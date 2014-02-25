@@ -9,14 +9,12 @@ public class Controller {
 		ADD, DELETE, MODIFY, SEARCH, INVALID;
 	}
 	
-	
 	public String getUserInput(String userInput) {
 		String userCommand = "";; //=getCommand(userinput)
 		COMMAND_TYPE commandType = determineCommandType(userCommand);
 		String feedback = executeCommand(commandType);		
 		return feedback;
 	}
-	
 	
 	private COMMAND_TYPE determineCommandType(String userCommand) {
 		switch(userCommand) {

@@ -16,6 +16,12 @@ public class TaskMasterKaboom {
 	public static final String KEYWORD_COMMAND_MODIFY = "modify";
 	public static final String KEYWORD_COMMAND_SEARCH = "search";
 	
+	public static final String MESSAGE_COMMAND_ADD_SUCCESS = "Successfully added %1$s";
+	public static final String MESSAGE_COMMAND_DELETE_SUCCESS = "%1$s deleted.";
+	public static final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
+	public static final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done";
+	public static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
+	
 	
 	public static void main(String[] args) {
 		// Setup application
@@ -33,7 +39,7 @@ public class TaskMasterKaboom {
 		String commandFeedback = ProcessCommand(command);
 	
 		// Return feedback to
-		System.out.println(commandFeedback);
+		System.out.println("Feedback: " + commandFeedback);
 	}
 	
 	/*
@@ -73,17 +79,17 @@ public class TaskMasterKaboom {
 	private static String executeCommand(COMMAND_TYPE command) {
 		switch(command) {
 		case ADD:
-			return "";
+			return String.format(MESSAGE_COMMAND_ADD_SUCCESS, "MYTASK");
 		case DELETE:
-			return "";
+			return String.format(MESSAGE_COMMAND_DELETE_SUCCESS, "MYTASK");
 		case MODIFY:
-			return "";
+			return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, "MYTASK");
 		case SEARCH:
-			return "";
+			return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, "MYTASK");
 		case INVALID:
-			return "";
+			return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, "MYTASK");
 		default:
-			return "";
+			return MESSAGE_COMMAND_INVALID;
 		}
 	}
 	
