@@ -13,39 +13,39 @@ public class TaskInfo {
 	
 	int importanceLevel;
 	
-	public void SetTaskName (String name) { 
+	public void setTaskName (String name) { 
 		taskname = name;
 	}
 	
-	public void SetTaskType (TASK_TYPE type) { 
+	public void setTaskType (TASK_TYPE type) { 
 		taskType = type;
 	}
 	
-	public void SetStartDate (Date date) { 
+	public void setStartDate (Date date) { 
 		startDate = date;
 	}
 	
-	public void SetEndDate (Date date) { 
+	public void setEndDate (Date date) { 
 		endDate = date;
 	}
 	
-	public void SetImportanceLevel (int level) { 
+	public void setImportanceLevel (int level) { 
 		importanceLevel = level;
 	}
 	
-	public String GetTaskName () { 
+	public String getTaskName () { 
 		return taskname;
 	}
 	
-	public TASK_TYPE GetTaskType () { 
+	public TASK_TYPE getTaskType () { 
 		return taskType;
 	}
 	
-	public Date SetStartDate () { 
+	public Date setStartDate () { 
 		return startDate;
 	}
 	
-	public Date GetEndDate () { 
+	public Date getEndDate () { 
 		return endDate;
 	}
 }
