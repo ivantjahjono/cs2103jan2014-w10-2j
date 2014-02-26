@@ -1,3 +1,4 @@
+import java.util.Calendar;
 import java.util.Date; 
 
 public class TaskInfo {
@@ -8,8 +9,8 @@ public class TaskInfo {
 	String taskname;
 	TASK_TYPE taskType;
 	
-	Date startDate;		// This includes the time as well
-	Date endDate;		// This includes the time as well
+	Calendar startDate;		// This includes the time as well
+	Calendar endDate;		// This includes the time as well
 	
 	int importanceLevel;
 	
@@ -28,11 +29,11 @@ public class TaskInfo {
 		taskType = type;
 	}
 	
-	public void setStartDate (Date date) { 
+	public void setStartDate (Calendar date) { 
 		startDate = date;
 	}
 	
-	public void setEndDate (Date date) { 
+	public void setEndDate (Calendar date) { 
 		endDate = date;
 	}
 	
@@ -48,11 +49,11 @@ public class TaskInfo {
 		return taskType;
 	}
 	
-	public Date getStartDate () { 
+	public Calendar getStartDate () { 
 		return startDate;
 	}
 	
-	public Date getEndDate () { 
+	public Calendar getEndDate () { 
 		return endDate;
 	}
 }
