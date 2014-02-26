@@ -48,7 +48,7 @@ public class TaskInfo {
 		return taskType;
 	}
 	
-	public Date setStartDate () { 
+	public Date getStartDate () { 
 		return startDate;
 	}
 	
