@@ -88,6 +88,7 @@ public class TaskMasterKaboom {
 	}
 	
 	private static String getFirstWord(String userCommand) {
-		return userCommand.trim().split(" ")[0];
+		String commandWord = userCommand.trim().split("\\s+")[0];
+		return commandWord.toLowerCase();
 	}
 }
