@@ -4,7 +4,17 @@ public class TaskListShop {
 
 	private Vector<TaskInfo> taskList;
 	
-	TaskListShop () {
+	private static TaskListShop taskListInstance = null;
+	
+	public static TaskListShop getInstance () {
+		if (taskListInstance == null) {
+			taskListInstance = new TaskListShop();
+		}
+		
+		return taskListInstance;
+	}
+	
+	private TaskListShop () {
 		taskList = new Vector<TaskInfo>();
 	}
 	
