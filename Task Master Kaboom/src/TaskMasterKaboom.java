@@ -36,7 +36,7 @@ public class TaskMasterKaboom {
 		String command = "add";
 		
 		// Process command line
-		String commandFeedback = ProcessCommand(command);
+		String commandFeedback = processCommand(command);
 	
 		// Return feedback to
 		System.out.println("Feedback: " + commandFeedback);
@@ -52,13 +52,18 @@ public class TaskMasterKaboom {
 	 * 
 	 * Future improvement: Return task class instead.
 	 */	
-	public static String ProcessCommand(String userCommand) {
-		COMMAND_TYPE commandType = determineCommandType(userCommand);
+	public static String processCommand(String userInputSentence) {
+		
+		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
+		if (commandType != COMMAND_TYPE.INVALID){
+			TaskInfo currentTaskInfo = createTaskInfoBasedOnCommand(userInputSentence);
+		}
 		String feedback = executeCommand(commandType);		
 		return feedback;
 	}
 	
 	private static COMMAND_TYPE determineCommandType(String userCommand) {
+		
 		String commandTypeString = getFirstWord(userCommand);
 		
 		// Determine what command to execute
@@ -93,8 +98,18 @@ public class TaskMasterKaboom {
 		}
 	}
 	
+	private static TaskInfo createTaskInfoBasedOnCommand(String userInputSentence) {
+		return null;
+	}
+	
+	private static String[] textProcess(String userCommand){
+		String[] commandWord = userCommand.trim().split("\\s+");
+		return commandWord;
+	}
+	
 	private static String getFirstWord(String userCommand) {
-		String commandWord = userCommand.trim().split("\\s+")[0];
-		return commandWord.toLowerCase();
+		String[] elements = textProcess(userCommand);
+		String firstWord = elements[0].toLowerCase();
+		return firstWord;
 	}
 }
