@@ -92,7 +92,7 @@ public class TaskMasterKaboom {
 		case SEARCH:
 			return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, "MYTASK");
 		case INVALID:
-			return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, "MYTASK");
+			return MESSAGE_COMMAND_INVALID;
 		default:
 			return MESSAGE_COMMAND_INVALID;
 		}
