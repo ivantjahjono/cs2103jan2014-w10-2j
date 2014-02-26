@@ -2,7 +2,6 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
-
 import javax.swing.JLabel;
 
 import java.awt.Font;
@@ -13,6 +12,7 @@ import javax.swing.JTable;
 import java.awt.Component;
 
 import javax.swing.UIManager;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -20,8 +20,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
+
 import java.awt.SystemColor;
 import java.awt.FlowLayout;
+import java.util.Vector;
 
 
 public class KaboomGUI implements ActionListener {
@@ -36,14 +38,18 @@ public class KaboomGUI implements ActionListener {
 	public void runUi () {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					KaboomGUI window = new KaboomGUI();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				executeUi();
 			}
 		});
+	}
+	
+	private void executeUi () {
+		try {
+			KaboomGUI window = new KaboomGUI();
+			window.frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -70,25 +76,6 @@ public class KaboomGUI implements ActionListener {
 		lblTaskMasterKaboom.setFont(new Font("Tahoma", Font.BOLD, 20));
 		frame.getContentPane().add(lblTaskMasterKaboom);
 		
-		String[] columnNames = {"Id",
-                "Task Name",
-                "Start Time",
-                "End Time",
-                "Priority"};
-		
-		Object[][] data = {
-			    {"1", "Smith",
-			     "Snowboarding", new Integer(5), new Boolean(false)},
-			    {"2", "Doe",
-			     "Rowing", new Integer(3), new Boolean(true)},
-			    {"3", "Black",
-			     "Knitting", new Integer(2), new Boolean(false)},
-			    {"4", "White",
-			     "Speed reading", new Integer(20), new Boolean(true)},
-			    {"5", "Brown",
-			     "Pool", new Integer(10), new Boolean(false)}
-			};
-		
 		txtEnterCommandHere = new JTextField();
 		txtEnterCommandHere.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtEnterCommandHere.setBounds(10, 231, 474, 29);
@@ -103,7 +90,7 @@ public class KaboomGUI implements ActionListener {
 		scrollPane.setBounds(10, 40, 474, 147);
 		frame.getContentPane().add(scrollPane);
 		
-		JTable tasklist = new JTable(data, columnNames);
+		JTable tasklist = new JTable();
 		tasklist.setAutoscrolls(false);
 		tasklist.setUpdateSelectionOnSort(false);
 		tasklist.getTableHeader().setReorderingAllowed(true);
@@ -165,6 +152,10 @@ public class KaboomGUI implements ActionListener {
 		String feedback = TaskMasterKaboom.processCommand(command);
 		
 		resetCommandTextfield();
+		updateFeedbackTextfield(feedback);
+	}
+	
+	public void updateTasksDisplay (String feedback, Vector<TaskInfo> taskList) {
 		updateFeedbackTextfield(feedback);
 	}
 	
