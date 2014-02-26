@@ -3,13 +3,11 @@
 ** 
 ** 
 **/
-
-
-public class TaskMasterKaboom {
-	
-	enum COMMAND_TYPE {
+enum COMMAND_TYPE {
 		ADD, DELETE, MODIFY, SEARCH, INVALID;
 	}
+
+public class TaskMasterKaboom {
 	
 	public static final String KEYWORD_COMMAND_ADD = "add";
 	public static final String KEYWORD_COMMAND_DELETE = "delete";
@@ -53,10 +51,10 @@ public class TaskMasterKaboom {
 	 * Future improvement: Return task class instead.
 	 */	
 	public static String processCommand(String userInputSentence) {
-		
+		TaskInfo currentTaskInfo = null;
 		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
-		if (commandType != COMMAND_TYPE.INVALID){
-			TaskInfo currentTaskInfo = createTaskInfoBasedOnCommand(userInputSentence);
+		if (commandType != COMMAND_TYPE.INVALID) {
+			currentTaskInfo = createTaskInfoBasedOnCommand(userInputSentence);
 		}
 		String feedback = executeCommand(commandType);		
 		return feedback;
@@ -83,18 +81,18 @@ public class TaskMasterKaboom {
 	
 	private static String executeCommand(COMMAND_TYPE command) {
 		switch(command) {
-		case ADD:
-			return String.format(MESSAGE_COMMAND_ADD_SUCCESS, "MYTASK");
-		case DELETE:
-			return String.format(MESSAGE_COMMAND_DELETE_SUCCESS, "MYTASK");
-		case MODIFY:
-			return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, "MYTASK");
-		case SEARCH:
-			return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, "MYTASK");
-		case INVALID:
-			return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, "MYTASK");
-		default:
-			return MESSAGE_COMMAND_INVALID;
+			case ADD:
+				return String.format(MESSAGE_COMMAND_ADD_SUCCESS, "MYTASK");
+			case DELETE:
+				return String.format(MESSAGE_COMMAND_DELETE_SUCCESS, "MYTASK");
+			case MODIFY:
+				return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, "MYTASK");
+			case SEARCH:
+				return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, "MYTASK");
+			case INVALID:
+				return String.format(MESSAGE_COMMAND_INVALID, "MYTASK");
+			default:
+				return MESSAGE_COMMAND_INVALID;
 		}
 	}
 	
