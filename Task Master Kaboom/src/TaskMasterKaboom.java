@@ -1,3 +1,11 @@
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+
+
 /*
 ** This is main class that will run Task Master Kaboom
 ** 
@@ -9,29 +17,29 @@ enum COMMAND_TYPE {
 
 public class TaskMasterKaboom {
 	
-	public static final String KEYWORD_COMMAND_ADD = "add";
-	public static final String KEYWORD_COMMAND_DELETE = "delete";
-	public static final String KEYWORD_COMMAND_MODIFY = "modify";
-	public static final String KEYWORD_COMMAND_SEARCH = "search";
+	private static final String KEYWORD_COMMAND_ADD = "add";
+	private static final String KEYWORD_COMMAND_DELETE = "delete";
+	private static final String KEYWORD_COMMAND_MODIFY = "modify";
+	private static final String KEYWORD_COMMAND_SEARCH = "search";
 	
-	public static final String MESSAGE_COMMAND_ADD_SUCCESS = "Successfully added %1$s";
-	public static final String MESSAGE_COMMAND_DELETE_SUCCESS = "%1$s deleted.";
-	public static final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
-	public static final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done";
-	public static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
+	private static final String MESSAGE_COMMAND_ADD_SUCCESS = "Successfully added %1$s";
+	private static final String MESSAGE_COMMAND_DELETE_SUCCESS = "%1$s deleted.";
+	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
+	private static final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done";
+	private static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
 	
 	private static KaboomGUI taskUi = new KaboomGUI();
 	
 	public static void main(String[] args) {
 		// Setup application
 			// Setup UI
-			//setupUi();
 			// Setup Memory
+			addTemporaryTaskForTesting();
 			// Setup Logic
 		
-		// Present the UI
+		// Run the UI
 		activateUi();
-			
+		
 		// Start processing user commands
 		
 //		// Get command from UI
@@ -48,8 +56,30 @@ public class TaskMasterKaboom {
 		}
 	}
 	
-	private static void setupUi () {
-		taskUi.initialize();
+	private static void addTemporaryTaskForTesting () {
+		TaskInfo newTask = new TaskInfo();
+		newTask.setTaskName("Task 1");
+		newTask.setImportanceLevel(3);
+		newTask.setTaskType(TaskInfo.TASK_TYPE.FLOATING);
+		
+		Calendar tempStartDate = new GregorianCalendar(2014, 2, 26);
+		Calendar tempEndDate = new GregorianCalendar(2014, 2, 28);
+		TaskInfo secondTask = new TaskInfo();
+		secondTask.setTaskName("Task 2");
+		secondTask.setImportanceLevel(1);
+		secondTask.setTaskType(TaskInfo.TASK_TYPE.TIMED);
+		secondTask.setStartDate(tempStartDate);
+		secondTask.setStartDate(tempEndDate);
+		
+		tempEndDate = new GregorianCalendar(2014, 6, 28);
+		TaskInfo thirdTask = new TaskInfo();
+		thirdTask.setTaskName("Task 3");
+		thirdTask.setTaskType(TaskInfo.TASK_TYPE.DEADLINE);
+		thirdTask.setStartDate(tempEndDate);
+		
+		TaskListShop.getInstance().addTaskToList(newTask);
+		TaskListShop.getInstance().addTaskToList(secondTask);
+		TaskListShop.getInstance().addTaskToList(thirdTask);
 	}
 	
 	private static void activateUi () {
