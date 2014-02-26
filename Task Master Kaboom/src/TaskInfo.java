@@ -13,6 +13,13 @@ public class TaskInfo {
 	
 	int importanceLevel;
 	
+	TaskInfo () {
+		taskname = "";
+		startDate = null;
+		endDate = null;
+		importanceLevel = 0;
+	}
+	
 	public void setTaskName (String name) { 
 		taskname = name;
 	}
