@@ -1,3 +1,6 @@
+/* 
+** Purpose: 
+*/
 
 public class Command {
 	COMMAND_TYPE commandType;

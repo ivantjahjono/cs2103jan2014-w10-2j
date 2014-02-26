@@ -1,7 +1,5 @@
 import java.util.Vector;
 
-
-
 public class TaskListShop {
 
 	private Vector<TaskInfo> taskList;

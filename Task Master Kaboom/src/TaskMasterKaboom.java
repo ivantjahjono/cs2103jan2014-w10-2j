@@ -20,24 +20,40 @@ public class TaskMasterKaboom {
 	public static final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done";
 	public static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
 	
+	private static KaboomGUI taskUi = new KaboomGUI();
 	
 	public static void main(String[] args) {
 		// Setup application
 			// Setup UI
+			//setupUi();
 			// Setup Memory
 			// Setup Logic
 		
+		// Present the UI
+		activateUi();
+			
 		// Start processing user commands
-
 		
-		// Get command from UI
-		String command = "add";
+//		// Get command from UI
+//		String command = "add";
+//		
+//		// Process command line
+//		String commandFeedback = processCommand(command);
+//	
+//		// Return feedback to
+//		System.out.println("Feedback: " + commandFeedback);
 		
-		// Process command line
-		String commandFeedback = processCommand(command);
+		while (true) {
+			//
+		}
+	}
 	
-		// Return feedback to
-		System.out.println("Feedback: " + commandFeedback);
+	private static void setupUi () {
+		taskUi.initialize();
+	}
+	
+	private static void activateUi () {
+		taskUi.runUi();
 	}
 	
 	/*
@@ -49,7 +65,7 @@ public class TaskMasterKaboom {
 	 * to run straight into command.
 	 * 
 	 * Future improvement: Return task class instead.
-	 */	
+	 */
 	public static String processCommand(String userInputSentence) {
 		TaskInfo currentTaskInfo = null;
 		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
@@ -63,6 +79,7 @@ public class TaskMasterKaboom {
 	private static COMMAND_TYPE determineCommandType(String userCommand) {
 		
 		String commandTypeString = getFirstWord(userCommand);
+		System.out.println(commandTypeString);
 		
 		// Determine what command to execute
 		switch(commandTypeString) {
@@ -82,15 +99,15 @@ public class TaskMasterKaboom {
 	private static String executeCommand(COMMAND_TYPE command) {
 		switch(command) {
 			case ADD:
-				return String.format(MESSAGE_COMMAND_ADD_SUCCESS, "MYTASK");
+				return String.format(MESSAGE_COMMAND_ADD_SUCCESS, command);
 			case DELETE:
-				return String.format(MESSAGE_COMMAND_DELETE_SUCCESS, "MYTASK");
+				return String.format(MESSAGE_COMMAND_DELETE_SUCCESS, command);
 			case MODIFY:
-				return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, "MYTASK");
+				return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, command);
 			case SEARCH:
-				return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, "MYTASK");
+				return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, command);
 			case INVALID:
-				return String.format(MESSAGE_COMMAND_INVALID, "MYTASK");
+				return String.format(MESSAGE_COMMAND_INVALID, command);
 			default:
 				return MESSAGE_COMMAND_INVALID;
 		}
