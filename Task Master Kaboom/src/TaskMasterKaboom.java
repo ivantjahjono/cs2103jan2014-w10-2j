@@ -1,8 +1,6 @@
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Vector;
 
 
 
@@ -62,18 +60,19 @@ public class TaskMasterKaboom {
 		newTask.setImportanceLevel(3);
 		newTask.setTaskType(TaskInfo.TASK_TYPE.FLOATING);
 		
-		Calendar tempStartDate = new GregorianCalendar(2014, 2, 26);
-		Calendar tempEndDate = new GregorianCalendar(2014, 2, 28);
+		Calendar tempStartDate = new GregorianCalendar(2014, 1, 26);
+		Calendar tempEndDate = new GregorianCalendar(2014, 1, 28);
 		TaskInfo secondTask = new TaskInfo();
 		secondTask.setTaskName("Task 2");
-		secondTask.setImportanceLevel(1);
+		secondTask.setImportanceLevel(0);
 		secondTask.setTaskType(TaskInfo.TASK_TYPE.TIMED);
 		secondTask.setStartDate(tempStartDate);
-		secondTask.setStartDate(tempEndDate);
+		secondTask.setEndDate(tempEndDate);
 		
-		tempEndDate = new GregorianCalendar(2014, 6, 28);
+		tempEndDate = new GregorianCalendar(2014, 5, 14);
 		TaskInfo thirdTask = new TaskInfo();
 		thirdTask.setTaskName("Task 3");
+		secondTask.setImportanceLevel(2);
 		thirdTask.setTaskType(TaskInfo.TASK_TYPE.DEADLINE);
 		thirdTask.setStartDate(tempEndDate);
 		
@@ -102,7 +101,10 @@ public class TaskMasterKaboom {
 		if (commandType != COMMAND_TYPE.INVALID) {
 			currentTaskInfo = createTaskInfoBasedOnCommand(userInputSentence);
 		}
-		String feedback = executeCommand(commandType);		
+		String feedback = executeCommand(commandType);
+		
+		Vector<TaskInfo> taskToDisplay = TaskListShop.getInstance().getAllTaskInList();
+		taskUi.updateUiDisplay(feedback, taskToDisplay);
 		return feedback;
 	}
 	
