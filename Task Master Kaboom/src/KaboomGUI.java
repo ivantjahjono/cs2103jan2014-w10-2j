@@ -66,33 +66,58 @@ public class KaboomGUI implements ActionListener {
 	 * Initialize the contents of the frame.
 	 */
 	public void initialize() {
-		frame = new JFrame();
-		frame.setBackground(UIManager.getColor("Button.darkShadow"));
-		frame.setResizable(false);
-		frame.setBounds(100, 100, 600, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		createDisplayFrame();
+		createApplicationTitle();
+		JPanel currentDisplay = createHeaderContainer();
+		createHeader(currentDisplay);
 		
-		JLabel lblTaskMasterKaboom = new JLabel("TASK MASTER KABOOM");
-		lblTaskMasterKaboom.setBounds(10, 0, 474, 29);
-		lblTaskMasterKaboom.setHorizontalAlignment(SwingConstants.LEFT);
-		lblTaskMasterKaboom.setFont(new Font("Tahoma", Font.BOLD, 20));
-		frame.getContentPane().add(lblTaskMasterKaboom);
+		createCommandTextfield();
 		
-		txtEnterCommandHere = new JTextField();
-		txtEnterCommandHere.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtEnterCommandHere.setBounds(10, 231, 574, 29);
-		txtEnterCommandHere.setText("Enter command here");
-		frame.getContentPane().add(txtEnterCommandHere);
-		txtEnterCommandHere.setColumns(10);
-		txtEnterCommandHere.addActionListener(this);
+		JScrollPane scrollPane = createPanelToHoldTable();
+		createTaskDisplayTable(scrollPane);
+		createDisplayFeedback();
+	}
+
+	private void createHeader(JPanel currentDisplay) {
+		JLabel lblNewLabel = new JLabel("ALL TASKS");
+		lblNewLabel.setVerticalAlignment(SwingConstants.TOP);
+		lblNewLabel.setForeground(Color.GRAY);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		currentDisplay.add(lblNewLabel);
+	}
+
+	private JPanel createHeaderContainer() {
+		JPanel currentDisplay = new JPanel();
+		currentDisplay.setBorder(null);
+		FlowLayout flowLayout = (FlowLayout) currentDisplay.getLayout();
+		flowLayout.setVgap(0);
+		flowLayout.setHgap(0);
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		currentDisplay.setBounds(10, 27, 256, 19);
+		frame.getContentPane().add(currentDisplay);
+		return currentDisplay;
+	}
+
+	private void createDisplayFeedback() {
+		JPanel feedback = new JPanel();
+		FlowLayout fl_feedback = (FlowLayout) feedback.getLayout();
+		fl_feedback.setAlignment(FlowLayout.LEFT);
+		feedback.setAlignmentX(Component.LEFT_ALIGNMENT);
+		feedback.setBackground(SystemColor.controlHighlight);
+		feedback.setBounds(10, 203, 574, 24);
+		frame.getContentPane().add(feedback);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setBounds(10, 57, 574, 130);
-		frame.getContentPane().add(scrollPane);
-		
+		lblFeedback = new JLabel("Feedback");
+		lblFeedback.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lblFeedback.setHorizontalAlignment(SwingConstants.LEFT);
+		lblFeedback.setForeground(UIManager.getColor("ToolBar.dockingForeground"));
+		lblFeedback.setBackground(SystemColor.activeCaption);
+		lblFeedback.setBounds(10, 203, 474, 24);
+		feedback.add(lblFeedback);
+	}
+
+	private void createTaskDisplayTable(JScrollPane scrollPane) {
 		tasklistDisplay = new JTable();
 		tasklistDisplay.setAutoscrolls(false);
 		tasklistDisplay.setUpdateSelectionOnSort(false);
@@ -140,40 +165,44 @@ public class KaboomGUI implements ActionListener {
 		tasklistDisplay.getColumnModel().getColumn(4).setResizable(false);
 		tasklistDisplay.getColumnModel().getColumn(4).setPreferredWidth(45);
 		tasklistDisplay.setRowSelectionAllowed(false);
-		scrollPane.setViewportView(tasklistDisplay);
 		tasklistDisplay.setBorder(null);
-		
-		JPanel feedback = new JPanel();
-		FlowLayout fl_feedback = (FlowLayout) feedback.getLayout();
-		fl_feedback.setAlignment(FlowLayout.LEFT);
-		feedback.setAlignmentX(Component.LEFT_ALIGNMENT);
-		feedback.setBackground(SystemColor.controlHighlight);
-		feedback.setBounds(10, 203, 574, 24);
-		frame.getContentPane().add(feedback);
-		
-		lblFeedback = new JLabel("Feedback");
-		lblFeedback.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblFeedback.setHorizontalAlignment(SwingConstants.LEFT);
-		feedback.add(lblFeedback);
-		lblFeedback.setForeground(UIManager.getColor("ToolBar.dockingForeground"));
-		lblFeedback.setBackground(SystemColor.activeCaption);
-		lblFeedback.setBounds(10, 203, 474, 24);
-		
-		JPanel currentDisplay = new JPanel();
-		currentDisplay.setBorder(null);
-		FlowLayout flowLayout = (FlowLayout) currentDisplay.getLayout();
-		flowLayout.setVgap(0);
-		flowLayout.setHgap(0);
-		flowLayout.setAlignment(FlowLayout.LEFT);
-		currentDisplay.setBounds(10, 27, 256, 19);
-		frame.getContentPane().add(currentDisplay);
-		
-		JLabel lblNewLabel = new JLabel("ALL TASKS");
-		lblNewLabel.setVerticalAlignment(SwingConstants.TOP);
-		lblNewLabel.setForeground(Color.GRAY);
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		currentDisplay.add(lblNewLabel);
+		scrollPane.setViewportView(tasklistDisplay);
+	}
+
+	private JScrollPane createPanelToHoldTable() {
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setBounds(10, 57, 574, 130);
+		frame.getContentPane().add(scrollPane);
+		return scrollPane;
+	}
+
+	private void createCommandTextfield() {
+		txtEnterCommandHere = new JTextField();
+		txtEnterCommandHere.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtEnterCommandHere.setBounds(10, 231, 574, 29);
+		txtEnterCommandHere.setText("Enter command here");
+		txtEnterCommandHere.setColumns(10);
+		txtEnterCommandHere.addActionListener(this);
+		frame.getContentPane().add(txtEnterCommandHere);
+	}
+
+	private void createApplicationTitle() {
+		JLabel lblTaskMasterKaboom = new JLabel("TASK MASTER KABOOM");
+		lblTaskMasterKaboom.setBounds(10, 0, 474, 29);
+		lblTaskMasterKaboom.setHorizontalAlignment(SwingConstants.LEFT);
+		lblTaskMasterKaboom.setFont(new Font("Tahoma", Font.BOLD, 20));
+		frame.getContentPane().add(lblTaskMasterKaboom);
+	}
+
+	private void createDisplayFrame() {
+		frame = new JFrame();
+		frame.setBackground(UIManager.getColor("Button.darkShadow"));
+		frame.setResizable(false);
+		frame.setBounds(100, 100, 600, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
 	}
 	
 	public void actionPerformed(ActionEvent e) {		
