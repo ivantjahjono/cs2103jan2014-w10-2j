@@ -55,4 +55,8 @@ public class TaskInfo {
 	public Calendar getEndDate () { 
 		return endDate;
 	}
+	
+	public int getImportanceLevel () { 
+		return importanceLevel;
+	}
 }
