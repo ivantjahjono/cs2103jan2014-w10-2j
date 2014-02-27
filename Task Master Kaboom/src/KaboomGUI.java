@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.SystemColor;
 import java.awt.FlowLayout;
 import java.util.Vector;
+import java.awt.Color;
 
 
 public class KaboomGUI implements ActionListener {
@@ -74,7 +75,7 @@ public class KaboomGUI implements ActionListener {
 		
 		JLabel lblTaskMasterKaboom = new JLabel("TASK MASTER KABOOM");
 		lblTaskMasterKaboom.setBounds(10, 0, 474, 29);
-		lblTaskMasterKaboom.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTaskMasterKaboom.setHorizontalAlignment(SwingConstants.LEFT);
 		lblTaskMasterKaboom.setFont(new Font("Tahoma", Font.BOLD, 20));
 		frame.getContentPane().add(lblTaskMasterKaboom);
 		
@@ -89,7 +90,7 @@ public class KaboomGUI implements ActionListener {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setBounds(10, 40, 574, 147);
+		scrollPane.setBounds(10, 57, 574, 130);
 		frame.getContentPane().add(scrollPane);
 		
 		tasklistDisplay = new JTable();
@@ -131,32 +132,48 @@ public class KaboomGUI implements ActionListener {
 		tasklistDisplay.getColumnModel().getColumn(0).setResizable(false);
 		tasklistDisplay.getColumnModel().getColumn(0).setPreferredWidth(21);
 		tasklistDisplay.getColumnModel().getColumn(1).setResizable(false);
-		tasklistDisplay.getColumnModel().getColumn(1).setPreferredWidth(150);
+		tasklistDisplay.getColumnModel().getColumn(1).setPreferredWidth(190);
 		tasklistDisplay.getColumnModel().getColumn(2).setResizable(false);
-		tasklistDisplay.getColumnModel().getColumn(2).setPreferredWidth(100);
+		tasklistDisplay.getColumnModel().getColumn(2).setPreferredWidth(120);
 		tasklistDisplay.getColumnModel().getColumn(3).setResizable(false);
-		tasklistDisplay.getColumnModel().getColumn(3).setPreferredWidth(100);
+		tasklistDisplay.getColumnModel().getColumn(3).setPreferredWidth(120);
 		tasklistDisplay.getColumnModel().getColumn(4).setResizable(false);
 		tasklistDisplay.getColumnModel().getColumn(4).setPreferredWidth(45);
 		tasklistDisplay.setRowSelectionAllowed(false);
 		scrollPane.setViewportView(tasklistDisplay);
 		tasklistDisplay.setBorder(null);
 		
-		JPanel panel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
-		flowLayout.setAlignment(FlowLayout.LEFT);
-		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		panel.setBackground(SystemColor.controlHighlight);
-		panel.setBounds(10, 203, 574, 24);
-		frame.getContentPane().add(panel);
+		JPanel feedback = new JPanel();
+		FlowLayout fl_feedback = (FlowLayout) feedback.getLayout();
+		fl_feedback.setAlignment(FlowLayout.LEFT);
+		feedback.setAlignmentX(Component.LEFT_ALIGNMENT);
+		feedback.setBackground(SystemColor.controlHighlight);
+		feedback.setBounds(10, 203, 574, 24);
+		frame.getContentPane().add(feedback);
 		
 		lblFeedback = new JLabel("Feedback");
 		lblFeedback.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblFeedback.setHorizontalAlignment(SwingConstants.LEFT);
-		panel.add(lblFeedback);
+		feedback.add(lblFeedback);
 		lblFeedback.setForeground(UIManager.getColor("ToolBar.dockingForeground"));
 		lblFeedback.setBackground(SystemColor.activeCaption);
 		lblFeedback.setBounds(10, 203, 474, 24);
+		
+		JPanel currentDisplay = new JPanel();
+		currentDisplay.setBorder(null);
+		FlowLayout flowLayout = (FlowLayout) currentDisplay.getLayout();
+		flowLayout.setVgap(0);
+		flowLayout.setHgap(0);
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		currentDisplay.setBounds(10, 27, 256, 19);
+		frame.getContentPane().add(currentDisplay);
+		
+		JLabel lblNewLabel = new JLabel("ALL TASKS");
+		lblNewLabel.setVerticalAlignment(SwingConstants.TOP);
+		lblNewLabel.setForeground(Color.GRAY);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		currentDisplay.add(lblNewLabel);
 	}
 	
 	public void actionPerformed(ActionEvent e) {		
