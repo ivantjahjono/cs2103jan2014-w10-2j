@@ -3,9 +3,8 @@ import java.util.GregorianCalendar;
 import java.util.Vector;
 
 
-
 /*
-** This is main class that will run Task Master Kaboom
+** This is main class that will run Task Master KABOOM
 ** 
 ** 
 **/
