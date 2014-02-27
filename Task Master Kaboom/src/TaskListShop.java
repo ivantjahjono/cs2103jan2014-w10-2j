@@ -31,6 +31,11 @@ public class TaskListShop {
 		return null;
 	}
 	
+	public Vector<TaskInfo> getAllTaskInList () {
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(taskList);
+		return vectorToReturn;
+	}
+	
 	public boolean removeTaskByName (String taskName) {
 		TaskInfo currentTaskToRemove = getTaskByName(taskName);
 		
