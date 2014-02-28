@@ -8,10 +8,12 @@ public class CommandModify extends Command {
 	}
 
 	public String execute() {
+		//TODO Not done
 		return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, "My Task");
 	}
 	
 	public String undo () {
+		//TODO Not done
 		return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, "My Task");
 	}
 }
