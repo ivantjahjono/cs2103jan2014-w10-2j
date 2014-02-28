@@ -3,6 +3,14 @@
 */
 
 public class Command {
+	
+	public static final String MESSAGE_COMMAND_ADD_SUCCESS = "Successfully added %1$s";
+	public static final String MESSAGE_COMMAND_DELETE_SUCCESS = "%1$s deleted.";
+	public static final String MESSAGE_COMMAND_DELETE_FAIL = "%1$s fail to delete.";
+	public static final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
+	public static final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done";
+	public static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
+	
 	COMMAND_TYPE commandType;
 	TaskInfo taskInfo;
 	
@@ -21,4 +29,47 @@ public class Command {
 	public TaskInfo getTaskInfo () {
 		return taskInfo;
 	}
+	
+	public String execute() {
+		switch(commandType) {
+		case ADD:
+			return add();
+		case DELETE:
+			return delete();
+		case MODIFY: 
+			return modify();
+		case SEARCH:
+			return search();
+		default: 
+			return MESSAGE_COMMAND_INVALID;
+		
+		}
+	}
+	
+	private String add() {
+		//addTaskToList(taskInfo);
+		return String.format(MESSAGE_COMMAND_ADD_SUCCESS, "My Task");
+	}
+	
+	private String delete() {
+		String taskName = taskInfo.getTaskName();
+		
+		if(/*removeTaskByName(taskName) && removeFromStorage*/ true) {
+			return String.format(MESSAGE_COMMAND_DELETE_SUCCESS, "My Task");		
+		}
+		
+		return String.format(MESSAGE_COMMAND_DELETE_FAIL, "My Task");
+	}
+	
+	private String modify() {
+		String taskName = taskInfo.getTaskName();
+		TaskInfo oldTask; //=getTaskByName(taskName);
+		
+		return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, "My Task");
+	}
+	
+	private static String search() {
+		return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, "My Task");
+	}
+	
 }
