@@ -1,5 +1,6 @@
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Random;
 import java.util.Vector;
 
 
@@ -10,7 +11,7 @@ import java.util.Vector;
 **/
 enum COMMAND_TYPE {
 		ADD, DELETE, MODIFY, SEARCH, INVALID;
-	}
+}
 
 public class TaskMasterKaboom {
 	
@@ -19,21 +20,18 @@ public class TaskMasterKaboom {
 	private static final String KEYWORD_COMMAND_MODIFY = "modify";
 	private static final String KEYWORD_COMMAND_SEARCH = "search";
 	
-	private static final String MESSAGE_COMMAND_ADD_SUCCESS = "Successfully added %1$s";
-	private static final String MESSAGE_COMMAND_DELETE_SUCCESS = "%1$s deleted.";
-	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
-	private static final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done";
-	private static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
-	
 	private static KaboomGUI taskUi;
-	private static CommandHistory commandHistory = new CommandHistory();
+	private static History historyofCommands = new History();
+	
+	// Temporary static
+	private static int counter = 1;				// Use to create temporary task
 	
 	public static void main(String[] args) {
 		// Setup application
 			// Setup UI
 			setupUi();
 			// Setup Memory
-			addTemporaryTaskForTesting();
+			//addTemporaryTaskForTesting();
 			// Setup Storage
 			// Setup Logic
 		
@@ -109,32 +107,81 @@ public class TaskMasterKaboom {
 	 * Future improvement: Return task class instead.
 	 */
 	public static String processCommand(String userInputSentence) {
-		TaskInfo currentTaskInfo = null;
-		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
-		if (commandType != COMMAND_TYPE.INVALID) {
-			currentTaskInfo = createTaskInfoBasedOnCommand(userInputSentence);
-		}
-		String feedback = executeCommand(commandType);
+		Command commandToExecute = null;
+		String feedback = "";
 		
-		Vector<TaskInfo> taskToDisplay = TaskListShop.getInstance().getAllTaskInList();
-		taskUi.updateUiDisplay(feedback, taskToDisplay);
+		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
+		String commandParametersString = removeFirstWord(userInputSentence);
+		
+		commandToExecute = createCommandBasedOnCommandType(commandType, commandParametersString);
+		feedback = commandToExecute.execute();
+		
+		// Later to be move to somewhere else
+		updateUi(feedback);
 		
 		// Add recent command to History list
 		addToCommandHistory(new Command());
 		
 		return feedback;
 	}
+
+	private static String removeFirstWord(String userInputSentence) {
+		String wordRemoved = userInputSentence.replace(getFirstWord(userInputSentence), "").trim();
+		return wordRemoved;
+	}
+
+	private static void updateUi(String feedback) {
+		Vector<TaskInfo> taskToDisplay = TaskListShop.getInstance().getAllTaskInList();
+		taskUi.updateUiDisplay(feedback, taskToDisplay);
+	}
 	
 	private static void addToCommandHistory(Command command) {
 		if (command.getCommandType() != COMMAND_TYPE.INVALID) {
-			commandHistory.addToRecentCommands(new Command());
+			historyofCommands.addToRecentCommands(command);
 		}
+	}
+	
+	private static Command createCommandBasedOnCommandType (COMMAND_TYPE commandType, String parameters) {
+		Command newlyCreatedCommand = new Command();
+		TaskInfo taskInformation = null;
+		
+		switch (commandType) {
+			case ADD:
+				newlyCreatedCommand = new CommandAdd();
+				taskInformation = createTaskInfoBasedOnCommand(parameters);
+				newlyCreatedCommand.setTaskInfo(taskInformation);
+				break;
+				
+			case DELETE:
+				newlyCreatedCommand = new CommandDelete();
+				taskInformation = createTaskInfoBasedOnCommand(parameters);
+				newlyCreatedCommand.setTaskInfo(taskInformation);
+				break;
+				
+			case MODIFY:
+				newlyCreatedCommand = new CommandModify();
+				taskInformation = createTaskInfoBasedOnCommand(parameters);
+				newlyCreatedCommand.setTaskInfo(taskInformation);
+				break;
+				
+			case SEARCH:
+				newlyCreatedCommand = new CommandSearch();
+				taskInformation = createTaskInfoBasedOnCommand(parameters);
+				newlyCreatedCommand.setTaskInfo(taskInformation);
+				break;
+				
+			default:
+				newlyCreatedCommand = new Command();
+				break;
+				
+		}
+		
+		return newlyCreatedCommand;
 	}
 
 	private static COMMAND_TYPE determineCommandType(String userCommand) {
 		
 		String commandTypeString = getFirstWord(userCommand);
-		System.out.println(commandTypeString);
 		
 		// Determine what command to execute
 		switch(commandTypeString) {
@@ -151,27 +198,46 @@ public class TaskMasterKaboom {
 		}
 	}
 	
-	private static String executeCommand(COMMAND_TYPE command) {
-		switch(command) {
-			case ADD:
-				return String.format(MESSAGE_COMMAND_ADD_SUCCESS, command);
-			case DELETE:
-				return String.format(MESSAGE_COMMAND_DELETE_SUCCESS, command);
-			case MODIFY:
-				return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, command);
-			case SEARCH:
-				return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, command);
-			case INVALID:
-				return String.format(MESSAGE_COMMAND_INVALID, command);
-			default:
-				return MESSAGE_COMMAND_INVALID;
-		}
-	}
-	
 	private static TaskInfo createTaskInfoBasedOnCommand(String userInputSentence) {
-		return null;
+		//TODO create and process text information to task info here
+		// Currently it is randomly generated.
+		TaskInfo newlyCreatedTaskInfo = new TaskInfo();
+		updateTaskInfoBasedOnParameter(newlyCreatedTaskInfo, userInputSentence);
+		
+		return newlyCreatedTaskInfo;
 	}
 	
+	private static void updateTaskInfoBasedOnParameter(TaskInfo taskInfoToUpdate,String parameterString) {
+		// TODO Auto-generated method stub
+		
+		// Decoy information
+		Random randomGenerator = new Random();
+		
+		String taskname = String.format("Task %d", counter);
+		int startDay = randomGenerator.nextInt(32);
+		int startMonth = randomGenerator.nextInt(12);
+		int startYear = 2014;
+		int startHour = randomGenerator.nextInt(24);
+		int startMinute = randomGenerator.nextInt(60);
+		Calendar startDate = new GregorianCalendar(startYear, startMonth, startDay, startHour, startMinute);
+		
+		int endDay = randomGenerator.nextInt(32);
+		int endMonth = randomGenerator.nextInt(12);
+		int endYear = 2014;
+		int endHour = randomGenerator.nextInt(24);
+		int endMinute = randomGenerator.nextInt(60);
+		Calendar endDate = new GregorianCalendar(endYear, endMonth, endDay, endHour, endMinute);
+		
+		int priority = randomGenerator.nextInt(4);
+		
+		taskInfoToUpdate.setTaskName(taskname);
+		taskInfoToUpdate.setStartDate(startDate);
+		taskInfoToUpdate.setEndDate(endDate);
+		taskInfoToUpdate.setImportanceLevel(priority);
+		
+		counter++;
+	}
+
 	private static String[] textProcess(String userCommand){
 		String[] commandWord = userCommand.trim().split("\\s+");
 		return commandWord;
