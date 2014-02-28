@@ -47,6 +47,15 @@ public class KaboomGUI implements ActionListener {
 	}
 	
 	/**
+	 * @wbp.parser.entryPoint
+	 */
+	private void createAndRun () {
+		KaboomGUI window = new KaboomGUI(); 
+		window.initialize();
+		window.runUi();
+	}
+	
+	/**
 	 *  Create the window and launch it.
 	 */
 	private void executeUi () {
@@ -125,11 +134,11 @@ public class KaboomGUI implements ActionListener {
 		tasklistDisplay.setShowVerticalLines(false);
 		tasklistDisplay.setModel(new DefaultTableModel(
 			new Object[][] {
-				{new Integer(1), "Meeting", "1:00pm", "2:00pm", "***"},
-				{new Integer(2), "CS 1101 Lecture", "3:00pm", "3:30pm", "**"},
-				{new Integer(3), "Sleep", "6:00pm", "8:00pm", ""},
-				{new Integer(4), "Breakfast", "4:00am", "5:30am", "*"},
-				{new Integer(5), "Slack", "8:00am", "12:00pm", "**"},
+				{new Integer(1), "Meeting", "1:00 PM 29/02/2014", "2:00 PM29/02/2014", "***"},
+				{new Integer(2), "CS 1101 Lecture", "3:00 PM 29/02/2014", "3:30 PM 29/02/2014", "**"},
+				{new Integer(3), "Sleep", "6:00 PM 29/02/2014", "8:00 PM 29/02/2014", ""},
+				{new Integer(4), "Breakfast", "4:00 AM 01/03/2014", "5:30 AM 01/03/2014", "*"},
+				{new Integer(5), "Slack", "8:00 AM 01/03/2014", "12:00 PM 01/03/2014", "**"},
 			},
 			new String[] {
 				"Id", "Task Name", "Start Time", "End Time", "Priority"
