@@ -18,8 +18,8 @@ public class TaskListShop {
 		taskList = new Vector<TaskInfo>();
 	}
 	
-	public void addTaskToList (TaskInfo newTask) {
-		taskList.add(newTask);
+	public boolean addTaskToList (TaskInfo newTask) {
+		return taskList.add(newTask);
 	}
 	
 	public TaskInfo getTaskByName (String taskName) {
@@ -46,5 +46,6 @@ public class TaskListShop {
 		
 		return false;
 	}
+
 	
 }
