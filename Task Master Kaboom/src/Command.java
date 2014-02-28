@@ -5,6 +5,7 @@
 public class Command {
 	
 	public static final String MESSAGE_COMMAND_ADD_SUCCESS = "Successfully added %1$s";
+	public static final String MESSAGE_COMMAND_ADD_FAIL = "Fail to add %1$s";
 	public static final String MESSAGE_COMMAND_DELETE_SUCCESS = "%1$s deleted.";
 	public static final String MESSAGE_COMMAND_DELETE_FAIL = "%1$s fail to delete.";
 	public static final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
@@ -46,28 +47,30 @@ public class Command {
 		}
 	}
 	
+
 	private String add() {
-		//addTaskToList(taskInfo);
-		return String.format(MESSAGE_COMMAND_ADD_SUCCESS, "My Task");
+		if (TaskListShop.getInstance().addTaskToList(taskInfo)) {
+			return String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
+		}
+		return String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
 	}
 	
 	private String delete() {
 		String taskName = taskInfo.getTaskName();
-		
-		if(/*removeTaskByName(taskName) && removeFromStorage*/ true) {
-			return String.format(MESSAGE_COMMAND_DELETE_SUCCESS, "My Task");		
+
+		if (TaskListShop.getInstance().removeTaskByName(taskName)) {
+			return String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);		
 		}
 		
-		return String.format(MESSAGE_COMMAND_DELETE_FAIL, "My Task");
+		return String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
 	}
 	
+	//Not done
 	private String modify() {
-		String taskName = taskInfo.getTaskName();
-		TaskInfo oldTask; //=getTaskByName(taskName);
-		
 		return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, "My Task");
 	}
 	
+	//Not done
 	private static String search() {
 		return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, "My Task");
 	}
