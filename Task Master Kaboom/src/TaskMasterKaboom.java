@@ -25,13 +25,15 @@ public class TaskMasterKaboom {
 	private static final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done";
 	private static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
 	
-	private static KaboomGUI taskUi = new KaboomGUI();
+	private static KaboomGUI taskUi;
 	
 	public static void main(String[] args) {
 		// Setup application
 			// Setup UI
+			setupUi();
 			// Setup Memory
 			addTemporaryTaskForTesting();
+			// Setup Storage
 			// Setup Logic
 		
 		// Run the UI
@@ -48,9 +50,9 @@ public class TaskMasterKaboom {
 //		// Return feedback to
 //		System.out.println("Feedback: " + commandFeedback);
 		
-		while (true) {
+		//while (true) {
 			//
-		}
+		//}
 	}
 	
 	private static void addTemporaryTaskForTesting () {
@@ -78,6 +80,17 @@ public class TaskMasterKaboom {
 		TaskListShop.getInstance().addTaskToList(newTask);
 		TaskListShop.getInstance().addTaskToList(secondTask);
 		TaskListShop.getInstance().addTaskToList(thirdTask);
+	}
+	
+	private static boolean setupUi () {
+		try {
+			taskUi = new KaboomGUI();
+			taskUi.initialize();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	private static void activateUi () {
