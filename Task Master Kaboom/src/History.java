@@ -1,13 +1,13 @@
 import java.util.Vector;
 
 
-public class CommandHistory {
+public class History {
 	
 	private final int MAX_COMMAND_TO_STORE = 10;
 	
 	private Vector<Command> previousCommandList;
 	
-	public CommandHistory () {
+	public History () {
 		previousCommandList = new Vector<Command>();
 	}
 	
