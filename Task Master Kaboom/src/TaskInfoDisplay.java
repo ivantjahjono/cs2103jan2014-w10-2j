@@ -13,8 +13,8 @@ public class TaskInfoDisplay {
 	TaskInfoDisplay () {
 		taskId = 0;
 		taskname = "";
-		startDate = "";
-		endDate = "";
+		startDate = "-";
+		endDate = "-";
 		importanceLevel = "";
 	}
 	
