@@ -33,7 +33,7 @@ public class KaboomGUI implements ActionListener {
 	private JFrame frame;
 	private JTextField txtEnterCommandHere;
 	private JLabel lblFeedback;
-	private static JTable tasklistDisplay;
+	private JTable tasklistDisplay;
 	
 	/**
 	 * Launch the application.
@@ -46,20 +46,18 @@ public class KaboomGUI implements ActionListener {
 		});
 	}
 	
+	/**
+	 *  Create the window and launch it.
+	 */
 	private void executeUi () {
-		try {
-			KaboomGUI window = new KaboomGUI();
-			window.frame.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		frame.setVisible(true);
 	}
 
 	/**
-	 * Create the application.
+	 *  Initialize and create layout and content for the UI 
 	 */
 	public KaboomGUI() {
-		initialize();
+		//initialize();
 	}
 
 	/**
