@@ -15,6 +15,11 @@ public class Command {
 	COMMAND_TYPE commandType;
 	TaskInfo taskInfo;
 	
+	Command () {
+		commandType = COMMAND_TYPE.INVALID;
+		taskInfo = null;
+	}
+	
 	public void setCommandType (COMMAND_TYPE type) {
 		commandType = type;
 	}
@@ -33,16 +38,16 @@ public class Command {
 	
 	public String execute() {
 		switch(commandType) {
-		case ADD:
-			return add();
-		case DELETE:
-			return delete();
-		case MODIFY: 
-			return modify();
-		case SEARCH:
-			return search();
-		default: 
-			return MESSAGE_COMMAND_INVALID;
+			case ADD:
+				return add();
+			case DELETE:
+				return delete();
+			case MODIFY: 
+				return modify();
+			case SEARCH:
+				return search();
+			default: 
+				return MESSAGE_COMMAND_INVALID;
 		
 		}
 	}
