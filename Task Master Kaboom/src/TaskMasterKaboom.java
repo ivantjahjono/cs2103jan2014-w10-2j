@@ -122,6 +122,8 @@ public class TaskMasterKaboom {
 		// Add recent command to History list
 		addToCommandHistory(new Command());
 		
+		// Save data to file
+		
 		return feedback;
 	}
 
@@ -208,8 +210,6 @@ public class TaskMasterKaboom {
 	}
 	
 	private static void updateTaskInfoBasedOnParameter(TaskInfo taskInfoToUpdate,String parameterString) {
-		// TODO Auto-generated method stub
-		
 		// Decoy information
 		Random randomGenerator = new Random();
 		
