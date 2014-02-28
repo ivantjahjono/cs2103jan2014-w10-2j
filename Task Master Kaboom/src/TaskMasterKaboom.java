@@ -26,6 +26,7 @@ public class TaskMasterKaboom {
 	private static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
 	
 	private static KaboomGUI taskUi;
+	private static CommandHistory commandHistory = new CommandHistory();
 	
 	public static void main(String[] args) {
 		// Setup application
@@ -117,9 +118,19 @@ public class TaskMasterKaboom {
 		
 		Vector<TaskInfo> taskToDisplay = TaskListShop.getInstance().getAllTaskInList();
 		taskUi.updateUiDisplay(feedback, taskToDisplay);
+		
+		// Add recent command to History list
+		addToCommandHistory(new Command());
+		
 		return feedback;
 	}
 	
+	private static void addToCommandHistory(Command command) {
+		if (command.getCommandType() != COMMAND_TYPE.INVALID) {
+			commandHistory.addToRecentCommands(new Command());
+		}
+	}
+
 	private static COMMAND_TYPE determineCommandType(String userCommand) {
 		
 		String commandTypeString = getFirstWord(userCommand);
