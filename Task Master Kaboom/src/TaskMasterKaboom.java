@@ -204,7 +204,7 @@ public class TaskMasterKaboom {
 		// Currently it is randomly generated.
 		TaskInfo newlyCreatedTaskInfo = new TaskInfo();
 		updateTaskInfoBasedOnParameter(newlyCreatedTaskInfo, userInputSentence);
-		
+		updateTaskInfo(newlyCreatedTaskInfo, userInputSentence);
 		return newlyCreatedTaskInfo;
 	}
 	
@@ -237,6 +237,86 @@ public class TaskMasterKaboom {
 		counter++;
 	}
 
+	private static void updateTaskInfo(TaskInfo thisTaskInfo, String userInputSentence){
+		String[] processedText = textProcess(userInputSentence);
+		String taskname = "";
+		int startDate;
+		int endDate;
+		int priority = 0;
+		
+		taskname = functionFindTaskname(processedText);
+		setTypeAndDate(thisTaskInfo, processedText);
+		
+		
+		//thisTaskInfo.setTaskName(taskname);
+		//thisTaskInfo.setStartDate(startDate);
+		//thisTaskInfo.setEndDate(endDate);
+		thisTaskInfo.setImportanceLevel(priority);
+		
+	}
+	
+	private static void setTypeAndDate(TaskInfo thisTaskInfo, String[] processedText){
+		boolean deadlineType = false;
+		boolean timedType = false;
+		
+		Calendar startDate = Calendar.getInstance();
+		Calendar endDate = Calendar.getInstance();
+		for(int i=1; i<processedText.length; i++){
+			if(processedText[i].equals("at")){
+				timedType = true;
+				String allegedTime = processedText[i+1];
+				if(verifyTimeValidity(allegedTime)){
+					timeTranslator(startDate, Integer.parseInt(allegedTime));
+				}
+				else{
+					return;
+				}
+			}
+			else if(processedText[i].equals("by")){
+				deadlineType = true;
+				String allegedTime = processedText[i+1];
+				if(verifyTimeValidity(allegedTime)){
+					timeTranslator(endDate, Integer.parseInt(allegedTime));
+				}
+				else{
+					return;
+				}
+			}
+		}
+		
+		setTaskType(thisTaskInfo, deadlineType, timedType);
+		
+	}
+	
+	private static void timeTranslator(Calendar theTime, int correctTime){
+		//this method translates all time formats
+		//theTime.set(Calendar.HOUR_OF_DAY, theCorrectTime);
+		//theTime.set(Calendar.MINUTE, theCorrectTime);
+	}
+
+	private static boolean verifyTimeValidity(String allegedTime) {
+		try{
+			Integer.parseInt(allegedTime);
+			return true;
+		}
+		catch(IllegalArgumentException exception){
+			return false;
+		}
+	}
+
+	private static void setTaskType(TaskInfo thisTaskInfo,
+			boolean deadlineType, boolean timedType) {
+		if (timedType){
+			thisTaskInfo.setTaskType(TASK_TYPE.TIMED);
+		}
+		else if(deadlineType){
+			thisTaskInfo.setTaskType(TASK_TYPE.DEADLINE);
+		}
+		else{
+			thisTaskInfo.setTaskType(TASK_TYPE.FLOATING);
+		}
+	}
+	
 	private static String functionFindTaskname(String[] processedText){
 		String actualTaskName = "";
 		for(int i=1; i<processedText.length; i++){
@@ -249,6 +329,8 @@ public class TaskMasterKaboom {
 		}
 		return actualTaskName;
 	}
+	
+	
 	
 	private static String[] textProcess(String userInputSentence){
 		String[] commandAndData = userInputSentence.trim().split("\\s+");
