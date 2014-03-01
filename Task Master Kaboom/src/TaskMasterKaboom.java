@@ -101,9 +101,15 @@ public class TaskMasterKaboom {
 		String[] processedText = textProcess(userInputSentence); 
 		TaskInfo thisTaskInfo = new TaskInfo();
 		thisTaskInfo.setTaskName(functionFindTaskname(processedText));
-		
+		setType(thisTaskInfo, processedText);
 		//thisTaskInfo.setTaskType(TASK_TYPE.DEADLINE);
 		return thisTaskInfo;
+	}
+	
+	private static TaskInfo setType(TaskInfo thisTaskInfo, String[] processedText){
+		
+		
+		return null;
 	}
 	
 	private static String functionFindTaskname(String[] processedText){
