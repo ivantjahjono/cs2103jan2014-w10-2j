@@ -52,8 +52,7 @@ public class TaskMasterKaboom {
 	 * 
 	 * Future improvement: Return task class instead.
 	 */	
-	public static String processCommand(String userInputSentence) {
-		
+	public static String processCommand(String userInputSentence) {		
 		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
 		if (commandType != COMMAND_TYPE.INVALID){
 			TaskInfo currentTaskInfo = createTaskInfoBasedOnCommand(userInputSentence);
@@ -99,16 +98,34 @@ public class TaskMasterKaboom {
 	}
 	
 	private static TaskInfo createTaskInfoBasedOnCommand(String userInputSentence) {
-		return null;
+		String[] processedText = textProcess(userInputSentence); 
+		TaskInfo thisTaskInfo = new TaskInfo();
+		thisTaskInfo.setTaskName(functionFindTaskname(processedText));
+		
+		//thisTaskInfo.setTaskType(TASK_TYPE.DEADLINE);
+		return thisTaskInfo;
 	}
 	
-	private static String[] textProcess(String userCommand){
-		String[] commandWord = userCommand.trim().split("\\s+");
-		return commandWord;
+	private static String functionFindTaskname(String[] processedText){
+		String actualTaskName = "";
+		for(int i=1; i<processedText.length; i++){
+			if((!processedText[i].equals("by")) && (!processedText[i].equals("at")) && (!processedText[i].equals("on"))){
+				actualTaskName += processedText[i] + " ";	
+			}
+			else{
+				break;
+			}
+		}
+		return actualTaskName;
 	}
 	
-	private static String getFirstWord(String userCommand) {
-		String[] elements = textProcess(userCommand);
+	private static String[] textProcess(String userInputSentence){
+		String[] commandAndData = userInputSentence.trim().split("\\s+");
+		return commandAndData;
+	}
+	
+	private static String getFirstWord(String userInputSentence) {
+		String[] elements = textProcess(userInputSentence);
 		String firstWord = elements[0].toLowerCase();
 		return firstWord;
 	}
