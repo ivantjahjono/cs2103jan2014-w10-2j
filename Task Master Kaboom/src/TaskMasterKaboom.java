@@ -220,27 +220,31 @@ public class TaskMasterKaboom {
 		// TODO
 		// One possible way of determining the command syntax.
 		// 1. Determine the command type. Each command has a different syntax and even same command
-		//    might have different formats.
+		//    might have different formats. The command type can also be passed in by parameter
+		//    to avoid determining the command type again.
 		//    E.g: add hello world at 1130pm 120112 by 1230am 130112 ***
 		//         <command> <task name> at <start time and date> by <end time and date>
 		
-		// 2. Remove the command from the command string. We are not going to use it anyway.
+		// 2. Switch on all syntax checks for keywords for that particular command.
 		//    E.g: hello world at 1130pm 120112 by 1230am 130112 ***
-		//    <task name> at <start time and date> by <end time and date>
+		//    <task name> at <start time and date> by <end time and date> <priority level>
 		
 		
 		// 3. Find the next closest syntax using the keywords such as 'at', 'by' or '*' for priority.
+		//    based on syntax checks that is on.
+		//    E.g: done <task name>
+		//    Checks for keyword 'at' or 'by' are switched off as they are not related to the command 'done'.  
 		// 3a. Cut the command until the next closest syntax.
 		//    E.g: 1. hello world 
-		//         2. at <start time and date> by <end time and date> ***
-		// 3b. The first string will be the task name. Update to task info.
+		//         2. at <start time and date> by <end time and date> <priority level>
+		// 3b. The first string will be the task name. Update the information to task info.
 		
 		
 		// 4. Find the next closest syntax again using the keywords such as 'at', 'by' or '*' for priority.
 		// 4a. If there is no such keywords found, end the parsing. If not cut the command again using the
 		//     remaining string.
 		//     E.g: 1. at <start time and date>
-		//          2. by <end time and date> ***
+		//          2. by <end time and date> <priority level>
 		// 4b. Determine the syntax by the keyword. If it contains 'at' it is a start time, 
 		//     if it has 'by' it is an end time and so on.
 		
