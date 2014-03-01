@@ -1,9 +1,9 @@
 import java.util.Date; 
-
+enum TASK_TYPE {
+	DEADLINE, FLOATING, TIMED;
+}
 public class TaskInfo {
-	public enum TASK_TYPE {
-		DEADLINE, FLOATING, TIMED;
-	}
+	
 	
 	String taskname;
 	TASK_TYPE taskType;
