@@ -33,7 +33,7 @@ public class KaboomGUI implements ActionListener {
 	private JFrame frame;
 	private JTextField txtEnterCommandHere;
 	private JLabel lblFeedback;
-	private static JTable tasklistDisplay;
+	private JTable tasklistDisplay;
 	
 	/**
 	 * Launch the application.
@@ -46,20 +46,27 @@ public class KaboomGUI implements ActionListener {
 		});
 	}
 	
+	/**
+	 * @wbp.parser.entryPoint
+	 */
+	private void createAndRun () {
+		KaboomGUI window = new KaboomGUI(); 
+		window.initialize();
+		window.runUi();
+	}
+	
+	/**
+	 *  Create the window and launch it.
+	 */
 	private void executeUi () {
-		try {
-			KaboomGUI window = new KaboomGUI();
-			window.frame.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		frame.setVisible(true);
 	}
 
 	/**
-	 * Create the application.
+	 *  Initialize and create layout and content for the UI 
 	 */
 	public KaboomGUI() {
-		initialize();
+		//initialize();
 	}
 
 	/**
@@ -105,7 +112,7 @@ public class KaboomGUI implements ActionListener {
 		fl_feedback.setAlignment(FlowLayout.LEFT);
 		feedback.setAlignmentX(Component.LEFT_ALIGNMENT);
 		feedback.setBackground(SystemColor.controlHighlight);
-		feedback.setBounds(10, 203, 574, 24);
+		feedback.setBounds(10, 260, 574, 24);
 		frame.getContentPane().add(feedback);
 		
 		lblFeedback = new JLabel("Feedback");
@@ -119,19 +126,24 @@ public class KaboomGUI implements ActionListener {
 
 	private void createTaskDisplayTable(JScrollPane scrollPane) {
 		tasklistDisplay = new JTable();
+		tasklistDisplay.setShowHorizontalLines(false);
+		tasklistDisplay.setShowVerticalLines(false);
 		tasklistDisplay.setAutoscrolls(false);
 		tasklistDisplay.setUpdateSelectionOnSort(false);
 		tasklistDisplay.getTableHeader().setReorderingAllowed(true);
 		tasklistDisplay.setFillsViewportHeight(true);
-		tasklistDisplay.setShowHorizontalLines(false);
-		tasklistDisplay.setShowVerticalLines(false);
 		tasklistDisplay.setModel(new DefaultTableModel(
 			new Object[][] {
-				{new Integer(1), "Meeting", "1:00pm", "2:00pm", "***"},
-				{new Integer(2), "CS 1101 Lecture", "3:00pm", "3:30pm", "**"},
-				{new Integer(3), "Sleep", "6:00pm", "8:00pm", ""},
-				{new Integer(4), "Breakfast", "4:00am", "5:30am", "*"},
-				{new Integer(5), "Slack", "8:00am", "12:00pm", "**"},
+				{new Integer(1), "Meeting", "1:00 PM 29/02/2014", "2:00 PM29/02/2014", "***"},
+				{new Integer(2), "CS 1101 Lecture", "3:00 PM 29/02/2014", "3:30 PM 29/02/2014", "**"},
+				{new Integer(3), "Sleep", "6:00 PM 29/02/2014", "8:00 PM 29/02/2014", ""},
+				{new Integer(4), "Breakfast", "4:00 AM 01/03/2014", "5:30 AM 01/03/2014", "*"},
+				{new Integer(5), "Slack", "8:00 AM 01/03/2014", "12:00 PM 01/03/2014", "**"},
+				{new Integer(6), "Slack", "8:00 AM 01/03/2014", "12:00 PM 01/03/2014", "**"},
+				{new Integer(7), "Slack", "12:00 AM 01/03/2014", "1:00 PM 01/03/2014", "***"},
+				{new Integer(8), "Slack", "1:00 AM 01/03/2014", "2:00 PM 01/03/2014", "**"},
+				{new Integer(9), "Slack", "2:00 AM 01/03/2014", "3:00 PM 01/03/2014", "**"},
+				{new Integer(10), "Slack", "3:00 AM 01/03/2014", "4:00 PM 01/03/2014", "***"},
 			},
 			new String[] {
 				"Id", "Task Name", "Start Time", "End Time", "Priority"
@@ -173,7 +185,7 @@ public class KaboomGUI implements ActionListener {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setBounds(10, 57, 574, 130);
+		scrollPane.setBounds(10, 57, 574, 192);
 		frame.getContentPane().add(scrollPane);
 		return scrollPane;
 	}
@@ -181,7 +193,7 @@ public class KaboomGUI implements ActionListener {
 	private void createCommandTextfield() {
 		txtEnterCommandHere = new JTextField();
 		txtEnterCommandHere.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtEnterCommandHere.setBounds(10, 231, 574, 29);
+		txtEnterCommandHere.setBounds(10, 295, 574, 29);
 		txtEnterCommandHere.setText("Enter command here");
 		txtEnterCommandHere.setColumns(10);
 		txtEnterCommandHere.addActionListener(this);
@@ -200,7 +212,7 @@ public class KaboomGUI implements ActionListener {
 		frame = new JFrame();
 		frame.setBackground(UIManager.getColor("Button.darkShadow"));
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 600, 300);
+		frame.setBounds(100, 100, 600, 365);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 	}
@@ -237,11 +249,25 @@ public class KaboomGUI implements ActionListener {
 	private void updateThisRowData (TaskInfoDisplay rowData) {
 		int rowIndex = rowData.getTaskId()-1;
 		
+		// Does the row exist ?
+		if (doesRowExist(rowIndex)) {
+			addNewRow();
+		}
+		
 		tasklistDisplay.setValueAt(rowData.getTaskId(), rowIndex, 0);
 		tasklistDisplay.setValueAt(rowData.getTaskName(), rowIndex, 1);
 		tasklistDisplay.setValueAt(rowData.getStartDate(), rowIndex, 2);
 		tasklistDisplay.setValueAt(rowData.getEndDate(), rowIndex, 3);
 		tasklistDisplay.setValueAt(rowData.getImportanceLevel(), rowIndex, 4);
+	}
+
+	private void addNewRow() {
+		DefaultTableModel tempModelTable = (DefaultTableModel)tasklistDisplay.getModel();
+		tempModelTable.addRow(new Vector<Object>());
+	}
+
+	private boolean doesRowExist(int rowIndex) {
+		return tasklistDisplay.getRowCount() <= rowIndex;
 	}
 	
 	private void removeAllRowsAfterIndex (int index) {

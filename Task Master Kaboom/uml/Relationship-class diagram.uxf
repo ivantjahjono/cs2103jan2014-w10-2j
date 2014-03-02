@@ -4,8 +4,8 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>380</x>
-      <y>230</y>
+      <x>350</x>
+      <y>270</y>
       <w>270</w>
       <h>200</h>
     </coordinates>
@@ -24,8 +24,8 @@ is received.</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>30</x>
-      <y>230</y>
+      <x>0</x>
+      <y>270</y>
       <w>320</w>
       <h>200</h>
     </coordinates>
@@ -45,8 +45,8 @@ Handles user interactions</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>30</x>
-      <y>530</y>
+      <x>0</x>
+      <y>570</y>
       <w>310</w>
       <h>190</h>
     </coordinates>
@@ -68,8 +68,8 @@ regularly in the application.</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>710</x>
-      <y>230</y>
+      <x>680</x>
+      <y>270</y>
       <w>270</w>
       <h>310</h>
     </coordinates>
@@ -97,8 +97,8 @@ Execute the command</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>380</x>
-      <y>530</y>
+      <x>350</x>
+      <y>570</y>
       <w>270</w>
       <h>190</h>
     </coordinates>
@@ -117,8 +117,8 @@ file.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>320</x>
-      <y>250</y>
+      <x>290</x>
+      <y>290</y>
       <w>80</w>
       <h>50</h>
     </coordinates>
@@ -128,8 +128,8 @@ file.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>620</x>
-      <y>250</y>
+      <x>590</x>
+      <y>290</y>
       <w>110</w>
       <h>50</h>
     </coordinates>
@@ -139,8 +139,8 @@ file.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>150</x>
-      <y>400</y>
+      <x>120</x>
+      <y>440</y>
       <w>50</w>
       <h>150</h>
     </coordinates>
@@ -150,8 +150,8 @@ file.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>620</x>
-      <y>270</y>
+      <x>590</x>
+      <y>310</y>
       <w>110</w>
       <h>50</h>
     </coordinates>
@@ -161,8 +161,8 @@ file.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>790</x>
-      <y>310</y>
+      <x>760</x>
+      <y>350</y>
       <w>420</w>
       <h>130</h>
     </coordinates>
@@ -172,8 +172,8 @@ file.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>170</x>
-      <y>400</y>
+      <x>140</x>
+      <y>440</y>
       <w>50</w>
       <h>150</h>
     </coordinates>
@@ -183,8 +183,8 @@ file.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>480</x>
-      <y>400</y>
+      <x>450</x>
+      <y>440</y>
       <w>50</w>
       <h>150</h>
     </coordinates>
@@ -194,8 +194,8 @@ file.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>460</x>
-      <y>400</y>
+      <x>430</x>
+      <y>440</y>
       <w>50</w>
       <h>150</h>
     </coordinates>
@@ -205,8 +205,8 @@ file.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>320</x>
-      <y>280</y>
+      <x>290</x>
+      <y>320</y>
       <w>80</w>
       <h>50</h>
     </coordinates>
@@ -216,8 +216,8 @@ file.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>310</x>
-      <y>580</y>
+      <x>280</x>
+      <y>620</y>
       <w>90</w>
       <h>50</h>
     </coordinates>
@@ -227,8 +227,8 @@ file.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>310</x>
-      <y>600</y>
+      <x>280</x>
+      <y>640</y>
       <w>90</w>
       <h>50</h>
     </coordinates>
@@ -238,8 +238,8 @@ file.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>240</x>
-      <y>510</y>
+      <x>210</x>
+      <y>550</y>
       <w>560</w>
       <h>310</h>
     </coordinates>
@@ -249,8 +249,8 @@ file.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>220</x>
-      <y>510</y>
+      <x>190</x>
+      <y>550</y>
       <w>600</w>
       <h>330</h>
     </coordinates>
@@ -260,8 +260,8 @@ file.</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>710</x>
-      <y>0</y>
+      <x>680</x>
+      <y>40</y>
       <w>270</w>
       <h>160</h>
     </coordinates>
@@ -280,8 +280,8 @@ data to be used.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>820</x>
-      <y>130</y>
+      <x>790</x>
+      <y>170</y>
       <w>50</w>
       <h>120</h>
     </coordinates>
@@ -291,12 +291,54 @@ data to be used.</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>800</x>
-      <y>130</y>
+      <x>770</x>
+      <y>170</y>
       <w>50</w>
       <h>120</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>30;30;30;100</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>350</x>
+      <y>0</y>
+      <w>270</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>*History*
+/(Dunno)/
+--
+attr:
+--
+method():
+--
+Responsibilities
+Keeps tracks of previous commands
+that is executed.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>440</x>
+      <y>170</y>
+      <w>50</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>30;30;30;100</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>460</x>
+      <y>170</y>
+      <w>50</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>30;100;30;30</additional_attributes>
   </element>
 </diagram>
