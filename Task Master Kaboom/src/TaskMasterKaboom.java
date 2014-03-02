@@ -54,33 +54,6 @@ public class TaskMasterKaboom {
 		//}
 	}
 	
-	private static void addTemporaryTaskForTesting () {
-		TaskInfo newTask = new TaskInfo();
-		newTask.setTaskName("Task 1");
-		newTask.setImportanceLevel(3);
-		newTask.setTaskType(TaskInfo.TASK_TYPE.FLOATING);
-		
-		Calendar tempStartDate = new GregorianCalendar(2014, 1, 26);
-		Calendar tempEndDate = new GregorianCalendar(2014, 1, 28);
-		TaskInfo secondTask = new TaskInfo();
-		secondTask.setTaskName("Task 2");
-		secondTask.setImportanceLevel(0);
-		secondTask.setTaskType(TaskInfo.TASK_TYPE.TIMED);
-		secondTask.setStartDate(tempStartDate);
-		secondTask.setEndDate(tempEndDate);
-		
-		tempEndDate = new GregorianCalendar(2014, 5, 14);
-		TaskInfo thirdTask = new TaskInfo();
-		thirdTask.setTaskName("Task 3");
-		secondTask.setImportanceLevel(2);
-		thirdTask.setTaskType(TaskInfo.TASK_TYPE.DEADLINE);
-		thirdTask.setStartDate(tempEndDate);
-		
-		TaskListShop.getInstance().addTaskToList(newTask);
-		TaskListShop.getInstance().addTaskToList(secondTask);
-		TaskListShop.getInstance().addTaskToList(thirdTask);
-	}
-	
 	private static boolean setupUi () {
 		try {
 			taskUi = new KaboomGUI();
@@ -208,7 +181,7 @@ public class TaskMasterKaboom {
 		return newlyCreatedTaskInfo;
 	}
 	
-	private static void updateTaskInfoBasedOnParameter(TaskInfo taskInfoToUpdate,String parameterString) {
+	private static void updateTaskInfoBasedOnParameter(TaskInfo taskInfoToUpdate, String parameterString) {
 		// Decoy information
 		Random randomGenerator = new Random();
 		
@@ -243,6 +216,46 @@ public class TaskMasterKaboom {
 		int startDate;
 		int endDate;
 		int priority = 0;
+		
+		// TODO
+		// One possible way of determining the command syntax.
+		// 1. Determine the command type. Each command has a different syntax and even same command
+		//    might have different formats. The command type can also be passed in by parameter
+		//    to avoid determining the command type again.
+		//    E.g: add hello world at 1130pm 120112 by 1230am 130112 ***
+		//         <command> <task name> at <start time and date> by <end time and date>
+		
+		// 2. Switch on all syntax checks for keywords for that particular command.
+		//    E.g: hello world at 1130pm 120112 by 1230am 130112 ***
+		//    <task name> at <start time and date> by <end time and date> <priority level>
+		
+		
+		// 3. Find the next closest syntax using the keywords such as 'at', 'by' or '*' for priority.
+		//    based on syntax checks that is on.
+		//    E.g: done <task name>
+		//    Checks for keyword 'at' or 'by' are switched off as they are not related to the command 'done'.  
+		// 3a. Cut the command until the next closest syntax.
+		//    E.g: 1. hello world 
+		//         2. at <start time and date> by <end time and date> <priority level>
+		// 3b. The first string will be the task name. Update the information to task info.
+		
+		
+		// 4. Find the next closest syntax again using the keywords such as 'at', 'by' or '*' for priority.
+		// 4a. If there is no such keywords found, end the parsing. If not cut the command again using the
+		//     remaining string.
+		//     E.g: 1. at <start time and date>
+		//          2. by <end time and date> <priority level>
+		// 4b. Determine the syntax by the keyword. If it contains 'at' it is a start time, 
+		//     if it has 'by' it is an end time and so on.
+		
+		
+		// 5. Repeating steps 3 and 4 until there is no string left or no keyword is found.
+		
+		
+		// 6. In steps of updating to task info, validate each information if it matches the formats.
+		//    E.g: by 1230am 130112***
+		//         It is not a valid format as the asterisks are combined. Might be due to user
+		//         typo.
 		
 		taskname = functionFindTaskname(processedText);
 		setTypeAndDate(thisTaskInfo, processedText);
@@ -329,8 +342,6 @@ public class TaskMasterKaboom {
 		}
 		return actualTaskName;
 	}
-	
-	
 	
 	private static String[] textProcess(String userInputSentence){
 		String[] commandAndData = userInputSentence.trim().split("\\s+");

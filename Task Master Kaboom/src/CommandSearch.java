@@ -1,3 +1,8 @@
+	/*
+	 * Current search is base on task name and result is unique. 
+	 * Search result will be returned in the command's taskInfo variable
+	 * 
+	 */
 
 public class CommandSearch extends Command {
 	
@@ -5,13 +10,12 @@ public class CommandSearch extends Command {
 		commandType = COMMAND_TYPE.SEARCH;
 	}
 
+
 	public String execute() {
-		//TODO Not done
+		String taskName = taskInfo.getTaskName();
+		TaskInfo searchTask = TaskListShop.getInstance(). getTaskByName(taskName);
+		taskInfo = searchTask;
 		return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, "My Task");
 	}
 	
-	public String undo () {
-		//TODO Not done
-		return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, "My Task");
-	}
 }
