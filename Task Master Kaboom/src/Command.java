@@ -14,12 +14,14 @@ public class Command {
 	protected static final String MESSAGE_COMMAND_UNDO_SUCCESS = "Command undone!";
 	protected static final String MESSAGE_COMMAND_UNDO_FAIL = "Fail to undo.";
 	
-	COMMAND_TYPE commandType;
-	TaskInfo taskInfo;
+	protected COMMAND_TYPE commandType;
+	protected TaskInfo taskInfo;
+	protected TaskListShop taskListShop;
 	
 	Command () {
 		commandType = COMMAND_TYPE.INVALID;
 		taskInfo = null;
+		taskListShop = TaskListShop.getInstance();
 	}
 	
 	public void setCommandType (COMMAND_TYPE type) {
