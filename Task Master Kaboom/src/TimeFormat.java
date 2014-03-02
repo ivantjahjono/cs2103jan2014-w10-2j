@@ -1,7 +1,7 @@
 
 public class TimeFormat {
 	//the24HourFormatDefault; 1700, 1500	code=1
-	//the24HourFormatNoColon; 17:20	code=2
+	//the24HourFormatColon; 17:20	code=2
 	//theAMFormat; 5am, 1100am	code=3
 	//theAMFormatColon; 5:00am	code=4
 	//thePMFormat; 5pm, 1100pm	code=5

@@ -19,8 +19,21 @@ public class TaskMasterKaboom {
 	private static final String KEYWORD_COMMAND_DELETE = "delete";
 	private static final String KEYWORD_COMMAND_MODIFY = "modify";
 	private static final String KEYWORD_COMMAND_SEARCH = "search";
+	
 	private static final int CORRECT_24HOUR_FORMAT_MIN = 100;
 	private static final int CORRECT_24HOUR_FORMAT_MAX = 2359;
+	
+	private static final int THE_24_HOUR_FORMAT_CODE = 1;
+	private static final int THE_24_HOUR_FORMAT_WITH_COLON_CODE = 2;
+	private static final int THE_AM_FORMAT_CODE = 3;
+	private static final int THE_AM_FORMAT_WITH_COLON_CODE = 4;
+	private static final int THE_PM_FORMAT_CODE = 5;
+	private static final int THE_PM_FORMAT_WITH_COLON_CODE = 6;
+		//the24HourFormatNoColon; 17:20	code=2
+		//theAMFormat; 5am, 1100am	code=3
+		//theAMFormatColon; 5:00am	code=4
+		//thePMFormat; 5pm, 1100pm	code=5
+		//thePMFormatColon; 5:00pm	code=6
 	
 	private static KaboomGUI taskUi;
 	private static History historyofCommands = new History();
@@ -274,7 +287,6 @@ public class TaskMasterKaboom {
 	private static void setTypeAndDate(TaskInfo thisTaskInfo, String[] processedText){
 		boolean deadlineType = false;
 		boolean timedType = false;
-		boolean the24HourFormat = false;
 		
 		Calendar startDate = Calendar.getInstance();
 		Calendar endDate = Calendar.getInstance();
@@ -282,8 +294,9 @@ public class TaskMasterKaboom {
 			if(processedText[i].equals("at")){
 				timedType = true;
 				String allegedTime = processedText[i+1];
-				if(verifyTimeValidity(allegedTime)){
-					timeTranslator(startDate, Integer.parseInt(allegedTime));
+				TimeFormat currTimeFormat = new TimeFormat();
+				if(verifyTimeValidity(allegedTime, currTimeFormat)){
+					timeTranslator(startDate, Integer.parseInt(allegedTime), currTimeFormat);
 				}
 				else{
 					thisTaskInfo = null;
@@ -293,23 +306,25 @@ public class TaskMasterKaboom {
 			else if(processedText[i].equals("by")){
 				deadlineType = true;
 				String allegedTime = processedText[i+1];
-				if(verifyTimeValidity(allegedTime)){
-					timeTranslator(endDate, Integer.parseInt(allegedTime));
+				TimeFormat currTimeFormat = new TimeFormat();
+				if(verifyTimeValidity(allegedTime, currTimeFormat)){
+					timeTranslator(endDate, Integer.parseInt(allegedTime), currTimeFormat);
 				}
 				else{
 					thisTaskInfo = null;
 					return;
 				}
 			}
+			
 		}
 		
 		setTaskType(thisTaskInfo, deadlineType, timedType);
 		
 	}
 	
-	private static void timeTranslator(Calendar theTime, int correctTime){
-		/*
-		if(correctTime >= CORRECT_24HOUR_FORMAT_MIN){
+	private static void timeTranslator(Calendar theTime, int correctTime, TimeFormat currTimeFormat){
+		//this method translates ALL time formats
+		if(currTimeFormat.getTimeFormatCode() == THE_24_HOUR_FORMAT_CODE){
 			int hour = correctTime / CORRECT_24HOUR_FORMAT_MIN;
 			int minute = correctTime % CORRECT_24HOUR_FORMAT_MIN;
 			theTime.set(Calendar.HOUR_OF_DAY, hour);
@@ -317,18 +332,18 @@ public class TaskMasterKaboom {
 		}
 		else{
 			return;
-		}*/
-		//this method translates all time formats
-		//theTime.set(Calendar.HOUR_OF_DAY, theCorrectTime);
-		//theTime.set(Calendar.MINUTE, theCorrectTime);
+		}
+		return;
+		
 	}
 
-	private static boolean verifyTimeValidity(String allegedTime) {
-		/*
+	private static boolean verifyTimeValidity(String allegedTime, TimeFormat currTimeFormat) {
+		
 		try{
 			//refers to 24 hour format without separation. Eg: 1700, 1000
 			int correctTimeFormat = Integer.parseInt(allegedTime);
 			if((correctTimeFormat >= CORRECT_24HOUR_FORMAT_MIN) && (correctTimeFormat <= CORRECT_24HOUR_FORMAT_MAX) ){
+				currTimeFormat.setTimeFormatCode(THE_24_HOUR_FORMAT_CODE);
 				return true;
 			}
 			else {
@@ -341,9 +356,9 @@ public class TaskMasterKaboom {
 			//5am, 5pm, 17:00, 5:00am, etc
 			return false;
 		}
-		*/
+		
 		//this is a stub
-		return false;
+		//return false;
 	}
 
 	private static void setTaskType(TaskInfo thisTaskInfo,
