@@ -12,7 +12,7 @@ public class TaskInfoDisplay {
 	
 	TaskInfoDisplay () {
 		taskId = 0;
-		taskname = "";
+		taskname = "No taskname available";
 		startDate = "-";
 		endDate = "-";
 		importanceLevel = "";
@@ -34,18 +34,14 @@ public class TaskInfoDisplay {
 	}
 	
 	public void setStartTime (Calendar time) {
-		if (time == null) {
-			startDate = "";
-		} else {
+		if (time != null) {
 			SimpleDateFormat sdf = new SimpleDateFormat("h:mm a dd/MM/yy");
 			startDate = sdf.format(time.getTime());
 		}
 	}
 	
 	public void setEndTime (Calendar time) {
-		if (time == null) {
-			endDate = "";
-		} else {
+		if (time != null) {
 			SimpleDateFormat sdf = new SimpleDateFormat("h:mm a dd/MM/yy");
 			endDate = sdf.format(time.getTime());
 		}
