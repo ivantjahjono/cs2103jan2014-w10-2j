@@ -19,6 +19,8 @@ public class TaskMasterKaboom {
 	private static final String KEYWORD_COMMAND_DELETE = "delete";
 	private static final String KEYWORD_COMMAND_MODIFY = "modify";
 	private static final String KEYWORD_COMMAND_SEARCH = "search";
+	private static final int CORRECT_24HOUR_FORMAT_MIN = 100;
+	private static final int CORRECT_24HOUR_FORMAT_MAX = 2359;
 	
 	private static KaboomGUI taskUi;
 	private static History historyofCommands = new History();
@@ -261,9 +263,10 @@ public class TaskMasterKaboom {
 		setTypeAndDate(thisTaskInfo, processedText);
 		
 		
-		//thisTaskInfo.setTaskName(taskname);
+		
 		//thisTaskInfo.setStartDate(startDate);
 		//thisTaskInfo.setEndDate(endDate);
+		thisTaskInfo.setTaskName(taskname);
 		thisTaskInfo.setImportanceLevel(priority);
 		
 	}
@@ -271,6 +274,7 @@ public class TaskMasterKaboom {
 	private static void setTypeAndDate(TaskInfo thisTaskInfo, String[] processedText){
 		boolean deadlineType = false;
 		boolean timedType = false;
+		boolean the24HourFormat = false;
 		
 		Calendar startDate = Calendar.getInstance();
 		Calendar endDate = Calendar.getInstance();
@@ -282,6 +286,7 @@ public class TaskMasterKaboom {
 					timeTranslator(startDate, Integer.parseInt(allegedTime));
 				}
 				else{
+					thisTaskInfo = null;
 					return;
 				}
 			}
@@ -292,6 +297,7 @@ public class TaskMasterKaboom {
 					timeTranslator(endDate, Integer.parseInt(allegedTime));
 				}
 				else{
+					thisTaskInfo = null;
 					return;
 				}
 			}
@@ -302,19 +308,42 @@ public class TaskMasterKaboom {
 	}
 	
 	private static void timeTranslator(Calendar theTime, int correctTime){
+		/*
+		if(correctTime >= CORRECT_24HOUR_FORMAT_MIN){
+			int hour = correctTime / CORRECT_24HOUR_FORMAT_MIN;
+			int minute = correctTime % CORRECT_24HOUR_FORMAT_MIN;
+			theTime.set(Calendar.HOUR_OF_DAY, hour);
+			theTime.set(Calendar.MINUTE, minute);
+		}
+		else{
+			return;
+		}*/
 		//this method translates all time formats
 		//theTime.set(Calendar.HOUR_OF_DAY, theCorrectTime);
 		//theTime.set(Calendar.MINUTE, theCorrectTime);
 	}
 
 	private static boolean verifyTimeValidity(String allegedTime) {
+		/*
 		try{
-			Integer.parseInt(allegedTime);
-			return true;
+			//refers to 24 hour format without separation. Eg: 1700, 1000
+			int correctTimeFormat = Integer.parseInt(allegedTime);
+			if((correctTimeFormat >= CORRECT_24HOUR_FORMAT_MIN) && (correctTimeFormat <= CORRECT_24HOUR_FORMAT_MAX) ){
+				return true;
+			}
+			else {
+				return false;
+			}
+			
 		}
 		catch(IllegalArgumentException exception){
+			//this means either invalid format or the other different formats
+			//5am, 5pm, 17:00, 5:00am, etc
 			return false;
 		}
+		*/
+		//this is a stub
+		return false;
 	}
 
 	private static void setTaskType(TaskInfo thisTaskInfo,
