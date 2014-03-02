@@ -19,7 +19,11 @@ public class TaskListShop {
 	}
 	
 	public boolean addTaskToList (TaskInfo newTask) {
-		return taskList.add(newTask);
+		if (taskList != null) {
+			return taskList.add(newTask);
+		} else {
+			return false;
+		}
 	}
 	
 	public TaskInfo getTaskByName (String taskName) {
