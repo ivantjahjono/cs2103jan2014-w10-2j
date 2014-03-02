@@ -29,11 +29,8 @@ public class TaskMasterKaboom {
 	private static final int THE_AM_FORMAT_WITH_COLON_CODE = 4;
 	private static final int THE_PM_FORMAT_CODE = 5;
 	private static final int THE_PM_FORMAT_WITH_COLON_CODE = 6;
-		//the24HourFormatNoColon; 17:20	code=2
-		//theAMFormat; 5am, 1100am	code=3
-		//theAMFormatColon; 5:00am	code=4
-		//thePMFormat; 5pm, 1100pm	code=5
-		//thePMFormatColon; 5:00pm	code=6
+	private static final int START_DATE_COUNT = 1;
+	private static final int END_DATE_COUNT = 2;
 	
 	private static KaboomGUI taskUi;
 	private static History historyofCommands = new History();
@@ -191,7 +188,7 @@ public class TaskMasterKaboom {
 		//TODO create and process text information to task info here
 		// Currently it is randomly generated.
 		TaskInfo newlyCreatedTaskInfo = new TaskInfo();
-		updateTaskInfoBasedOnParameter(newlyCreatedTaskInfo, userInputSentence);
+		//updateTaskInfoBasedOnParameter(newlyCreatedTaskInfo, userInputSentence);
 		updateTaskInfo(newlyCreatedTaskInfo, userInputSentence);
 		return newlyCreatedTaskInfo;
 	}
@@ -228,9 +225,9 @@ public class TaskMasterKaboom {
 	private static void updateTaskInfo(TaskInfo thisTaskInfo, String userInputSentence){
 		String[] processedText = textProcess(userInputSentence);
 		String taskname = "";
-		int startDate;
-		int endDate;
-		int priority = 0;
+		//int startDate;
+		//int endDate;
+		int priority = 2;
 		
 		// TODO
 		// One possible way of determining the command syntax.
@@ -273,13 +270,13 @@ public class TaskMasterKaboom {
 		//         typo.
 		
 		taskname = functionFindTaskname(processedText);
+		thisTaskInfo.setTaskName(taskname);
 		setTypeAndDate(thisTaskInfo, processedText);
 		
 		
 		
 		//thisTaskInfo.setStartDate(startDate);
 		//thisTaskInfo.setEndDate(endDate);
-		thisTaskInfo.setTaskName(taskname);
 		thisTaskInfo.setImportanceLevel(priority);
 		
 	}
@@ -290,8 +287,9 @@ public class TaskMasterKaboom {
 		
 		Calendar startDate = Calendar.getInstance();
 		Calendar endDate = Calendar.getInstance();
-		for(int i=1; i<processedText.length; i++){
-			if(processedText[i].equals("at")){
+		for(int i=0; i<processedText.length; i++){
+			//check that this is the first encounter of the keyword "at"
+			if(processedText[i].equals("at") && (timedType == false)){
 				timedType = true;
 				String allegedTime = processedText[i+1];
 				TimeFormat currTimeFormat = new TimeFormat();
@@ -303,7 +301,8 @@ public class TaskMasterKaboom {
 					return;
 				}
 			}
-			else if(processedText[i].equals("by")){
+			//check that this is the first encounter of the keyword "by"
+			else if(processedText[i].equals("by") && (deadlineType == false)){
 				deadlineType = true;
 				String allegedTime = processedText[i+1];
 				TimeFormat currTimeFormat = new TimeFormat();
@@ -316,10 +315,63 @@ public class TaskMasterKaboom {
 				}
 			}
 			
+			//if this is not the first encounter of the keyword, it means, the user keyed in a wrong input format
+			
 		}
 		
+		//Calendar currStartDate = new GregorianCalendar(startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH), startDate.get(Calendar.HOUR_OF_DAY), startDate.get(Calendar.MINUTE));
+		//Calendar currEndDate = new GregorianCalendar(endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH), endDate.get(Calendar.HOUR_OF_DAY), endDate.get(Calendar.MINUTE));
+		detectAndSetTaskDate(processedText, startDate, endDate);
+		thisTaskInfo.setStartDate(startDate);
+		thisTaskInfo.setEndDate(endDate);
 		setTaskType(thisTaskInfo, deadlineType, timedType);
 		
+	}
+	
+	private static void detectAndSetTaskDate(String[] processedText, Calendar startDate, Calendar endDate){
+		int onWordCounter = 0; //this variable is to ensure that there are maximum of 2 "on" keyword for startDate and endDate
+		
+		for(int i=0; i<processedText.length; i++){
+			if(processedText[i].equals("on")){
+				onWordCounter++;
+				if(onWordCounter == START_DATE_COUNT){
+					dateTranslator(startDate, processedText[i+1]);
+				}
+				else if(onWordCounter == END_DATE_COUNT){
+					dateTranslator(endDate, processedText[i+1]);
+				}
+				else
+				{
+					
+					return;
+				}
+			}
+		}
+	}
+	
+	
+	private static void dateTranslator(Calendar thisDate, String theDate){
+		//this method should already take in the proper date format. verification should be separated in another method
+		int date;
+		int month;
+		int year;
+		String[] dateArray = new String[3];
+		
+		dateArray = theDate.split("/");
+		
+		if(dateArray[2] != null){
+			year = Integer.parseInt(dateArray[2]);
+			thisDate.set(Calendar.YEAR, year);
+		}
+		if(dateArray[1] != null){
+			month = Integer.parseInt(dateArray[1]);
+			thisDate.set(Calendar.MONTH, month-1);
+		}
+		if(dateArray[0] != null){
+			date = Integer.parseInt(dateArray[0]);
+			thisDate.set(Calendar.DAY_OF_MONTH, date);
+		}
+		return;
 	}
 	
 	private static void timeTranslator(Calendar theTime, int correctTime, TimeFormat currTimeFormat){
@@ -340,8 +392,10 @@ public class TaskMasterKaboom {
 	private static boolean verifyTimeValidity(String allegedTime, TimeFormat currTimeFormat) {
 		
 		try{
-			//refers to 24 hour format without separation. Eg: 1700, 1000
+			//check if it's the 24 hour format without separation. Eg: 1700, 1000
 			int correctTimeFormat = Integer.parseInt(allegedTime);
+			//check if the time is in logical number
+			//!!!!!!!!!revise this again. Logic error
 			if((correctTimeFormat >= CORRECT_24HOUR_FORMAT_MIN) && (correctTimeFormat <= CORRECT_24HOUR_FORMAT_MAX) ){
 				currTimeFormat.setTimeFormatCode(THE_24_HOUR_FORMAT_CODE);
 				return true;
@@ -376,7 +430,7 @@ public class TaskMasterKaboom {
 	
 	private static String functionFindTaskname(String[] processedText){
 		String actualTaskName = "";
-		for(int i=1; i<processedText.length; i++){
+		for(int i=0; i<processedText.length; i++){
 			if((!processedText[i].equals("by")) && (!processedText[i].equals("at")) && (!processedText[i].equals("on"))){
 				actualTaskName += processedText[i] + " ";	
 			}
