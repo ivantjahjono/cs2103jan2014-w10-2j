@@ -6,7 +6,7 @@ public class CommandAdd extends Command {
 	}
 
 	public String execute() {
-		if (TaskListShop.getInstance().addTaskToList(taskInfo)) {
+		if (taskListShop.addTaskToList(taskInfo)) {
 			return String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
 		}
 		return String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
@@ -15,7 +15,7 @@ public class CommandAdd extends Command {
 	public String undo () {
 		String taskName = taskInfo.getTaskName();
 		
-		boolean isRemoveSuccess = TaskListShop.getInstance().removeTaskByName(taskName);
+		boolean isRemoveSuccess = taskListShop.removeTaskByName(taskName);
 		
 		if (isRemoveSuccess) {
 			return MESSAGE_COMMAND_UNDO_SUCCESS;
