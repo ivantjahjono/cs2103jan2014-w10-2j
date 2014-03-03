@@ -9,7 +9,8 @@ public class CommandDelete extends Command {
 		String taskName = taskInfo.getTaskName();
 
 		if (taskListShop.removeTaskByName(taskName)) {
-			return String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);		
+			return String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);	
+			
 		}
 		
 		return String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
