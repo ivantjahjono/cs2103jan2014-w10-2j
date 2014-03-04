@@ -27,16 +27,23 @@ is received.</panel_attributes>
       <x>287</x>
       <y>217</y>
       <w>224</w>
-      <h>140</h>
+      <h>196</h>
     </coordinates>
-    <panel_attributes>*GUI Display Data*
-/(KaboomGui.java)/
+    <panel_attributes>*Gui Display Data*
+/(DisplayData.java)/
+Singleton Object
 --
--commandTextField: JText
+- tasksToDisplay : Vector&lt;TaskDisplayInfo&gt;
+- searchResult : Vector&lt;TaskDisplayInfo&gt;
+- feedback : String
 --
-+actionPerformed(ActionEvent)
-+updateUiDisplay(String, Vector&lt;TaskInfo&gt;)
--initialize()
++ setTaskToDisplay(Vector&lt;TaskInfo&gt;)
++ getTasksToDisplay: Vector&lt;TaskDisplayInfo&gt;
++ setSearchTaskResult(Vector&lt;TaskInfo&gt;)
++ getSearchTaskResult: Vector&lt;TaskDisplayInfo&gt;
++ setFeedbackMessage(String)
++ getFeedbackMessage: String
+- convertTaskInfoToTaskInfoDisplay(Vector&lt;TaskInfo&gt;, Vector&lt;TaskDisplayInfo&gt;)
 --
 Responsibilities
 Holds the data which will be used to diplay to
@@ -320,11 +327,13 @@ that is executed.</panel_attributes>
     <panel_attributes>*User Interface*
 /(KaboomGui.java)/
 --
--commandTextField: JText
+- commandTextField: JText
+- taskListDisplay: JTable
+- feedbackLabel: JLabel
 --
 +actionPerformed(ActionEvent)
 +updateUiDisplay(String, Vector&lt;TaskInfo&gt;)
--initialize()
++initialize()
 --
 Responsibilities
 Handles user interactions</panel_attributes>
@@ -336,10 +345,10 @@ Handles user interactions</panel_attributes>
       <x>105</x>
       <y>245</y>
       <w>195</w>
-      <h>202</h>
+      <h>209</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>182;21;21;21;21;189</additional_attributes>
+    <additional_attributes>182;21;21;21;21;196</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
