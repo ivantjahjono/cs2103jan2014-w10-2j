@@ -114,8 +114,14 @@ public class TaskMasterKaboom {
 		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
 		String commandParametersString = removeFirstWord(userInputSentence);
 		
-		commandToExecute = createCommandBasedOnCommandType(commandType, commandParametersString);
-		feedback = commandToExecute.execute();
+		commandToExecute = createCommandBasedOnCommandType(commandType);
+		Error errorType = updateCommandInfoFromParameter(commandToExecute, commandParametersString);
+		
+		if (errorType == null) {
+			feedback = commandToExecute.execute();
+		} else {
+			feedback = errorType.getErrorMessage();
+		}
 		
 		// Later to be move to somewhere else
 		updateUi(feedback);
@@ -128,7 +134,7 @@ public class TaskMasterKaboom {
 		
 		return feedback;
 	}
-
+	
 	private static String removeFirstWord(String userInputSentence) {
 		String wordRemoved = userInputSentence.replace(getFirstWord(userInputSentence), "").trim();
 		return wordRemoved;
@@ -148,33 +154,24 @@ public class TaskMasterKaboom {
 		}
 	}
 	
-	private static Command createCommandBasedOnCommandType (COMMAND_TYPE commandType, String parameters) {
+	private static Command createCommandBasedOnCommandType (COMMAND_TYPE commandType) {
 		Command newlyCreatedCommand = new Command();
-		TaskInfo taskInformation = null;
 		
 		switch (commandType) {
 			case ADD:
 				newlyCreatedCommand = new CommandAdd();
-				taskInformation = createTaskInfoBasedOnCommand(parameters);
-				newlyCreatedCommand.setTaskInfo(taskInformation);
 				break;
 				
 			case DELETE:
 				newlyCreatedCommand = new CommandDelete();
-				taskInformation = createTaskInfoBasedOnCommand(parameters);
-				newlyCreatedCommand.setTaskInfo(taskInformation);
 				break;
 				
 			case MODIFY:
 				newlyCreatedCommand = new CommandModify();
-				taskInformation = createTaskInfoBasedOnCommand(parameters);
-				newlyCreatedCommand.setTaskInfo(taskInformation);
 				break;
 				
 			case SEARCH:
 				newlyCreatedCommand = new CommandSearch();
-				taskInformation = createTaskInfoBasedOnCommand(parameters);
-				newlyCreatedCommand.setTaskInfo(taskInformation);
 				break;
 				
 			default:
@@ -186,8 +183,16 @@ public class TaskMasterKaboom {
 		return newlyCreatedCommand;
 	}
 
-	private static COMMAND_TYPE determineCommandType(String userCommand) {
+	private static Error updateCommandInfoFromParameter(Command commandToUpdate, String parameters) {
+		TaskInfo taskInformation = new TaskInfo();
 		
+		Error errorType = createTaskInfoBasedOnCommand(taskInformation, parameters);
+		commandToUpdate.setTaskInfo(taskInformation);
+
+		return errorType;
+	}
+	
+	private static COMMAND_TYPE determineCommandType(String userCommand) {
 		String commandTypeString = getFirstWord(userCommand);
 		
 		// Determine what command to execute
@@ -205,13 +210,13 @@ public class TaskMasterKaboom {
 		}
 	}
 	
-	private static TaskInfo createTaskInfoBasedOnCommand(String userInputSentence) {
-		//TODO create and process text information to task info here
+	private static Error createTaskInfoBasedOnCommand(TaskInfo newTaskInfo, String userInputSentence) {
 		// Currently it is randomly generated.
-		TaskInfo newlyCreatedTaskInfo = new TaskInfo();
 		//updateTaskInfoBasedOnParameter(newlyCreatedTaskInfo, userInputSentence);
-		updateTaskInfo(newlyCreatedTaskInfo, userInputSentence);
-		return newlyCreatedTaskInfo;
+		
+		Error errorEncountered = updateTaskInfo(newTaskInfo, userInputSentence);
+		
+		return errorEncountered;
 	}
 	
 	private static void updateTaskInfoBasedOnParameter(TaskInfo taskInfoToUpdate, String parameterString) {
@@ -243,7 +248,7 @@ public class TaskMasterKaboom {
 		counter++;
 	}
 
-	private static void updateTaskInfo(TaskInfo thisTaskInfo, String userInputSentence){
+	private static Error updateTaskInfo(TaskInfo thisTaskInfo, String userInputSentence){
 		String[] processedText = textProcess(userInputSentence);
 		String taskname = "";
 		//int startDate;
@@ -301,6 +306,7 @@ public class TaskMasterKaboom {
 		//thisTaskInfo.setEndDate(endDate);
 		thisTaskInfo.setImportanceLevel(priority);
 		
+		return null;
 	}
 	
 	private static void setTypeAndDate(TaskInfo thisTaskInfo, String[] processedText){
