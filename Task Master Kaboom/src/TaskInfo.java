@@ -1,9 +1,10 @@
 import java.util.Calendar; 
+
 enum TASK_TYPE {
 	DEADLINE, FLOATING, TIMED;
 }
+
 public class TaskInfo {
-	
 	
 	String taskname;
 	TASK_TYPE taskType;
@@ -58,5 +59,30 @@ public class TaskInfo {
 	
 	public int getImportanceLevel () { 
 		return importanceLevel;
+	}
+	
+	public static TASK_TYPE getTaskType(String taskType) {
+		if (taskType.equalsIgnoreCase("DEADLINE")) {
+			return TASK_TYPE.DEADLINE;
+		}
+		else if (taskType.equalsIgnoreCase("FLOATING")) {
+			return TASK_TYPE.FLOATING;
+		}
+		else {
+			return TASK_TYPE.TIMED;
+		}
+	}
+	
+	public static String taskTypeToString(TASK_TYPE taskType) {
+		switch (taskType) {
+		case DEADLINE:
+			return "DEADLINE";
+		case FLOATING:
+			return "FLOATING";
+		case TIMED:
+			return "TIMED";
+		default:
+			return "Unrecognized";  //This should never be reached
+		}
 	}
 }
