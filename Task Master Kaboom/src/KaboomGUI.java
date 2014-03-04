@@ -225,23 +225,26 @@ public class KaboomGUI implements ActionListener {
 		updateFeedbackTextfield(feedback);
 	}
 	
-	public void updateUiDisplay (String feedback, Vector<TaskInfo> taskList) {
+	public void showUpdatedUi () {
+		String feedback = DisplayData.getInstance().getFeedbackMessage();
+		Vector<TaskInfoDisplay> displayInfo = DisplayData.getInstance().getAllTaskDisplayInfo();
+		
+		updateUiDisplay(feedback, displayInfo);
+	}
+	
+	public void updateUiDisplay (String feedback, Vector<TaskInfoDisplay> taskList) {
 		updateFeedbackTextfield(feedback);
 		updateTaskDisplay(taskList);
 	}
 	
-	private void updateTaskDisplay (Vector<TaskInfo> taskList) {
+	private void updateTaskDisplay (Vector<TaskInfoDisplay> taskList) {
 		updateAllTaskDisplayRows(taskList);
 		removeAllRowsAfterIndex(taskList.size());
 	}
 
-	private void updateAllTaskDisplayRows(Vector<TaskInfo> taskList) {
+	private void updateAllTaskDisplayRows(Vector<TaskInfoDisplay> taskList) {
 		for (int i = 0; i < taskList.size() && i < MAX_TASK_DISPLAY_COUNT; i++) {
-			TaskInfo currentTaskInfo = taskList.get(i);
-			
-			TaskInfoDisplay infoToDisplay = new TaskInfoDisplay();
-			infoToDisplay.updateFromThisInfo(currentTaskInfo);
-			infoToDisplay.setTaskId(i+1);
+			TaskInfoDisplay infoToDisplay = taskList.get(i);
 			updateThisRowData(infoToDisplay);
 		}
 	}
