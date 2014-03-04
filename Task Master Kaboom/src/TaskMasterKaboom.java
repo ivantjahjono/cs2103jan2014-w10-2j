@@ -35,6 +35,7 @@ public class TaskMasterKaboom {
 	private static final String FILENAME = "KABOOM_FILE.dat";
 	
 	private static KaboomGUI taskUi;
+	private static DisplayData guiDisplayData;
 	private static Storage fileStorage;
 	private static History historyofCommands = new History();
 	
@@ -43,7 +44,6 @@ public class TaskMasterKaboom {
 	
 	public static void main(String[] args) {
 		// Setup application
-			guiDisplayData = DisplayData.getInstance();
 			// Setup Memory
 			//addTemporaryTaskForTesting();
 		
@@ -52,6 +52,7 @@ public class TaskMasterKaboom {
 		
 			// Setup UI
 			setupUi();
+			guiDisplayData = DisplayData.getInstance();
 			
 			// Setup Logic
 		
