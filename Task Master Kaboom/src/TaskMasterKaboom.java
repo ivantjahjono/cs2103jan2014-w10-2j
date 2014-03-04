@@ -32,8 +32,10 @@ public class TaskMasterKaboom {
 	private static final int START_DATE_COUNT = 1;
 	private static final int END_DATE_COUNT = 2;
 	
+	private static final String FILENAME = "KABOOM_FILE.dat";
+	
 	private static KaboomGUI taskUi;
-	private static DisplayData guiDisplayData;
+	private static Storage fileStorage;
 	private static History historyofCommands = new History();
 	
 	// Temporary static
@@ -41,12 +43,16 @@ public class TaskMasterKaboom {
 	
 	public static void main(String[] args) {
 		// Setup application
-			// Setup UI
-			setupUi();
 			guiDisplayData = DisplayData.getInstance();
 			// Setup Memory
 			//addTemporaryTaskForTesting();
+		
 			// Setup Storage
+			initialiseStorage();
+		
+			// Setup UI
+			setupUi();
+			
 			// Setup Logic
 		
 		// Run the UI
@@ -81,6 +87,14 @@ public class TaskMasterKaboom {
 	
 	private static void activateUi () {
 		taskUi.runUi();
+		updateUi("Welcome back, Commander");
+	}
+	
+	private static boolean initialiseStorage () {
+		fileStorage = new Storage(FILENAME);
+		//fileStorage.load();
+		
+		return true;
 	}
 	
 	/*
@@ -109,6 +123,7 @@ public class TaskMasterKaboom {
 		addToCommandHistory(new Command());
 		
 		// Save data to file
+		fileStorage.store();
 		
 		return feedback;
 	}
