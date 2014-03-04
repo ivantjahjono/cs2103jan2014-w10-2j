@@ -33,6 +33,7 @@ public class TaskMasterKaboom {
 	private static final int END_DATE_COUNT = 2;
 	
 	private static KaboomGUI taskUi;
+	private static DisplayData guiDisplayData;
 	private static History historyofCommands = new History();
 	
 	// Temporary static
@@ -42,6 +43,7 @@ public class TaskMasterKaboom {
 		// Setup application
 			// Setup UI
 			setupUi();
+			guiDisplayData = DisplayData.getInstance();
 			// Setup Memory
 			//addTemporaryTaskForTesting();
 			// Setup Storage
@@ -118,7 +120,10 @@ public class TaskMasterKaboom {
 
 	private static void updateUi(String feedback) {
 		Vector<TaskInfo> taskToDisplay = TaskListShop.getInstance().getAllTaskInList();
-		taskUi.updateUiDisplay(feedback, taskToDisplay);
+		
+		guiDisplayData.setFeedbackMessage(feedback);
+		guiDisplayData.setTaskDataToDisplay(taskToDisplay);
+		taskUi.showUpdatedUi();
 	}
 	
 	private static void addToCommandHistory(Command command) {
