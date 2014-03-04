@@ -32,7 +32,7 @@ public class KaboomGUI implements ActionListener {
 	
 	private JFrame frame;
 	private JTextField txtEnterCommandHere;
-	private JLabel lblFeedback;
+	private JLabel feedbackLabel;
 	private JTable tasklistDisplay;
 	
 	/**
@@ -115,13 +115,13 @@ public class KaboomGUI implements ActionListener {
 		feedback.setBounds(10, 260, 574, 24);
 		frame.getContentPane().add(feedback);
 		
-		lblFeedback = new JLabel("Feedback");
-		lblFeedback.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblFeedback.setHorizontalAlignment(SwingConstants.LEFT);
-		lblFeedback.setForeground(UIManager.getColor("ToolBar.dockingForeground"));
-		lblFeedback.setBackground(SystemColor.activeCaption);
-		lblFeedback.setBounds(10, 203, 474, 24);
-		feedback.add(lblFeedback);
+		feedbackLabel = new JLabel("Feedback");
+		feedbackLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		feedbackLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		feedbackLabel.setForeground(UIManager.getColor("ToolBar.dockingForeground"));
+		feedbackLabel.setBackground(SystemColor.activeCaption);
+		feedbackLabel.setBounds(10, 203, 474, 24);
+		feedback.add(feedbackLabel);
 	}
 
 	private void createTaskDisplayTable(JScrollPane scrollPane) {
@@ -289,6 +289,6 @@ public class KaboomGUI implements ActionListener {
 	}
 	
 	private void updateFeedbackTextfield (String feedback) {
-		lblFeedback.setText(feedback);
+		feedbackLabel.setText(feedback);
 	}
 }
