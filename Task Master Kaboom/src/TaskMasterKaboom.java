@@ -327,24 +327,25 @@ public class TaskMasterKaboom {
 			// Get index of next keyword and keyword type
 			nextKeywordIndex = getNextKeywordIndex(currentString);
 			
+			if (currentString.length() > 0 && nextKeywordIndex < 1) {
+				nextKeywordIndex =  currentString.length();
+			}
+			
 			if (nextKeywordIndex != -1) {
 				// Cut to next keyword
 				cutOutString = currentString.substring(0, nextKeywordIndex);
 				
-				type = getKeywordType(cutOutString);
+				if (keywordTable.isEmpty()) {
+					type = KEYWORD_TYPE.TASKNAME;
+				} else {
+					type = getKeywordType(cutOutString);
+				}
 				
 				// add to table
 				keywordTable.put(type, cutOutString);
 				
 				// Remove the string from the original string
-				currentString.replace(cutOutString, "");
-			} else if (currentString.length() > 0 && keywordTable.isEmpty()) {
-				cutOutString = currentString;
-				
-				type = KEYWORD_TYPE.TASKNAME;
-				
-				// add to table
-				keywordTable.put(type, cutOutString);
+				currentString = currentString.replace(cutOutString, "");
 			}
 		}
 		
