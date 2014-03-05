@@ -1,5 +1,6 @@
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Hashtable;
 import java.util.Random;
 import java.util.Vector;
 
@@ -11,6 +12,10 @@ import java.util.Vector;
 **/
 enum COMMAND_TYPE {
 		ADD, DELETE, MODIFY, SEARCH, INVALID;
+}
+
+enum KEYWORD_TYPE {
+	INVALID, TASKID, TASKNAME, MODIFIED_TASKNAME, START_DATE, END_DATE, PRIORITY
 }
 
 public class TaskMasterKaboom {
@@ -255,6 +260,16 @@ public class TaskMasterKaboom {
 		//int endDate;
 		int priority = 2;
 		
+		// Cut the command into their respective syntax. Will return hash table of data strings
+		Hashtable<KEYWORD_TYPE, String> keywordHashTable = new Hashtable<KEYWORD_TYPE, String>();
+		Error errorEncountered = createKeywordTableBasedOnParameter(userInputSentence, keywordHashTable);
+		if (errorEncountered != null) {
+			return;
+		}
+		
+		System.out.println(keywordHashTable);
+		
+		
 		// TODO
 		// One possible way of determining the command syntax.
 		// 1. Determine the command type. Each command has a different syntax and even same command
@@ -309,6 +324,92 @@ public class TaskMasterKaboom {
 		return null;
 	}
 	
+	private static Error createKeywordTableBasedOnParameter(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+		// TODO Auto-generated method stub
+		
+		String currentString = userInputSentence;
+		int nextKeywordIndex = 0;
+		KEYWORD_TYPE type = KEYWORD_TYPE.INVALID;
+		String cutOutString = "";
+		
+		while (nextKeywordIndex != -1) {
+			// Get index of next keyword and keyword type
+			nextKeywordIndex = getNextKeywordIndex(currentString);
+			
+			if (currentString.length() > 0 && nextKeywordIndex < 1) {
+				nextKeywordIndex =  currentString.length();
+			}
+			
+			if (nextKeywordIndex != -1) {
+				// Cut to next keyword
+				cutOutString = currentString.substring(0, nextKeywordIndex);
+				
+				if (keywordTable.isEmpty()) {
+					type = KEYWORD_TYPE.TASKNAME;
+				} else {
+					type = getKeywordType(cutOutString);
+				}
+				
+				// Is there already data in table for that type ?
+				if (keywordTable.get(type) != null) {
+					return new Error(Error.ERROR_TYPE.INVALID_INPUT_COMMAND_SYNTAX);
+				}
+				
+				// add to table
+				keywordTable.put(type, cutOutString);
+				
+				// Remove the string from the original string
+				currentString = currentString.replace(cutOutString, "");
+			}
+		}
+		
+		return keywordTable;
+	}
+
+	private static KEYWORD_TYPE getKeywordType(String cutOutString) {
+		// TODO Auto-generated method stub
+		if (cutOutString.contains("at")) {
+			return KEYWORD_TYPE.START_DATE;
+		} else if (cutOutString.contains("by")) {
+			return KEYWORD_TYPE.END_DATE;
+		} else if (cutOutString.contains("*")) {
+			return KEYWORD_TYPE.PRIORITY;
+		}
+		
+		return KEYWORD_TYPE.INVALID;
+	}
+
+	private static int getNextKeywordIndex(String stringToSearch) {
+		int nearestIndex = -1;
+		int currentIndex = -1;
+		String currentKeyword = "";
+		
+		// Hard coded value
+		for (int i = 0; i < 3; i++) {
+			switch(i) {
+				case 0:
+					currentKeyword = "at";
+					break;
+					
+				case 1:
+					currentKeyword = "by";
+					break;
+					
+				case 2:
+					currentKeyword = "*";
+					break;
+			}
+			
+			currentIndex = stringToSearch.indexOf(currentKeyword);
+			
+			if (nearestIndex == -1 ||(currentIndex != -1 && currentIndex < nearestIndex)) {
+				nearestIndex = currentIndex;
+			}
+		}
+		
+		return nearestIndex;
+	}
+
 	private static void setTypeAndDate(TaskInfo thisTaskInfo, String[] processedText){
 		boolean deadlineType = false;
 		boolean timedType = false;
