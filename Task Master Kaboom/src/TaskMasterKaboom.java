@@ -15,7 +15,7 @@ enum COMMAND_TYPE {
 }
 
 enum KEYWORD_TYPE {
-	INVALID, TASKID, TASKNAME, MODIFIED_TASKNAME, START_DATE, END_DATE, PRIORITY
+	INVALID, TASKID, TASKNAME, MODIFIED_TASKNAME, START_DATE, START_TIME, END_DATE, END_TIME, PRIORITY
 }
 
 public class TaskMasterKaboom {
@@ -264,7 +264,7 @@ public class TaskMasterKaboom {
 		Hashtable<KEYWORD_TYPE, String> keywordHashTable = new Hashtable<KEYWORD_TYPE, String>();
 		Error errorEncountered = createKeywordTableBasedOnParameter(userInputSentence, keywordHashTable);
 		if (errorEncountered != null) {
-			return;
+			return errorEncountered;
 		}
 		
 		System.out.println(keywordHashTable);
@@ -316,7 +316,6 @@ public class TaskMasterKaboom {
 		setTypeAndDate(thisTaskInfo, processedText);
 		
 		
-		
 		//thisTaskInfo.setStartDate(startDate);
 		//thisTaskInfo.setEndDate(endDate);
 		thisTaskInfo.setImportanceLevel(priority);
@@ -324,13 +323,14 @@ public class TaskMasterKaboom {
 		return null;
 	}
 	
+	//TODO Clean up and refactor code
 	private static Error createKeywordTableBasedOnParameter(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
-		// TODO Auto-generated method stub
-		
 		String currentString = userInputSentence;
 		int nextKeywordIndex = 0;
 		KEYWORD_TYPE type = KEYWORD_TYPE.INVALID;
+		KEYWORD_TYPE prevType = type;
 		String cutOutString = "";
+		
 		
 		while (nextKeywordIndex != -1) {
 			// Get index of next keyword and keyword type
@@ -350,9 +350,13 @@ public class TaskMasterKaboom {
 					type = getKeywordType(cutOutString);
 				}
 				
+				if (type == KEYWORD_TYPE.START_DATE && prevType == KEYWORD_TYPE.END_TIME) {
+					type = KEYWORD_TYPE.END_DATE;
+				}
+				
 				// Is there already data in table for that type ?
 				if (keywordTable.get(type) != null) {
-					return new Error(Error.ERROR_TYPE.INVALID_INPUT_COMMAND_SYNTAX);
+					return new Error(Error.ERROR_TYPE.MESSAGE_DUPLICTE_COMMAND_PARAMETERS);
 				}
 				
 				// add to table
@@ -360,20 +364,24 @@ public class TaskMasterKaboom {
 				
 				// Remove the string from the original string
 				currentString = currentString.replace(cutOutString, "");
+				
+				prevType = type;
 			}
 		}
 		
-		return keywordTable;
+		return null;
 	}
 
 	private static KEYWORD_TYPE getKeywordType(String cutOutString) {
 		// TODO Auto-generated method stub
 		if (cutOutString.contains("at")) {
-			return KEYWORD_TYPE.START_DATE;
+			return KEYWORD_TYPE.START_TIME;
 		} else if (cutOutString.contains("by")) {
-			return KEYWORD_TYPE.END_DATE;
+			return KEYWORD_TYPE.END_TIME;
 		} else if (cutOutString.contains("*")) {
 			return KEYWORD_TYPE.PRIORITY;
+		} else if (cutOutString.contains("on")) {
+			return KEYWORD_TYPE.START_DATE;
 		}
 		
 		return KEYWORD_TYPE.INVALID;
@@ -381,11 +389,11 @@ public class TaskMasterKaboom {
 
 	private static int getNextKeywordIndex(String stringToSearch) {
 		int nearestIndex = -1;
-		int currentIndex = -1;
+		int currentIndex = 0;
 		String currentKeyword = "";
 		
 		// Hard coded value
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 4; i++) {
 			switch(i) {
 				case 0:
 					currentKeyword = "at";
@@ -398,11 +406,15 @@ public class TaskMasterKaboom {
 				case 2:
 					currentKeyword = "*";
 					break;
+					
+				case 3:
+					currentKeyword = "on";
+					break;
 			}
 			
 			currentIndex = stringToSearch.indexOf(currentKeyword);
 			
-			if (nearestIndex == -1 ||(currentIndex != -1 && currentIndex < nearestIndex)) {
+			if (currentIndex > 0  && (nearestIndex == -1 || currentIndex < nearestIndex)) {
 				nearestIndex = currentIndex;
 			}
 		}
