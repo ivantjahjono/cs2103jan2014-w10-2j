@@ -32,7 +32,11 @@ public class TaskMasterKaboom {
 	private static final int START_DATE_COUNT = 1;
 	private static final int END_DATE_COUNT = 2;
 	
+	private static final String FILENAME = "KABOOM_FILE.dat";
+	
 	private static KaboomGUI taskUi;
+	private static DisplayData guiDisplayData;
+	private static Storage fileStorage;
 	private static History historyofCommands = new History();
 	
 	// Temporary static
@@ -40,11 +44,16 @@ public class TaskMasterKaboom {
 	
 	public static void main(String[] args) {
 		// Setup application
-			// Setup UI
-			setupUi();
 			// Setup Memory
 			//addTemporaryTaskForTesting();
+		
 			// Setup Storage
+			initialiseStorage();
+		
+			// Setup UI
+			setupUi();
+			guiDisplayData = DisplayData.getInstance();
+			
 			// Setup Logic
 		
 		// Run the UI
@@ -79,6 +88,14 @@ public class TaskMasterKaboom {
 	
 	private static void activateUi () {
 		taskUi.runUi();
+		updateUi("Welcome back, Commander");
+	}
+	
+	private static boolean initialiseStorage () {
+		fileStorage = new Storage(FILENAME);
+		//fileStorage.load();
+		
+		return true;
 	}
 	
 	/*
@@ -107,6 +124,7 @@ public class TaskMasterKaboom {
 		addToCommandHistory(new Command());
 		
 		// Save data to file
+		fileStorage.store();
 		
 		return feedback;
 	}
@@ -118,7 +136,10 @@ public class TaskMasterKaboom {
 
 	private static void updateUi(String feedback) {
 		Vector<TaskInfo> taskToDisplay = TaskListShop.getInstance().getAllTaskInList();
-		taskUi.updateUiDisplay(feedback, taskToDisplay);
+		
+		guiDisplayData.setFeedbackMessage(feedback);
+		guiDisplayData.setTaskDataToDisplay(taskToDisplay);
+		taskUi.showUpdatedUi();
 	}
 	
 	private static void addToCommandHistory(Command command) {
@@ -234,12 +255,12 @@ public class TaskMasterKaboom {
 		// 1. Determine the command type. Each command has a different syntax and even same command
 		//    might have different formats. The command type can also be passed in by parameter
 		//    to avoid determining the command type again.
-		//    E.g: add hello world at 1130pm 120112 by 1230am 130112 ***
-		//         <command> <task name> at <start time and date> by <end time and date>
+		//    E.g: add hello world at 1130pm on 120112 by 1230am on 130112 ***
+		//         <command> <task name> at <start time> on <date> by <end time> on <date>
 		
 		// 2. Switch on all syntax checks for keywords for that particular command.
-		//    E.g: hello world at 1130pm 120112 by 1230am 130112 ***
-		//    <task name> at <start time and date> by <end time and date> <priority level>
+		//    E.g: hello world at 1130pm on 120112 by 1230am on 130112 ***
+		//    <task name> at <start time> on <date> by <end time> on <date> <priority level>
 		
 		
 		// 3. Find the next closest syntax using the keywords such as 'at', 'by' or '*' for priority.
@@ -248,15 +269,15 @@ public class TaskMasterKaboom {
 		//    Checks for keyword 'at' or 'by' are switched off as they are not related to the command 'done'.  
 		// 3a. Cut the command until the next closest syntax.
 		//    E.g: 1. hello world 
-		//         2. at <start time and date> by <end time and date> <priority level>
+		//         2. at <start time> on <date> by <end time> on <date> <priority level>
 		// 3b. The first string will be the task name. Update the information to task info.
 		
 		
 		// 4. Find the next closest syntax again using the keywords such as 'at', 'by' or '*' for priority.
 		// 4a. If there is no such keywords found, end the parsing. If not cut the command again using the
 		//     remaining string.
-		//     E.g: 1. at <start time and date>
-		//          2. by <end time and date> <priority level>
+		//     E.g: 1. at <start time> on <date>
+		//          2. by <end time> on <date> <priority level>
 		// 4b. Determine the syntax by the keyword. If it contains 'at' it is a start time, 
 		//     if it has 'by' it is an end time and so on.
 		
@@ -265,12 +286,13 @@ public class TaskMasterKaboom {
 		
 		
 		// 6. In steps of updating to task info, validate each information if it matches the formats.
-		//    E.g: by 1230am 130112***
+		//    E.g: by 1230am on 130112***
 		//         It is not a valid format as the asterisks are combined. Might be due to user
 		//         typo.
 		
 		taskname = functionFindTaskname(processedText);
 		thisTaskInfo.setTaskName(taskname);
+		
 		setTypeAndDate(thisTaskInfo, processedText);
 		
 		

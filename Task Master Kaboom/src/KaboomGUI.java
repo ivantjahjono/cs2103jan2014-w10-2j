@@ -32,7 +32,7 @@ public class KaboomGUI implements ActionListener {
 	
 	private JFrame frame;
 	private JTextField txtEnterCommandHere;
-	private JLabel lblFeedback;
+	private JLabel feedbackLabel;
 	private JTable tasklistDisplay;
 	
 	/**
@@ -115,13 +115,13 @@ public class KaboomGUI implements ActionListener {
 		feedback.setBounds(10, 260, 574, 24);
 		frame.getContentPane().add(feedback);
 		
-		lblFeedback = new JLabel("Feedback");
-		lblFeedback.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblFeedback.setHorizontalAlignment(SwingConstants.LEFT);
-		lblFeedback.setForeground(UIManager.getColor("ToolBar.dockingForeground"));
-		lblFeedback.setBackground(SystemColor.activeCaption);
-		lblFeedback.setBounds(10, 203, 474, 24);
-		feedback.add(lblFeedback);
+		feedbackLabel = new JLabel("Feedback");
+		feedbackLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		feedbackLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		feedbackLabel.setForeground(UIManager.getColor("ToolBar.dockingForeground"));
+		feedbackLabel.setBackground(SystemColor.activeCaption);
+		feedbackLabel.setBounds(10, 203, 474, 24);
+		feedback.add(feedbackLabel);
 	}
 
 	private void createTaskDisplayTable(JScrollPane scrollPane) {
@@ -225,23 +225,26 @@ public class KaboomGUI implements ActionListener {
 		updateFeedbackTextfield(feedback);
 	}
 	
-	public void updateUiDisplay (String feedback, Vector<TaskInfo> taskList) {
+	public void showUpdatedUi () {
+		String feedback = DisplayData.getInstance().getFeedbackMessage();
+		Vector<TaskInfoDisplay> displayInfo = DisplayData.getInstance().getAllTaskDisplayInfo();
+		
+		updateUiDisplay(feedback, displayInfo);
+	}
+	
+	public void updateUiDisplay (String feedback, Vector<TaskInfoDisplay> taskList) {
 		updateFeedbackTextfield(feedback);
 		updateTaskDisplay(taskList);
 	}
 	
-	private void updateTaskDisplay (Vector<TaskInfo> taskList) {
+	private void updateTaskDisplay (Vector<TaskInfoDisplay> taskList) {
 		updateAllTaskDisplayRows(taskList);
 		removeAllRowsAfterIndex(taskList.size());
 	}
 
-	private void updateAllTaskDisplayRows(Vector<TaskInfo> taskList) {
+	private void updateAllTaskDisplayRows(Vector<TaskInfoDisplay> taskList) {
 		for (int i = 0; i < taskList.size() && i < MAX_TASK_DISPLAY_COUNT; i++) {
-			TaskInfo currentTaskInfo = taskList.get(i);
-			
-			TaskInfoDisplay infoToDisplay = new TaskInfoDisplay();
-			infoToDisplay.updateFromThisInfo(currentTaskInfo);
-			infoToDisplay.setTaskId(i+1);
+			TaskInfoDisplay infoToDisplay = taskList.get(i);
 			updateThisRowData(infoToDisplay);
 		}
 	}
@@ -286,6 +289,6 @@ public class KaboomGUI implements ActionListener {
 	}
 	
 	private void updateFeedbackTextfield (String feedback) {
-		lblFeedback.setText(feedback);
+		feedbackLabel.setText(feedback);
 	}
 }

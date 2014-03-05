@@ -13,7 +13,7 @@ public class CommandSearch extends Command {
 
 	public String execute() {
 		String taskName = taskInfo.getTaskName();
-		TaskInfo searchTask = TaskListShop.getInstance(). getTaskByName(taskName);
+		TaskInfo searchTask = taskListShop. getTaskByName(taskName);
 		taskInfo = searchTask;
 		return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, "My Task");
 	}
