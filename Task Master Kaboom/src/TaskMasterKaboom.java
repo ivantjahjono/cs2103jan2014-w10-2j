@@ -256,7 +256,12 @@ public class TaskMasterKaboom {
 		int priority = 2;
 		
 		// Cut the command into their respective syntax. Will return hash table of data strings
-		Hashtable<KEYWORD_TYPE, String> keywordHashTable = createKeywordTableBasedOnParameter(userInputSentence);
+		Hashtable<KEYWORD_TYPE, String> keywordHashTable = new Hashtable<KEYWORD_TYPE, String>();
+		Error errorEncountered = createKeywordTableBasedOnParameter(userInputSentence, keywordHashTable);
+		if (errorEncountered != null) {
+			return;
+		}
+		
 		System.out.println(keywordHashTable);
 		
 		
@@ -313,15 +318,13 @@ public class TaskMasterKaboom {
 		
 	}
 	
-	private static Hashtable<KEYWORD_TYPE, String> createKeywordTableBasedOnParameter(String userInputSentence) {
+	private static Error createKeywordTableBasedOnParameter(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
 		// TODO Auto-generated method stub
 		
 		String currentString = userInputSentence;
 		int nextKeywordIndex = 0;
 		KEYWORD_TYPE type = KEYWORD_TYPE.INVALID;
 		String cutOutString = "";
-		
-		Hashtable<KEYWORD_TYPE, String> keywordTable = new Hashtable<KEYWORD_TYPE, String>();
 		
 		while (nextKeywordIndex != -1) {
 			// Get index of next keyword and keyword type
@@ -339,6 +342,11 @@ public class TaskMasterKaboom {
 					type = KEYWORD_TYPE.TASKNAME;
 				} else {
 					type = getKeywordType(cutOutString);
+				}
+				
+				// Is there already data in table for that type ?
+				if (keywordTable.get(type) != null) {
+					return new Error(Error.ERROR_TYPE.INVALID_INPUT_COMMAND_SYNTAX);
 				}
 				
 				// add to table
