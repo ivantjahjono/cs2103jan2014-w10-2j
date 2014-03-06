@@ -8,8 +8,8 @@ import java.io.IOException;
 
 
 public class Storage {
-	private static final String delimiter = "|";
-	private static final int INDEX_FILENAME = 0;
+	private static final String delimiter = "~";
+	private static final int INDEX_TASK_NAME = 0;
 	private static final int INDEX_TASK_TYPE = 1;
 	private static final int INDEX_START_YEAR = 2;
 	private static final int INDEX_START_MONTH = 3;
@@ -85,7 +85,7 @@ public class Storage {
 				String input = fileScanner.nextLine().trim();
 				String[] inputSplit = input.split(delimiter);
 				TaskInfo task = new TaskInfo();
-				task.setTaskName(inputSplit[INDEX_FILENAME]);
+				task.setTaskName(inputSplit[INDEX_TASK_NAME]);
 				task.setTaskType(TaskInfo.getTaskType(inputSplit[INDEX_TASK_TYPE]));
 				
 				//THERE MIGHT STILL BE BUGS IN THE LOADING OF CALENDAR ATTRIBUTES
