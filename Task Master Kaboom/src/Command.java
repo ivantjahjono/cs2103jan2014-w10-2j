@@ -17,11 +17,13 @@ public class Command {
 	protected COMMAND_TYPE commandType;
 	protected TaskInfo taskInfo;
 	protected TaskListShop taskListShop;
+	protected DisplayData displayData;
 	
 	Command () {
 		commandType = COMMAND_TYPE.INVALID;
 		taskInfo = null;
 		taskListShop = TaskListShop.getInstance();
+		displayData = DisplayData.getInstance();
 	}
 	
 	public void setCommandType (COMMAND_TYPE type) {

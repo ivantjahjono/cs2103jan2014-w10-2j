@@ -93,7 +93,7 @@ public class TaskMasterKaboom {
 	
 	private static boolean initialiseStorage () {
 		fileStorage = new Storage(FILENAME);
-		//fileStorage.load();
+		fileStorage.load();
 		
 		return true;
 	}

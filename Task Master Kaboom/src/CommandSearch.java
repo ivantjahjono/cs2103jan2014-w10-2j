@@ -15,7 +15,7 @@ public class CommandSearch extends Command {
 		String taskName = taskInfo.getTaskName();
 		TaskInfo searchTask = taskListShop. getTaskByName(taskName);
 		taskInfo = searchTask;
-		return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, "My Task");
+		return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS);
 	}
 	
 }
