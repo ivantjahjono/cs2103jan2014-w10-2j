@@ -15,18 +15,21 @@ import javax.swing.UIManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
+
 import java.awt.SystemColor;
 import java.awt.FlowLayout;
 import java.util.Vector;
 import java.awt.Color;
 
 
-public class KaboomGUI implements ActionListener {
+public class KaboomGUI implements ActionListener, KeyListener {
 
 	private final int MAX_TASK_DISPLAY_COUNT = 10;
 	
@@ -34,6 +37,9 @@ public class KaboomGUI implements ActionListener {
 	private JTextField txtEnterCommandHere;
 	private JLabel feedbackLabel;
 	private JTable tasklistDisplay;
+	
+	private String prevCommand;
+	private String currentCommand;
 	
 	/**
 	 * Launch the application.
@@ -197,6 +203,7 @@ public class KaboomGUI implements ActionListener {
 		txtEnterCommandHere.setText("Enter command here");
 		txtEnterCommandHere.setColumns(10);
 		txtEnterCommandHere.addActionListener(this);
+		txtEnterCommandHere.addKeyListener(this);
 		frame.getContentPane().add(txtEnterCommandHere);
 	}
 
@@ -217,13 +224,38 @@ public class KaboomGUI implements ActionListener {
 		frame.getContentPane().setLayout(null);
 	}
 	
-	public void actionPerformed(ActionEvent e) {		
+	public void actionPerformed(ActionEvent e) {
+		String feedback = "You didn't type anything commander.";
 		String command = txtEnterCommandHere.getText();
-		String feedback = TaskMasterKaboom.processCommand(command);
 		
-		resetCommandTextfield();
+		if (!command.equals("")) {
+			feedback = TaskMasterKaboom.processCommand(command);
+			resetCommandTextfield();
+			prevCommand = command;
+		}
+		
 		updateFeedbackTextfield(feedback);
 	}
+	
+	public void keyTyped(KeyEvent e) {
+		 //System.out.println(e.getKeyCode() + "KEY TYPED: ");
+    }
+	
+	public void keyPressed(KeyEvent e) {
+        //System.out.println(e.getKeyCode() + "KEY PRESSED: ");
+    }
+	
+	public void keyReleased(KeyEvent e) {
+		// Update text field to previous command
+		
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			currentCommand = txtEnterCommandHere.getText();
+			txtEnterCommandHere.setText(prevCommand);
+		} else if (e.getKeyCode() == KeyEvent.VK_DOWN){
+			txtEnterCommandHere.setText(currentCommand);
+		}
+		 //System.out.println(e.getKeyChar() + "KEY RELEASED: ");
+    }
 	
 	public void showUpdatedUi () {
 		String feedback = DisplayData.getInstance().getFeedbackMessage();
