@@ -14,11 +14,14 @@ public class TaskInfo {
 	
 	int importanceLevel;
 	
+	boolean isExpired;
+	
 	TaskInfo () {
 		taskname = "";
 		startDate = null;
 		endDate = null;
 		importanceLevel = 0;
+		isExpired = false;
 	}
 	
 	public void setTaskName (String name) { 
@@ -41,6 +44,10 @@ public class TaskInfo {
 		importanceLevel = level;
 	}
 	
+	public void setExpiryFlag (boolean flag) { 
+		isExpired = flag;
+	}
+	
 	public String getTaskName () { 
 		return taskname;
 	}
@@ -59,6 +66,10 @@ public class TaskInfo {
 	
 	public int getImportanceLevel () { 
 		return importanceLevel;
+	}
+	
+	public boolean setExpiryFlag () { 
+		return isExpired;
 	}
 	
 	public static TASK_TYPE getTaskType(String taskType) {
