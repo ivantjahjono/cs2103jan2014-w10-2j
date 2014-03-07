@@ -253,6 +253,8 @@ public class KaboomGUI implements ActionListener, KeyListener {
 			txtEnterCommandHere.setText(prevCommand);
 		} else if (e.getKeyCode() == KeyEvent.VK_DOWN){
 			txtEnterCommandHere.setText(currentCommand);
+		} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			frame.dispose();
 		}
 		 //System.out.println(e.getKeyChar() + "KEY RELEASED: ");
     }
