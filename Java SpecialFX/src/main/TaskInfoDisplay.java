@@ -56,7 +56,7 @@ public class TaskInfoDisplay {
 			importanceLevel.set("");
 		} else {
 			for (int i = 0; i < level; i++) {
-				importanceLevel.set("*");
+				importanceLevel.set("*" + importanceLevel.get());
 			}
 		}
 	}
