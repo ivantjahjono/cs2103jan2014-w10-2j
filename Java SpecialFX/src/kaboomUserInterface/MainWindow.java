@@ -49,6 +49,7 @@ public class MainWindow implements javafx.fxml.Initializable {
 		taskDisplayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		
 		updateTaskTable();
+		updateFeedbackMessage();
 	}
 	
 	@FXML
@@ -60,12 +61,12 @@ public class MainWindow implements javafx.fxml.Initializable {
 		currentCommand = "";
 		
 		commandTextInput.setText("");
-		feedbackText.setText(feedback);
 		
 		// Update the table
 		updateTaskTable();
+		updateFeedbackMessage();
 	}
-	
+
 	private void updateTaskTable() {
 		data.clear();
 		
@@ -75,6 +76,11 @@ public class MainWindow implements javafx.fxml.Initializable {
 			data.add(taskList.get(i));
 		}
 		taskDisplayTable.setItems(data);
+	}
+	
+	private void updateFeedbackMessage() {
+		String feedback = DisplayData.getInstance().getFeedbackMessage();
+		feedbackText.setText(feedback);
 	}
 	
 	private void recallPreviousCommand () {
