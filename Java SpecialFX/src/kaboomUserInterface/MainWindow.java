@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ResourceBundle; 
 import java.util.Vector;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -55,10 +56,17 @@ public class MainWindow implements javafx.fxml.Initializable {
 	@FXML
 	private void onTextfieldAction (ActionEvent e) {
 		String command = commandTextInput.getText();
+		if (command.equals("exit")) {
+			Platform.exit();
+			return;
+		}
+		
 		String feedback = TaskMasterKaboom.processCommand(command);
 		
 		prevCommand = command;
 		currentCommand = "";
+		
+
 		
 		commandTextInput.setText("");
 		
