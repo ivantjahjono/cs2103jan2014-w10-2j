@@ -84,8 +84,8 @@ public class TaskMasterKaboom {
 	}
 	
 	private static void activateUi () {
-		taskUi.run(null);
 		updateUi("Welcome back, Commander");
+		taskUi.run(null);
 	}
 	
 	private static boolean initialiseStorage () {
@@ -146,7 +146,6 @@ public class TaskMasterKaboom {
 		
 		guiDisplayData.setFeedbackMessage(feedback);
 		guiDisplayData.setTaskDataToDisplay(taskToDisplay);
-		//taskUi.showUpdatedUi();
 	}
 	
 	private static void addToCommandHistory(Command command) {
