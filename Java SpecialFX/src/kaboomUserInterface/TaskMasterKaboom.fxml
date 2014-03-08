@@ -9,7 +9,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" blendMode="SRC_OVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" snapToPixel="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboomUserInterface.MainWindow">
+<AnchorPane id="AnchorPane" blendMode="SRC_OVER" focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="400.0" prefWidth="600.0" snapToPixel="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboomUserInterface.MainWindow">
   <children>
     <TextField fx:id="commandTextInput" disable="false" layoutX="14.0" layoutY="364.0" onAction="#onTextfieldAction" onKeyPressed="#onTextfieldKeyPressed" prefWidth="572.0" promptText="Please enter a command" text="" />
     <TableView fx:id="taskDisplayTable" editable="false" focusTraversable="false" layoutX="14.0" layoutY="38.0" prefHeight="288.0" prefWidth="572.0" tableMenuButtonVisible="false">
@@ -26,7 +26,7 @@
         <Font name="System Bold" size="24.0" />
       </font>
     </Label>
-    <Label alignment="CENTER_RIGHT" contentDisplay="TOP" layoutX="362.0" layoutY="14.0" prefWidth="224.0" text="ALL TASKS" textFill="#606060" underline="false">
+    <Label alignment="CENTER_RIGHT" contentDisplay="TOP" layoutX="362.0" layoutY="15.0" prefWidth="224.0" text="ALL TASKS" textFill="RED" underline="false">
       <effect>
         <Glow />
       </effect>
