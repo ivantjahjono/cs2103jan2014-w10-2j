@@ -18,7 +18,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 public class MainWindow implements javafx.fxml.Initializable {
@@ -29,6 +31,7 @@ public class MainWindow implements javafx.fxml.Initializable {
 	@FXML private TableColumn<TaskInfoDisplay, String> columnStartTime;
 	@FXML private TableColumn<TaskInfoDisplay, String> columnEndTime;
 	@FXML private TableColumn<TaskInfoDisplay, String> columnPriority;
+	@FXML private ImageView exitButton;
 	
 	@FXML private TextField commandTextInput;
 	@FXML private Pane feedbackBox;
@@ -61,12 +64,10 @@ public class MainWindow implements javafx.fxml.Initializable {
 			return;
 		}
 		
-		String feedback = TaskMasterKaboom.processCommand(command);
+		TaskMasterKaboom.processCommand(command);
 		
 		prevCommand = command;
 		currentCommand = "";
-		
-
 		
 		commandTextInput.setText("");
 		
@@ -120,5 +121,10 @@ public class MainWindow implements javafx.fxml.Initializable {
 			default:
 				break;
 		}
+	}
+	
+	@FXML
+	private void onExitButtonPressed (MouseEvent mouseEvent) {
+		Platform.exit();
 	}
 }
