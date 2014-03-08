@@ -10,9 +10,11 @@ import java.util.Vector;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -21,9 +23,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 public class MainWindow implements javafx.fxml.Initializable {
+	
+	private Stage windowStage;
+	@FXML private AnchorPane mainPane;
 	
 	@FXML private TableView<TaskInfoDisplay> taskDisplayTable;
 	@FXML private TableColumn<TaskInfoDisplay, Integer> columnTaskId;
@@ -40,6 +47,9 @@ public class MainWindow implements javafx.fxml.Initializable {
 	private String prevCommand;
 	private String currentCommand;
 	
+	private double initialX;
+	private double initialY;
+	
 	private ObservableList<TaskInfoDisplay> data = FXCollections.observableArrayList();
 	
 	@Override
@@ -52,8 +62,24 @@ public class MainWindow implements javafx.fxml.Initializable {
 		
 		taskDisplayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		
+		// Disable column reordering
+//		taskDisplayTable.getColumns().addListener(new ListChangeListener() {
+//	        @Override
+//	        public void onChanged(Change change) {
+//	          change.next();
+//	          if(change.wasReplaced()) {
+//	        	  taskDisplayTable.getColumns().clear();
+//	        	  taskDisplayTable.getColumns().addAll(columnTaskId, columnTaskName, columnStartTime, columnEndTime, columnPriority);
+//	          }
+//	        }
+//	    });
+		
 		updateTaskTable();
 		updateFeedbackMessage();
+	}
+	
+	public void setStage (Stage currentStage) {
+		windowStage = currentStage;
 	}
 	
 	@FXML
@@ -126,5 +152,19 @@ public class MainWindow implements javafx.fxml.Initializable {
 	@FXML
 	private void onExitButtonPressed (MouseEvent mouseEvent) {
 		Platform.exit();
+	}
+	
+	@FXML
+	private void onWindowMouseDrag (MouseEvent mouseEvent) {
+		//System.out.printf("[%f, %f]\n", mouseEvent.getSceneX(), mouseEvent.getSceneY());
+		
+		windowStage.setX(mouseEvent.getScreenX() - initialX);
+		windowStage.setY(mouseEvent.getScreenY() - initialY);
+	}
+	
+	@FXML
+	private void onWindowMousePressed (MouseEvent mouseEvent) {
+		initialX = mouseEvent.getSceneX();
+		initialY = mouseEvent.getSceneY();
 	}
 }
