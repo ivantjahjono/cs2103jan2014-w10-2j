@@ -48,6 +48,7 @@ public class TaskMasterKaboom {
 	
 	// Temporary static
 	private static int counter = 1;				// Use to create temporary task
+	private static boolean isRunning = true;
 	
 	public static void main(String[] args) {
 		// Setup application
@@ -66,8 +67,9 @@ public class TaskMasterKaboom {
 		// Run the UI
 		activateUi();
 		
-		while (true) {
-			// Updates the task data inside here every minute
+		//
+		while (isRunning) {
+			 // Updates the task data inside here every minute
 		}
 	}
 	
@@ -91,6 +93,10 @@ public class TaskMasterKaboom {
 		fileStorage.load();
 		
 		return true;
+	}
+	
+	public static void exitProgram () {
+		isRunning = false;
 	}
 	
 	/*

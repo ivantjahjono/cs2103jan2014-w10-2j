@@ -1,5 +1,6 @@
 package kaboomUserInterface;
 
+import main.TaskMasterKaboom;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -28,5 +29,10 @@ public class GraphicInterface extends Application {
 	
 	public void run(String[] args) {
 		launch(args);
+	}
+	
+	@Override
+	public void stop() {
+		TaskMasterKaboom.exitProgram();
 	}
 }
