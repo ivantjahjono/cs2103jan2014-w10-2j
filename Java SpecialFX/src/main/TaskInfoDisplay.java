@@ -1,0 +1,83 @@
+package main;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+
+public class TaskInfoDisplay {
+	private SimpleIntegerProperty taskId;
+	private SimpleStringProperty taskName;
+	
+	private SimpleStringProperty startDate;
+	private SimpleStringProperty endDate;
+	
+	private SimpleStringProperty importanceLevel;
+	
+	public TaskInfoDisplay () {
+		taskId = new SimpleIntegerProperty(0);
+		taskName = new SimpleStringProperty("No taskname available");;
+		startDate = new SimpleStringProperty("-");
+		endDate = new SimpleStringProperty("-");
+		importanceLevel = new SimpleStringProperty("");
+	}
+	
+	public void updateFromThisInfo (TaskInfo infoToUpdateFrom) {
+		setTaskName(infoToUpdateFrom.getTaskName());
+		setStartTime(infoToUpdateFrom.getStartDate());
+		setEndTime(infoToUpdateFrom.getEndDate());
+		setImportanceLevel(infoToUpdateFrom.getImportanceLevel());
+	}
+	
+	public void setTaskId (int id) {
+		taskId.set(id);
+	}
+	
+	public void setTaskName (String name) {
+		taskName.set(name);
+	}
+	
+	public void setStartTime (Calendar time) {
+		if (time != null) {
+			SimpleDateFormat sdf = new SimpleDateFormat("h:mm a dd/MM/yy");
+			startDate.set(sdf.format(time.getTime()));
+		}
+	}
+	
+	public void setEndTime (Calendar time) {
+		if (time != null) {
+			SimpleDateFormat sdf = new SimpleDateFormat("h:mm a dd/MM/yy");
+			endDate.set(sdf.format(time.getTime()));
+		}
+	}
+	
+	public void setImportanceLevel (int level) {
+		if (level == 0) {
+			importanceLevel.set("");
+		} else {
+			for (int i = 0; i < level; i++) {
+				importanceLevel.set("*" + importanceLevel.get());
+			}
+		}
+	}
+	
+	public int getTaskId () {
+		return taskId.get();
+	}
+	
+	public String getTaskName () {
+		return taskName.get();
+	}
+	
+	public String getStartDate () {
+		return startDate.get();
+	}
+	
+	public String getEndDate () {
+		return endDate.get();
+	}
+	
+	public String getImportanceLevel () {
+		return importanceLevel.get();
+	}
+}

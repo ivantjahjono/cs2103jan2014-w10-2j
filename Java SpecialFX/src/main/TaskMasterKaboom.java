@@ -1,9 +1,11 @@
+package main;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Vector;
 
+import kaboomUserInterface.GraphicInterface;
 
 /*
 ** This is main class that will run Task Master KABOOM
@@ -39,13 +41,14 @@ public class TaskMasterKaboom {
 	
 	private static final String FILENAME = "KABOOM_FILE.dat";
 	
-	private static KaboomGUI taskUi;
+	private static GraphicInterface taskUi;
 	private static DisplayData guiDisplayData;
 	private static Storage fileStorage;
 	private static History historyofCommands = new History();
 	
 	// Temporary static
 	private static int counter = 1;				// Use to create temporary task
+	private static boolean isRunning = true;
 	
 	public static void main(String[] args) {
 		// Setup application
@@ -64,26 +67,15 @@ public class TaskMasterKaboom {
 		// Run the UI
 		activateUi();
 		
-		// Start processing user commands
-		
-//		// Get command from UI
-//		String command = "add";
-//		
-//		// Process command line
-//		String commandFeedback = processCommand(command);
-//	
-//		// Return feedback to
-//		System.out.println("Feedback: " + commandFeedback);
-		
-		//while (true) {
-			//
-		//}
+		//
+		while (isRunning) {
+			 // Updates the task data inside here every minute
+		}
 	}
 	
 	private static boolean setupUi () {
 		try {
-			taskUi = new KaboomGUI();
-			taskUi.initialize();
+			taskUi = new GraphicInterface();
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -92,8 +84,8 @@ public class TaskMasterKaboom {
 	}
 	
 	private static void activateUi () {
-		taskUi.runUi();
 		updateUi("Welcome back, Commander");
+		taskUi.run(null);
 	}
 	
 	private static boolean initialiseStorage () {
@@ -101,6 +93,10 @@ public class TaskMasterKaboom {
 		fileStorage.load();
 		
 		return true;
+	}
+	
+	public static void exitProgram () {
+		isRunning = false;
 	}
 	
 	/*
@@ -150,7 +146,6 @@ public class TaskMasterKaboom {
 		
 		guiDisplayData.setFeedbackMessage(feedback);
 		guiDisplayData.setTaskDataToDisplay(taskToDisplay);
-		taskUi.showUpdatedUi();
 	}
 	
 	private static void addToCommandHistory(Command command) {

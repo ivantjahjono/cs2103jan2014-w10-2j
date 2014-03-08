@@ -1,3 +1,4 @@
+package main;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -20,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
+
 import java.awt.SystemColor;
 import java.awt.FlowLayout;
 import java.util.Vector;

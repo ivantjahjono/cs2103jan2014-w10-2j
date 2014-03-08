@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" blendMode="SRC_OVER" focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="400.0" prefWidth="600.0" snapToPixel="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboomUserInterface.MainWindow">
+  <children>
+    <TextField fx:id="commandTextInput" disable="false" layoutX="14.0" layoutY="364.0" onAction="#onTextfieldAction" onKeyPressed="#onTextfieldKeyPressed" prefWidth="572.0" promptText="Please enter a command" text="" />
+    <TableView fx:id="taskDisplayTable" editable="false" focusTraversable="false" layoutX="14.0" layoutY="38.0" prefHeight="288.0" prefWidth="572.0" tableMenuButtonVisible="false">
+      <columns>
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="30.0" resizable="false" sortable="false" text="Id" fx:id="columnTaskId" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="198.0" resizable="false" sortable="false" text="Task Name" fx:id="columnTaskName" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="128.0" resizable="false" sortable="false" text="Start Date" fx:id="columnStartTime" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="126.0" resizable="false" sortable="false" text="End Date" fx:id="columnEndTime" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="88.0" resizable="false" sortable="false" text="Priority" visible="true" fx:id="columnPriority" />
+      </columns>
+    </TableView>
+    <Label layoutX="15.0" layoutY="6.0" text="Task Master Kaboom">
+      <font>
+        <Font name="System Bold" size="24.0" />
+      </font>
+    </Label>
+    <Label alignment="CENTER_RIGHT" contentDisplay="TOP" layoutX="362.0" layoutY="15.0" prefWidth="224.0" text="ALL TASKS" textFill="RED" underline="false">
+      <effect>
+        <Glow />
+      </effect>
+      <font>
+        <Font size="16.0" />
+      </font>
+    </Label>
+    <Pane fx:id="feedbackBox" blendMode="SRC_OVER" layoutX="14.0" layoutY="338.0" prefHeight="22.0" prefWidth="572.0" styleClass="feedback-pane">
+      <children>
+        <Label id="" fx:id="feedbackText" labelFor="$commandTextInput" layoutX="0.0" layoutY="0.0" minHeight="22.0" prefHeight="22.0" prefWidth="567.0" text="Feedback" translateX="5.0" underline="false">
+          <font>
+            <Font name="System Italic" size="16.0" />
+          </font>
+        </Label>
+      </children>
+      <stylesheets>
+        <URL value="@application.css" />
+      </stylesheets>
+    </Pane>
+  </children>
+</AnchorPane>
