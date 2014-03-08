@@ -1,3 +1,5 @@
+package main;
+
 	/*
 	 * Current search is base on task name and result is unique. 
 	 * Search result will be returned in the command's taskInfo variable
