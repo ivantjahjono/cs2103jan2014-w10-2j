@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import java.net.*?>
 <?import java.util.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
@@ -8,10 +9,10 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" blendMode="SRC_OVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" snapToPixel="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.MainForm">
+<AnchorPane id="AnchorPane" blendMode="SRC_OVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" snapToPixel="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboomUserInterface.MainWindow">
   <children>
     <TextField fx:id="commandTextInput" disable="false" layoutX="14.0" layoutY="364.0" onAction="#onTextfieldAction" onKeyPressed="#onTextfieldKeyPressed" prefWidth="572.0" promptText="Please enter a command" text="" />
-    <TableView layoutX="14.0" layoutY="78.0" prefHeight="274.9999000000025" prefWidth="572.0">
+    <TableView focusTraversable="false" layoutX="14.0" layoutY="78.0" prefHeight="248.0" prefWidth="572.0" tableMenuButtonVisible="false">
       <columns>
         <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="30.0" resizable="false" sortable="false" text="Id" />
         <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="198.0" resizable="false" sortable="false" text="Task Name" />
@@ -33,5 +34,17 @@
         <Font size="16.0" />
       </font>
     </Label>
+    <Pane fx:id="feedbackBox" blendMode="SRC_OVER" layoutX="14.0" layoutY="338.0" prefHeight="22.0" prefWidth="572.0" styleClass="feedback-pane">
+      <children>
+        <Label id="" fx:id="feedbackText" labelFor="$commandTextInput" layoutX="0.0" layoutY="0.0" minHeight="22.0" prefHeight="22.0" prefWidth="567.0" text="Feedback" translateX="5.0" underline="false">
+          <font>
+            <Font name="System Italic" size="16.0" />
+          </font>
+        </Label>
+      </children>
+      <stylesheets>
+        <URL value="@application.css" />
+      </stylesheets>
+    </Pane>
   </children>
 </AnchorPane>
