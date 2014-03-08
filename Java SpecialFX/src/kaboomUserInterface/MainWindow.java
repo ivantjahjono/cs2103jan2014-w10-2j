@@ -1,10 +1,12 @@
 package kaboomUserInterface;
 
+import main.DisplayData;
 import main.TaskInfoDisplay;
 import main.TaskMasterKaboom;
 
 import java.net.URL; 
 import java.util.ResourceBundle; 
+import java.util.Vector;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,9 +33,7 @@ public class MainWindow implements javafx.fxml.Initializable {
 	@FXML private Pane feedbackBox;
 	@FXML private Label feedbackText;
 	
-	private ObservableList<TaskInfoDisplay> data = FXCollections.observableArrayList(new TaskInfoDisplay(), 
-																				new TaskInfoDisplay(),
-																				new TaskInfoDisplay());
+	private ObservableList<TaskInfoDisplay> data = FXCollections.observableArrayList();
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -44,26 +44,36 @@ public class MainWindow implements javafx.fxml.Initializable {
 		columnPriority.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("importanceLevel"));
 		
 		taskDisplayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		taskDisplayTable.setItems(data);
+		
+		updateTaskTable();
 	}
 	
 	@FXML
 	private void onTextfieldAction (ActionEvent e) {
-		System.out.println("Hello world!");
-		
 		String command = commandTextInput.getText();
 		String feedback = TaskMasterKaboom.processCommand(command);
 		
 		commandTextInput.setText("");
 		feedbackText.setText(feedback);
 		
-		// Update ui
-		
+		// Update the table
+		updateTaskTable();
 		
 		//resetCommandTextfield();
 		//updateFeedbackTextfield(feedback);
 	}
 	
+	private void updateTaskTable() {
+		data.clear();
+		
+		Vector<TaskInfoDisplay> taskList = DisplayData.getInstance().getAllTaskDisplayInfo();
+		
+		for (int i = 0; i < taskList.size(); i++) {
+			data.add(taskList.get(i));
+		}
+		taskDisplayTable.setItems(data);
+	}
+
 	@FXML
 	private void onTextfieldKeyPressed (KeyEvent keyEvent) {
 		//System.out.println("Key pressed: " + keyEvent.getText());
