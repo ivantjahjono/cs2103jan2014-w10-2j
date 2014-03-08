@@ -1,4 +1,4 @@
-package application;
+package kaboomUserInterface;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -7,7 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 
-public class Main extends Application {
+public class GraphicInterface extends Application {
 	
 	Parent root;
 	
@@ -26,7 +26,7 @@ public class Main extends Application {
 		primaryStage.show();
 	}
 	
-	public static void main(String[] args) {
+	public void run(String[] args) {
 		launch(args);
 	}
 }
