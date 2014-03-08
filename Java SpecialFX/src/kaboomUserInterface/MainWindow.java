@@ -22,7 +22,6 @@ import javafx.scene.layout.Pane;
 
 public class MainWindow implements javafx.fxml.Initializable {
 	
-	@FXML private TextField commandTextInput;
 	@FXML private TableView<TaskInfoDisplay> taskDisplayTable;
 	@FXML private TableColumn<TaskInfoDisplay, Integer> columnTaskId;
 	@FXML private TableColumn<TaskInfoDisplay, String> columnTaskName;
@@ -30,8 +29,12 @@ public class MainWindow implements javafx.fxml.Initializable {
 	@FXML private TableColumn<TaskInfoDisplay, String> columnEndTime;
 	@FXML private TableColumn<TaskInfoDisplay, String> columnPriority;
 	
+	@FXML private TextField commandTextInput;
 	@FXML private Pane feedbackBox;
 	@FXML private Label feedbackText;
+	
+	private String prevCommand;
+	private String currentCommand;
 	
 	private ObservableList<TaskInfoDisplay> data = FXCollections.observableArrayList();
 	
@@ -53,14 +56,14 @@ public class MainWindow implements javafx.fxml.Initializable {
 		String command = commandTextInput.getText();
 		String feedback = TaskMasterKaboom.processCommand(command);
 		
+		prevCommand = command;
+		currentCommand = "";
+		
 		commandTextInput.setText("");
 		feedbackText.setText(feedback);
 		
 		// Update the table
 		updateTaskTable();
-		
-		//resetCommandTextfield();
-		//updateFeedbackTextfield(feedback);
 	}
 	
 	private void updateTaskTable() {
@@ -73,9 +76,35 @@ public class MainWindow implements javafx.fxml.Initializable {
 		}
 		taskDisplayTable.setItems(data);
 	}
+	
+	private void recallPreviousCommand () {
+		if (!prevCommand.equals(commandTextInput.getText())) {
+			currentCommand = commandTextInput.getText();
+			commandTextInput.setText(prevCommand);
+		}
+	}
+	
+	private void recallStoredTypedCommand () {
+		if (!currentCommand.equals(commandTextInput.getText())) {
+			commandTextInput.setText(currentCommand);
+		}
+	}
 
 	@FXML
 	private void onTextfieldKeyPressed (KeyEvent keyEvent) {
 		//System.out.println("Key pressed: " + keyEvent.getText());
+		
+		switch(keyEvent.getCode()) {
+			case UP:
+				recallPreviousCommand();
+				break;
+				
+			case DOWN:
+				recallStoredTypedCommand();
+				break;
+				
+			default:
+				break;
+		}
 	}
 }
