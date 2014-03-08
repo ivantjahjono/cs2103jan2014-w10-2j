@@ -4,8 +4,10 @@ import main.TaskMasterKaboom;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 
 
 public class GraphicInterface extends Application {
@@ -21,9 +23,11 @@ public class GraphicInterface extends Application {
 		}
 		
 		Scene scene = new Scene(root);
+		//scene.setFill(Color.rgb(255, 255, 255, 0.5));
 		//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
+		primaryStage.initStyle(StageStyle.TRANSPARENT);
 		primaryStage.show();
 	}
 	
