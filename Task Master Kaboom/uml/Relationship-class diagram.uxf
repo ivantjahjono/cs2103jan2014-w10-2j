@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.2">
+  <zoom_level>7</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>910</x>
+      <y>413</y>
+      <w>189</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>*Controller*
+/(TaskMasterKaboom.java)/
+
+--
+processCommand(String): String
+activateUI()
+--
+Responsibilities
+Handle control flow when command 
+is received.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>287</x>
+      <y>217</y>
+      <w>224</w>
+      <h>196</h>
+    </coordinates>
+    <panel_attributes>*Gui Display Data*
+/(DisplayData.java)/
+Singleton Object
+--
+- tasksToDisplay : Vector&lt;TaskDisplayInfo&gt;
+- searchResult : Vector&lt;TaskDisplayInfo&gt;
+- feedback : String
+--
++ setTaskToDisplay(Vector&lt;TaskInfo&gt;)
++ getTasksToDisplay: Vector&lt;TaskDisplayInfo&gt;
++ setSearchTaskResult(Vector&lt;TaskInfo&gt;)
++ getSearchTaskResult: Vector&lt;TaskDisplayInfo&gt;
++ setFeedbackMessage(String)
++ getFeedbackMessage: String
+- convertTaskInfoToTaskInfoDisplay(Vector&lt;TaskInfo&gt;, Vector&lt;TaskDisplayInfo&gt;)
+--
+Responsibilities
+Holds the data which will be used to diplay to
+user</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1134</x>
+      <y>819</y>
+      <w>217</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>*Memory*
+/(TaskListShop.java)/
+--
+Vector&lt;TaskInfo&gt; taskList;
+--
+addTaskToList(TaskInfo)
+getTaskByName(String): TaskInfo
+removeTaskByName(String): bool
+
+--
+Responsibilities
+Stores all the task in a list that will be used
+regularly in the application.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1141</x>
+      <y>413</y>
+      <w>189</w>
+      <h>217</h>
+    </coordinates>
+    <panel_attributes>*Command*
+&lt;abstract&gt;
+/(Command.java)/
+--
+Command_Type command;
+TaskInfo taskInfo;
+--
+setCommandType(COMMAND_TYPE)
+setTaskInfo(TaskInfo)
+getCommandType(): COMMAND_TYPE
+getTaskInfo(): TaskInfo
+execute(): String
+add(): String
+delete(): String
+modify(): String
+search(): String
+--
+Responsibilities
+Execute the command</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>882</x>
+      <y>819</y>
+      <w>189</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>*Storage*
+/(Storage.java)/
+--
+att:
+--
+method()
+--
+Responsibilities
+Saving and loading of task data into
+file.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>490</x>
+      <y>308</y>
+      <w>433</w>
+      <h>153</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>420;140;406;140;406;21;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1078</x>
+      <y>427</y>
+      <w>76</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>63;21;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1078</x>
+      <y>441</y>
+      <w>76</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;21;63;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1197</x>
+      <y>469</y>
+      <w>293</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;77;280;70;133;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>952</x>
+      <y>532</y>
+      <w>34</w>
+      <h>300</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;287;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>938</x>
+      <y>525</y>
+      <w>34</w>
+      <h>307</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;21;21;294</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>490</x>
+      <y>322</y>
+      <w>433</w>
+      <h>153</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;21;392;21;392;140;420;140</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1050</x>
+      <y>854</y>
+      <w>97</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>84;21;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1050</x>
+      <y>868</y>
+      <w>97</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;21;84;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1183</x>
+      <y>609</y>
+      <w>34</w>
+      <h>223</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;210;21;133;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1197</x>
+      <y>609</y>
+      <w>34</w>
+      <h>223</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;21;21;210</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1134</x>
+      <y>63</y>
+      <w>189</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>*CommandParser*
+/(Dunno)/
+--
+att:
+--
+method()
+--
+Responsibilities
+Convert command string into useful 
+data to be used.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1050</x>
+      <y>154</y>
+      <w>188</w>
+      <h>272</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;259;21;77;175;77;175;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1036</x>
+      <y>154</y>
+      <w>188</w>
+      <h>272</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>175;21;175;63;21;63;21;259</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>910</x>
+      <y>35</y>
+      <w>189</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>*History*
+/(History.java)/
+--
+attr:
+--
+method():
+--
+Responsibilities
+Keeps tracks of previous commands
+that is executed.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>924</x>
+      <y>154</y>
+      <w>34</w>
+      <h>272</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;21;21;259</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>28</x>
+      <y>441</y>
+      <w>224</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>*User Interface*
+/(KaboomGui.java)/
+--
+- commandTextField: JText
+- taskListDisplay: JTable
+- feedbackLabel: JLabel
+--
++actionPerformed(ActionEvent)
++updateUiDisplay(String, Vector&lt;TaskInfo&gt;)
++initialize()
+--
+Responsibilities
+Handles user interactions</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>105</x>
+      <y>245</y>
+      <w>195</w>
+      <h>209</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>182;21;21;21;21;196</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>231</x>
+      <y>497</y>
+      <w>692</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>679;21;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>231</x>
+      <y>511</y>
+      <w>692</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;21;679;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>938</x>
+      <y>154</y>
+      <w>34</w>
+      <h>272</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;259;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>490</x>
+      <y>259</y>
+      <w>699</w>
+      <h>167</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;21;686;21;686;91;686;154</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>490</x>
+      <y>245</y>
+      <w>713</w>
+      <h>181</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>700;168;700;49;700;21;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>847</x>
+      <y>784</y>
+      <w>539</w>
+      <h>203</h>
+    </coordinates>
+    <panel_attributes>*Memory*
+
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>875</x>
+      <y>0</y>
+      <w>490</w>
+      <h>665</h>
+    </coordinates>
+    <panel_attributes>*Logic*
+
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>0</x>
+      <y>189</y>
+      <w>539</w>
+      <h>420</h>
+    </coordinates>
+    <panel_attributes>*GUI*
+
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
