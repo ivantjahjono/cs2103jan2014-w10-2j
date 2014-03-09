@@ -8,8 +8,38 @@ public class CommandModify extends Command {
 	}
 
 	public String execute() {
-		//TODO Not done
-		return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, "My Task");
+		if (taskInfoToBeModified != null) {
+			preModifiedTaskInfo = TaskListShop.getInstance().getTaskByName(taskInfoToBeModified.getTaskName());
+		}
+		if (preModifiedTaskInfo != null) {
+			taskInfoToBeModified = preModifiedTaskInfo;
+			//transfer all the new information over to taskinfotobemodified
+			if (taskInfo.getTaskName() != null) {
+				taskInfoToBeModified.setTaskName (taskInfo.getTaskName());
+			}
+			if (taskInfo.getTaskType() != null) {
+				taskInfoToBeModified.setTaskType (taskInfo.getTaskType());
+			}
+			if (taskInfo.getStartDate() != null) {
+				taskInfoToBeModified.setStartDate (taskInfo.getStartDate());
+			}
+			if (taskInfo.getEndDate() != null) {
+				taskInfoToBeModified.setEndDate (taskInfo.getEndDate());
+			}
+			if (taskInfo.getImportanceLevel() != 0) {
+				taskInfoToBeModified.setImportanceLevel (taskInfo.getImportanceLevel());
+			}
+			
+			//need error check
+			TaskListShop.getInstance().updateTask (preModifiedTaskInfo, taskInfoToBeModified);
+			
+			//need to decide which taskName to return (previous or updated).
+			return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, preModifiedTaskInfo.getTaskName());
+		}
+		
+		else {
+			return String.format(MESSAGE_COMMAND_MODIFY_FAIL, preModifiedTaskInfo.getTaskName());	
+		}
 	}
 	
 	public String undo () {

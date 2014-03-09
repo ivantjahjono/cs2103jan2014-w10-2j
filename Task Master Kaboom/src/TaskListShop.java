@@ -35,6 +35,19 @@ public class TaskListShop {
 		return null;
 	}
 	
+	public void updateTask (TaskInfo newTaskInfo, TaskInfo prevTaskInfo) {
+		int indexOfTaskListToBeModified = -1;
+		for (int i = 0; i < taskList.size(); i++) {
+			if (prevTaskInfo.equals(taskList.get(i))) {
+				indexOfTaskListToBeModified = i;
+			}
+		}
+	
+		if (indexOfTaskListToBeModified != -1) {
+			taskList.set(indexOfTaskListToBeModified, newTaskInfo);
+		}
+	}
+	
 	public Vector<TaskInfo> getAllTaskInList () {
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(taskList);
 		return vectorToReturn;
