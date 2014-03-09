@@ -9,6 +9,7 @@ public class Command {
 	protected static final String MESSAGE_COMMAND_DELETE_SUCCESS = "%1$s deleted.";
 	protected static final String MESSAGE_COMMAND_DELETE_FAIL = "%1$s fail to delete.";
 	protected static final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
+	protected static final String MESSAGE_COMMAND_MODIFY_FAIL = "Fail to modify %1$s";
 	protected static final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done";
 	protected static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
 	protected static final String MESSAGE_COMMAND_UNDO_SUCCESS = "Command undone!";
