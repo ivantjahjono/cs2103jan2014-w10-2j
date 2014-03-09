@@ -15,6 +15,7 @@ public class Command {
 	protected static final String MESSAGE_COMMAND_UNDO_FAIL = "Fail to undo.";
 	
 	protected COMMAND_TYPE commandType;
+	protected TaskInfo taskInfoToBeModified;
 	protected TaskInfo taskInfo;
 	protected TaskListShop taskListShop;
 	protected DisplayData displayData;
@@ -22,6 +23,7 @@ public class Command {
 	Command () {
 		commandType = COMMAND_TYPE.INVALID;
 		taskInfo = null;
+		taskInfoToBeModified = null;
 		taskListShop = TaskListShop.getInstance();
 		displayData = DisplayData.getInstance();
 	}
@@ -34,12 +36,20 @@ public class Command {
 		taskInfo = info;
 	}
 	
+	public void setTaskInfoToBeModified (TaskInfo info) {
+		taskInfoToBeModified = info;
+	}
+	
 	public COMMAND_TYPE getCommandType () {
 		return commandType;
 	}
 	
 	public TaskInfo getTaskInfo () {
 		return taskInfo;
+	}
+	
+	public TaskInfo getTaskInfoToBeModified () {
+		return taskInfoToBeModified;
 	}
 	
 	public String execute() {
