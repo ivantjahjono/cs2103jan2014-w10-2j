@@ -30,8 +30,6 @@ import java.awt.Color;
 
 
 public class KaboomGUI implements ActionListener, KeyListener {
-
-	private final int MAX_TASK_DISPLAY_COUNT = 10;
 	
 	private JFrame frame;
 	private JTextField txtEnterCommandHere;
@@ -229,12 +227,10 @@ public class KaboomGUI implements ActionListener, KeyListener {
 		String command = txtEnterCommandHere.getText();
 		
 		if (!command.equals("")) {
-			feedback = TaskMasterKaboom.processCommand(command);
+			TaskMasterKaboom.processCommand(command);
 			resetCommandTextfield();
 			prevCommand = command;
 		}
-		
-		updateFeedbackTextfield(feedback);
 	}
 	
 	public void keyTyped(KeyEvent e) {
@@ -261,7 +257,7 @@ public class KaboomGUI implements ActionListener, KeyListener {
 	
 	public void showUpdatedUi () {
 		String feedback = DisplayData.getInstance().getFeedbackMessage();
-		Vector<TaskInfoDisplay> displayInfo = DisplayData.getInstance().getAllTaskDisplayInfo();
+		Vector<TaskInfoDisplay> displayInfo = DisplayData.getInstance().getTaskDisplay();
 		
 		updateUiDisplay(feedback, displayInfo);
 	}
@@ -277,7 +273,7 @@ public class KaboomGUI implements ActionListener, KeyListener {
 	}
 
 	private void updateAllTaskDisplayRows(Vector<TaskInfoDisplay> taskList) {
-		for (int i = 0; i < taskList.size() && i < MAX_TASK_DISPLAY_COUNT; i++) {
+		for (int i = 0; i < taskList.size(); i++) {
 			TaskInfoDisplay infoToDisplay = taskList.get(i);
 			updateThisRowData(infoToDisplay);
 		}

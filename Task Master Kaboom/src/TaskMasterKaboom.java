@@ -25,6 +25,8 @@ public class TaskMasterKaboom {
 	private static final String KEYWORD_COMMAND_MODIFY = "modify";
 	private static final String KEYWORD_COMMAND_SEARCH = "search";
 	
+	private static final String MESSAGE_WELCOME = "Welcome back, Commander";
+	
 	private static final int CORRECT_24HOUR_FORMAT_MIN = 100;
 	private static final int CORRECT_24HOUR_FORMAT_MAX = 2359;
 	
@@ -93,7 +95,14 @@ public class TaskMasterKaboom {
 	
 	private static void activateUi () {
 		taskUi.runUi();
-		updateUi("Welcome back, Commander");
+		updateUiWithFirstLoadedMemory();
+	}
+
+	private static void updateUiWithFirstLoadedMemory() {
+		Result introResult = new Result();
+		introResult.setTasksToDisplay(TaskListShop.getInstance().getAllTaskInList());
+		introResult.setFeedback(MESSAGE_WELCOME);
+		updateUi(introResult);
 	}
 	
 	private static boolean initialiseStorage () {
@@ -113,9 +122,9 @@ public class TaskMasterKaboom {
 	 * 
 	 * Future improvement: Return task class instead.
 	 */
-	public static String processCommand(String userInputSentence) {		
+	public static boolean processCommand(String userInputSentence) {		
 		Command commandToExecute = null;
-		String feedback = "";
+		Result commandResult = null;
 		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
 		String commandParametersString = removeFirstWord(userInputSentence);
 		
@@ -123,13 +132,13 @@ public class TaskMasterKaboom {
 		Error errorType = updateCommandInfoFromParameter(commandToExecute, commandParametersString);
 		
 		if (errorType == null) {
-			feedback = commandToExecute.execute();
+			commandResult = commandToExecute.execute();
 		} else {
-			feedback = errorType.getErrorMessage();
+			commandResult = new Result();
+			commandResult.setFeedback(errorType.getErrorMessage());
 		}
 		
-		// Later to be move to somewhere else
-		updateUi(feedback);
+		updateUi(commandResult);
 		
 		// Add recent command to History list
 		addToCommandHistory(new Command());
@@ -137,7 +146,7 @@ public class TaskMasterKaboom {
 		// Save data to file
 		fileStorage.store();
 		
-		return feedback;
+		return true;
 	}
 	
 	private static String removeFirstWord(String userInputSentence) {
@@ -145,11 +154,8 @@ public class TaskMasterKaboom {
 		return wordRemoved;
 	}
 
-	private static void updateUi(String feedback) {
-		Vector<TaskInfo> taskToDisplay = TaskListShop.getInstance().getAllTaskInList();
-		
-		guiDisplayData.setFeedbackMessage(feedback);
-		guiDisplayData.setTaskDataToDisplay(taskToDisplay);
+	private static void updateUi(Result commandResult) {
+		guiDisplayData.updateDisplayWithResult(commandResult);
 		taskUi.showUpdatedUi();
 	}
 	
@@ -193,7 +199,7 @@ public class TaskMasterKaboom {
 		//to store existing taskinfo to be modified 
 		TaskInfo taskInformationToBeModified = new TaskInfo();
 		
-		Error errorType = createTaskInfoBasedOnCommand(taskInformation,taskInformationToBeModified, parameters);
+		Error errorType = createTaskInfoBasedOnCommand(taskInformation, taskInformationToBeModified, parameters);
 		commandToUpdate.setTaskInfo(taskInformation);
 		
 		//modify
