@@ -14,7 +14,7 @@ public class CommandModify extends Command {
 		if (preModifiedTaskInfo != null) {
 			taskInfoToBeModified = preModifiedTaskInfo;
 			//transfer all the new information over to taskinfotobemodified
-			if (taskInfo.getTaskName() != null) {
+			if (taskInfo.getTaskName() != "") {
 				taskInfoToBeModified.setTaskName (taskInfo.getTaskName());
 			}
 			if (taskInfo.getTaskType() != null) {
