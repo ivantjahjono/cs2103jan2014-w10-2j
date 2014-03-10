@@ -4,8 +4,6 @@ public class TaskListShop {
 
 	private Vector<TaskInfo> taskList;
 	
-	private Vector<TaskInfo> searchList;
-	
 	private static TaskListShop taskListInstance = null;
 	
 	public static TaskListShop getInstance () {
@@ -18,20 +16,11 @@ public class TaskListShop {
 	
 	private TaskListShop () {
 		taskList = new Vector<TaskInfo>();
-		searchList = new Vector<TaskInfo>();
 	}
 	
 	public boolean addTaskToList (TaskInfo newTask) {
 		if (taskList != null) {
 			return taskList.add(newTask);
-		} else {
-			return false;
-		}
-	}
-	
-	public boolean addTaskToSearch (TaskInfo newTask) {
-		if (taskList != null) {
-			return searchList.add(newTask);
 		} else {
 			return false;
 		}
@@ -62,12 +51,6 @@ public class TaskListShop {
 	
 	public Vector<TaskInfo> getAllTaskInList () {
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(taskList);
-		return vectorToReturn;
-	}
-	
-	public Vector<TaskInfo> getSearchList() {
-		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(searchList);
-		searchList.clear();  //Clear the search list each time the search list is returned
 		return vectorToReturn;
 	}
 	
