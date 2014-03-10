@@ -4,6 +4,8 @@
 	 * 
 	 */
 
+import java.util.Vector;
+
 public class CommandSearch extends Command {
 	
 	CommandSearch () {
@@ -13,9 +15,17 @@ public class CommandSearch extends Command {
 
 	public String execute() {
 		String taskName = taskInfo.getTaskName();
-		TaskInfo searchTask = taskListShop. getTaskByName(taskName);
-		taskInfo = searchTask;
-		return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS);
+		Vector<TaskInfo> allTasks = TaskListShop.getInstance().getAllTaskInList();
+		int count = 0;  //Count the number of items found
+		
+		for (int i = 0; i < allTasks.size(); i++) {
+			TaskInfo singleTask = allTasks.get(i);
+			if (singleTask.getTaskName().contains(taskName)) {
+				TaskListShop.getInstance().addTaskToSearch(singleTask);
+				count++;
+			}
+		}
+		return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, count);
 	}
 	
 }

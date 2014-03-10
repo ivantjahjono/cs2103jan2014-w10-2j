@@ -93,7 +93,7 @@ public class TaskMasterKaboom {
 	
 	private static void activateUi () {
 		taskUi.runUi();
-		updateUi("Welcome back, Commander");
+		updateUi(false, "Welcome back, Commander");
 	}
 	
 	private static boolean initialiseStorage () {
@@ -129,7 +129,9 @@ public class TaskMasterKaboom {
 		}
 		
 		// Later to be move to somewhere else
-		updateUi(feedback);
+		boolean isSearch = (commandType == COMMAND_TYPE.SEARCH);
+		updateUi(isSearch, feedback);
+		//updateUi(feedback);
 		
 		// Add recent command to History list
 		addToCommandHistory(new Command());
@@ -145,8 +147,14 @@ public class TaskMasterKaboom {
 		return wordRemoved;
 	}
 
-	private static void updateUi(String feedback) {
-		Vector<TaskInfo> taskToDisplay = TaskListShop.getInstance().getAllTaskInList();
+	private static void updateUi(boolean isSearch, String feedback) {
+		Vector<TaskInfo> taskToDisplay;
+		if (isSearch) {
+			taskToDisplay = TaskListShop.getInstance().getSearchList();
+		}
+		else {
+			taskToDisplay = TaskListShop.getInstance().getAllTaskInList();
+		}
 		
 		guiDisplayData.setFeedbackMessage(feedback);
 		guiDisplayData.setTaskDataToDisplay(taskToDisplay);
