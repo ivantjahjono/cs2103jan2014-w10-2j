@@ -157,7 +157,7 @@ public class TaskMasterKaboom {
 		}
 		
 		guiDisplayData.setFeedbackMessage(feedback);
-		guiDisplayData.setTaskDataToDisplay(taskToDisplay);
+		guiDisplayData.setTaskDisplayToThese(taskToDisplay);
 		taskUi.showUpdatedUi();
 	}
 	
