@@ -9,6 +9,7 @@ public class CommandModify extends Command {
 
 	public Result execute() {
 		String commandFeedback = "";
+		String taskName = "";
 		
 		if (taskInfoToBeModified != null) {
 			taskName = taskInfoToBeModified.getTaskName();
@@ -41,12 +42,15 @@ public class CommandModify extends Command {
 			
 			//need to decide which taskName to return (previous or updated).
 			commandFeedback = String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, preModifiedTaskInfo.getTaskName());
+		} else {
+			commandFeedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL, preModifiedTaskInfo.getTaskName());
 		}
 		
-			commandFeedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL, preModifiedTaskInfo.getTaskName());	
+		return createResult(taskListShop.getAllTaskInList(), commandFeedback);
 	}
 		
-		return createResult(taskListShop.getAllTaskInList(), commandFeedback);
+		
+
 	
 	public String undo () {
 		//TODO Not done
