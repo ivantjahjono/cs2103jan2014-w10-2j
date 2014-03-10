@@ -31,11 +31,11 @@ public class TaskMasterKaboom {
 	private static final int CORRECT_24HOUR_FORMAT_MAX = 2359;
 	
 	private static final int THE_24_HOUR_FORMAT_CODE = 1;
-	private static final int THE_24_HOUR_FORMAT_WITH_COLON_CODE = 2;
-	private static final int THE_AM_FORMAT_CODE = 3;
-	private static final int THE_AM_FORMAT_WITH_COLON_CODE = 4;
-	private static final int THE_PM_FORMAT_CODE = 5;
-	private static final int THE_PM_FORMAT_WITH_COLON_CODE = 6;
+	//private static final int THE_24_HOUR_FORMAT_WITH_COLON_CODE = 2;
+	//private static final int THE_AM_FORMAT_CODE = 3;
+	//private static final int THE_AM_FORMAT_WITH_COLON_CODE = 4;
+	//private static final int THE_PM_FORMAT_CODE = 5;
+	//private static final int THE_PM_FORMAT_WITH_COLON_CODE = 6;
 	private static final int START_DATE_COUNT = 1;
 	private static final int END_DATE_COUNT = 2;
 	
@@ -271,7 +271,7 @@ public class TaskMasterKaboom {
 		String taskname = "";
 		//int startDate;
 		//int endDate;
-		int priority = 2;
+		int priority = 0;
 		
 		// Cut the command into their respective syntax. Will return hash table of data strings
 		Hashtable<KEYWORD_TYPE, String> keywordHashTable = new Hashtable<KEYWORD_TYPE, String>();
@@ -402,12 +402,22 @@ public class TaskMasterKaboom {
 		
 			//thisTaskInfo.setStartDate(startDate);
 			//thisTaskInfo.setEndDate(endDate);
+			int processedTextLength = processedText.length;
+			priority = findPriority(processedText[processedTextLength-1]);
 			thisTaskInfo.setImportanceLevel(priority);
 		
 		}
 		return null;
 	}
 	
+	private static int findPriority(String priorityString){
+		
+		if(priorityString.contains("*")){
+			char[] countPriorityStar = priorityString.toCharArray();
+			return countPriorityStar.length;
+		}
+		return 0;
+	}
 	//TODO Clean up and refactor code
 	private static Error createKeywordTableBasedOnParameter(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
 		String currentString = userInputSentence;
