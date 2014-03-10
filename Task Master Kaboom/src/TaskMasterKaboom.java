@@ -124,7 +124,6 @@ public class TaskMasterKaboom {
 	 */
 	public static boolean processCommand(String userInputSentence) {		
 		Command commandToExecute = null;
-		String feedback = "";
 		Result commandResult = null;
 		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
 		String commandParametersString = removeFirstWord(userInputSentence);
@@ -140,8 +139,6 @@ public class TaskMasterKaboom {
 		}
 		
 		updateUi(commandResult);
-		updateUi(isSearch, feedback);
-		//updateUi(feedback);
 		
 		// Add recent command to History list
 		addToCommandHistory(new Command());
@@ -159,12 +156,6 @@ public class TaskMasterKaboom {
 
 	private static void updateUi(Result commandResult) {
 		guiDisplayData.updateDisplayWithResult(commandResult);
-		if (isSearch) {
-			taskToDisplay = TaskListShop.getInstance().getSearchList();
-		}
-		else {
-			taskToDisplay = TaskListShop.getInstance().getAllTaskInList();
-		}
 		taskUi.showUpdatedUi();
 	}
 	
@@ -208,7 +199,7 @@ public class TaskMasterKaboom {
 		//to store existing taskinfo to be modified 
 		TaskInfo taskInformationToBeModified = new TaskInfo();
 		
-		Error errorType = createTaskInfoBasedOnCommand(taskInformation,taskInformationToBeModified, parameters);
+		Error errorType = createTaskInfoBasedOnCommand(taskInformation, taskInformationToBeModified, parameters);
 		commandToUpdate.setTaskInfo(taskInformation);
 		
 		//modify
