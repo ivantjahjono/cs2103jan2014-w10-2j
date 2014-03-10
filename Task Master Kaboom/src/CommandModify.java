@@ -11,6 +11,10 @@ public class CommandModify extends Command {
 		String commandFeedback = "";
 		
 		if (taskInfoToBeModified != null) {
+			taskName = taskInfoToBeModified.getTaskName();
+		}
+		if (!taskName.isEmpty()) {
+			preModifiedTaskInfo = TaskListShop.getInstance().getTaskByName(taskName);
 			preModifiedTaskInfo = TaskListShop.getInstance().getTaskByName(taskInfoToBeModified.getTaskName());
 		}
 		if (preModifiedTaskInfo != null) {
@@ -38,12 +42,11 @@ public class CommandModify extends Command {
 			//need to decide which taskName to return (previous or updated).
 			commandFeedback = String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, preModifiedTaskInfo.getTaskName());
 		}
-		else {
+		
 			commandFeedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL, preModifiedTaskInfo.getTaskName());	
-		}
+	}
 		
 		return createResult(taskListShop.getAllTaskInList(), commandFeedback);
-	}
 	
 	public String undo () {
 		//TODO Not done

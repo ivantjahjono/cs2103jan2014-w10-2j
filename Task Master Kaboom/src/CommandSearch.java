@@ -3,6 +3,7 @@
 	 * Search result will be returned in the command's taskInfo variable
 	 * 
 	 */
+import java.util.Vector;
 
 import java.util.Vector;
 

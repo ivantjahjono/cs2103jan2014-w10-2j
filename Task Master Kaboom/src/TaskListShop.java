@@ -5,6 +5,8 @@ public class TaskListShop {
 	private Vector<TaskInfo> taskList;
 	private Vector<TaskInfo> searchList;
 
+	private Vector<TaskInfo> searchList;
+	
 	private static TaskListShop taskListInstance = null;
 
 	public static TaskListShop getInstance () {
@@ -35,9 +37,10 @@ public class TaskListShop {
 			return false;
 		}
 	}
-
+	
 	public TaskInfo getTaskByName (String taskName) {
 		for (int i = 0; i < taskList.size(); i++) {
+			System.out.println(taskList.get(i).getTaskName());
 			if (taskName.equals(taskList.get(i).getTaskName())) {
 				return taskList.get(i);
 			}
@@ -60,6 +63,12 @@ public class TaskListShop {
 
 	public Vector<TaskInfo> getAllTaskInList () {
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(taskList);
+		return vectorToReturn;
+	}
+	
+	public Vector<TaskInfo> getSearchList() {
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(searchList);
+		searchList.clear();  //Clear the search list each time the search list is returned
 		return vectorToReturn;
 	}
 
