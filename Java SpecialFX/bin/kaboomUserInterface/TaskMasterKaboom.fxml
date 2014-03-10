@@ -52,7 +52,7 @@
         <InnerShadow />
       </effect>
       <image>
-        <Image url="@../../../../../Workspace/projects/cardgame/Assets/gridX.png" />
+        <Image url="@img/gridX.png" />
       </image>
     </ImageView>
   </children>
