@@ -28,6 +28,7 @@ public class TaskListShop {
 	
 	public TaskInfo getTaskByName (String taskName) {
 		for (int i = 0; i < taskList.size(); i++) {
+			System.out.println(taskList.get(i).getTaskName());
 			if (taskName.equals(taskList.get(i).getTaskName())) {
 				return taskList.get(i);
 			}

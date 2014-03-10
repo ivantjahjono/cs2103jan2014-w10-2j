@@ -8,8 +8,12 @@ public class CommandModify extends Command {
 	}
 
 	public String execute() {
+		String taskName = "";
 		if (taskInfoToBeModified != null) {
-			preModifiedTaskInfo = TaskListShop.getInstance().getTaskByName(taskInfoToBeModified.getTaskName());
+			taskName = taskInfoToBeModified.getTaskName();
+		}
+		if (!taskName.isEmpty()) {
+			preModifiedTaskInfo = TaskListShop.getInstance().getTaskByName(taskName);
 		}
 		if (preModifiedTaskInfo != null) {
 			taskInfoToBeModified = preModifiedTaskInfo;
@@ -34,12 +38,11 @@ public class CommandModify extends Command {
 			TaskListShop.getInstance().updateTask (preModifiedTaskInfo, taskInfoToBeModified);
 			
 			//need to decide which taskName to return (previous or updated).
-			return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, preModifiedTaskInfo.getTaskName());
+			return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, taskName);
 		}
 		
-		else {
-			return String.format(MESSAGE_COMMAND_MODIFY_FAIL, preModifiedTaskInfo.getTaskName());	
-		}
+		
+		return String.format(MESSAGE_COMMAND_MODIFY_FAIL, taskName);	
 	}
 	
 	public String undo () {
