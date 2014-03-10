@@ -72,6 +72,15 @@ public class TaskInfo {
 		return isExpired;
 	}
 	
+	public boolean isEmpty () {
+	
+		if (taskname == "" && startDate == null && endDate == null && importanceLevel == 0) {
+			return true;
+		}		
+		
+		return false;
+	}
+	
 	public static TASK_TYPE getTaskType(String taskType) {
 		if (taskType.equalsIgnoreCase("DEADLINE")) {
 			return TASK_TYPE.DEADLINE;
