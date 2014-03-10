@@ -227,12 +227,10 @@ public class KaboomGUI implements ActionListener, KeyListener {
 		String command = txtEnterCommandHere.getText();
 		
 		if (!command.equals("")) {
-			feedback = TaskMasterKaboom.processCommand(command);
+			TaskMasterKaboom.processCommand(command);
 			resetCommandTextfield();
 			prevCommand = command;
 		}
-		
-		updateFeedbackTextfield(feedback);
 	}
 	
 	public void keyTyped(KeyEvent e) {
@@ -259,7 +257,7 @@ public class KaboomGUI implements ActionListener, KeyListener {
 	
 	public void showUpdatedUi () {
 		String feedback = DisplayData.getInstance().getFeedbackMessage();
-		Vector<TaskInfoDisplay> displayInfo = DisplayData.getInstance().getAllTaskDisplayInfo();
+		Vector<TaskInfoDisplay> displayInfo = DisplayData.getInstance().getTaskDisplay();
 		
 		updateUiDisplay(feedback, displayInfo);
 	}
