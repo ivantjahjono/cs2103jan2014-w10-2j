@@ -666,7 +666,11 @@ public class TaskMasterKaboom {
 	
 	private static String functionFindTaskname(String[] processedText){
 		String actualTaskName = "";
-		for(int i=0; i<processedText.length; i++){
+		int loopLength = processedText.length;
+		if(processedText[loopLength-1].contains("*")){
+			loopLength--;
+		}
+		for(int i=0; i<loopLength; i++){
 			if((!processedText[i].equals("by")) && (!processedText[i].equals("at")) && (!processedText[i].equals("on"))){
 				actualTaskName += processedText[i] + " ";	
 			}
