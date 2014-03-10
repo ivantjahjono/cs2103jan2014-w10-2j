@@ -27,6 +27,26 @@ public class DisplayData {
 		currentPage = 0;
 	}
 	
+	public void updateDisplayWithResult (Result commandResult) {
+		if (commandResult.getTasksToDisplay() != null) {
+			setTaskDisplayToThese(commandResult.getTasksToDisplay());
+		}
+		setFeedbackMessage(commandResult.getFeedback());
+		
+		if (commandResult.getGoToNextPage()) {
+			currentPage++;
+			
+			int maxPage = tasksDataToDisplay.size()/NUM_OF_TASK_PER_PAGE;
+			if (currentPage > maxPage) {
+				currentPage = maxPage;
+			}
+		} else if (commandResult.getGoToPrevPage()) {
+			if (currentPage > 1) {
+				currentPage--;
+			}
+		}
+	}
+	
 	public Vector<TaskInfoDisplay> getAllTaskDisplayInfo () {
 		return tasksDataToDisplay;
 	}

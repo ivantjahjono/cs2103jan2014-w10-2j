@@ -1,3 +1,5 @@
+import java.util.Vector;
+
 /* 
 ** Purpose: 
 */
@@ -53,8 +55,16 @@ public class Command {
 		return taskInfoToBeModified;
 	}
 	
-	public String execute() {
-		return MESSAGE_COMMAND_INVALID;
+	public Result execute() {
+		return createResult(new Vector<TaskInfo>(), MESSAGE_COMMAND_INVALID);
+	}
+	
+	protected Result createResult (Vector<TaskInfo> taskToBeDisplayed, String feedback) {
+		Result commandResult = new Result();
+		commandResult.setTasksToDisplay(taskToBeDisplayed);
+		commandResult.setFeedback(feedback);
+		
+		return commandResult;
 	}
 	
 	public String undo () {

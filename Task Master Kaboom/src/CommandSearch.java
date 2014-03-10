@@ -13,19 +13,22 @@ public class CommandSearch extends Command {
 	}
 
 
-	public String execute() {
+	public Result execute() {
+		String commandFeedback = "";
+		
 		String taskName = taskInfo.getTaskName();
 		Vector<TaskInfo> allTasks = TaskListShop.getInstance().getAllTaskInList();
-		int count = 0;  //Count the number of items found
+		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
 		
 		for (int i = 0; i < allTasks.size(); i++) {
 			TaskInfo singleTask = allTasks.get(i);
 			if (singleTask.getTaskName().contains(taskName)) {
-				TaskListShop.getInstance().addTaskToSearch(singleTask);
-				count++;
+				tasksFound.add(singleTask);
 			}
 		}
-		return String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, count);
+		commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
+		
+		return createResult(tasksFound, commandFeedback);
 	}
 	
 }
