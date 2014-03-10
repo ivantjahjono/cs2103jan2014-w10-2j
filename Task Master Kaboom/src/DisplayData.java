@@ -6,14 +6,13 @@ import java.util.Vector;
 // Properties: Singleton
 //
 public class DisplayData {
-	final int MAX_TASK_DISPLAY_COUNT = 10;
-	
-	Vector<TaskInfoDisplay> tasksDataToDisplay;
-	Vector<TaskInfoDisplay> taskSearchResult;
-	
-	String userFeedbackMessage;
+	final int NUM_OF_TASK_PER_PAGE = 10;
 	
 	static DisplayData instance;
+	
+	Vector<TaskInfoDisplay> tasksDataToDisplay;
+	String userFeedbackMessage;
+	int currentPage;
 	
 	public static DisplayData getInstance () {
 		if (instance == null) {
@@ -24,26 +23,39 @@ public class DisplayData {
 	
 	private DisplayData () {
 		tasksDataToDisplay = new Vector<TaskInfoDisplay>();
-		taskSearchResult = new Vector<TaskInfoDisplay>();
-		userFeedbackMessage = "Hello World!";
+		userFeedbackMessage = "";
+		currentPage = 0;
 	}
 	
 	public Vector<TaskInfoDisplay> getAllTaskDisplayInfo () {
 		return tasksDataToDisplay;
 	}
 	
-	public void setTaskDataToDisplay (Vector<TaskInfo> taskList) {
+	public Vector<TaskInfoDisplay> getTaskDisplay () {
+		Vector<TaskInfoDisplay> selectedTaskToDisplay = new Vector<TaskInfoDisplay>();
+		int startTaskIndex = currentPage*NUM_OF_TASK_PER_PAGE;
+		int endTaskIndex = getLastIndexOfPage(currentPage);
+		
+		for (int i = startTaskIndex; i < endTaskIndex; i++) {
+			selectedTaskToDisplay.add(tasksDataToDisplay.get(i));
+		}
+		
+		return selectedTaskToDisplay;
+	}
+
+	private int getLastIndexOfPage(int startPage) {
+		int maxCurrentPage = currentPage+NUM_OF_TASK_PER_PAGE;
+		
+		if (maxCurrentPage > tasksDataToDisplay.size()) {
+			return tasksDataToDisplay.size();
+		}
+		
+		return maxCurrentPage;
+	}
+	
+	public void setTaskDisplayToThese (Vector<TaskInfo> taskList) {
 		tasksDataToDisplay.clear();
 		convertTasksIntoDisplayData(taskList, tasksDataToDisplay);
-	}
-	
-	public Vector<TaskInfoDisplay> getAllSearchResult () {
-		return taskSearchResult;
-	}
-	
-	public void setTaskSearchResult (Vector<TaskInfo> taskList) {
-		taskSearchResult.clear();
-		convertTasksIntoDisplayData(taskList, taskSearchResult);
 	}
 
 	private void convertTasksIntoDisplayData(Vector<TaskInfo> taskList, Vector<TaskInfoDisplay> taskListToAddinto) {
