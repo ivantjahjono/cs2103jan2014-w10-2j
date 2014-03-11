@@ -5,15 +5,17 @@ public class CommandDelete extends Command {
 		commandType = COMMAND_TYPE.DELETE;
 	}
 
-	public String execute() {
+	public Result execute() {
 		String taskName = taskInfo.getTaskName();
-
+		String commandFeedback = "";
+		
 		if (taskListShop.removeTaskByName(taskName)) {
-			return String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);	
-			
+			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
+		} else {
+			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
 		}
 		
-		return String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
+		return createResult(taskListShop.getAllTaskInList(), commandFeedback);
 	}
 	
 	public String undo () {
