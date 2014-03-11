@@ -16,6 +16,8 @@ public class Command {
 	protected static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
 	protected static final String MESSAGE_COMMAND_UNDO_SUCCESS = "Command undone!";
 	protected static final String MESSAGE_COMMAND_UNDO_FAIL = "Fail to undo.";
+	protected static final String MESSAGE_COMMAND_CLEAR_SUCCESS = "Cleared memory";
+	
 	
 	protected COMMAND_TYPE commandType;
 	protected TaskInfo taskInfoToBeModified;

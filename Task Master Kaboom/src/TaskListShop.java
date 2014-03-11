@@ -65,4 +65,14 @@ public class TaskListShop {
 
 		return false;
 	}
+	
+	public Vector<TaskInfo> clearAllTasks () {
+		taskList = new Vector<TaskInfo>();
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(taskList);
+		return vectorToReturn;
+	}
+	
+	public int shopSize () {
+		return taskList.size();
+	}
 }

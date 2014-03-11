@@ -11,7 +11,7 @@ import java.util.Vector;
 ** 
 **/
 enum COMMAND_TYPE {
-		ADD, DELETE, MODIFY, SEARCH, INVALID;
+		ADD, DELETE, MODIFY, SEARCH, INVALID, CLEAR;
 }
 
 enum KEYWORD_TYPE {
@@ -24,6 +24,7 @@ public class TaskMasterKaboom {
 	private static final String KEYWORD_COMMAND_DELETE = "delete";
 	private static final String KEYWORD_COMMAND_MODIFY = "modify";
 	private static final String KEYWORD_COMMAND_SEARCH = "search";
+	private static final String KEYWORD_COMMAND_CLEAR = "clear";
 	
 	private static final String MESSAGE_WELCOME = "Welcome back, Commander";
 	
@@ -190,6 +191,10 @@ public class TaskMasterKaboom {
 				newlyCreatedCommand = new CommandSearch();
 				break;
 				
+			case CLEAR:
+				newlyCreatedCommand = new CommandClear();
+				break;
+				
 			default:
 				newlyCreatedCommand = new Command();
 				break;
@@ -228,6 +233,8 @@ public class TaskMasterKaboom {
 				return COMMAND_TYPE.MODIFY;
 			case KEYWORD_COMMAND_SEARCH:
 				return COMMAND_TYPE.SEARCH;
+			case KEYWORD_COMMAND_CLEAR:
+				return COMMAND_TYPE.CLEAR;
 			default:
 				return COMMAND_TYPE.INVALID;
 		}
