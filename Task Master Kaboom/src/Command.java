@@ -56,7 +56,7 @@ public class Command {
 	}
 	
 	public Result execute() {
-		return createResult(new Vector<TaskInfo>(), MESSAGE_COMMAND_INVALID);
+		return createResult(null, MESSAGE_COMMAND_INVALID);
 	}
 	
 	protected Result createResult (Vector<TaskInfo> taskToBeDisplayed, String feedback) {
