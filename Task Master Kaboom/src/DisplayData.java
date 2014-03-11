@@ -29,7 +29,7 @@ public class DisplayData {
 	
 	public void updateDisplayWithResult (Result commandResult) {
 		// TODO Hardcoded way of forcing to show to default if there is no tasks to display
-		if (commandResult.getTasksToDisplay().size() > 0) {
+		if (commandResult.getTasksToDisplay() != null) {
 			setTaskDisplayToThese(commandResult.getTasksToDisplay());
 		}
 		setFeedbackMessage(commandResult.getFeedback());
