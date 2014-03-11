@@ -8,10 +8,17 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" fx:id="mainPane" blendMode="SRC_OVER" focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" prefHeight="431.0" prefWidth="600.0" snapToPixel="true" translateX="0.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboomUserInterface.MainWindow">
+<AnchorPane id="AnchorPane" fx:id="mainPane" blendMode="SRC_OVER" focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" onKeyPressed="#onWindowKeyPressed" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" prefHeight="431.0" prefWidth="600.0" snapToPixel="true" translateX="0.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboomUserInterface.MainWindow">
   <children>
+    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="WHITE" height="431.0" layoutX="0.0" layoutY="0.0" opacity="1.0" smooth="true" strokeType="INSIDE" strokeWidth="1.0" styleClass="column-header" width="600.0">
+      <stroke>
+        <Color blue="0.937" green="0.537" red="0.176" fx:id="x4" />
+      </stroke>
+    </Rectangle>
+    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="$x4" height="27.0" layoutX="0.0" layoutY="0.0" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0" />
     <TextField fx:id="commandTextInput" disable="false" layoutX="14.0" layoutY="400.0" onAction="#onTextfieldAction" onKeyPressed="#onTextfieldKeyPressed" prefWidth="572.0" promptText="Please enter a command" text="" />
     <TableView fx:id="taskDisplayTable" editable="false" focusTraversable="false" layoutX="14.0" layoutY="74.0" prefHeight="288.0" prefWidth="572.0" tableMenuButtonVisible="false" visible="true">
       <columns>
@@ -25,7 +32,7 @@
         <URL value="@application.css" />
       </stylesheets>
     </TableView>
-    <Label layoutX="19.0" layoutY="5.0" text="TASK MASTER KABOOM">
+    <Label layoutX="17.0" layoutY="5.0" text="| TASK MASTER KABOOM" textFill="WHITE">
       <font>
         <Font name="Segoe UI" size="12.0" />
       </font>
@@ -44,13 +51,13 @@
     </Pane>
     <ImageView fx:id="exitButton" fitHeight="18.0" fitWidth="18.0" layoutX="578.0" layoutY="4.0" onMousePressed="#onExitButtonPressed" pickOnBounds="true" preserveRatio="true">
       <effect>
-        <InnerShadow />
+        <InnerShadow color="WHITE" height="255.0" radius="68.5" />
       </effect>
       <image>
         <Image url="@img/gridX.png" />
       </image>
     </ImageView>
-    <HBox alignment="BOTTOM_CENTER" layoutX="8.0" layoutY="35.0" prefHeight="36.0" prefWidth="567.0">
+    <HBox alignment="CENTER" layoutX="8.0" layoutY="35.0" prefHeight="36.0" prefWidth="567.0">
       <children>
         <Label fx:id="header_all" alignment="CENTER" contentDisplay="TOP" prefWidth="80.0" styleClass="header-label-normal" text="ALL" textAlignment="LEFT" underline="false">
           <font>
@@ -89,4 +96,7 @@
       </children>
     </HBox>
   </children>
+  <stylesheets>
+    <URL value="@application.css" />
+  </stylesheets>
 </AnchorPane>

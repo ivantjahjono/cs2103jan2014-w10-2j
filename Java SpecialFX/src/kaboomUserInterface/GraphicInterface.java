@@ -38,6 +38,9 @@ public class GraphicInterface extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.initStyle(StageStyle.TRANSPARENT);
 		primaryStage.show();
+		
+		
+		mainWindow.prepareTextfieldFocus();
 	}
 	
 	public void run(String[] args) {

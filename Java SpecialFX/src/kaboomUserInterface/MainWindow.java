@@ -59,6 +59,10 @@ public class MainWindow implements javafx.fxml.Initializable {
 	
 	private ObservableList<TaskInfoDisplay> data = FXCollections.observableArrayList();
 	
+	Vector<Label> labelList;
+	int currentLabelIndex;
+	int previousLabelIndex;
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		columnTaskId.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, Integer>("taskId"));
@@ -80,11 +84,16 @@ public class MainWindow implements javafx.fxml.Initializable {
 //	        }
 //	    });
 		
-		//header_all.getStyleClass().clear();
-		//header_deadline.getStyleClass().add("header-label-selected");
-		header_all.getStyleClass().remove("header-label-selected");
-		header_all.getStyleClass().remove("header-label-normal");
-		header_all.getStyleClass().add("header-label-selected");
+		labelList = new Vector<Label>();
+		labelList.add(header_all);
+		labelList.add(header_running);
+		labelList.add(header_deadline);
+		labelList.add(header_timed);
+		labelList.add(header_search);
+		currentLabelIndex = 0;
+		previousLabelIndex = 0;
+		
+		setHeaderLabelToSelected(labelList.get(currentLabelIndex));
 		
 		updateTaskTable();
 		updateFeedbackMessage();
@@ -92,6 +101,10 @@ public class MainWindow implements javafx.fxml.Initializable {
 	
 	public void setStage (Stage currentStage) {
 		windowStage = currentStage;
+	}
+	
+	public void prepareTextfieldFocus () {
+		commandTextInput.requestFocus();
 	}
 	
 	@FXML
@@ -178,5 +191,46 @@ public class MainWindow implements javafx.fxml.Initializable {
 	private void onWindowMousePressed (MouseEvent mouseEvent) {
 		initialX = mouseEvent.getSceneX();
 		initialY = mouseEvent.getSceneY();
+	}
+	
+	@FXML
+	private void onWindowKeyPressed (KeyEvent keyEvent) {
+		//System.out.println("Key pressed: " + keyEvent.getText());
+		
+		if (!keyEvent.isControlDown()) {
+			return;
+		}
+		
+		previousLabelIndex = currentLabelIndex;
+		switch(keyEvent.getCode()) {
+			case LEFT:
+				currentLabelIndex--;
+				
+				if (currentLabelIndex < 0) {
+					currentLabelIndex = labelList.size()-1;
+				}
+				break;
+				
+			case RIGHT:
+				currentLabelIndex++;
+				currentLabelIndex %= labelList.size();
+				break;
+				
+			default:
+				break;
+		}
+		
+		setHeaderLabelToNormal(labelList.get(previousLabelIndex));
+		setHeaderLabelToSelected(labelList.get(currentLabelIndex));
+	}
+	
+	private void setHeaderLabelToNormal (Label labelToChange) {
+		labelToChange.getStyleClass().remove("header-label-selected");
+		labelToChange.getStyleClass().add("header-label-normal");
+	}
+	
+	private void setHeaderLabelToSelected (Label labelToChange) {
+		labelToChange.getStyleClass().remove("header-label-normal");
+		labelToChange.getStyleClass().add("header-label-selected");
 	}
 }
