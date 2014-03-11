@@ -50,39 +50,43 @@
         <Image url="@img/gridX.png" />
       </image>
     </ImageView>
-    <Label fx:id="header_all" alignment="BOTTOM_LEFT" contentDisplay="TOP" layoutX="19.0" layoutY="42.0" prefWidth="80.0" text="ALL" textAlignment="LEFT" textFill="#0066ff" underline="false">
-      <font>
-        <Font name="Segoe UI" size="24.0" />
-      </font>
-      <stylesheets>
-        <URL value="@application.css" />
-      </stylesheets>
-    </Label>
-    <Label fx:id="header_running" alignment="BOTTOM_LEFT" contentDisplay="TOP" layoutX="84.0" layoutY="45.0" prefWidth="139.0" text="RUNNING" textAlignment="LEFT" textFill="#9f9f9f" underline="false">
-      <font>
-        <Font name="Segoe UI" size="20.0" fx:id="x1" />
-      </font>
-      <stylesheets>
-        <URL value="@application.css" />
-      </stylesheets>
-    </Label>
-    <Label fx:id="header_deadline" alignment="BOTTOM_LEFT" contentDisplay="TOP" font="$x1" layoutX="203.0" layoutY="45.0" prefWidth="139.0" text="DEADLINE" textAlignment="LEFT" underline="false">
-      <stylesheets>
-        <URL value="@application.css" />
-      </stylesheets>
-      <textFill>
-        <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
-      </textFill>
-    </Label>
-    <Label fx:id="header_timed" alignment="BOTTOM_LEFT" contentDisplay="TOP" font="$x1" layoutX="326.0" layoutY="45.0" prefWidth="139.0" text="TIMED" textAlignment="LEFT" textFill="$x2" underline="false">
-      <stylesheets>
-        <URL value="@application.css" />
-      </stylesheets>
-    </Label>
-    <Label fx:id="header_search" alignment="BOTTOM_LEFT" contentDisplay="TOP" font="$x1" layoutX="416.0" layoutY="45.0" prefWidth="101.0" text="SEARCH" textAlignment="LEFT" textFill="$x2" underline="false">
-      <stylesheets>
-        <URL value="@application.css" />
-      </stylesheets>
-    </Label>
+    <HBox alignment="BOTTOM_CENTER" layoutX="8.0" layoutY="35.0" prefHeight="36.0" prefWidth="567.0">
+      <children>
+        <Label fx:id="header_all" alignment="CENTER" contentDisplay="TOP" prefWidth="80.0" styleClass="header-label-normal" text="ALL" textAlignment="LEFT" underline="false">
+          <font>
+            <Font name="Segoe UI" size="20.0" fx:id="x1" />
+          </font>
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+          <textFill>
+            <Color blue="0.625" green="0.625" red="0.625" fx:id="x2" />
+          </textFill>
+        </Label>
+        <Label fx:id="header_running" alignment="CENTER" contentDisplay="TOP" font="$x1" prefWidth="139.0" styleClass="header-label-normal" text="RUNNING" textAlignment="LEFT" textFill="$x2" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label fx:id="header_deadline" alignment="CENTER" contentDisplay="TOP" font="$x1" prefWidth="139.0" styleClass="header-label-normal" text="DEADLINE" textAlignment="LEFT" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+          <textFill>
+            <Color blue="0.624" green="0.624" red="0.624" fx:id="x3" />
+          </textFill>
+        </Label>
+        <Label fx:id="header_timed" alignment="CENTER" contentDisplay="TOP" font="$x1" prefWidth="139.0" styleClass="header-label-normal" text="TIMED" textAlignment="LEFT" textFill="$x3" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label fx:id="header_search" alignment="CENTER" contentDisplay="BOTTOM" disable="false" focusTraversable="false" font="$x1" prefWidth="101.0" text="SEARCH" textAlignment="LEFT" textFill="$x3" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+      </children>
+    </HBox>
   </children>
 </AnchorPane>
