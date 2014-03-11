@@ -13,14 +13,17 @@
 <AnchorPane id="AnchorPane" fx:id="mainPane" blendMode="SRC_OVER" focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" prefHeight="415.0" prefWidth="600.0" snapToPixel="true" translateX="0.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboomUserInterface.MainWindow">
   <children>
     <TextField fx:id="commandTextInput" disable="false" layoutX="14.0" layoutY="379.0" onAction="#onTextfieldAction" onKeyPressed="#onTextfieldKeyPressed" prefWidth="572.0" promptText="Please enter a command" text="" />
-    <TableView fx:id="taskDisplayTable" editable="false" focusTraversable="false" layoutX="14.0" layoutY="53.0" prefHeight="288.0" prefWidth="572.0" tableMenuButtonVisible="false">
+    <TableView fx:id="taskDisplayTable" editable="false" focusTraversable="false" layoutX="14.0" layoutY="53.0" prefHeight="288.0" prefWidth="572.0" tableMenuButtonVisible="false" visible="true">
       <columns>
-        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="30.0" resizable="false" sortable="false" text="Id" fx:id="columnTaskId" />
-        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="198.0" resizable="false" sortable="false" text="Task Name" fx:id="columnTaskName" />
-        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="128.0" resizable="false" sortable="false" text="Start Date" fx:id="columnStartTime" />
-        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="126.0" resizable="false" sortable="false" text="End Date" fx:id="columnEndTime" />
-        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="88.0" resizable="false" sortable="false" text="Priority" visible="true" fx:id="columnPriority" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="30.0" resizable="false" sortable="false" style="" text="ID" fx:id="columnTaskId" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="198.0" resizable="false" sortable="false" text="TASK NAME" fx:id="columnTaskName" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="128.0" resizable="false" sortable="false" text="START DATE" fx:id="columnStartTime" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="126.0" resizable="false" sortable="false" text="END DATE" fx:id="columnEndTime" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="88.0" resizable="false" sortable="false" text="PRIORITY" visible="true" fx:id="columnPriority" />
       </columns>
+      <stylesheets>
+        <URL value="@application.css" />
+      </stylesheets>
     </TableView>
     <Label layoutX="15.0" layoutY="21.0" text="Task Master Kaboom">
       <font>

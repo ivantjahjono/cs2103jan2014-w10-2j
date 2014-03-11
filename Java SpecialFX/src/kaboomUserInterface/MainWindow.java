@@ -44,8 +44,8 @@ public class MainWindow implements javafx.fxml.Initializable {
 	@FXML private Pane feedbackBox;
 	@FXML private Label feedbackText;
 	
-	private String prevCommand;
-	private String currentCommand;
+	private String prevCommand = "";
+	private String currentCommand = "";
 	
 	private double initialX;
 	private double initialY;
