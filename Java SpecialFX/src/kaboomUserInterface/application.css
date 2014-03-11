@@ -1,3 +1,21 @@
 .feedback-pane {
     -fx-background-color: #CCCCCC;
 }
+
+.table-view .filler {
+    -fx-border-width: 0 0 1 0;
+}
+
+.column-header {
+	-fx-background-color: #2d89ef;
+	-fx-border-width: 0, 1, 0, 0;
+	-fx-border-color: #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF;
+	-fx-padding: 5;
+	-fx-alignment: CENTER-LEFT;
+}
+
+.column-header .label {
+	-fx-text-fill: #FFFFFF;
+	-fx-text-alignment: left;
+	-fx-font-weight: bold;
+}
