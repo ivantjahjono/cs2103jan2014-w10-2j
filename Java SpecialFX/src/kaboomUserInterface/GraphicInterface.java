@@ -1,7 +1,5 @@
 package kaboomUserInterface;
 
-import java.io.IOException;
-
 import main.TaskMasterKaboom;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -29,16 +27,13 @@ public class GraphicInterface extends Application {
 		mainWindow.setStage(primaryStage);
 		
 		Scene scene = new Scene(root);
-		//scene.setFill(Color.rgb(255, 255, 255, 0.5));
-		//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-		
-		
-		
+		scene.setFill(null);
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.initStyle(StageStyle.TRANSPARENT);
+		primaryStage.setWidth(700);
+		primaryStage.setHeight(500);
 		primaryStage.show();
-		
 		
 		mainWindow.prepareTextfieldFocus();
 	}
