@@ -40,6 +40,13 @@ public class MainWindow implements javafx.fxml.Initializable {
 	@FXML private TableColumn<TaskInfoDisplay, String> columnPriority;
 	@FXML private ImageView exitButton;
 	
+	@FXML private Label header_all;
+	@FXML private Label header_running;
+	@FXML private Label header_deadline;
+	@FXML private Label header_timed;
+	@FXML private Label header_search;
+	
+	
 	@FXML private TextField commandTextInput;
 	@FXML private Pane feedbackBox;
 	@FXML private Label feedbackText;
@@ -61,7 +68,6 @@ public class MainWindow implements javafx.fxml.Initializable {
 		columnPriority.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("importanceLevel"));
 		
 		taskDisplayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		
 		// Disable column reordering
 //		taskDisplayTable.getColumns().addListener(new ListChangeListener() {
 //	        @Override
@@ -73,6 +79,12 @@ public class MainWindow implements javafx.fxml.Initializable {
 //	          }
 //	        }
 //	    });
+		
+		//header_all.getStyleClass().clear();
+		//header_deadline.getStyleClass().add("header-label-selected");
+		header_all.getStyleClass().remove("header-label-selected");
+		header_all.getStyleClass().remove("header-label-normal");
+		header_all.getStyleClass().add("header-label-selected");
 		
 		updateTaskTable();
 		updateFeedbackMessage();
