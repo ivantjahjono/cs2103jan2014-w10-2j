@@ -29,7 +29,7 @@
 	-fx-padding: 5;
 }
 
-.column-header .label {
+.column-header .label, .table-view .placeholder .label {
 	-fx-text-fill: #FFFFFF;
 	-fx-alignment: CENTER_LEFT;
 	-fx-font-family: "Segoe UI";
