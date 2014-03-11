@@ -421,7 +421,6 @@ public class TaskMasterKaboom {
 		KEYWORD_TYPE prevType = type;
 		String cutOutString = "";
 		
-		
 		while (nextKeywordIndex != -1) {
 			// Get index of next keyword and keyword type
 			nextKeywordIndex = getNextKeywordIndex(currentString);
@@ -463,7 +462,7 @@ public class TaskMasterKaboom {
 	}
 
 	private static KEYWORD_TYPE getKeywordType(String cutOutString) {
-		// TODO Auto-generated method stub
+		// TODO Find ways to refactor this
 		if (cutOutString.contains(KEYWORD_STARTTIME)) {
 			return KEYWORD_TYPE.START_TIME;
 		} else if (cutOutString.contains(KEYWORD_ENDTIME)) {
