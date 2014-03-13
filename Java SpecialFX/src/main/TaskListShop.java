@@ -4,11 +4,11 @@ import java.util.Vector;
 
 public class TaskListShop {
 
-	private Vector<TaskInfo> taskList;
-	private Vector<TaskInfo> searchList;
-	
 	private static TaskListShop taskListInstance = null;
-
+	
+	private Vector<TaskInfo> taskList;
+	
+	
 	public static TaskListShop getInstance () {
 		if (taskListInstance == null) {
 			taskListInstance = new TaskListShop();
@@ -19,20 +19,11 @@ public class TaskListShop {
 
 	private TaskListShop () {
 		taskList = new Vector<TaskInfo>();
-		searchList = new Vector<TaskInfo>();
 	}
 
 	public boolean addTaskToList (TaskInfo newTask) {
 		if (taskList != null) {
 			return taskList.add(newTask);
-		} else {
-			return false;
-		}
-	}
-
-	public boolean addTaskToSearch (TaskInfo newTask) {
-		if (taskList != null) {
-			return searchList.add(newTask);
 		} else {
 			return false;
 		}
@@ -65,12 +56,6 @@ public class TaskListShop {
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(taskList);
 		return vectorToReturn;
 	}
-	
-	public Vector<TaskInfo> getSearchList() {
-		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(searchList);
-		searchList.clear();  //Clear the search list each time the search list is returned
-		return vectorToReturn;
-	}
 
 	public boolean removeTaskByName (String taskName) {
 		TaskInfo currentTaskToRemove = getTaskByName(taskName);
@@ -82,6 +67,14 @@ public class TaskListShop {
 
 		return false;
 	}
-
-
+	
+	public Vector<TaskInfo> clearAllTasks () {
+		taskList = new Vector<TaskInfo>();
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(taskList);
+		return vectorToReturn;
+	}
+	
+	public int shopSize () {
+		return taskList.size();
+	}
 }

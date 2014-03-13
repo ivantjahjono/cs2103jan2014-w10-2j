@@ -23,7 +23,7 @@ public class Result {
 	}
 	
 	public void setTasksToDisplay (Vector<TaskInfo> taskList) {
-		taskToDisplayList = new Vector<TaskInfo>(taskList);
+		taskToDisplayList = taskList;
 	}
 	
 	public Vector<TaskInfo> getTasksToDisplay () {

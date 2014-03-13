@@ -13,7 +13,6 @@ public class CommandSearch extends Command {
 		commandType = COMMAND_TYPE.SEARCH;
 	}
 
-
 	public Result execute() {
 		
 		String commandFeedback = "";
