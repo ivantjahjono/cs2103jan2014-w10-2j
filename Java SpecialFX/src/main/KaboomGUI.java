@@ -1,4 +1,5 @@
 package main;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -16,6 +17,8 @@ import javax.swing.UIManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,14 +31,15 @@ import java.util.Vector;
 import java.awt.Color;
 
 
-public class KaboomGUI implements ActionListener {
-
-	private final int MAX_TASK_DISPLAY_COUNT = 10;
+public class KaboomGUI implements ActionListener, KeyListener {
 	
 	private JFrame frame;
 	private JTextField txtEnterCommandHere;
 	private JLabel feedbackLabel;
 	private JTable tasklistDisplay;
+	
+	private String prevCommand;
+	private String currentCommand;
 	
 	/**
 	 * Launch the application.
@@ -199,6 +203,7 @@ public class KaboomGUI implements ActionListener {
 		txtEnterCommandHere.setText("Enter command here");
 		txtEnterCommandHere.setColumns(10);
 		txtEnterCommandHere.addActionListener(this);
+		txtEnterCommandHere.addKeyListener(this);
 		frame.getContentPane().add(txtEnterCommandHere);
 	}
 
@@ -219,17 +224,42 @@ public class KaboomGUI implements ActionListener {
 		frame.getContentPane().setLayout(null);
 	}
 	
-	public void actionPerformed(ActionEvent e) {		
+	public void actionPerformed(ActionEvent e) {
+		String feedback = "You didn't type anything commander.";
 		String command = txtEnterCommandHere.getText();
-		String feedback = TaskMasterKaboom.processCommand(command);
 		
-		resetCommandTextfield();
-		updateFeedbackTextfield(feedback);
+		if (!command.equals("")) {
+			TaskMasterKaboom.processCommand(command);
+			resetCommandTextfield();
+			prevCommand = command;
+		}
 	}
+	
+	public void keyTyped(KeyEvent e) {
+		 //System.out.println(e.getKeyCode() + "KEY TYPED: ");
+    }
+	
+	public void keyPressed(KeyEvent e) {
+        //System.out.println(e.getKeyCode() + "KEY PRESSED: ");
+    }
+	
+	public void keyReleased(KeyEvent e) {
+		// Update text field to previous command
+		
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			currentCommand = txtEnterCommandHere.getText();
+			txtEnterCommandHere.setText(prevCommand);
+		} else if (e.getKeyCode() == KeyEvent.VK_DOWN){
+			txtEnterCommandHere.setText(currentCommand);
+		} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			frame.dispose();
+		}
+		 //System.out.println(e.getKeyChar() + "KEY RELEASED: ");
+    }
 	
 	public void showUpdatedUi () {
 		String feedback = DisplayData.getInstance().getFeedbackMessage();
-		Vector<TaskInfoDisplay> displayInfo = DisplayData.getInstance().getAllTaskDisplayInfo();
+		Vector<TaskInfoDisplay> displayInfo = DisplayData.getInstance().getTaskDisplay();
 		
 		updateUiDisplay(feedback, displayInfo);
 	}
@@ -245,7 +275,7 @@ public class KaboomGUI implements ActionListener {
 	}
 
 	private void updateAllTaskDisplayRows(Vector<TaskInfoDisplay> taskList) {
-		for (int i = 0; i < taskList.size() && i < MAX_TASK_DISPLAY_COUNT; i++) {
+		for (int i = 0; i < taskList.size(); i++) {
 			TaskInfoDisplay infoToDisplay = taskList.get(i);
 			updateThisRowData(infoToDisplay);
 		}

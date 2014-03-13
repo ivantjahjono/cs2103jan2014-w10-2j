@@ -1,4 +1,5 @@
 package main;
+
 import java.util.Calendar; 
 
 enum TASK_TYPE {
@@ -71,6 +72,15 @@ public class TaskInfo {
 	
 	public boolean setExpiryFlag () { 
 		return isExpired;
+	}
+	
+	public boolean isEmpty () {
+	
+		if (taskname == "" && startDate == null && endDate == null && importanceLevel == 0) {
+			return true;
+		}		
+		
+		return false;
 	}
 	
 	public static TASK_TYPE getTaskType(String taskType) {

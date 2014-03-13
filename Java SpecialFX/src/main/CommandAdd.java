@@ -1,16 +1,23 @@
 package main;
 
+
 public class CommandAdd extends Command {
 
 	CommandAdd () {
 		commandType = COMMAND_TYPE.ADD;
 	}
 
-	public String execute() {
+	public Result execute() {
+		String commandFeedback = "";
+		
+		
 		if (taskListShop.addTaskToList(taskInfo)) {
-			return String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
+			commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
+		} else {
+			commandFeedback = String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
 		}
-		return String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
+		
+		return createResult(taskListShop.getAllTaskInList(), commandFeedback);
 	}
 	
 	public String undo () {

@@ -1,4 +1,5 @@
 package main;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
@@ -6,6 +7,7 @@ import java.util.Random;
 import java.util.Vector;
 
 import kaboomUserInterface.GraphicInterface;
+
 
 /*
 ** This is main class that will run Task Master KABOOM
@@ -27,15 +29,17 @@ public class TaskMasterKaboom {
 	private static final String KEYWORD_COMMAND_MODIFY = "modify";
 	private static final String KEYWORD_COMMAND_SEARCH = "search";
 	
+	private static final String MESSAGE_WELCOME = "Welcome back, Commander";
+	
 	private static final int CORRECT_24HOUR_FORMAT_MIN = 100;
 	private static final int CORRECT_24HOUR_FORMAT_MAX = 2359;
 	
 	private static final int THE_24_HOUR_FORMAT_CODE = 1;
-	private static final int THE_24_HOUR_FORMAT_WITH_COLON_CODE = 2;
-	private static final int THE_AM_FORMAT_CODE = 3;
-	private static final int THE_AM_FORMAT_WITH_COLON_CODE = 4;
-	private static final int THE_PM_FORMAT_CODE = 5;
-	private static final int THE_PM_FORMAT_WITH_COLON_CODE = 6;
+	//private static final int THE_24_HOUR_FORMAT_WITH_COLON_CODE = 2;
+	//private static final int THE_AM_FORMAT_CODE = 3;
+	//private static final int THE_AM_FORMAT_WITH_COLON_CODE = 4;
+	//private static final int THE_PM_FORMAT_CODE = 5;
+	//private static final int THE_PM_FORMAT_WITH_COLON_CODE = 6;
 	private static final int START_DATE_COUNT = 1;
 	private static final int END_DATE_COUNT = 2;
 	
@@ -48,7 +52,7 @@ public class TaskMasterKaboom {
 	
 	// Temporary static
 	private static int counter = 1;				// Use to create temporary task
-	private static boolean isRunning = true;
+	private static boolean isRunning;
 	
 	public static void main(String[] args) {
 		// Setup application
@@ -67,25 +71,27 @@ public class TaskMasterKaboom {
 		// Run the UI
 		activateUi();
 		
-		//
+		isRunning = true;
 		while (isRunning) {
-			 // Updates the task data inside here every minute
+			// Update the task here
 		}
 	}
 	
 	private static boolean setupUi () {
-		try {
-			taskUi = new GraphicInterface();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+		taskUi = new GraphicInterface();
+		return true;
 	}
 	
 	private static void activateUi () {
-		updateUi("Welcome back, Commander");
+		updateUiWithFirstLoadedMemory();
 		taskUi.run(null);
+	}
+
+	private static void updateUiWithFirstLoadedMemory() {
+		Result introResult = new Result();
+		introResult.setTasksToDisplay(TaskListShop.getInstance().getAllTaskInList());
+		introResult.setFeedback(MESSAGE_WELCOME);
+		updateUi(introResult);
 	}
 	
 	private static boolean initialiseStorage () {
@@ -109,9 +115,9 @@ public class TaskMasterKaboom {
 	 * 
 	 * Future improvement: Return task class instead.
 	 */
-	public static String processCommand(String userInputSentence) {		
+	public static boolean processCommand(String userInputSentence) {		
 		Command commandToExecute = null;
-		String feedback = "";
+		Result commandResult = null;
 		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
 		String commandParametersString = removeFirstWord(userInputSentence);
 		
@@ -119,13 +125,13 @@ public class TaskMasterKaboom {
 		Error errorType = updateCommandInfoFromParameter(commandToExecute, commandParametersString);
 		
 		if (errorType == null) {
-			feedback = commandToExecute.execute();
+			commandResult = commandToExecute.execute();
 		} else {
-			feedback = errorType.getErrorMessage();
+			commandResult = new Result();
+			commandResult.setFeedback(errorType.getErrorMessage());
 		}
 		
-		// Later to be move to somewhere else
-		updateUi(feedback);
+		updateUi(commandResult);
 		
 		// Add recent command to History list
 		addToCommandHistory(new Command());
@@ -133,7 +139,7 @@ public class TaskMasterKaboom {
 		// Save data to file
 		fileStorage.store();
 		
-		return feedback;
+		return true;
 	}
 	
 	private static String removeFirstWord(String userInputSentence) {
@@ -141,11 +147,8 @@ public class TaskMasterKaboom {
 		return wordRemoved;
 	}
 
-	private static void updateUi(String feedback) {
-		Vector<TaskInfo> taskToDisplay = TaskListShop.getInstance().getAllTaskInList();
-		
-		guiDisplayData.setFeedbackMessage(feedback);
-		guiDisplayData.setTaskDataToDisplay(taskToDisplay);
+	private static void updateUi(Result commandResult) {
+		guiDisplayData.updateDisplayWithResult(commandResult);
 	}
 	
 	private static void addToCommandHistory(Command command) {
@@ -185,9 +188,16 @@ public class TaskMasterKaboom {
 
 	private static Error updateCommandInfoFromParameter(Command commandToUpdate, String parameters) {
 		TaskInfo taskInformation = new TaskInfo();
+		//to store existing taskinfo to be modified 
+		TaskInfo taskInformationToBeModified = new TaskInfo();
 		
-		Error errorType = createTaskInfoBasedOnCommand(taskInformation, parameters);
+		Error errorType = createTaskInfoBasedOnCommand(taskInformation, taskInformationToBeModified, parameters);
 		commandToUpdate.setTaskInfo(taskInformation);
+		
+		//modify
+		if (!taskInformationToBeModified.isEmpty()) {
+			commandToUpdate.setTaskInfoToBeModified(taskInformationToBeModified);
+		}
 
 		return errorType;
 	}
@@ -210,11 +220,11 @@ public class TaskMasterKaboom {
 		}
 	}
 	
-	private static Error createTaskInfoBasedOnCommand(TaskInfo newTaskInfo, String userInputSentence) {
+	private static Error createTaskInfoBasedOnCommand(TaskInfo newTaskInfo, TaskInfo oldTaskInfo, String userInputSentence) {
 		// Currently it is randomly generated.
 		//updateTaskInfoBasedOnParameter(newlyCreatedTaskInfo, userInputSentence);
 		
-		Error errorEncountered = updateTaskInfo(newTaskInfo, userInputSentence);
+		Error errorEncountered = updateTaskInfo(newTaskInfo, oldTaskInfo, userInputSentence);
 		
 		return errorEncountered;
 	}
@@ -248,12 +258,12 @@ public class TaskMasterKaboom {
 		counter++;
 	}
 
-	private static Error updateTaskInfo(TaskInfo thisTaskInfo, String userInputSentence){
+	private static Error updateTaskInfo(TaskInfo thisTaskInfo, TaskInfo oldTaskInfo, String userInputSentence){
 		String[] processedText = textProcess(userInputSentence);
 		String taskname = "";
 		//int startDate;
 		//int endDate;
-		int priority = 2;
+		int priority = 0;
 		
 		// Cut the command into their respective syntax. Will return hash table of data strings
 		Hashtable<KEYWORD_TYPE, String> keywordHashTable = new Hashtable<KEYWORD_TYPE, String>();
@@ -305,19 +315,101 @@ public class TaskMasterKaboom {
 		//         It is not a valid format as the asterisks are combined. Might be due to user
 		//         typo.
 		
-		taskname = functionFindTaskname(processedText);
-		thisTaskInfo.setTaskName(taskname);
-		
-		setTypeAndDate(thisTaskInfo, processedText);
 		
 		
-		//thisTaskInfo.setStartDate(startDate);
-		//thisTaskInfo.setEndDate(endDate);
-		thisTaskInfo.setImportanceLevel(priority);
 		
+		//**********************THIS WHOLE CHUNK IS FOR MODIFY************************
+		//Bug in textparsing: there is a space after the task name after u convert it into a string <eg. ( _ denote space) taskname_ or task_name_ (note the space behind) >
+		//for command modify only
+		boolean toModify = false;
+		//Sample: modify this> going into space to see the stars  to> going to simei to eat cai peng
+		
+		//Checks for the 2 keywords for modify
+		if (processedText[0].equals("this>")) {
+			for(int i = 0; i < processedText.length; i++) {
+				if (processedText[i].equals("to>")) {
+					toModify = true;
+				}
+			}
+		}
+		
+		//modify
+		if (toModify) {
+			String oldTaskName = "";
+			//1. Get task name to be modified
+			for(int i = 0; i < processedText.length; i++) {
+				if (!processedText[i].equals("this>")) {
+					if (processedText[i].equals("to>")) {
+						break;
+					}
+					else {
+						/*
+						if(!oldTaskName.isEmpty()) {
+							oldTaskName += " ";
+						}
+						*/
+						oldTaskName += processedText[i] + " ";
+					}
+				}
+			}
+			//2. Set task name into oldTaskInfo
+			if (!oldTaskName.isEmpty()) {
+				oldTaskInfo.setTaskName(oldTaskName);
+			}
+			
+			//3. Get new task name
+			String newTaskName = "";
+			for(int i = 0; i < processedText.length; i++) {
+				if (processedText[i].equals("to>")) {
+					for(int j = i+1; j < processedText.length; j++) {
+						/*
+						if (!newTaskName.isEmpty()) {
+							newTaskName += " ";
+						}
+						*/
+						newTaskName += processedText[j] + " ";
+					}
+					break;
+				}
+			}
+			
+			//4. Set task name into task info
+			if (!newTaskName.isEmpty()) {
+				thisTaskInfo.setTaskName(newTaskName);
+			}
+
+		}
+		
+		//**********************THIS WHOLE CHUNK IS FOR MODIFY************************
+		
+		
+		//add delete search
+		else {
+			
+			taskname = functionFindTaskname(processedText);
+			thisTaskInfo.setTaskName(taskname);
+		
+			setTypeAndDate(thisTaskInfo, processedText);
+		
+		
+			//thisTaskInfo.setStartDate(startDate);
+			//thisTaskInfo.setEndDate(endDate);
+			int processedTextLength = processedText.length;
+			priority = findPriority(processedText[processedTextLength-1]);
+			thisTaskInfo.setImportanceLevel(priority);
+		
+		}
 		return null;
 	}
 	
+	private static int findPriority(String priorityString){
+		
+		if(priorityString.contains("*")){
+			char[] countPriorityStar = priorityString.toCharArray();
+			return countPriorityStar.length;
+		}
+		return 0;
+	}
 	//TODO Clean up and refactor code
 	private static Error createKeywordTableBasedOnParameter(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
 		String currentString = userInputSentence;
@@ -566,7 +658,11 @@ public class TaskMasterKaboom {
 	
 	private static String functionFindTaskname(String[] processedText){
 		String actualTaskName = "";
-		for(int i=0; i<processedText.length; i++){
+		int loopLength = processedText.length;
+		if(processedText[loopLength-1].contains("*")){
+			loopLength--;
+		}
+		for(int i=0; i<loopLength; i++){
 			if((!processedText[i].equals("by")) && (!processedText[i].equals("at")) && (!processedText[i].equals("on"))){
 				actualTaskName += processedText[i] + " ";	
 			}

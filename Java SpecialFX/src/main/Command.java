@@ -1,4 +1,7 @@
 package main;
+
+import java.util.Vector;
+
 /* 
 ** Purpose: 
 */
@@ -10,12 +13,14 @@ public class Command {
 	protected static final String MESSAGE_COMMAND_DELETE_SUCCESS = "%1$s deleted.";
 	protected static final String MESSAGE_COMMAND_DELETE_FAIL = "%1$s fail to delete.";
 	protected static final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
+	protected static final String MESSAGE_COMMAND_MODIFY_FAIL = "Fail to modify %1$s";
 	protected static final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done";
 	protected static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
 	protected static final String MESSAGE_COMMAND_UNDO_SUCCESS = "Command undone!";
 	protected static final String MESSAGE_COMMAND_UNDO_FAIL = "Fail to undo.";
 	
 	protected COMMAND_TYPE commandType;
+	protected TaskInfo taskInfoToBeModified;
 	protected TaskInfo taskInfo;
 	protected TaskListShop taskListShop;
 	protected DisplayData displayData;
@@ -23,6 +28,7 @@ public class Command {
 	Command () {
 		commandType = COMMAND_TYPE.INVALID;
 		taskInfo = null;
+		taskInfoToBeModified = null;
 		taskListShop = TaskListShop.getInstance();
 		displayData = DisplayData.getInstance();
 	}
@@ -35,6 +41,10 @@ public class Command {
 		taskInfo = info;
 	}
 	
+	public void setTaskInfoToBeModified (TaskInfo info) {
+		taskInfoToBeModified = info;
+	}
+	
 	public COMMAND_TYPE getCommandType () {
 		return commandType;
 	}
@@ -43,8 +53,20 @@ public class Command {
 		return taskInfo;
 	}
 	
-	public String execute() {
-		return MESSAGE_COMMAND_INVALID;
+	public TaskInfo getTaskInfoToBeModified () {
+		return taskInfoToBeModified;
+	}
+	
+	public Result execute() {
+		return createResult(new Vector<TaskInfo>(), MESSAGE_COMMAND_INVALID);
+	}
+	
+	protected Result createResult (Vector<TaskInfo> taskToBeDisplayed, String feedback) {
+		Result commandResult = new Result();
+		commandResult.setTasksToDisplay(taskToBeDisplayed);
+		commandResult.setFeedback(feedback);
+		
+		return commandResult;
 	}
 	
 	public String undo () {
