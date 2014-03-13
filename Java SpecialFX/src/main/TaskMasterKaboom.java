@@ -1,8 +1,12 @@
+package main;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Vector;
+
+import kaboomUserInterface.GraphicInterface;
 
 
 /*
@@ -11,7 +15,7 @@ import java.util.Vector;
 ** 
 **/
 enum COMMAND_TYPE {
-		ADD, DELETE, MODIFY, SEARCH, INVALID, CLEAR;
+		ADD, DELETE, MODIFY, SEARCH, INVALID;
 }
 
 enum KEYWORD_TYPE {
@@ -24,14 +28,8 @@ public class TaskMasterKaboom {
 	private static final String KEYWORD_COMMAND_DELETE = "delete";
 	private static final String KEYWORD_COMMAND_MODIFY = "modify";
 	private static final String KEYWORD_COMMAND_SEARCH = "search";
-	private static final String KEYWORD_COMMAND_CLEAR = "clear";
 	
 	private static final String MESSAGE_WELCOME = "Welcome back, Commander";
-	
-	private static final String KEYWORD_STARTTIME = " at ";
-	private static final String KEYWORD_ENDTIME = " by ";
-	private static final String KEYWORD_DATE = " on ";
-	private static final String KEYWORD_PRIORITY = " *";
 	
 	private static final int CORRECT_24HOUR_FORMAT_MIN = 100;
 	private static final int CORRECT_24HOUR_FORMAT_MAX = 2359;
@@ -47,13 +45,14 @@ public class TaskMasterKaboom {
 	
 	private static final String FILENAME = "KABOOM_FILE.dat";
 	
-	private static KaboomGUI taskUi;
+	private static GraphicInterface taskUi;
 	private static DisplayData guiDisplayData;
 	private static Storage fileStorage;
 	private static History historyofCommands = new History();
 	
 	// Temporary static
 	private static int counter = 1;				// Use to create temporary task
+	private static boolean isRunning;
 	
 	public static void main(String[] args) {
 		// Setup application
@@ -72,36 +71,20 @@ public class TaskMasterKaboom {
 		// Run the UI
 		activateUi();
 		
-		// Start processing user commands
-		
-//		// Get command from UI
-//		String command = "add";
-//		
-//		// Process command line
-//		String commandFeedback = processCommand(command);
-//	
-//		// Return feedback to
-//		System.out.println("Feedback: " + commandFeedback);
-		
-		//while (true) {
-			//
-		//}
-	}
-	
-	private static boolean setupUi () {
-		try {
-			taskUi = new KaboomGUI();
-			taskUi.initialize();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
+		isRunning = true;
+		while (isRunning) {
+			// Update the task here
 		}
 	}
 	
+	private static boolean setupUi () {
+		taskUi = new GraphicInterface();
+		return true;
+	}
+	
 	private static void activateUi () {
-		taskUi.runUi();
 		updateUiWithFirstLoadedMemory();
+		taskUi.run(null);
 	}
 
 	private static void updateUiWithFirstLoadedMemory() {
@@ -116,6 +99,10 @@ public class TaskMasterKaboom {
 		fileStorage.load();
 		
 		return true;
+	}
+	
+	public static void exitProgram () {
+		isRunning = false;
 	}
 	
 	/*
@@ -162,7 +149,6 @@ public class TaskMasterKaboom {
 
 	private static void updateUi(Result commandResult) {
 		guiDisplayData.updateDisplayWithResult(commandResult);
-		taskUi.showUpdatedUi();
 	}
 	
 	private static void addToCommandHistory(Command command) {
@@ -189,10 +175,6 @@ public class TaskMasterKaboom {
 				
 			case SEARCH:
 				newlyCreatedCommand = new CommandSearch();
-				break;
-				
-			case CLEAR:
-				newlyCreatedCommand = new CommandClear();
 				break;
 				
 			default:
@@ -233,8 +215,6 @@ public class TaskMasterKaboom {
 				return COMMAND_TYPE.MODIFY;
 			case KEYWORD_COMMAND_SEARCH:
 				return COMMAND_TYPE.SEARCH;
-			case KEYWORD_COMMAND_CLEAR:
-				return COMMAND_TYPE.CLEAR;
 			default:
 				return COMMAND_TYPE.INVALID;
 		}
@@ -408,7 +388,7 @@ public class TaskMasterKaboom {
 			
 			taskname = functionFindTaskname(processedText);
 			thisTaskInfo.setTaskName(taskname);
-		thisTaskInfo.setTaskType(TASK_TYPE.FLOATING);	// HARDCODED TO DEFAULT
+		
 			setTypeAndDate(thisTaskInfo, processedText);
 		
 		
@@ -431,12 +411,13 @@ public class TaskMasterKaboom {
 		return 0;
 	}
 	//TODO Clean up and refactor code
-	public static Error createKeywordTableBasedOnParameter(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+	private static Error createKeywordTableBasedOnParameter(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
 		String currentString = userInputSentence;
 		int nextKeywordIndex = 0;
 		KEYWORD_TYPE type = KEYWORD_TYPE.INVALID;
 		KEYWORD_TYPE prevType = type;
 		String cutOutString = "";
+		
 		
 		while (nextKeywordIndex != -1) {
 			// Get index of next keyword and keyword type
@@ -469,7 +450,7 @@ public class TaskMasterKaboom {
 				keywordTable.put(type, cutOutString);
 				
 				// Remove the string from the original string
-				currentString = currentString.replaceFirst(cutOutString, "");
+				currentString = currentString.replace(cutOutString, "");
 				
 				prevType = type;
 			}
@@ -479,55 +460,21 @@ public class TaskMasterKaboom {
 	}
 
 	private static KEYWORD_TYPE getKeywordType(String cutOutString) {
-		// TODO Find ways to refactor this
-		if (cutOutString.contains(KEYWORD_STARTTIME)) {
+		// TODO Auto-generated method stub
+		if (cutOutString.contains("at")) {
 			return KEYWORD_TYPE.START_TIME;
-		} else if (cutOutString.contains(KEYWORD_ENDTIME)) {
+		} else if (cutOutString.contains("by")) {
 			return KEYWORD_TYPE.END_TIME;
-		} else if (cutOutString.contains(KEYWORD_PRIORITY)) {
+		} else if (cutOutString.contains("*")) {
 			return KEYWORD_TYPE.PRIORITY;
-		} else if (cutOutString.contains(KEYWORD_DATE)) {
+		} else if (cutOutString.contains("on")) {
 			return KEYWORD_TYPE.START_DATE;
 		}
 		
 		return KEYWORD_TYPE.INVALID;
 	}
-	
-	public static Vector<Integer> getListOfKeywordPositions (String stringToSearch) {
-		Vector<Integer> keywordPositions = new Vector<Integer>();
-		
-		String currentKeyword = "";
-		int numOfKeywords = 4;
-		
-		for (int i = 0; i < numOfKeywords; i++) {
-			switch(i) {
-				case 0:
-					currentKeyword = " at ";
-					break;
-					
-				case 1:
-					currentKeyword = " by ";
-					break;
-					
-				case 2:
-					currentKeyword = " * ";
-					break;
-					
-				case 3:
-					currentKeyword = " on ";
-					break;
-			}
-			
-			int currentIndex = stringToSearch.indexOf(currentKeyword);
-			if (currentIndex > 0) {
-				keywordPositions.add(currentIndex);
-			}
-		}
-		
-		return keywordPositions;
-	}
 
-	public static int getNextKeywordIndex(String stringToSearch) {
+	private static int getNextKeywordIndex(String stringToSearch) {
 		int nearestIndex = -1;
 		int currentIndex = 0;
 		String currentKeyword = "";
@@ -536,19 +483,19 @@ public class TaskMasterKaboom {
 		for (int i = 0; i < 4; i++) {
 			switch(i) {
 				case 0:
-					currentKeyword = " at ";
+					currentKeyword = "at";
 					break;
 					
 				case 1:
-					currentKeyword = " by ";
+					currentKeyword = "by";
 					break;
 					
 				case 2:
-					currentKeyword = " * ";
+					currentKeyword = "*";
 					break;
 					
 				case 3:
-					currentKeyword = " on ";
+					currentKeyword = "on";
 					break;
 			}
 			
