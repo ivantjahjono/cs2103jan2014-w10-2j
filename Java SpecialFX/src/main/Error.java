@@ -1,4 +1,5 @@
 package main;
+
 /*
  * Error class for TASK MASTER KABOOOOOOOOM
  */

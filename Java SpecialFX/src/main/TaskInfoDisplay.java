@@ -1,25 +1,23 @@
 package main;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-
 public class TaskInfoDisplay {
-	private SimpleIntegerProperty taskId;
-	private SimpleStringProperty taskName;
+	int taskId;
+	String taskname;
 	
-	private SimpleStringProperty startDate;
-	private SimpleStringProperty endDate;
+	String startDate;
+	String endDate;
 	
-	private SimpleStringProperty importanceLevel;
+	String importanceLevel;
 	
-	public TaskInfoDisplay () {
-		taskId = new SimpleIntegerProperty(0);
-		taskName = new SimpleStringProperty("No taskname available");;
-		startDate = new SimpleStringProperty("-");
-		endDate = new SimpleStringProperty("-");
-		importanceLevel = new SimpleStringProperty("");
+	TaskInfoDisplay () {
+		taskId = 0;
+		taskname = "No taskname available";
+		startDate = "-";
+		endDate = "-";
+		importanceLevel = "";
 	}
 	
 	public void updateFromThisInfo (TaskInfo infoToUpdateFrom) {
@@ -30,54 +28,54 @@ public class TaskInfoDisplay {
 	}
 	
 	public void setTaskId (int id) {
-		taskId.set(id);
+		taskId = id;
 	}
 	
 	public void setTaskName (String name) {
-		taskName.set(name);
+		taskname = name;
 	}
 	
 	public void setStartTime (Calendar time) {
 		if (time != null) {
 			SimpleDateFormat sdf = new SimpleDateFormat("h:mm a dd/MM/yy");
-			startDate.set(sdf.format(time.getTime()));
+			startDate = sdf.format(time.getTime());
 		}
 	}
 	
 	public void setEndTime (Calendar time) {
 		if (time != null) {
 			SimpleDateFormat sdf = new SimpleDateFormat("h:mm a dd/MM/yy");
-			endDate.set(sdf.format(time.getTime()));
+			endDate = sdf.format(time.getTime());
 		}
 	}
 	
 	public void setImportanceLevel (int level) {
 		if (level == 0) {
-			importanceLevel.set("");
+			importanceLevel = "";
 		} else {
 			for (int i = 0; i < level; i++) {
-				importanceLevel.set("*" + importanceLevel.get());
+				importanceLevel += "*";
 			}
 		}
 	}
 	
 	public int getTaskId () {
-		return taskId.get();
+		return taskId;
 	}
 	
 	public String getTaskName () {
-		return taskName.get();
+		return taskname;
 	}
 	
 	public String getStartDate () {
-		return startDate.get();
+		return startDate;
 	}
 	
 	public String getEndDate () {
-		return endDate.get();
+		return endDate;
 	}
 	
 	public String getImportanceLevel () {
-		return importanceLevel.get();
+		return importanceLevel;
 	}
 }
