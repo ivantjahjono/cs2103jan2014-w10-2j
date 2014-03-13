@@ -1,3 +1,5 @@
+package main;
+
 import java.util.Vector;
 
 public class TaskListShop {
