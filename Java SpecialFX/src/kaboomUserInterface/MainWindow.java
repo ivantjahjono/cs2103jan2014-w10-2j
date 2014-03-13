@@ -37,6 +37,8 @@ public class MainWindow implements javafx.fxml.Initializable {
 	@FXML private TableColumn<TaskInfoDisplay, String> columnEndTime;
 	@FXML private TableColumn<TaskInfoDisplay, String> columnPriority;
 	@FXML private ImageView exitButton;
+	@FXML private Label minimiseLabel;
+	
 	
 	@FXML private Label header_all;
 	@FXML private Label header_running;
@@ -115,7 +117,15 @@ public class MainWindow implements javafx.fxml.Initializable {
 			return;
 		}
 		
-		TaskMasterKaboom.processCommand(command);
+		// Check if need to switch header
+		int switchIndexResult = getSwitchIndexFromCommand(command);
+		if (switchIndexResult != -1) {
+			previousLabelIndex = currentLabelIndex;
+			currentLabelIndex = switchIndexResult;
+			switchMainHeaderHighlight(previousLabelIndex, currentLabelIndex);
+		} else {
+			TaskMasterKaboom.processCommand(command);
+		}
 		
 		prevCommand = command;
 		currentCommand = "";
@@ -167,6 +177,10 @@ public class MainWindow implements javafx.fxml.Initializable {
 				
 			case DOWN:
 				recallStoredTypedCommand();
+				break;
+				
+			case ESCAPE:
+				windowStage.setIconified(true);
 				break;
 				
 			default:
@@ -224,6 +238,42 @@ public class MainWindow implements javafx.fxml.Initializable {
 		setHeaderLabelToSelected(labelList.get(currentLabelIndex));
 	}
 	
+	private int getSwitchIndexFromCommand(String command) {
+		int selected = -1;
+		
+		switch (command) {
+			case "view all":
+				selected = 0;
+				break;
+				
+			case "view running":
+				selected = 1;
+				break;
+				
+			case "view deadline":
+				selected = 2;
+				break;
+				
+			case "view timed":
+				selected = 3;
+				break;
+				
+			case "view search":
+				selected = 4;
+				break;
+				
+			default:
+				break;
+		}
+		
+		return selected;
+	}
+
+	private void switchMainHeaderHighlight(int prevIndex, int currIndex) {
+		setHeaderLabelToNormal(labelList.get(prevIndex));
+		setHeaderLabelToSelected(labelList.get(currIndex));
+	}
+	
 	private void setHeaderLabelToNormal (Label labelToChange) {
 		labelToChange.getStyleClass().remove("header-label-selected");
 		labelToChange.getStyleClass().add("header-label-normal");
@@ -232,5 +282,10 @@ public class MainWindow implements javafx.fxml.Initializable {
 	private void setHeaderLabelToSelected (Label labelToChange) {
 		labelToChange.getStyleClass().remove("header-label-normal");
 		labelToChange.getStyleClass().add("header-label-selected");
+	}
+	
+	@FXML
+	private void onMinimiseMousePressed () {
+		windowStage.setIconified(true);
 	}
 }

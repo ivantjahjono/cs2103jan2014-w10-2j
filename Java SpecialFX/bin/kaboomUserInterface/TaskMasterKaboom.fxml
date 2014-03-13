@@ -95,6 +95,11 @@
         </Label>
       </children>
     </HBox>
+    <Label fx:id="minimiseLabel" alignment="TOP_LEFT" contentDisplay="TOP" layoutX="559.0" layoutY="-8.0" minHeight="18.0" onMousePressed="#onMinimiseMousePressed" prefHeight="36.0" prefWidth="18.0" text="-" textFill="WHITE" underline="false">
+      <font>
+        <Font size="35.0" />
+      </font>
+    </Label>
   </children>
   <stylesheets>
     <URL value="@application.css" />
