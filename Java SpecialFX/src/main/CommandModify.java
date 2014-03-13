@@ -1,3 +1,5 @@
+package main;
+
 
 public class CommandModify extends Command {
 	

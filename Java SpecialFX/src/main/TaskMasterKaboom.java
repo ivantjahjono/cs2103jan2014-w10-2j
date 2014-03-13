@@ -1,8 +1,12 @@
+package main;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Vector;
+
+import kaboomUserInterface.GraphicInterface;
 
 
 /*
@@ -47,13 +51,14 @@ public class TaskMasterKaboom {
 	
 	private static final String FILENAME = "KABOOM_FILE.dat";
 	
-	private static KaboomGUI taskUi;
+	private static GraphicInterface taskUi;
 	private static DisplayData guiDisplayData;
 	private static Storage fileStorage;
 	private static History historyofCommands = new History();
 	
 	// Temporary static
 	private static int counter = 1;				// Use to create temporary task
+	private static boolean isRunning;
 	
 	public static void main(String[] args) {
 		// Setup application
@@ -83,25 +88,19 @@ public class TaskMasterKaboom {
 //		// Return feedback to
 //		System.out.println("Feedback: " + commandFeedback);
 		
-		//while (true) {
-			//
-		//}
+//		isRunning = true;
+//		while (isRunning) {
+//			
+//		}
 	}
 	
-	private static boolean setupUi () {
-		try {
-			taskUi = new KaboomGUI();
-			taskUi.initialize();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+	private static void setupUi () {
+		taskUi = new GraphicInterface();
 	}
 	
 	private static void activateUi () {
-		taskUi.runUi();
 		updateUiWithFirstLoadedMemory();
+		taskUi.run(null);
 	}
 
 	private static void updateUiWithFirstLoadedMemory() {
@@ -116,6 +115,10 @@ public class TaskMasterKaboom {
 		fileStorage.load();
 		
 		return true;
+	}
+	
+	public static void exitProgram () {
+		isRunning = false;
 	}
 	
 	/*
@@ -162,7 +165,6 @@ public class TaskMasterKaboom {
 
 	private static void updateUi(Result commandResult) {
 		guiDisplayData.updateDisplayWithResult(commandResult);
-		taskUi.showUpdatedUi();
 	}
 	
 	private static void addToCommandHistory(Command command) {
