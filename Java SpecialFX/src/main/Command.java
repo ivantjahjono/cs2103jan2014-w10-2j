@@ -14,10 +14,12 @@ public class Command {
 	protected static final String MESSAGE_COMMAND_DELETE_FAIL = "%1$s fail to delete.";
 	protected static final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
 	protected static final String MESSAGE_COMMAND_MODIFY_FAIL = "Fail to modify %1$s";
-	protected static final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done";
+	protected static final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done. %d item(s) found.";
 	protected static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
 	protected static final String MESSAGE_COMMAND_UNDO_SUCCESS = "Command undone!";
 	protected static final String MESSAGE_COMMAND_UNDO_FAIL = "Fail to undo.";
+	protected static final String MESSAGE_COMMAND_CLEAR_SUCCESS = "Cleared memory";
+	
 	
 	protected COMMAND_TYPE commandType;
 	protected TaskInfo taskInfoToBeModified;
@@ -58,7 +60,7 @@ public class Command {
 	}
 	
 	public Result execute() {
-		return createResult(new Vector<TaskInfo>(), MESSAGE_COMMAND_INVALID);
+		return createResult(null, MESSAGE_COMMAND_INVALID);
 	}
 	
 	protected Result createResult (Vector<TaskInfo> taskToBeDisplayed, String feedback) {
