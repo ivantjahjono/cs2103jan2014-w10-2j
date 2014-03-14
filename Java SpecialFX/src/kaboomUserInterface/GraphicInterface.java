@@ -37,7 +37,7 @@ public class GraphicInterface extends Application {
 	      return new Task<Void>() {
 	        @Override
 	        protected Void call() throws Exception {
-	        	System.out.println("Begin task");
+	        	//System.out.println("Begin task");
 	        	++counter;
 	        	return null;
 	        }
