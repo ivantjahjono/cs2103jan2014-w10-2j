@@ -19,7 +19,7 @@
 
 .table-view .table-cell {
 	-fx-padding: 5;
-	-fx-font-family: "Segoe UI";
+	-fx-font-family: "Segoe UI Semibold";
 }
 
 .column-header {
@@ -32,7 +32,7 @@
 .column-header .label, .table-view .placeholder .label {
 	-fx-text-fill: #FFFFFF;
 	-fx-alignment: CENTER_LEFT;
-	-fx-font-family: "Segoe UI";
+	-fx-font-family: "Segoe UI Semibold";
 }
 
 .header-label-selected {
