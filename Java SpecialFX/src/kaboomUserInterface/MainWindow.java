@@ -38,7 +38,7 @@ public class MainWindow implements javafx.fxml.Initializable {
 	@FXML private TableColumn<TaskInfoDisplay, String> columnPriority;
 	@FXML private ImageView exitButton;
 	@FXML private Label minimiseLabel;
-	
+	@FXML private Label counter;
 	
 	@FXML private Label header_all;
 	@FXML private Label header_running;
@@ -287,5 +287,9 @@ public class MainWindow implements javafx.fxml.Initializable {
 	@FXML
 	private void onMinimiseMousePressed () {
 		windowStage.setIconified(true);
+	}
+	
+	public void updateCounter(int number) {
+		counter.setText("Test Counter"+number);
 	}
 }
