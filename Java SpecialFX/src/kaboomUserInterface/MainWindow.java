@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -72,17 +73,10 @@ public class MainWindow implements javafx.fxml.Initializable {
 		columnPriority.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("importanceLevel"));
 		
 		taskDisplayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		
+		
 		// Disable column reordering
-//		taskDisplayTable.getColumns().addListener(new ListChangeListener() {
-//	        @Override
-//	        public void onChanged(Change change) {
-//	          change.next();
-//	          if(change.wasReplaced()) {
-//	        	  taskDisplayTable.getColumns().clear();
-//	        	  taskDisplayTable.getColumns().addAll(columnTaskId, columnTaskName, columnStartTime, columnEndTime, columnPriority);
-//	          }
-//	        }
-//	    });
+		//disableTableColumnReordering();
 		
 		mainPane.getStyleClass().add("root");
 		
@@ -99,6 +93,19 @@ public class MainWindow implements javafx.fxml.Initializable {
 		
 		updateTaskTable();
 		updateFeedbackMessage();
+	}
+
+	private void disableTableColumnReordering() {
+		taskDisplayTable.getColumns().addListener(new ListChangeListener() {
+	        @Override
+	        public void onChanged(Change change) {
+	          change.next();
+	          if(change.wasReplaced()) {
+	        	  taskDisplayTable.getColumns().clear();
+	        	  taskDisplayTable.getColumns().addAll(columnTaskId, columnTaskName, columnStartTime, columnEndTime, columnPriority);
+	          }
+	        }
+	    });
 	}
 	
 	public void setStage (Stage currentStage) {
