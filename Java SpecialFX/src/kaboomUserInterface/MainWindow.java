@@ -147,7 +147,7 @@ public class MainWindow implements javafx.fxml.Initializable {
 	private void updateTaskTable() {
 		data.clear();
 		
-		Vector<TaskInfoDisplay> taskList = DisplayData.getInstance().getAllTaskDisplayInfo();
+		Vector<TaskInfoDisplay> taskList = DisplayData.getInstance().getTaskDisplay();
 		
 		for (int i = 0; i < taskList.size(); i++) {
 			data.add(taskList.get(i));
@@ -297,6 +297,6 @@ public class MainWindow implements javafx.fxml.Initializable {
 	}
 	
 	public void updateCounter(int number) {
-		counter.setText("Test Counter"+number);
+		counter.setText("Test Counter: "+number);
 	}
 }
