@@ -45,6 +45,10 @@
 	-fx-text-fill: #9F9F9F;
 }
 
+.hbox {
+	-fx-spacing: 5; 
+}
+
 .root {
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0.5, 0.0, 0.0);
     -fx-background-radius: 5;
