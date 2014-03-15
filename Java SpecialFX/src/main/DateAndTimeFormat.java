@@ -37,14 +37,16 @@ public class DateAndTimeFormat {
 	
 	public Calendar formatStringToCalendar (String date, String time) {
 		Calendar cal = Calendar.getInstance();
-		/*
-		dateTranslator(cal, date);
 		
-		TimeFormat currTimeFormat = new TimeFormat();
-		if(verifyTimeValidity(time, currTimeFormat)){
-			timeTranslator(cal, Integer.parseInt(time), currTimeFormat);
+		if(date != null) {
+			dateTranslator(cal, date);
 		}
-		*/
+		if(time != null) {
+			TimeFormat currTimeFormat = new TimeFormat();
+			if(verifyTimeValidity(time, currTimeFormat)){
+				timeTranslator(cal, Integer.parseInt(time), currTimeFormat);
+			}
+		}
 		return cal;
 	}
 	
