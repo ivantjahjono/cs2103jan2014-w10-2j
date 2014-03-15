@@ -100,7 +100,7 @@ public class DisplayData {
 	}
 	
 	public int getMaxTaskDisplayPages () {
-		return (tasksDataToDisplay.size()/NUM_OF_TASK_PER_PAGE)+1;
+		return (tasksDataToDisplay.size()/(NUM_OF_TASK_PER_PAGE+1))+1;
 	}
 	
 	public int getCurrentPage () {
