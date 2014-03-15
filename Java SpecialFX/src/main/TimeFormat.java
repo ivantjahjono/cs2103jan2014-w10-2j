@@ -1,6 +1,5 @@
 package main;
 
-
 public class TimeFormat {
 	//the24HourFormatDefault; 1700, 1500	code=1
 	//the24HourFormatColon; 17:20	code=2
