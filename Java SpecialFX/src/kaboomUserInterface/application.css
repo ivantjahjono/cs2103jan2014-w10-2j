@@ -1,5 +1,7 @@
 .feedback-pane {
-    -fx-background-color: #CCCCCC;
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #2d89ef;
+    -fx-font-family: "Segoe UI Semilight";
 }
 
 .table-view {
