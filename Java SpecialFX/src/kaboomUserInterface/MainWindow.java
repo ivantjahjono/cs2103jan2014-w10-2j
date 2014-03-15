@@ -438,6 +438,23 @@ public class MainWindow implements javafx.fxml.Initializable {
 	public void updateCounter(int number) {
 		counter.setText("Test Counter: "+number);
 	}
+	
+	@FXML
+	private void onPagesArrowMouseClicked (MouseEvent mouseEvent) {
+		Node nodePressed = (Node)mouseEvent.getSource();
+		
+		switch (nodePressed.getId()) {
+			case "nextArrow":
+				uiData.goToNextPage();
+				break;
+				
+			case "prevArrow":
+				uiData.goToPreviousPage();
+				break;
+		}
+		
+		updateDisplay();
+	}
 
 	private void updatePagesTab() {
 		int maxPages = uiData.getMaxTaskDisplayPages();
