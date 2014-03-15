@@ -99,10 +99,18 @@ public class DisplayData {
 		userFeedbackMessage = message;
 	}
 	
+	public int getMaxTaskDisplayPages () {
+		return (tasksDataToDisplay.size()/NUM_OF_TASK_PER_PAGE)+1;
+	}
+	
+	public int getCurrentPage () {
+		return currentPage;
+	}
+	
 	public void goToNextPage () {
 		currentPage++;
 		
-		int maxPage = tasksDataToDisplay.size()/NUM_OF_TASK_PER_PAGE;
+		int maxPage = getMaxTaskDisplayPages()-1;
 		if (currentPage > maxPage) {
 			currentPage = maxPage;
 		}
