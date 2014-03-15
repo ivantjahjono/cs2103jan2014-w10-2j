@@ -6,7 +6,6 @@ import main.TaskMasterKaboom;
 
 import java.net.URL; 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.ResourceBundle; 
 import java.util.Vector;
@@ -117,12 +116,6 @@ public class MainWindow implements javafx.fxml.Initializable {
 		previousLabelIndex = 0;
 		
 		setHeaderLabelToSelected(labelList.get(currentLabelIndex));
-		
-		
-		final ObservableList<Integer> highlightRows = FXCollections.observableArrayList();
-		highlightRows.add(1);
-		highlightRows.add(5);
-		
 		setTablelistToRespondToExpiry();
 		
 		updateDisplay();
@@ -228,7 +221,7 @@ public class MainWindow implements javafx.fxml.Initializable {
 				uiData.goToNextPage();
 				break;
 				
-			case "previous page":
+			case "prev page":
 				uiData.goToPreviousPage();
 				break;
 				
@@ -240,7 +233,7 @@ public class MainWindow implements javafx.fxml.Initializable {
 	private boolean isPageToggle(String command) {
 		switch (command) {
 			case "next page":
-			case "previous page":
+			case "prev page":
 				return true;
 				
 			default:
@@ -268,12 +261,14 @@ public class MainWindow implements javafx.fxml.Initializable {
 		if (!prevCommand.equals(commandTextInput.getText())) {
 			currentCommand = commandTextInput.getText();
 			commandTextInput.setText(prevCommand);
+			commandTextInput.end();
 		}
 	}
 	
 	private void recallStoredTypedCommand () {
 		if (!currentCommand.equals(commandTextInput.getText())) {
 			commandTextInput.setText(currentCommand);
+			commandTextInput.end();
 		}
 	}
 
