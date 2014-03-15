@@ -400,27 +400,28 @@ public class MainWindow implements javafx.fxml.Initializable {
 	public void updateCounter(int number) {
 		counter.setText("Test Counter: "+number);
 	}
-	
 
 	private void updatePagesTab() {
 		// Get number of pages
 		int maxPages = uiData.getMaxTaskDisplayPages();
 		
-		// see if need to create or destroy
-		if (maxPages <= 5 && pagesTab.size() < maxPages) {
-			int tabsToCreate = maxPages - pagesTab.size();
-			for (int i = 0; i < tabsToCreate; i++) {
-				pagesTab.add(createPageTabRectangle());
-			}
-		} else if (pagesTab.size() > maxPages ) {
-			int tabsToDelete = pagesTab.size() - maxPages;
-			for (int i = 0; i < tabsToDelete; i++) {
-				pagesTab.remove(pagesTab.size()-1);
-			}
-		}
+		resizePageTabToMaxPages(maxPages);
+		updatePageTabStyles();
+		refreshPageTabContainerWithNewPageTabs();
+	}
+	
+	private Rectangle createPageTabRectangle() {
+		RectangleBuilder pageTabBuilder = RectangleBuilder.create()
+			    .x(100).y(100)
+			    .width(25).height(5)
+			    .styleClass("pagesOn");
 		
+		Rectangle rect1 = pageTabBuilder.build();
+		return rect1;
+	}
+
+	private void updatePageTabStyles() {
 		int currentPage = uiData.getCurrentPage();
-		
 		for (int i = 0; i < pagesTab.size(); i++) {
 			
 			Rectangle currentTab = pagesTab.get(i);
@@ -433,19 +434,24 @@ public class MainWindow implements javafx.fxml.Initializable {
 				pagesTab.get(i).getStyleClass().add("pagesOff");
 			}
 		}
-		
-		// Update to tab to match current page
-		pageTabContainer.getChildren().clear();
-		pageTabContainer.getChildren().addAll(pagesTab);
 	}
 
-	private Rectangle createPageTabRectangle() {
-		RectangleBuilder pageTabBuilder = RectangleBuilder.create()
-			    .x(100).y(100)
-			    .width(25).height(5)
-			    .styleClass("pagesOn");
-		
-		Rectangle rect1 = pageTabBuilder.build();
-		return rect1;
+	private void resizePageTabToMaxPages(int maxPages) {
+		if (maxPages <= 5 && pagesTab.size() < maxPages) {
+			int tabsToCreate = maxPages - pagesTab.size();
+			for (int i = 0; i < tabsToCreate; i++) {
+				pagesTab.add(createPageTabRectangle());
+			}
+		} else if (pagesTab.size() > maxPages ) {
+			int tabsToDelete = pagesTab.size() - maxPages;
+			for (int i = 0; i < tabsToDelete; i++) {
+				pagesTab.remove(pagesTab.size()-1);
+			}
+		}
+	}
+	
+	private void refreshPageTabContainerWithNewPageTabs() {
+		pageTabContainer.getChildren().clear();
+		pageTabContainer.getChildren().addAll(pagesTab);
 	}
 }
