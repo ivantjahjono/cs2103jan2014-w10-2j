@@ -5,8 +5,9 @@ import main.TaskInfoDisplay;
 import main.TaskMasterKaboom;
 
 import java.net.URL; 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.ResourceBundle; 
 import java.util.Vector;
 
@@ -16,7 +17,6 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -27,7 +27,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.RectangleBuilder;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -57,17 +60,33 @@ public class MainWindow implements javafx.fxml.Initializable {
 	@FXML private Pane feedbackBox;
 	@FXML private Label feedbackText;
 	
-	private String prevCommand = "";
-	private String currentCommand = "";
+	@FXML private HBox pageTabContainer;
+	
+	ArrayList<Rectangle> pagesTab;
+	
+	private String prevCommand;
+	private String currentCommand;
 	
 	private double initialX;
 	private double initialY;
 	
-	private ObservableList<TaskInfoDisplay> data = FXCollections.observableArrayList();
+	private ObservableList<TaskInfoDisplay> data;
 	
 	Vector<Label> labelList;
 	int currentLabelIndex;
 	int previousLabelIndex;
+	
+	DisplayData uiData;
+	
+	public MainWindow () {
+		prevCommand = "";
+		currentCommand = "";
+		
+		data = FXCollections.observableArrayList();
+		pagesTab = new ArrayList<Rectangle>();
+		
+		uiData = DisplayData.getInstance();
+	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -96,14 +115,14 @@ public class MainWindow implements javafx.fxml.Initializable {
 		
 		setHeaderLabelToSelected(labelList.get(currentLabelIndex));
 		
+		
 		final ObservableList<Integer> highlightRows = FXCollections.observableArrayList();
 		highlightRows.add(1);
 		highlightRows.add(5);
 		
 		setTablelistToRespondToExpiry();
 		
-		updateTaskTable();
-		updateFeedbackMessage();
+		updateDisplay();
 	}
 
 	private void setTablelistToRespondToExpiry() {
@@ -191,19 +210,23 @@ public class MainWindow implements javafx.fxml.Initializable {
 		
 		commandTextInput.setText("");
 		
-		// Update the table
+		updateDisplay();
+	}
+
+	private void updateDisplay() {
 		updateTaskTable();
 		updateFeedbackMessage();
+		updatePagesTab();
 	}
 
 	private void activatePageToggle(String command) {
 		switch (command) {
 			case "next page":
-				DisplayData.getInstance().goToNextPage();
+				uiData.goToNextPage();
 				break;
 				
 			case "previous page":
-				DisplayData.getInstance().goToPreviousPage();
+				uiData.goToPreviousPage();
 				break;
 				
 			default:
@@ -225,34 +248,16 @@ public class MainWindow implements javafx.fxml.Initializable {
 	private void updateTaskTable() {
 		data.clear();
 		
-		Vector<TaskInfoDisplay> taskList = DisplayData.getInstance().getTaskDisplay();
+		Vector<TaskInfoDisplay> taskList = uiData.getTaskDisplay();
 		
 		for (int i = 0; i < taskList.size(); i++) {
 			data.add(taskList.get(i));
 		}
 		taskDisplayTable.setItems(data);
-		
-		// Update the table based on expiry
-		
-//		int i = 0;
-//	    for (Node n: taskDisplayTable.lookupAll("TableRow")) {
-//			if (n instanceof TableRow) {
-//				TableRow row = (TableRow) n;
-//				if (taskDisplayTable.getItems().get(i).isExpired() || i%3 == 0) {
-//					row.getStyleClass().add("isExpired");
-//				} else {
-//					row.getStyleClass().add("isNotExpired");
-//				}
-//				i++;
-//				if (i == taskDisplayTable.getItems().size())
-//				  break;
-//			}
-//	    }
-
 	}
 	
 	private void updateFeedbackMessage() {
-		String feedback = DisplayData.getInstance().getFeedbackMessage();
+		String feedback = uiData.getFeedbackMessage();
 		feedbackText.setText(feedback);
 	}
 	
@@ -394,5 +399,53 @@ public class MainWindow implements javafx.fxml.Initializable {
 	
 	public void updateCounter(int number) {
 		counter.setText("Test Counter: "+number);
+	}
+	
+
+	private void updatePagesTab() {
+		// Get number of pages
+		int maxPages = uiData.getMaxTaskDisplayPages();
+		
+		// see if need to create or destroy
+		if (maxPages <= 5 && pagesTab.size() < maxPages) {
+			int tabsToCreate = maxPages - pagesTab.size();
+			for (int i = 0; i < tabsToCreate; i++) {
+				pagesTab.add(createPageTabRectangle());
+			}
+		} else if (pagesTab.size() > maxPages ) {
+			int tabsToDelete = pagesTab.size() - maxPages;
+			for (int i = 0; i < tabsToDelete; i++) {
+				pagesTab.remove(pagesTab.size()-1);
+			}
+		}
+		
+		int currentPage = uiData.getCurrentPage();
+		
+		for (int i = 0; i < pagesTab.size(); i++) {
+			
+			Rectangle currentTab = pagesTab.get(i);
+			currentTab.getStyleClass().removeAll(Collections.singleton("pagesOn"));
+			currentTab.getStyleClass().removeAll(Collections.singleton("pagesOff"));
+			
+			if (i == currentPage) {
+				pagesTab.get(i).getStyleClass().add("pagesOn");
+			} else {
+				pagesTab.get(i).getStyleClass().add("pagesOff");
+			}
+		}
+		
+		// Update to tab to match current page
+		pageTabContainer.getChildren().clear();
+		pageTabContainer.getChildren().addAll(pagesTab);
+	}
+
+	private Rectangle createPageTabRectangle() {
+		RectangleBuilder pageTabBuilder = RectangleBuilder.create()
+			    .x(100).y(100)
+			    .width(25).height(5)
+			    .styleClass("pagesOn");
+		
+		Rectangle rect1 = pageTabBuilder.build();
+		return rect1;
 	}
 }
