@@ -8,9 +8,9 @@ import java.util.Vector;
 
 public class TextParser {
 	
-	private static final String KEYWORD_STARTTIME = " at ";
-	private static final String KEYWORD_ENDTIME = " by ";
-	private static final String KEYWORD_DATE = " on ";
+	private static final String KEYWORD_STARTDATE = " at ";
+	private static final String KEYWORD_ENDDATE = " by ";
+	private static final String KEYWORD_TIME = " on ";
 	private static final String KEYWORD_PRIORITY = " *";
 	
 	
@@ -37,6 +37,11 @@ public class TextParser {
 		}
 		
 		System.out.println(keywordHashTable);
+
+		
+		
+		
+		return keywordHashTable;
 		
 		
 		// TODO
@@ -81,7 +86,7 @@ public class TextParser {
 		
 		
 		
-		return keywordHashTable;
+		
 	}
 	//******************************************************************************************
 	
@@ -128,8 +133,8 @@ public class TextParser {
 					type = getKeywordType(cutOutString);
 				}
 				
-				if (type == KEYWORD_TYPE.START_DATE && prevType == KEYWORD_TYPE.END_TIME) {
-					type = KEYWORD_TYPE.END_DATE;
+				if (type == KEYWORD_TYPE.START_TIME && prevType == KEYWORD_TYPE.END_DATE) {
+					type = KEYWORD_TYPE.END_TIME;
 				}
 				
 				// Is there already data in table for that type ?
@@ -137,9 +142,18 @@ public class TextParser {
 					return new Error(Error.ERROR_TYPE.MESSAGE_DUPLICTE_COMMAND_PARAMETERS);
 				}
 				
-				// add to table
-				keywordTable.put(type, cutOutString);
-				
+				//further cut out the required information from the string
+				String information = "";
+				if (type != KEYWORD_TYPE.TASKNAME) {
+					information = getInformation (cutOutString);
+					// add to table
+					keywordTable.put(type, information);
+				}
+				else {
+					// add to table
+					keywordTable.put(type, cutOutString);
+				}
+					
 				// Remove the string from the original string
 				currentString = currentString.replaceFirst(cutOutString, "");
 				
@@ -149,6 +163,16 @@ public class TextParser {
 		
 		return null;
 	}
+	
+	
+	public static String getInformation (String cutOutString) {
+		String[] tokenisedString = cutOutString.split("\\s+");
+		if (tokenisedString.length < 2) {
+			return "";
+		}
+		return tokenisedString[2];
+	}
+	
 	
 	public static int getNextKeywordIndex(String stringToSearch) {
 		int nearestIndex = -1;
@@ -187,14 +211,14 @@ public class TextParser {
 	
 	private static KEYWORD_TYPE getKeywordType(String cutOutString) {
 		// TODO Find ways to refactor this
-		if (cutOutString.contains(KEYWORD_STARTTIME)) {
-			return KEYWORD_TYPE.START_TIME;
-		} else if (cutOutString.contains(KEYWORD_ENDTIME)) {
-			return KEYWORD_TYPE.END_TIME;
+		if (cutOutString.contains(KEYWORD_STARTDATE)) {
+			return KEYWORD_TYPE.START_DATE;
+		} else if (cutOutString.contains(KEYWORD_ENDDATE)) {
+			return KEYWORD_TYPE.END_DATE;
 		} else if (cutOutString.contains(KEYWORD_PRIORITY)) {
 			return KEYWORD_TYPE.PRIORITY;
-		} else if (cutOutString.contains(KEYWORD_DATE)) {
-			return KEYWORD_TYPE.START_DATE;
+		} else if (cutOutString.contains(KEYWORD_TIME)) {
+			return KEYWORD_TYPE.START_TIME;
 		}
 		
 		return KEYWORD_TYPE.INVALID;
@@ -233,24 +257,6 @@ public class TextParser {
 		
 		return keywordPositions;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

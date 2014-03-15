@@ -39,18 +39,62 @@ public class DateAndTimeFormat {
 		Calendar cal = Calendar.getInstance();
 		
 		if(date != null) {
+			System.out.println("1");
 			dateTranslator(cal, date);
 		}
+		
 		if(time != null) {
 			TimeFormat currTimeFormat = new TimeFormat();
 			if(verifyTimeValidity(time, currTimeFormat)){
 				timeTranslator(cal, Integer.parseInt(time), currTimeFormat);
 			}
 		}
+		
 		return cal;
 	}
 	
-	private static boolean verifyTimeValidity(String allegedTime, TimeFormat currTimeFormat) {
+
+	
+	public void dateTranslator(Calendar thisDate, String theDate){
+		//this method should already take in the proper date format. verification should be separated in another method
+		int date;
+		int month;
+		int year;
+		String[] dateArray = new String[3];
+		
+		dateArray = theDate.split("/");
+		
+		if(dateArray[2] != null){
+			year = Integer.parseInt(dateArray[2]);
+			thisDate.set(Calendar.YEAR, year);
+		}
+		if(dateArray[1] != null){
+			month = Integer.parseInt(dateArray[1]);
+			thisDate.set(Calendar.MONTH, month-1);
+		}
+		if(dateArray[0] != null){
+			date = Integer.parseInt(dateArray[0]);
+			thisDate.set(Calendar.DAY_OF_MONTH, date);
+		}
+	}
+	
+	private void timeTranslator(Calendar theTime, int correctTime, TimeFormat currTimeFormat){
+		//this method translates ALL time formats
+		if(currTimeFormat.getTimeFormatCode() == THE_24_HOUR_FORMAT_CODE){
+			int hour = correctTime / CORRECT_24HOUR_FORMAT_MIN;
+			int minute = correctTime % CORRECT_24HOUR_FORMAT_MIN;
+			theTime.set(Calendar.HOUR_OF_DAY, hour);
+			theTime.set(Calendar.MINUTE, minute);
+		}
+		else{
+			return;
+		}
+		return;
+		
+	}
+	
+	
+	private boolean verifyTimeValidity(String allegedTime, TimeFormat currTimeFormat) {
 		
 		try{
 			//check if it's the 24 hour format without separation. Eg: 1700, 1000
@@ -75,44 +119,19 @@ public class DateAndTimeFormat {
 		//this is a stub
 		//return false;
 	}
-		
-	
-	private static void dateTranslator(Calendar thisDate, String theDate){
-		//this method should already take in the proper date format. verification should be separated in another method
-		int date;
-		int month;
-		int year;
-		String[] dateArray = new String[3];
-		
-		dateArray = theDate.split("/");
-		
-		if(dateArray[2] != null){
-			year = Integer.parseInt(dateArray[2]);
-			thisDate.set(Calendar.YEAR, year);
-		}
-		if(dateArray[1] != null){
-			month = Integer.parseInt(dateArray[1]);
-			thisDate.set(Calendar.MONTH, month-1);
-		}
-		if(dateArray[0] != null){
-			date = Integer.parseInt(dateArray[0]);
-			thisDate.set(Calendar.DAY_OF_MONTH, date);
-		}
-		return;
+
+	//*************************** TEST METHODS **********************************
+	public String testDayFromDateTranslator (Calendar thisDate, String theDate) {
+		dateTranslator (thisDate,theDate);	
+		return Integer.toString(thisDate.get(Calendar.DAY_OF_MONTH));
 	}
-	
-	private static void timeTranslator(Calendar theTime, int correctTime, TimeFormat currTimeFormat){
-		//this method translates ALL time formats
-		if(currTimeFormat.getTimeFormatCode() == THE_24_HOUR_FORMAT_CODE){
-			int hour = correctTime / CORRECT_24HOUR_FORMAT_MIN;
-			int minute = correctTime % CORRECT_24HOUR_FORMAT_MIN;
-			theTime.set(Calendar.HOUR_OF_DAY, hour);
-			theTime.set(Calendar.MINUTE, minute);
-		}
-		else{
-			return;
-		}
-		return;
-		
+	public String testMonthFromDateTranslator (Calendar thisDate, String theDate) {
+		dateTranslator (thisDate,theDate);	
+		return Integer.toString(thisDate.get(Calendar.MONTH));
 	}
+	public String testYearFromDateTranslator (Calendar thisDate, String theDate) {
+		dateTranslator (thisDate,theDate);	
+		return Integer.toString(thisDate.get(Calendar.YEAR));
+	}
+	//*************************** TEST METHODS **********************************
 }
