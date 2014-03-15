@@ -36,6 +36,9 @@ import javafx.util.Callback;
 
 public class MainWindow implements javafx.fxml.Initializable {
 	
+	private final int MAX_TABS = 5;
+	private final int MIN_TABS = 1;
+	
 	private Stage windowStage;
 	@FXML private AnchorPane mainPane;
 	
@@ -402,10 +405,14 @@ public class MainWindow implements javafx.fxml.Initializable {
 	}
 
 	private void updatePagesTab() {
-		// Get number of pages
 		int maxPages = uiData.getMaxTaskDisplayPages();
+		int maxTabs = maxPages;
 		
-		resizePageTabToMaxPages(maxPages);
+		if (maxTabs > MAX_TABS) {
+			maxTabs = MAX_TABS;
+		}
+		
+		resizePageTabToMaxPages(maxTabs);
 		updatePageTabStyles();
 		refreshPageTabContainerWithNewPageTabs();
 	}
@@ -421,14 +428,15 @@ public class MainWindow implements javafx.fxml.Initializable {
 	}
 
 	private void updatePageTabStyles() {
-		int currentPage = uiData.getCurrentPage();
+		int currentTabPage = uiData.getCurrentPage()%MAX_TABS;
+		
 		for (int i = 0; i < pagesTab.size(); i++) {
 			
 			Rectangle currentTab = pagesTab.get(i);
 			currentTab.getStyleClass().removeAll(Collections.singleton("pagesOn"));
 			currentTab.getStyleClass().removeAll(Collections.singleton("pagesOff"));
 			
-			if (i == currentPage) {
+			if (i == currentTabPage) {
 				pagesTab.get(i).getStyleClass().add("pagesOn");
 			} else {
 				pagesTab.get(i).getStyleClass().add("pagesOff");
@@ -436,14 +444,14 @@ public class MainWindow implements javafx.fxml.Initializable {
 		}
 	}
 
-	private void resizePageTabToMaxPages(int maxPages) {
-		if (maxPages <= 5 && pagesTab.size() < maxPages) {
-			int tabsToCreate = maxPages - pagesTab.size();
+	private void resizePageTabToMaxPages(int maxTab) {
+		if (pagesTab.size() < maxTab) {
+			int tabsToCreate = maxTab - pagesTab.size();
 			for (int i = 0; i < tabsToCreate; i++) {
 				pagesTab.add(createPageTabRectangle());
 			}
-		} else if (pagesTab.size() > maxPages ) {
-			int tabsToDelete = pagesTab.size() - maxPages;
+		} else if (pagesTab.size() > maxTab ) {
+			int tabsToDelete = pagesTab.size() - maxTab;
 			for (int i = 0; i < tabsToDelete; i++) {
 				pagesTab.remove(pagesTab.size()-1);
 			}
