@@ -110,9 +110,9 @@
         <URL value="@application.css" />
       </stylesheets>
     </HBox>
-    <Pane layoutX="22.0" layoutY="378.0" prefHeight="22.0" prefWidth="546.0">
+    <Pane disable="false" focusTraversable="false" layoutX="13.0" layoutY="378.0" prefHeight="22.0" prefWidth="572.0" visible="true">
       <children>
-        <Text layoutX="391.0" layoutY="21.0" opacity="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&gt;">
+        <Text layoutX="405.0" layoutY="22.0" opacity="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&gt;">
           <fill>
             <Color blue="1.000" green="0.784" red="0.400" fx:id="x5" />
           </fill>
@@ -120,7 +120,7 @@
             <Font name="Segoe UI" size="24.0" fx:id="x6" />
           </font>
         </Text>
-        <Text fill="$x5" font="$x6" layoutX="155.0" layoutY="21.0" opacity="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;" />
+        <Text fill="$x5" font="$x6" layoutX="150.0" layoutY="22.0" opacity="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;" />
       </children>
     </Pane>
   </children>
