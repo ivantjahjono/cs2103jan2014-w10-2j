@@ -58,6 +58,10 @@
 	-fx-background-color: #EEEEFF;
 }
 
+.isEmpty {
+	-fx-background-color: #FFFFFF;
+}
+
 .table-view .table-row {
 	-fx-background-color: #FFFFFF;
 }
