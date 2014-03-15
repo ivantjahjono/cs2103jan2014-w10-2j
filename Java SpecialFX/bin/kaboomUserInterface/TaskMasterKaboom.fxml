@@ -112,7 +112,7 @@
     </HBox>
     <Pane disable="false" focusTraversable="false" layoutX="13.0" layoutY="378.0" prefHeight="22.0" prefWidth="572.0" visible="true">
       <children>
-        <Text layoutX="405.0" layoutY="22.0" opacity="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&gt;">
+        <Text fx:id="nextArrow" layoutX="405.0" layoutY="22.0" onMouseClicked="#onPagesArrowMouseClicked" opacity="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&gt;">
           <fill>
             <Color blue="1.000" green="0.784" red="0.400" fx:id="x5" />
           </fill>
@@ -120,7 +120,7 @@
             <Font name="Segoe UI" size="24.0" fx:id="x6" />
           </font>
         </Text>
-        <Text fill="$x5" font="$x6" layoutX="150.0" layoutY="22.0" opacity="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;" />
+        <Text fx:id="prevArrow" fill="$x5" font="$x6" layoutX="150.0" layoutY="22.0" onMouseClicked="#onPagesArrowMouseClicked" opacity="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;" />
       </children>
     </Pane>
   </children>
