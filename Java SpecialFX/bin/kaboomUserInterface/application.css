@@ -13,13 +13,9 @@
   -fx-border-color: transparent;
 }
 
-.table-view .table-row-cell {
-	-fx-background-color: #FFFFFF;
-}
-
 .table-view .table-cell {
 	-fx-padding: 5;
-	-fx-font-family: "Segoe UI";
+	-fx-font-family: "Segoe UI Semibold";
 }
 
 .column-header {
@@ -32,7 +28,7 @@
 .column-header .label, .table-view .placeholder .label {
 	-fx-text-fill: #FFFFFF;
 	-fx-alignment: CENTER_LEFT;
-	-fx-font-family: "Segoe UI";
+	-fx-font-family: "Segoe UI Semibold";
 }
 
 .header-label-selected {
@@ -43,6 +39,42 @@
 .header-label-normal {
 	-fx-font-size: 20px;
 	-fx-text-fill: #9F9F9F;
+}
+
+.isExpired {
+	-fx-background-color: #FFFFFF;
+	-fx-opacity: 0.3;
+}
+
+.isExpired:hover {
+	-fx-background-color: #EEEEFF;
+}
+
+.isNotExpired {
+	-fx-background-color: #FFFFFF;
+}
+
+.isNotExpired:hover {
+	-fx-background-color: #EEEEFF;
+}
+
+.table-view .table-row {
+	-fx-background-color: #FFFFFF;
+}
+
+.pages-tab-hbox {
+	-fx-spacing: 5; 
+}
+
+.pagesOn {
+	-fx-fill: #2d89ef;
+	-fx-border-color: red;
+	-fx-opacity: 1;
+}
+
+.pagesOff {
+	-fx-fill: #2d89ef;
+	-fx-opacity: 0.3;
 }
 
 .root {
