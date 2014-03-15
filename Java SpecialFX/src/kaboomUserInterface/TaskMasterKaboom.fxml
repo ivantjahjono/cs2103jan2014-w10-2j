@@ -11,14 +11,14 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" fx:id="mainPane" blendMode="SRC_OVER" focusTraversable="true" layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" onKeyPressed="#onWindowKeyPressed" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" prefHeight="470.0" prefWidth="600.0" snapToPixel="true" styleClass="root" translateX="0.0" translateY="0.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboomUserInterface.MainWindow">
+<AnchorPane id="AnchorPane" fx:id="mainPane" blendMode="SRC_OVER" focusTraversable="true" layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="470.0" prefWidth="600.0" snapToPixel="true" styleClass="root" translateX="0.0" translateY="0.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboomUserInterface.MainWindow">
   <children>
     <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="WHITE" height="469.9999694824219" layoutX="0.0" layoutY="0.0" opacity="1.0" smooth="true" strokeType="INSIDE" strokeWidth="1.0" styleClass="column-header" width="600.0">
       <stroke>
         <Color blue="0.937" green="0.537" red="0.176" fx:id="x4" />
       </stroke>
     </Rectangle>
-    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="$x4" height="27.0" layoutX="0.0" layoutY="0.0" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0" />
+    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="$x4" height="27.0" layoutX="0.0" layoutY="0.0" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0" />
     <TextField fx:id="commandTextInput" disable="false" layoutX="13.0" layoutY="434.0" onAction="#onTextfieldAction" onKeyPressed="#onTextfieldKeyPressed" prefWidth="572.0" promptText="Please enter a command" text="" />
     <Pane fx:id="feedbackBox" blendMode="SRC_OVER" layoutX="13.0" layoutY="408.0" prefHeight="22.0" prefWidth="572.0" styleClass="feedback-pane">
       <children>
@@ -44,7 +44,7 @@
         <URL value="@application.css" />
       </stylesheets>
     </TableView>
-    <Label layoutX="17.0" layoutY="5.0" text="| TASK MASTER KABOOM" textFill="WHITE">
+    <Label layoutX="17.0" layoutY="5.0" mouseTransparent="true" text="| TASK MASTER KABOOM" textFill="WHITE">
       <font>
         <Font name="Segoe UI" size="12.0" />
       </font>
@@ -100,7 +100,7 @@
         <Font size="35.0" />
       </font>
     </Label>
-    <Label fx:id="counter" layoutX="257.0" layoutY="6.0" text="Test Counter: 0" textFill="WHITE">
+    <Label fx:id="counter" layoutX="257.0" layoutY="6.0" mouseTransparent="true" text="Test Counter: 0" textFill="WHITE">
       <font>
         <Font name="Segoe UI Semibold" size="12.0" />
       </font>
