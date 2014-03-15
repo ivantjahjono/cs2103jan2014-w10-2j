@@ -141,7 +141,12 @@ public class TaskMasterKaboom {
 		Error errorType = updateCommandInfoFromParameter(commandToExecute, commandParametersString);
 		
 		if (errorType == null) {
-			commandResult = commandToExecute.execute();
+			try {
+				commandResult = commandToExecute.execute();
+			} catch (Exception e) {
+				commandResult = new Result();
+				commandResult.setFeedback("Error executing command! Please inform your administrator!");
+			}
 		} else {
 			commandResult = new Result();
 			commandResult.setFeedback(errorType.getErrorMessage());
