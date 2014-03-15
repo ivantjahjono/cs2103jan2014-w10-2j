@@ -100,6 +100,13 @@ public class MainWindow implements javafx.fxml.Initializable {
 		highlightRows.add(1);
 		highlightRows.add(5);
 		
+		setTablelistToRespondToExpiry();
+		
+		updateTaskTable();
+		updateFeedbackMessage();
+	}
+
+	private void setTablelistToRespondToExpiry() {
 		taskDisplayTable.setRowFactory(new Callback<TableView<TaskInfoDisplay>, TableRow<TaskInfoDisplay>>() {
 	        @Override
 	        public TableRow<TaskInfoDisplay> call(TableView<TaskInfoDisplay> tableView) {
@@ -110,7 +117,7 @@ public class MainWindow implements javafx.fxml.Initializable {
 	                    
 	                    getStyleClass().removeAll(Collections.singleton("isNotExpired"));
 	                    getStyleClass().removeAll(Collections.singleton("isExpired"));
-	                    if (person != null && !person.isExpired() && person.getTaskId()%3 == 0) {
+	                    if (person != null && person.isExpired()) {
 	                    //if (highlightRows.contains(getIndex())) {
 	                        if (! getStyleClass().contains("isExpired")) {
 	                            getStyleClass().add("isExpired");
@@ -136,10 +143,6 @@ public class MainWindow implements javafx.fxml.Initializable {
 	            return row;
 	        }
 	    });
-		
-		
-		updateTaskTable();
-		updateFeedbackMessage();
 	}
 
 	private void disableTableColumnReordering() {
@@ -177,6 +180,8 @@ public class MainWindow implements javafx.fxml.Initializable {
 			previousLabelIndex = currentLabelIndex;
 			currentLabelIndex = switchIndexResult;
 			switchMainHeaderHighlight(previousLabelIndex, currentLabelIndex);
+		} if (isPageToggle(command)) {
+			activatePageToggle(command);
 		} else {
 			TaskMasterKaboom.processCommand(command);
 		}
@@ -189,6 +194,32 @@ public class MainWindow implements javafx.fxml.Initializable {
 		// Update the table
 		updateTaskTable();
 		updateFeedbackMessage();
+	}
+
+	private void activatePageToggle(String command) {
+		switch (command) {
+			case "next page":
+				DisplayData.getInstance().goToNextPage();
+				break;
+				
+			case "previous page":
+				DisplayData.getInstance().goToPreviousPage();
+				break;
+				
+			default:
+				break;
+		}
+	}
+
+	private boolean isPageToggle(String command) {
+		switch (command) {
+			case "next page":
+			case "previous page":
+				return true;
+				
+			default:
+				return false;
+		}
 	}
 
 	private void updateTaskTable() {

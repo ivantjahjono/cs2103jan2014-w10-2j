@@ -37,16 +37,9 @@ public class DisplayData {
 		setFeedbackMessage(commandResult.getFeedback());
 		
 		if (commandResult.getGoToNextPage()) {
-			currentPage++;
-			
-			int maxPage = tasksDataToDisplay.size()/NUM_OF_TASK_PER_PAGE;
-			if (currentPage > maxPage) {
-				currentPage = maxPage;
-			}
+			goToNextPage();
 		} else if (commandResult.getGoToPrevPage()) {
-			if (currentPage > 1) {
-				currentPage--;
-			}
+			goToPreviousPage();
 		}
 	}
 	
@@ -67,7 +60,7 @@ public class DisplayData {
 	}
 
 	private int getLastIndexOfPage(int startPage) {
-		int maxCurrentPage = currentPage+NUM_OF_TASK_PER_PAGE;
+		int maxCurrentPage = (currentPage+1)*NUM_OF_TASK_PER_PAGE;
 		
 		if (maxCurrentPage > tasksDataToDisplay.size()) {
 			return tasksDataToDisplay.size();
@@ -84,7 +77,7 @@ public class DisplayData {
 	private void convertTasksIntoDisplayData(Vector<TaskInfo> taskList, Vector<TaskInfoDisplay> taskListToAddinto) {
 		for (int i = 0; i < taskList.size(); i++) {
 			TaskInfo currentTaskInfo = taskList.get(i);
-			TaskInfoDisplay infoToDisplay = convertTaskInfoIntoTaskInfoDisplay(currentTaskInfo, i+1);
+			TaskInfoDisplay infoToDisplay = convertTaskInfoIntoTaskInfoDisplay(currentTaskInfo, i%NUM_OF_TASK_PER_PAGE+1);
 			
 			taskListToAddinto.add(infoToDisplay);
 		}
@@ -104,5 +97,20 @@ public class DisplayData {
 	
 	public void setFeedbackMessage (String message) {
 		userFeedbackMessage = message;
+	}
+	
+	public void goToNextPage () {
+		currentPage++;
+		
+		int maxPage = tasksDataToDisplay.size()/NUM_OF_TASK_PER_PAGE;
+		if (currentPage > maxPage) {
+			currentPage = maxPage;
+		}
+	}
+	
+	public void goToPreviousPage () {
+		if (currentPage > 0) {
+			currentPage--;
+		}
 	}
 }
