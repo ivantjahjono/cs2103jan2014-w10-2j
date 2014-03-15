@@ -3,16 +3,18 @@ package main;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Vector;
 
 public class TextParser {
 	
-	private static final String KEYWORD_STARTTIME = " at ";
-	private static final String KEYWORD_ENDTIME = " by ";
-	private static final String KEYWORD_DATE = " on ";
-	private static final String KEYWORD_PRIORITY = " *";
-	private static final String KEYWORD_MODIFY = " >";
+	private static final String KEYWORD_STARTTIME = "at";
+	private static final String KEYWORD_ENDTIME = "by";
+	private static final String KEYWORD_DATE = "on";
+	private static final String KEYWORD_PRIORITY = "*";
+	private static final String KEYWORD_MODIFY = ">";
 	
 
 	
@@ -24,14 +26,16 @@ public class TextParser {
 		return getFirstWord(userInput);
 	}
 	
-	public static Hashtable<KEYWORD_TYPE, String> process (String userInput) {
+	public static Hashtable<KEYWORD_TYPE, String> extractTaskInformation (String userInput) {
 		String taskInformation = removeFirstWord(userInput);
 		
 		
 		
 		// Cut the command into their respective syntax. Will return hash table of data strings
 		Hashtable<KEYWORD_TYPE, String> keywordHashTable = new Hashtable<KEYWORD_TYPE, String>();
-		Error errorEncountered = createKeywordTableBasedOnParameter(taskInformation, keywordHashTable);
+		Error errorEncountered = asd(taskInformation, keywordHashTable);
+		
+		//Error errorEncountered = createKeywordTableBasedOnParameter(taskInformation, keywordHashTable);
 		if (errorEncountered != null) {
 			//return errorEncountered;
 		}
@@ -106,6 +110,7 @@ public class TextParser {
 		String[] commandAndData = userInputSentence.trim().split("\\s+");
 		return commandAndData;
 	}
+	
 	
 	//TODO Clean up and refactor code
 	public static Error createKeywordTableBasedOnParameter(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
@@ -224,6 +229,8 @@ public class TextParser {
 		return KEYWORD_TYPE.INVALID;
 	}
 	
+	
+	//FOR TESTING
 	public static Vector<Integer> getListOfKeywordPositions (String stringToSearch) {
 		Vector<Integer> keywordPositions = new Vector<Integer>();
 		
@@ -233,24 +240,26 @@ public class TextParser {
 		for (int i = 0; i < numOfKeywords; i++) {
 			switch(i) {
 				case 0:
-					currentKeyword = " at ";
+					currentKeyword = ">";
 					break;
 					
 				case 1:
-					currentKeyword = " by ";
+					currentKeyword = "at";
 					break;
 					
 				case 2:
-					currentKeyword = " * ";
+					currentKeyword = "by";
 					break;
 					
 				case 3:
-					currentKeyword = " on ";
+					currentKeyword = "*";
 					break;
 					
 				case 4:
-					currentKeyword = ">";
+					currentKeyword = "on";
 					break;
+					
+	
 			}
 			
 			int currentIndex = stringToSearch.indexOf(currentKeyword);
@@ -265,18 +274,92 @@ public class TextParser {
 	
 	
 	
+	//**********************TO BE REVIEWED*********************************************************
+	public static Error asd(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+		String currentString = userInputSentence;
+		String currentKeyword = "";
+		String nextKeyword = "";
+		KEYWORD_TYPE type = KEYWORD_TYPE.INVALID;
+		
+		Queue<String> keyWordsList = getKeywordsOrder(currentString);
+		
+		while(!currentString.isEmpty()) {
+			currentKeyword = nextKeyword;
+			
+			type = getKeywordType2(currentKeyword);
+			
+			nextKeyword = keyWordsList.poll();
+			
+			String infoChunk = "";
+			
+			if (nextKeyword != null) {
+				infoChunk = currentString.split(nextKeyword)[0].trim();
+			}
+			else {
+				infoChunk = currentString;
+			}
+			
+			String info = infoChunk.replace(currentKeyword, "").trim();
+			
+			if (currentKeyword.equals(KEYWORD_DATE) && nextKeyword == null) {
+				type = KEYWORD_TYPE.END_DATE;
+			}
+			keywordTable.put(type, info);
+			
+			if (nextKeyword != null) {
+				currentString = currentString.replace(infoChunk.concat(" "+nextKeyword), "");
+			}
+			else {
+				currentString = currentString.replace(infoChunk, "");
+			}
+			
+			
+		}
+		return null;
+	}
 	
+
+	public static Queue<String> getKeywordsOrder(String sentence) {
+		Queue<String> q = new LinkedList<String>();
+		String[] sentenceA = sentence.split("\\s+");
+		for (int i = 0; i< sentenceA.length; i++) {
+			if (sentenceA[i].equals(KEYWORD_MODIFY)) {
+				q.add(sentenceA[i]);
+			}
+			if (sentenceA[i].equals(KEYWORD_STARTTIME)) {
+				q.add(sentenceA[i]);
+			}
+			if (sentenceA[i].equals(KEYWORD_ENDTIME)) {
+				q.add(sentenceA[i]);
+			}
+			if (sentenceA[i].equals(KEYWORD_PRIORITY)) {
+				q.add(sentenceA[i]);
+			}
+			if (sentenceA[i].equals(KEYWORD_DATE)) {
+				q.add(sentenceA[i]);
+			}
+			
+		}
+		
+		return q;
+	}
+
+	private static KEYWORD_TYPE getKeywordType2(String cutOutString) {
+		// TODO Find ways to refactor this
+		if (cutOutString.contains(KEYWORD_STARTTIME)) {
+			return KEYWORD_TYPE.START_TIME;
+		} else if (cutOutString.contains(KEYWORD_ENDTIME)) {
+			return KEYWORD_TYPE.END_TIME;
+		} else if (cutOutString.contains(KEYWORD_PRIORITY)) {
+			return KEYWORD_TYPE.PRIORITY;
+		} else if (cutOutString.contains(KEYWORD_DATE)) {
+			return KEYWORD_TYPE.START_DATE;
+		}
+		
+		return KEYWORD_TYPE.TASKNAME;
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	//**********************TO BE REVIEWED*********************************************************
 	
 	
 	
@@ -644,3 +727,4 @@ public class TextParser {
 
 
 }
+

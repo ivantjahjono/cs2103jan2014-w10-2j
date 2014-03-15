@@ -122,7 +122,7 @@ public class TaskMasterKaboom {
 
 		commandToExecute = createCommandBasedOnCommandType(commandType);
 		
-		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.process(userInputSentence);
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.extractTaskInformation(userInputSentence);
 		
 		Error errorType = updateCommandInfoBasedOnTaskInformationTable(commandToExecute, taskInformationTable);
 		
