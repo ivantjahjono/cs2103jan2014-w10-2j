@@ -3,3 +3,4 @@ syntax: glob
 *.bat
 *.orig
 Task Master Kaboom/KABOOM_FILE.dat
+Java SpecialFX/KABOOM_FILE.dat
