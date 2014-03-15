@@ -16,6 +16,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -36,7 +37,6 @@ import javafx.util.Callback;
 public class MainWindow implements javafx.fxml.Initializable {
 	
 	private final int MAX_TABS = 5;
-	private final int MIN_TABS = 1;
 	
 	private Stage windowStage;
 	@FXML private AnchorPane mainPane;
@@ -132,13 +132,19 @@ public class MainWindow implements javafx.fxml.Initializable {
 	                    
 	                    getStyleClass().removeAll(Collections.singleton("isNotExpired"));
 	                    getStyleClass().removeAll(Collections.singleton("isExpired"));
-	                    if (person != null && person.isExpired()) {
+	                    getStyleClass().removeAll(Collections.singleton("isEmpty"));
+	                    
+	                    if (person == null) {
+	                    	 getStyleClass().add("isEmpty");
+	                    	 return;
+	                    }
+	                    
+	                    if (person.isExpired()) {
 	                    //if (highlightRows.contains(getIndex())) {
 	                        if (! getStyleClass().contains("isExpired")) {
 	                            getStyleClass().add("isExpired");
 	                        }
-	                    } else {
-	                        
+	                    } else {   
 	                        getStyleClass().add("isNotExpired");
 	                    }
 	                }
@@ -374,6 +380,40 @@ public class MainWindow implements javafx.fxml.Initializable {
 		
 		return selected;
 	}
+	
+	@FXML
+	private void onHeaderMouseClicked (MouseEvent mouseEvent) {
+		Node nodePressed = (Node)mouseEvent.getSource();
+		
+		previousLabelIndex = currentLabelIndex;
+		switch (nodePressed.getId()) {
+			case "header_all":
+				currentLabelIndex = 0;
+				break;
+				
+			case "header_running":
+				currentLabelIndex = 1;
+				break;
+				
+			case "header_deadline":
+				currentLabelIndex = 2;
+				break;
+				
+			case "header_timed":
+				currentLabelIndex = 3;
+				break;
+				
+			case "header_search":
+				currentLabelIndex = 4;
+				break;
+				
+			default:
+				return;
+		}
+		
+		setHeaderLabelToNormal(labelList.get(previousLabelIndex));
+		setHeaderLabelToSelected(labelList.get(currentLabelIndex));
+	}
 
 	private void switchMainHeaderHighlight(int prevIndex, int currIndex) {
 		setHeaderLabelToNormal(labelList.get(prevIndex));
@@ -381,12 +421,12 @@ public class MainWindow implements javafx.fxml.Initializable {
 	}
 	
 	private void setHeaderLabelToNormal (Label labelToChange) {
-		labelToChange.getStyleClass().remove("header-label-selected");
+		labelToChange.getStyleClass().removeAll(Collections.singleton("header-label-selected"));
 		labelToChange.getStyleClass().add("header-label-normal");
 	}
 	
 	private void setHeaderLabelToSelected (Label labelToChange) {
-		labelToChange.getStyleClass().remove("header-label-normal");
+		labelToChange.getStyleClass().removeAll(Collections.singleton("header-label-normal"));
 		labelToChange.getStyleClass().add("header-label-selected");
 	}
 	
