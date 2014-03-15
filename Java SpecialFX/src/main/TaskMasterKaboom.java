@@ -234,7 +234,7 @@ public class TaskMasterKaboom {
 		
 		String priority = taskInformationTable.get(KEYWORD_TYPE.PRIORITY);
 		
-		taskInfo.setImportanceLevel(2);
+		taskInfo.setImportanceLevel(3);
 		
 		return taskInfo;
 	}
