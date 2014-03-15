@@ -27,3 +27,5 @@ public class DateAndTimeFormatTest {
 		assertEquals("2013",DateAndTimeFormat.getInstance().testYearFromDateTranslator(cal, "10/10/2013"));
 	}
 }
+
+//add k at 2000 on 20/10/2014 by 2100 on 21/10/2014
