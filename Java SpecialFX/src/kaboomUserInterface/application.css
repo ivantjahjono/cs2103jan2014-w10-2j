@@ -13,10 +13,6 @@
   -fx-border-color: transparent;
 }
 
-.table-view .table-row-cell {
-	-fx-background-color: #FFFFFF;
-}
-
 .table-view .table-cell {
 	-fx-padding: 5;
 	-fx-font-family: "Segoe UI Semibold";
@@ -45,7 +41,28 @@
 	-fx-text-fill: #9F9F9F;
 }
 
-.hbox {
+.isExpired {
+	-fx-background-color: #FFFFFF;
+	-fx-opacity: 0.3;
+}
+
+.isExpired:hover {
+	-fx-background-color: #EEEEFF;
+}
+
+.isNotExpired {
+	-fx-background-color: #FFFFFF;
+}
+
+.isNotExpired:hover {
+	-fx-background-color: #EEEEFF;
+}
+
+.table-view .table-row {
+	-fx-background-color: #FFFFFF;
+}
+
+.pages-tab-hbox {
 	-fx-spacing: 5; 
 }
 

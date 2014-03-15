@@ -5,6 +5,8 @@ import main.TaskInfoDisplay;
 import main.TaskMasterKaboom;
 
 import java.net.URL; 
+import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle; 
 import java.util.Vector;
 
@@ -14,8 +16,10 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -25,6 +29,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class MainWindow implements javafx.fxml.Initializable {
 	
@@ -91,6 +96,48 @@ public class MainWindow implements javafx.fxml.Initializable {
 		
 		setHeaderLabelToSelected(labelList.get(currentLabelIndex));
 		
+		final ObservableList<Integer> highlightRows = FXCollections.observableArrayList();
+		highlightRows.add(1);
+		highlightRows.add(5);
+		
+		taskDisplayTable.setRowFactory(new Callback<TableView<TaskInfoDisplay>, TableRow<TaskInfoDisplay>>() {
+	        @Override
+	        public TableRow<TaskInfoDisplay> call(TableView<TaskInfoDisplay> tableView) {
+	            final TableRow<TaskInfoDisplay> row = new TableRow<TaskInfoDisplay>() {
+	                @Override
+	                protected void updateItem(TaskInfoDisplay person, boolean empty){
+	                    super.updateItem(person, empty);
+	                    
+	                    getStyleClass().removeAll(Collections.singleton("isNotExpired"));
+	                    getStyleClass().removeAll(Collections.singleton("isExpired"));
+	                    if (person != null && !person.isExpired() && person.getTaskId()%3 == 0) {
+	                    //if (highlightRows.contains(getIndex())) {
+	                        if (! getStyleClass().contains("isExpired")) {
+	                            getStyleClass().add("isExpired");
+	                        }
+	                    } else {
+	                        
+	                        getStyleClass().add("isNotExpired");
+	                    }
+	                }
+	            };
+//	            highlightRows.addListener(new ListChangeListener<Integer>() {
+//	                @Override
+//	                public void onChanged(Change<? extends Integer> change) {
+//	                    if (highlightRows.contains(row.getIndex())) {
+//	                        if (! row.getStyleClass().contains("isExpired")) {
+//	                            row.getStyleClass().add("isExpired");
+//	                        }
+//	                    } else {
+//	                        row.getStyleClass().removeAll(Collections.singleton("isExpired"));
+//	                    }
+//	                }
+//	            });
+	            return row;
+	        }
+	    });
+		
+		
 		updateTaskTable();
 		updateFeedbackMessage();
 	}
@@ -153,6 +200,24 @@ public class MainWindow implements javafx.fxml.Initializable {
 			data.add(taskList.get(i));
 		}
 		taskDisplayTable.setItems(data);
+		
+		// Update the table based on expiry
+		
+//		int i = 0;
+//	    for (Node n: taskDisplayTable.lookupAll("TableRow")) {
+//			if (n instanceof TableRow) {
+//				TableRow row = (TableRow) n;
+//				if (taskDisplayTable.getItems().get(i).isExpired() || i%3 == 0) {
+//					row.getStyleClass().add("isExpired");
+//				} else {
+//					row.getStyleClass().add("isNotExpired");
+//				}
+//				i++;
+//				if (i == taskDisplayTable.getItems().size())
+//				  break;
+//			}
+//	    }
+
 	}
 	
 	private void updateFeedbackMessage() {
