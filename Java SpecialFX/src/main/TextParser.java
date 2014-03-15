@@ -8,11 +8,11 @@ import java.util.Vector;
 
 public class TextParser {
 	
-	private static final String KEYWORD_STARTDATE = " at ";
-	private static final String KEYWORD_ENDDATE = " by ";
-	private static final String KEYWORD_TIME = " on ";
+	private static final String KEYWORD_STARTTIME = " at ";
+	private static final String KEYWORD_ENDTIME = " by ";
+	private static final String KEYWORD_DATE = " on ";
 	private static final String KEYWORD_PRIORITY = " *";
-	
+	private static final String KEYWORD_MODIFY = " >";
 	
 
 	
@@ -133,8 +133,8 @@ public class TextParser {
 					type = getKeywordType(cutOutString);
 				}
 				
-				if (type == KEYWORD_TYPE.START_TIME && prevType == KEYWORD_TYPE.END_DATE) {
-					type = KEYWORD_TYPE.END_TIME;
+				if (type == KEYWORD_TYPE.START_DATE && prevType == KEYWORD_TYPE.END_TIME) {
+					type = KEYWORD_TYPE.END_DATE;
 				}
 				
 				// Is there already data in table for that type ?
@@ -211,14 +211,14 @@ public class TextParser {
 	
 	private static KEYWORD_TYPE getKeywordType(String cutOutString) {
 		// TODO Find ways to refactor this
-		if (cutOutString.contains(KEYWORD_STARTDATE)) {
-			return KEYWORD_TYPE.START_DATE;
-		} else if (cutOutString.contains(KEYWORD_ENDDATE)) {
-			return KEYWORD_TYPE.END_DATE;
+		if (cutOutString.contains(KEYWORD_STARTTIME)) {
+			return KEYWORD_TYPE.START_TIME;
+		} else if (cutOutString.contains(KEYWORD_ENDTIME)) {
+			return KEYWORD_TYPE.END_TIME;
 		} else if (cutOutString.contains(KEYWORD_PRIORITY)) {
 			return KEYWORD_TYPE.PRIORITY;
-		} else if (cutOutString.contains(KEYWORD_TIME)) {
-			return KEYWORD_TYPE.START_TIME;
+		} else if (cutOutString.contains(KEYWORD_DATE)) {
+			return KEYWORD_TYPE.START_DATE;
 		}
 		
 		return KEYWORD_TYPE.INVALID;
@@ -228,7 +228,7 @@ public class TextParser {
 		Vector<Integer> keywordPositions = new Vector<Integer>();
 		
 		String currentKeyword = "";
-		int numOfKeywords = 4;
+		int numOfKeywords = 5;
 		
 		for (int i = 0; i < numOfKeywords; i++) {
 			switch(i) {
@@ -246,6 +246,10 @@ public class TextParser {
 					
 				case 3:
 					currentKeyword = " on ";
+					break;
+					
+				case 4:
+					currentKeyword = ">";
 					break;
 			}
 			
