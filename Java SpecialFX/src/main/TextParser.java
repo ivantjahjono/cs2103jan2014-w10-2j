@@ -1,12 +1,11 @@
 package main;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Random;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TextParser {
 	
@@ -279,17 +278,49 @@ public class TextParser {
 		String currentString = userInputSentence;
 		String currentKeyword = "";
 		String nextKeyword = "";
+		String previousKeyword = "";
 		KEYWORD_TYPE type = KEYWORD_TYPE.INVALID;
+		
+		String asc = Pattern.quote(currentString);
+		System.out.println(asc);
 		
 		Queue<String> keyWordsList = getKeywordsOrder(currentString);
 		
 		while(!currentString.isEmpty()) {
+			//1. Get keywords
+			previousKeyword = currentKeyword;
 			currentKeyword = nextKeyword;
-			
-			type = getKeywordType2(currentKeyword);
-			
 			nextKeyword = keyWordsList.poll();
 			
+			/*
+			 * 2. get the type (with check)			
+			 * There are 4 conditions.
+			 * -On without an at or by before
+			 * -on with an at before = start date
+			 * -on with an by before = end date
+			 * -anything else
+			 */
+			if(currentKeyword.equals(KEYWORD_DATE)) {
+				switch(previousKeyword) {
+				case KEYWORD_STARTTIME:
+					type = KEYWORD_TYPE.START_DATE;
+					break;
+				case KEYWORD_ENDTIME:
+					type = KEYWORD_TYPE.END_DATE;
+					break;
+				default: 
+					type = KEYWORD_TYPE.INVALID;
+				}
+				
+			}
+			else {
+				type = getKeywordType2(currentKeyword);
+			}
+			
+			
+			
+			
+			//3. chop and get the bunch of text before the next keyword
 			String infoChunk = "";
 			
 			if (nextKeyword != null) {
@@ -299,13 +330,32 @@ public class TextParser {
 				infoChunk = currentString;
 			}
 			
+			
+			//4. get the information by removing any keywords
 			String info = infoChunk.replace(currentKeyword, "").trim();
 			
-			if (currentKeyword.equals(KEYWORD_DATE) && nextKeyword == null) {
-				type = KEYWORD_TYPE.END_DATE;
+			// 4.1 with this info can do checking base on current keyword (or can be done in controller or command)
+			switch(type) {
+			case START_TIME: 
+				//checktime method;
+				break;
+			case END_TIME:
+				//checktime method + isTimeBefore starttime;
+				break;
+			case START_DATE:
+				//checkdate method;
+				break;
+			case END_DATE:
+				//checkdate method + isDateBefore starttime;
+				break;
+			default: 
+				//nothing yet
 			}
+			
+			//5. put in table
 			keywordTable.put(type, info);
 			
+			//6. remove the bunch of text + keyword from the original string
 			if (nextKeyword != null) {
 				currentString = currentString.replace(infoChunk.concat(" "+nextKeyword), "");
 			}
@@ -346,21 +396,40 @@ public class TextParser {
 
 	private static KEYWORD_TYPE getKeywordType2(String cutOutString) {
 		// TODO Find ways to refactor this
-		if (cutOutString.contains(KEYWORD_STARTTIME)) {
+		if (cutOutString.equals(KEYWORD_STARTTIME)) {
 			return KEYWORD_TYPE.START_TIME;
-		} else if (cutOutString.contains(KEYWORD_ENDTIME)) {
+		} else if (cutOutString.equals(KEYWORD_ENDTIME)) {
 			return KEYWORD_TYPE.END_TIME;
-		} else if (cutOutString.contains(KEYWORD_PRIORITY)) {
+		} else if (cutOutString.equals(KEYWORD_PRIORITY)) {
 			return KEYWORD_TYPE.PRIORITY;
-		} else if (cutOutString.contains(KEYWORD_DATE)) {
-			return KEYWORD_TYPE.START_DATE;
-		}
-		
+		} 
 		return KEYWORD_TYPE.TASKNAME;
 	}
 	
 	//**********************TO BE REVIEWED*********************************************************
 	
+	
+	
+	private static String lookForStartTimeAndDate(String userInput) {
+		
+		String currentString = userInput;
+		Matcher matcher = Pattern.compile("(?<=30/).*").matcher(currentString);
+		if(currentString.contains(" at ")) {
+			
+			currentString.split("at");
+		
+			
+		
+		
+		
+		
+		
+		}
+	
+		
+		
+		return null;
+	}
 	
 	
 	
