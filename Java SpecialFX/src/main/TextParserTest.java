@@ -2,6 +2,8 @@ package main;
 
 import static org.junit.Assert.*;
 
+import java.util.Hashtable;
+import java.util.Queue;
 import java.util.Vector;
 
 import org.junit.Test;
@@ -23,6 +25,75 @@ public class TextParserTest {
 		
 		Vector<Integer> listOfkeywordPosition = TextParser.getListOfKeywordPositions("hello world at 0700 on 14/05/12 by 0200 on 14/05/12");
 		System.out.println(listOfkeywordPosition);
+		
+		listOfkeywordPosition = TextParser.getListOfKeywordPositions("hello world at 0700 on 14/05/12 by 0200 on 14/05/12 ***");
+		System.out.println(listOfkeywordPosition);
 	}
-
+	
+	@Test
+	public void testParsing () {
+		// Create hashtable for result
+		Hashtable<KEYWORD_TYPE, String> keywordTable = new Hashtable<KEYWORD_TYPE, String>();
+		Queue<KeytypeIndexPair> queue;
+		String command = "";	
+		
+		TextParser.possibleParser(command, keywordTable);
+		System.out.println(keywordTable);
+		keywordTable.clear();
+		
+		command = "live long and prosper";
+//		queue = TextParser.getKeywordsInAscendingOrder(command);
+//		System.out.println(queue);
+		
+		TextParser.possibleParser(command, keywordTable);
+		assertEquals(command, keywordTable.get(KEYWORD_TYPE.TASKNAME));
+		System.out.println(keywordTable);
+		keywordTable.clear();
+		
+		command = "live long and prosper by 1800";
+//		queue = TextParser.getKeywordsInAscendingOrder(command);
+//		System.out.println(queue);
+		
+		TextParser.possibleParser(command, keywordTable);
+		System.out.println(keywordTable);
+		keywordTable.clear();
+		
+		command = "by 1800";
+//		queue = TextParser.getKeywordsInAscendingOrder(command);
+//		System.out.println(queue);
+		
+		TextParser.possibleParser(command, keywordTable);
+		System.out.println(keywordTable);
+		keywordTable.clear();
+		
+		command = "live long and prosper at 1800";
+		TextParser.possibleParser(command, keywordTable);
+		System.out.println(keywordTable);
+		keywordTable.clear();
+		
+		command = "live long and prosper at 1800 by 2000";
+		TextParser.possibleParser(command, keywordTable);
+		System.out.println(keywordTable);
+		keywordTable.clear();
+		
+		command = "live long and    prosper by 2000 at 1800";
+		TextParser.possibleParser(command, keywordTable);
+		System.out.println(keywordTable);
+		keywordTable.clear();
+		
+		command = "live long and prosper at marina by the bay by 2000 at 1800";
+		TextParser.possibleParser(command, keywordTable);
+		System.out.println(keywordTable);
+		keywordTable.clear();
+		
+		command = "live long and prosper *";
+		TextParser.possibleParser(command, keywordTable);
+		System.out.println(keywordTable);
+		keywordTable.clear();
+		
+		command = "live long and prosper  * ***";
+		TextParser.possibleParser(command, keywordTable);
+		System.out.println(keywordTable);
+		keywordTable.clear();
+	}
 }

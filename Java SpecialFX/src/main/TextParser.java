@@ -419,7 +419,7 @@ public class TextParser {
 		String[] tokenisedElements = userInputSentence.split(" ");
 		
 		// Loop through the elements and get position of keywords
-		Queue<KeytypeIndexPair> keywordsIndexQueue = getKeywordsInAscendingOrder(userInputSentence);
+		Queue<KeytypeIndexPair> keywordsIndexQueue = getKeywordsInAscendingOrder(tokenisedElements);
 		
 		String currentData = "";
 		KEYWORD_TYPE type = KEYWORD_TYPE.INVALID;
