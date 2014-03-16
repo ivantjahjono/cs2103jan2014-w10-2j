@@ -232,9 +232,10 @@ public class TaskMasterKaboom {
 		taskInfo.setEndDate(endDateAndTime);
 		taskInfo.setTaskType(TASK_TYPE.FLOATING);	// HARDCODED TO DEFAULT
 		
-		String priority = taskInformationTable.get(KEYWORD_TYPE.PRIORITY);
-		
-		taskInfo.setImportanceLevel(3);
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.PRIORITY)) {
+			String priority = taskInformationTable.get(KEYWORD_TYPE.PRIORITY);
+			taskInfo.setImportanceLevel(Integer.parseInt(priority));
+		}
 		
 		return taskInfo;
 	}
