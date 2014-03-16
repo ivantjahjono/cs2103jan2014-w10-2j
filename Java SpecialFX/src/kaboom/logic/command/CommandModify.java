@@ -1,11 +1,15 @@
-package main;
+package kaboom.logic.command;
+
+import kaboom.logic.Result;
+import kaboom.logic.TaskInfo;
+import kaboom.storage.TaskListShop;
 
 
 public class CommandModify extends Command {
 	
 	TaskInfo preModifiedTaskInfo;		// Use to store premodified data so that can undo later
 	
-	CommandModify () {
+	public CommandModify () {
 		commandType = COMMAND_TYPE.MODIFY;
 	}
 

@@ -1,4 +1,4 @@
-package main;
+package kaboom.logic;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -6,6 +6,16 @@ import java.util.Hashtable;
 import java.util.Random;
 import java.util.Vector;
 
+import kaboom.logic.command.COMMAND_TYPE;
+import kaboom.logic.command.Command;
+import kaboom.logic.command.CommandAdd;
+import kaboom.logic.command.CommandClear;
+import kaboom.logic.command.CommandDelete;
+import kaboom.logic.command.CommandModify;
+import kaboom.logic.command.CommandSearch;
+import kaboom.storage.History;
+import kaboom.storage.Storage;
+import kaboom.storage.TaskListShop;
 import kaboom.ui.GraphicInterface;
 
 
@@ -14,13 +24,6 @@ import kaboom.ui.GraphicInterface;
 ** 
 ** 
 **/
-enum COMMAND_TYPE {
-		ADD, DELETE, MODIFY, SEARCH, INVALID, CLEAR;
-}
-
-enum KEYWORD_TYPE {
-	INVALID, TASKID, TASKNAME, MODIFIED_TASKNAME, START_DATE, START_TIME, END_DATE, END_TIME, PRIORITY
-}
 
 public class TaskMasterKaboom {
 	

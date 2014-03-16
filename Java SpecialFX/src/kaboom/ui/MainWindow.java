@@ -1,9 +1,5 @@
 package kaboom.ui;
 
-import main.DisplayData;
-import main.TaskInfoDisplay;
-import main.TaskMasterKaboom;
-
 import java.net.URL; 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +29,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.RectangleBuilder;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import kaboom.logic.DisplayData;
+import kaboom.logic.TaskInfoDisplay;
+import kaboom.logic.TaskMasterKaboom;
 
 public class MainWindow implements javafx.fxml.Initializable {
 	

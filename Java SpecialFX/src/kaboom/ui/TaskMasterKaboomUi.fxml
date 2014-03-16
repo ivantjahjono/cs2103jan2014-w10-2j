@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" fx:id="mainPane" blendMode="SRC_OVER" focusTraversable="true" layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="470.0" prefWidth="600.0" snapToPixel="true" styleClass="root" translateX="0.0" translateY="0.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboomUserInterface.MainWindow">
+<AnchorPane id="AnchorPane" fx:id="mainPane" blendMode="SRC_OVER" focusTraversable="true" layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="470.0" prefWidth="600.0" snapToPixel="true" styleClass="root" translateX="0.0" translateY="0.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboom.ui.MainWindow">
   <children>
     <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="WHITE" height="469.9999694824219" layoutX="0.0" layoutY="0.0" opacity="1.0" smooth="true" strokeType="INSIDE" strokeWidth="1.0" styleClass="column-header" width="600.0">
       <stroke>
