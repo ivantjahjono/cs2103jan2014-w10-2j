@@ -396,14 +396,20 @@ public class TextParser {
 
 	private static KEYWORD_TYPE getKeywordType2(String cutOutString) {
 		// TODO Find ways to refactor this
-		if (cutOutString.equals(KEYWORD_STARTTIME)) {
-			return KEYWORD_TYPE.START_TIME;
-		} else if (cutOutString.equals(KEYWORD_ENDTIME)) {
-			return KEYWORD_TYPE.END_TIME;
-		} else if (cutOutString.equals(KEYWORD_PRIORITY)) {
-			return KEYWORD_TYPE.PRIORITY;
-		} 
-		return KEYWORD_TYPE.TASKNAME;
+		switch (cutOutString) {
+			case KEYWORD_STARTTIME:
+				return KEYWORD_TYPE.START_TIME;
+			
+			case KEYWORD_ENDTIME:
+				return KEYWORD_TYPE.END_TIME;
+				
+			case KEYWORD_PRIORITY:
+				return KEYWORD_TYPE.PRIORITY;
+				
+			default:
+				return KEYWORD_TYPE.TASKNAME;
+		
+		}
 	}
 	
 	//**********************TO BE REVIEWED*********************************************************
