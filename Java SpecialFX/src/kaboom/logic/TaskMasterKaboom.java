@@ -54,7 +54,6 @@ public class TaskMasterKaboom {
 	
 	private static final String FILENAME = "KABOOM_FILE.dat";
 	
-	private static GraphicInterface taskUi;
 	private static DisplayData guiDisplayData;
 	private static Storage fileStorage;
 	private static History historyofCommands = new History();
@@ -62,7 +61,19 @@ public class TaskMasterKaboom {
 	// Temporary static
 	private static int counter = 1;				// Use to create temporary task
 	
-	public static void main(String[] args) {
+	static TaskMasterKaboom instance;
+	
+	public static TaskMasterKaboom getInstance () {
+		if (instance == null) {
+			instance = new TaskMasterKaboom();
+		}
+		return instance;
+	}
+	
+	private TaskMasterKaboom () {
+	}
+	
+	public void initialiseKaboom() {
 		// Setup application
 			// Setup Memory
 			//addTemporaryTaskForTesting();
@@ -71,24 +82,17 @@ public class TaskMasterKaboom {
 			initialiseStorage();
 		
 			// Setup UI
-			setupUi();
 			guiDisplayData = DisplayData.getInstance();
+			updateUiWithFirstLoadedMemory();
+			//setupUi();
+			
 			
 			// Setup Logic
 		
 		// Run the UI
-		activateUi();
+		//activateUi();
 		
 		// Start processing user commands
-	}
-	
-	private static void setupUi () {
-		taskUi = new GraphicInterface();
-	}
-	
-	private static void activateUi () {
-		updateUiWithFirstLoadedMemory();
-		taskUi.run(null);
 	}
 
 	private static void updateUiWithFirstLoadedMemory() {
