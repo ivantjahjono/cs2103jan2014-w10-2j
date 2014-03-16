@@ -32,12 +32,12 @@ public class TextParser {
 		
 		// Cut the command into their respective syntax. Will return hash table of data strings
 		Hashtable<KEYWORD_TYPE, String> keywordHashTable = new Hashtable<KEYWORD_TYPE, String>();
-		Error errorEncountered = asd(taskInformation, keywordHashTable);
+		TextParser.possibleParser(taskInformation, keywordHashTable);
 		
 		//Error errorEncountered = createKeywordTableBasedOnParameter(taskInformation, keywordHashTable);
-		if (errorEncountered != null) {
-			//return errorEncountered;
-		}
+//		if (errorEncountered != null) {
+//			//return errorEncountered;
+//		}
 		
 		System.out.println(keywordHashTable);
 
@@ -415,6 +415,8 @@ public class TextParser {
 	//**********************TO BE REVIEWED*********************************************************
 	
 	public static void possibleParser(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+		userInputSentence = extractPriority(userInputSentence, keywordTable);
+	
 		// Break up the commands into tokens by space
 		String[] tokenisedElements = userInputSentence.split(" ");
 		
@@ -429,7 +431,6 @@ public class TextParser {
 		KeytypeIndexPair nextPair = null;
 		
 		while (counter < tokenisedElements.length) {
-		
 			currentPair = nextPair;
 			nextPair = keywordsIndexQueue.poll();
 			
@@ -438,7 +439,6 @@ public class TextParser {
 			} else {
 				nextKeywordIndex = nextPair.getIndexPosition();
 			}
-			
 			
 			if (currentPair == null) {
 				// Assume it is a taskname
@@ -477,6 +477,61 @@ public class TextParser {
 			keywordTable.put(type, currentData);
 		}
 	}
+
+	public static String extractPriority(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+		// Extract priority level to avoid complications
+		String priorityRegex = "[\\s+]\\*{1,3}[\\s\\W]*";
+	    Pattern asteriskPattern = Pattern.compile(priorityRegex);
+	    int startIndex = 0;
+	    int endIndex = 0;
+	    int priorityLevel = 0;
+	    
+	    Matcher matcher = asteriskPattern.matcher(userInputSentence);
+	    if (matcher.find()) {
+	    	startIndex = matcher.start();
+	    	endIndex = matcher.end();
+	    }
+	    
+	    if (endIndex == 0) {
+	    	return userInputSentence;
+	    }
+	    
+	    // Extract the priority
+	    String extractedPriorityString = userInputSentence.substring(startIndex, endIndex).trim();
+	    userInputSentence = userInputSentence.substring(0, startIndex);
+	    
+	    priorityLevel = extractedPriorityString.length();
+	    keywordTable.put(KEYWORD_TYPE.PRIORITY, ""+priorityLevel);
+	    
+	    return userInputSentence;
+	}
+	
+	public static int extractPriority2(String userInputSentence) {
+		// Extract priority level to avoid complications
+		String priorityRegex = "[\\s+]\\*{1,3}[\\s\\W]*";
+	    Pattern asteriskPattern = Pattern.compile(priorityRegex);
+	    int startIndex = 0;
+	    int endIndex = 0;
+	    int priorityLevel = 0;
+	    
+	    Matcher matcher = asteriskPattern.matcher(userInputSentence);
+	    if (matcher.find()) {
+	    	startIndex = matcher.start();
+	    	endIndex = matcher.end();
+	    }
+	    
+	    if (endIndex == 0) {
+	    	return priorityLevel;
+	    }
+	    
+	    // Extract the priority
+	    String extractedPriorityString = userInputSentence.substring(startIndex, endIndex).trim();
+	    userInputSentence = userInputSentence.substring(0, startIndex);
+	    
+	    priorityLevel = extractedPriorityString.length();
+	    
+	    return priorityLevel;
+	}
 	
 
 	public static Queue<KeytypeIndexPair> getKeywordsInAscendingOrder(String[] tokenisedString) {
@@ -496,10 +551,6 @@ public class TextParser {
 					
 				case KEYWORD_ENDTIME:
 					currentPair = new KeytypeIndexPair(KEYWORD_TYPE.END_TIME, i);
-					break;
-					
-				case KEYWORD_PRIORITY:
-					currentPair = new KeytypeIndexPair(KEYWORD_TYPE.PRIORITY, i);
 					break;
 					
 				case KEYWORD_DATE:
