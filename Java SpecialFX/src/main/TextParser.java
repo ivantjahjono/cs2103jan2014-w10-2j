@@ -320,6 +320,8 @@ public class TextParser {
 			
 			
 			
+			
+			
 			//3. chop and get the bunch of text before the next keyword
 			String infoChunk = "";
 			
@@ -362,13 +364,12 @@ public class TextParser {
 			else {
 				currentString = currentString.replace(infoChunk, "");
 			}
-			
-			
 		}
 		return null;
 	}
 	
 
+	
 	public static Queue<String> getKeywordsOrder(String sentence) {
 		Queue<String> q = new LinkedList<String>();
 		String[] sentenceA = sentence.split("\\s+");
@@ -408,12 +409,111 @@ public class TextParser {
 				
 			default:
 				return KEYWORD_TYPE.TASKNAME;
-		
 		}
 	}
 	
 	//**********************TO BE REVIEWED*********************************************************
 	
+	public static void possibleParser(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+		// Break up the commands into tokens by space
+		String[] tokenisedElements = userInputSentence.split(" ");
+		
+		// Loop through the elements and get position of keywords
+		Queue<KeytypeIndexPair> keywordsIndexQueue = getKeywordsInAscendingOrder(userInputSentence);
+		
+		String currentData = "";
+		KEYWORD_TYPE type = KEYWORD_TYPE.INVALID;
+		int counter = 0;
+		int nextKeywordIndex = -1;
+		KeytypeIndexPair currentPair = null;
+		KeytypeIndexPair nextPair = null;
+		
+		while (counter < tokenisedElements.length) {
+		
+			currentPair = nextPair;
+			nextPair = keywordsIndexQueue.poll();
+			
+			if (nextPair == null) {
+				nextKeywordIndex = tokenisedElements.length;
+			} else {
+				nextKeywordIndex = nextPair.getIndexPosition();
+			}
+			
+			
+			if (currentPair == null) {
+				// Assume it is a taskname
+				type = KEYWORD_TYPE.TASKNAME;
+			} else {
+				type = currentPair.getType();
+				
+				// Special condition to skip the keyword
+				switch (type) {
+					case PRIORITY:
+						break;
+						
+					default:
+						counter++;
+						break;
+				}
+			}
+			
+			// Put in token until next keyword
+			currentData = "";
+			for (int i = counter; i < nextKeywordIndex; i++, counter++) {
+				currentData += tokenisedElements[i] + " ";
+			}
+			currentData = currentData.trim();
+			
+			//5. put in table
+			
+			// Checks if current type is already taken
+//			if (keywordTable.containsKey(type)) {
+//				// This is based on assumption that the last keyword is always the correct one
+//				String extractedData = keywordTable.get(type);
+//				String taskname = keywordTable.get(KEYWORD_TYPE.TASKNAME);
+//				keywordTable.put(KEYWORD_TYPE.TASKNAME, taskname+extractedData);
+//			}
+			
+			keywordTable.put(type, currentData);
+		}
+	}
+	
+
+	public static Queue<KeytypeIndexPair> getKeywordsInAscendingOrder(String[] tokenisedString) {
+		Queue<KeytypeIndexPair> queue = new LinkedList<KeytypeIndexPair>();
+		
+		for (int i = 0; i < tokenisedString.length; i++) {
+			KeytypeIndexPair currentPair = null;
+			
+			switch (tokenisedString[i]) {
+				case KEYWORD_MODIFY:
+					currentPair = new KeytypeIndexPair(KEYWORD_TYPE.MODIFIED_TASKNAME, i);
+					break;
+					
+				case KEYWORD_STARTTIME:
+					currentPair = new KeytypeIndexPair(KEYWORD_TYPE.START_TIME, i);
+					break;
+					
+				case KEYWORD_ENDTIME:
+					currentPair = new KeytypeIndexPair(KEYWORD_TYPE.END_TIME, i);
+					break;
+					
+				case KEYWORD_PRIORITY:
+					currentPair = new KeytypeIndexPair(KEYWORD_TYPE.PRIORITY, i);
+					break;
+					
+				case KEYWORD_DATE:
+					currentPair = new KeytypeIndexPair(KEYWORD_TYPE.DATE, i);
+					break;
+			}
+			
+			if (currentPair != null) {
+				queue.add(currentPair);
+			}
+		}
+		
+		return queue;
+	}
 	
 	
 	private static String lookForStartTimeAndDate(String userInput) {
