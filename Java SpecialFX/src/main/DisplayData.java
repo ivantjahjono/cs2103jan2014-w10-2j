@@ -2,20 +2,33 @@ package main;
 
 import java.util.Vector;
 
-// Purpose: DisplayData is used in conjunction with KaboomGUI. It holds all the task information and
-//          feedback message that will be displayed on the GUI.
-//
-// Properties: Singleton
-//
+/**
+ * Returns a vector of TaskInfoDisplay which contains all the 
+ * tasks that is displayed.
+ * <p>
+ * This Singleton class contains all the information that User Interface
+ * needs to display. It holds all the tasks, command feedback,
+ * current page the UI is on.
+ */
 public class DisplayData {
 	final int NUM_OF_TASK_PER_PAGE = 10;
 	
 	static DisplayData instance;
 	
 	Vector<TaskInfoDisplay> tasksDataToDisplay;
-	String userFeedbackMessage;
-	int currentPage;
+	Vector<TaskInfoDisplay> searchResultDataToDisplay;
 	
+	String 	userFeedbackMessage;
+	int 	currentPage;
+	
+	/**
+	 * Returns a DisplayData instance of the class.
+	 * <p>
+	 * This method always return DisplayData. The instance will be
+	 * created when it is first called. Subsequent calls will return
+	 * the first created instance.
+	 *
+	 */
 	public static DisplayData getInstance () {
 		if (instance == null) {
 			instance = new DisplayData();
@@ -29,6 +42,12 @@ public class DisplayData {
 		currentPage = 0;
 	}
 	
+	/**
+	 * Updates the information with the Result object that is
+	 * passed by parameter. 
+	 * 
+	 *  @param commandResult information of the command that is executed
+	 */
 	public void updateDisplayWithResult (Result commandResult) {
 		// TODO Hardcoded way of forcing to show to default if there is no tasks to display
 		if (commandResult.getTasksToDisplay() != null) {
@@ -43,10 +62,28 @@ public class DisplayData {
 		}
 	}
 	
+	/**
+	 * Returns a vector of TaskInfoDisplay which contains all the 
+	 * tasks that is displayed.
+	 * <p>
+	 * This method always return DisplayData. The instance will be
+	 * created when it is first called. Subsequent calls will return
+	 * the first created instance.
+	 *
+	 */
 	public Vector<TaskInfoDisplay> getAllTaskDisplayInfo () {
 		return tasksDataToDisplay;
 	}
 	
+	/**
+	 * Returns a vector of TaskInfoDisplay which contains all the 
+	 * tasks that is displayed. The size of vector is limited
+	 * by the maximum page.
+	 * <p>
+	 * This method will get all the tasks on the current page and
+	 * will be truncated to max task per page. 
+	 *
+	 */
 	public Vector<TaskInfoDisplay> getTaskDisplay () {
 		Vector<TaskInfoDisplay> selectedTaskToDisplay = new Vector<TaskInfoDisplay>();
 		int startTaskIndex = currentPage*NUM_OF_TASK_PER_PAGE;
