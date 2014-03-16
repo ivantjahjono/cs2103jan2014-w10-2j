@@ -12,6 +12,7 @@ import javafx.stage.StageStyle;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.util.Duration;
+import kaboom.logic.TaskMasterKaboom;
 
 
 public class GraphicInterface extends Application {
@@ -68,7 +69,13 @@ public class GraphicInterface extends Application {
 		return timeline;
 	}
 	
-	public void run(String[] args) {
+	public static void run(String[] args) {
 		launch(args);
+	}
+	
+	public static void main (String[] args) {
+		TaskMasterKaboom.getInstance().initialiseKaboom(); 
+		
+		run(args);
 	}
 }
