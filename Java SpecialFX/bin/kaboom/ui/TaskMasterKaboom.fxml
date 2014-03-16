@@ -18,14 +18,10 @@
         <Color blue="0.937" green="0.537" red="0.176" fx:id="x4" />
       </stroke>
     </Rectangle>
-    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" height="27.0" layoutX="0.0" layoutY="0.0" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0">
-      <fill>
-        <Color blue="0.937" green="0.537" red="0.176" fx:id="x7" />
-      </fill>
-    </Rectangle>
+    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="$x4" height="27.0" layoutX="0.0" layoutY="0.0" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0" />
     <Pane fx:id="feedbackBox" blendMode="SRC_OVER" layoutX="13.0" layoutY="410.0" prefHeight="22.0" prefWidth="572.0" styleClass="feedback-pane">
       <children>
-        <Label id="" fx:id="feedbackText" layoutX="0.0" layoutY="0.0" minHeight="22.0" prefHeight="22.0" prefWidth="567.0" text="Feedback" textFill="$x7" translateX="5.0" underline="false">
+        <Label id="" fx:id="feedbackText" layoutX="0.0" layoutY="0.0" minHeight="22.0" prefHeight="22.0" prefWidth="567.0" text="Feedback" textFill="$x4" translateX="5.0" underline="false">
           <font>
             <Font name="Segoe UI Semilight" size="16.0" />
           </font>
@@ -39,13 +35,13 @@
       </stylesheets>
     </Pane>
     <fx:reference source="commandTextInput" />
-    <TableView fx:id="taskDisplayTable" editable="false" focusTraversable="false" layoutX="14.0" layoutY="74.0" prefHeight="309.0" prefWidth="572.0" tableMenuButtonVisible="false" visible="true">
+    <TableView fx:id="taskDisplayTable" editable="false" focusTraversable="false" layoutX="14.0" layoutY="74.0" prefHeight="309.0" prefWidth="571.0" tableMenuButtonVisible="false" visible="true">
       <columns>
         <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="30.0" resizable="false" sortable="false" style="" text="ID" fx:id="columnTaskId" />
-        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="198.0" resizable="false" sortable="false" text="TASK NAME" fx:id="columnTaskName" />
-        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="128.0" resizable="false" sortable="false" text="START DATE" fx:id="columnStartTime" />
-        <TableColumn editable="false" id="columnEndTime" maxWidth="5000.0" minWidth="10.0" prefWidth="126.0" resizable="false" sortable="false" text="END DATE" fx:id="columnEndTime" />
-        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="88.0" resizable="false" sortable="false" text="PRIORITY" visible="true" fx:id="columnPriority" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="230.0" resizable="false" sortable="false" text="TASK NAME" fx:id="columnTaskName" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="122.0" resizable="false" sortable="false" text="START DATE" fx:id="columnStartTime" />
+        <TableColumn editable="false" id="columnEndTime" maxWidth="5000.0" minWidth="10.0" prefWidth="122.0" resizable="false" sortable="false" text="END DATE" fx:id="columnEndTime" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="65.0" resizable="false" sortable="false" text="PRIORITY" visible="true" fx:id="columnPriority" />
       </columns>
       <stylesheets>
         <URL value="@application.css" />
@@ -102,7 +98,7 @@
         </Label>
       </children>
     </HBox>
-    <Label fx:id="minimiseLabel" alignment="TOP_LEFT" contentDisplay="TOP" layoutX="559.0" layoutY="-8.0" minHeight="18.0" onMousePressed="#onMinimiseMousePressed" prefHeight="36.0" prefWidth="18.0" text="-" textFill="WHITE" underline="false">
+    <Label fx:id="minimiseLabel" alignment="TOP_LEFT" contentDisplay="TOP" layoutX="559.0" layoutY="-8.0" minHeight="18.0" onMousePressed="#onMinimiseMousePressed" pickOnBounds="true" prefHeight="36.0" prefWidth="18.0" text="-" textFill="WHITE" underline="false">
       <font>
         <Font size="35.0" />
       </font>

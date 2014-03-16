@@ -1,12 +1,10 @@
-package kaboomUserInterface;
+package kaboom.ui;
 
 import main.TaskMasterKaboom;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.concurrent.Task;
-import javafx.concurrent.Service;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -22,28 +20,8 @@ public class GraphicInterface extends Application {
 	Parent root;
 	MainWindow mainWindow;
 	
-	public static class MyService extends Service<Void> {
-		
-		MainWindow mainWindow;
-		int counter;
-		
-		MyService (MainWindow window) {
-			mainWindow = window;
-			counter = 0;
-		}
-		
-	    @Override
-	    protected Task<Void> createTask() {
-	      return new Task<Void>() {
-	        @Override
-	        protected Void call() throws Exception {
-	        	//System.out.println("Begin task");
-	        	++counter;
-	        	return null;
-	        }
-	      };
-	    }
-	  }
+	UpdateService myService;
+	Timeline updateTimeline;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -69,7 +47,17 @@ public class GraphicInterface extends Application {
 		
 		mainWindow.prepareTextfieldFocus();
 		
-		final MyService myService = new MyService(mainWindow);
+		updateTimeline = setupRunningUpdate();
+		initialiseAndStartUpdateService();
+	}
+
+	private void initialiseAndStartUpdateService() {
+		updateTimeline.setCycleCount(Animation.INDEFINITE);
+		updateTimeline.playFrom("end"); // can also play from start but you will have an initial 5 second delay
+	}
+
+	private Timeline setupRunningUpdate() {
+		myService = new UpdateService(mainWindow);
 
 	    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
 	    	@Override
@@ -78,17 +66,10 @@ public class GraphicInterface extends Application {
 	    		mainWindow.updateCounter(myService.counter);
 	    	}
 	    }));
-
-	    timeline.setCycleCount(Animation.INDEFINITE);
-	    timeline.playFrom("end"); // can also play from start but you will have an initial 5 second delay
+		return timeline;
 	}
 	
 	public void run(String[] args) {
 		launch(args);
-	}
-	
-	@Override
-	public void stop() {
-		TaskMasterKaboom.exitProgram();
 	}
 }
