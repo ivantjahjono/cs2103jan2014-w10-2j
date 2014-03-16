@@ -1,4 +1,4 @@
-package main;
+package kaboom.logic;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 

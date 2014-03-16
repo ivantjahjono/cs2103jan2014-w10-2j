@@ -1,9 +1,12 @@
-package main;
+package kaboom.logic.command;
+
+import kaboom.logic.Result;
+
 
 
 public class CommandDelete extends Command {
 	
-	CommandDelete () {
+	public CommandDelete () {
 		commandType = COMMAND_TYPE.DELETE;
 	}
 

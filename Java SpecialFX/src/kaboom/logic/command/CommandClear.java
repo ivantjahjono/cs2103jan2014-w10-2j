@@ -1,13 +1,17 @@
-package main;
+package kaboom.logic.command;
 
 import java.util.Vector;
+
+import kaboom.logic.Result;
+import kaboom.logic.TaskInfo;
+import kaboom.storage.TaskListShop;
 
 
 public class CommandClear extends Command {
 
 	Vector<TaskInfo> tasksCleared;
 		
-	CommandClear () {
+	public CommandClear () {
 		commandType = COMMAND_TYPE.CLEAR;
 	}
 

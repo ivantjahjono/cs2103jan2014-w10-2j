@@ -1,4 +1,4 @@
-package main;
+package kaboom.storage;
 
 import java.util.Scanner;
 import java.util.Vector;
@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
+
+import kaboom.logic.TaskInfo;
 
 
 public class Storage {

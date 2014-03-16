@@ -1,4 +1,4 @@
-package main;
+package kaboom.logic;
 
 /*
  * Error class for TASK MASTER KABOOOOOOOOM

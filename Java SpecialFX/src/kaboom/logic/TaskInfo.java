@@ -1,4 +1,4 @@
-package main;
+package kaboom.logic;
 
 import java.util.Calendar; 
 
@@ -18,7 +18,7 @@ public class TaskInfo {
 	
 	boolean isExpired;
 	
-	TaskInfo () {
+	public TaskInfo () {
 		taskname = "";
 		startDate = null;
 		endDate = null;

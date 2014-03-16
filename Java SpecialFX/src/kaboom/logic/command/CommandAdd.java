@@ -1,9 +1,12 @@
-package main;
+package kaboom.logic.command;
+
+import kaboom.logic.Result;
+
 
 
 public class CommandAdd extends Command {
 
-	CommandAdd () {
+	public CommandAdd () {
 		commandType = COMMAND_TYPE.ADD;
 	}
 

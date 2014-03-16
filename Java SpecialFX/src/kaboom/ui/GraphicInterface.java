@@ -1,6 +1,5 @@
 package kaboom.ui;
 
-import main.TaskMasterKaboom;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -27,7 +26,7 @@ public class GraphicInterface extends Application {
 	public void start(Stage primaryStage) {
 		FXMLLoader loader = null;
 		try {
-			loader = new FXMLLoader(getClass().getResource("TaskMasterKaboom.fxml"));
+			loader = new FXMLLoader(getClass().getResource("TaskMasterKaboomUi.fxml"));
 			root = (Parent)(loader.load());
 		} catch(Exception e) {
 			e.printStackTrace();

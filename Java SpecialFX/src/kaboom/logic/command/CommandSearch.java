@@ -1,4 +1,4 @@
-package main;
+package kaboom.logic.command;
 
 	/*
 	 * Current search is base on task name and result is unique. 
@@ -7,9 +7,13 @@ package main;
 	 */
 import java.util.Vector;
 
+import kaboom.logic.Result;
+import kaboom.logic.TaskInfo;
+import kaboom.storage.TaskListShop;
+
 public class CommandSearch extends Command {
 	
-	CommandSearch () {
+	public CommandSearch () {
 		commandType = COMMAND_TYPE.SEARCH;
 	}
 

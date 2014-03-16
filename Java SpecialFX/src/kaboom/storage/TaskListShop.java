@@ -1,6 +1,8 @@
-package main;
+package kaboom.storage;
 
 import java.util.Vector;
+
+import kaboom.logic.TaskInfo;
 
 public class TaskListShop {
 

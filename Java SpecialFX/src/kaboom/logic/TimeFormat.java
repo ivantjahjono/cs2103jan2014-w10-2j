@@ -1,4 +1,4 @@
-package main;
+package kaboom.logic;
 
 
 public class TimeFormat {

@@ -1,6 +1,11 @@
-package main;
+package kaboom.logic.command;
 
 import java.util.Vector;
+
+import kaboom.logic.DisplayData;
+import kaboom.logic.Result;
+import kaboom.logic.TaskInfo;
+import kaboom.storage.TaskListShop;
 
 /* 
 ** Purpose: 
@@ -27,7 +32,7 @@ public class Command {
 	protected TaskListShop taskListShop;
 	protected DisplayData displayData;
 	
-	Command () {
+	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
 		taskInfo = null;
 		taskInfoToBeModified = null;
