@@ -5,6 +5,7 @@ import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 import kaboom.logic.command.COMMAND_TYPE;
 import kaboom.logic.command.Command;
@@ -464,7 +465,8 @@ public class TaskMasterKaboom {
 				keywordTable.put(type, cutOutString);
 				
 				// Remove the string from the original string
-				currentString = currentString.replaceFirst(cutOutString, "");
+				final String re = Pattern.quote(cutOutString);
+				currentString = currentString.replaceFirst(re, "");
 				
 				prevType = type;
 			}
