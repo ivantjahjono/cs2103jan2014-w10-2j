@@ -1,4 +1,4 @@
-package kaboomUserInterface;
+package kaboom.ui;
 
 import main.DisplayData;
 import main.TaskInfoDisplay;
@@ -91,15 +91,18 @@ public class MainWindow implements javafx.fxml.Initializable {
 	}
 	
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		columnTaskId.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, Integer>("taskId"));
-		columnTaskName.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("taskName"));
-		columnStartTime.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("startDate"));
-		columnEndTime.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("endDate"));
-		columnPriority.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("importanceLevel"));
-		
-		taskDisplayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		
+	public void initialize(URL location, ResourceBundle resources) throws NullPointerException {
+		try {
+			columnTaskId.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, Integer>("taskId"));
+			columnTaskName.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("taskName"));
+			columnStartTime.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("startDate"));
+			columnEndTime.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("endDate"));
+			columnPriority.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("importanceLevel"));
+			
+			taskDisplayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		} catch (NullPointerException e) {
+			return;
+		}
 		
 		// Disable column reordering
 		//disableTableColumnReordering();

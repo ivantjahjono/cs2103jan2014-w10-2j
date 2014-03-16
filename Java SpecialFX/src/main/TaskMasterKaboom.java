@@ -6,7 +6,7 @@ import java.util.Hashtable;
 import java.util.Random;
 import java.util.Vector;
 
-import kaboomUserInterface.GraphicInterface;
+import kaboom.ui.GraphicInterface;
 
 
 /*
@@ -58,7 +58,6 @@ public class TaskMasterKaboom {
 	
 	// Temporary static
 	private static int counter = 1;				// Use to create temporary task
-	private static boolean isRunning;
 	
 	public static void main(String[] args) {
 		// Setup application
@@ -78,20 +77,6 @@ public class TaskMasterKaboom {
 		activateUi();
 		
 		// Start processing user commands
-		
-//		// Get command from UI
-//		String command = "add";
-//		
-//		// Process command line
-//		String commandFeedback = processCommand(command);
-//	
-//		// Return feedback to
-//		System.out.println("Feedback: " + commandFeedback);
-		
-//		isRunning = true;
-//		while (isRunning) {
-//			
-//		}
 	}
 	
 	private static void setupUi () {
@@ -115,10 +100,6 @@ public class TaskMasterKaboom {
 		fileStorage.load();
 		
 		return true;
-	}
-	
-	public static void exitProgram () {
-		isRunning = false;
 	}
 	
 	/*
