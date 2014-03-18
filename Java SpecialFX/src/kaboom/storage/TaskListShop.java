@@ -1,6 +1,7 @@
 package kaboom.storage;
 
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import kaboom.logic.TaskInfo;
 import kaboom.logic.TASK_TYPE;
@@ -8,6 +9,7 @@ import kaboom.logic.TASK_TYPE;
 public class TaskListShop {
 
 	private static TaskListShop taskListInstance = null;
+	private static final Logger logger = Logger.getLogger("TaskListShopLogger");
 	
 	private Vector<TaskInfo> taskList;
 	
@@ -15,6 +17,7 @@ public class TaskListShop {
 	public static TaskListShop getInstance () {
 		if (taskListInstance == null) {
 			taskListInstance = new TaskListShop();
+			logger.info("New singleton TaskListShop instance created");
 		}
 
 		return taskListInstance;
@@ -26,6 +29,7 @@ public class TaskListShop {
 
 	public boolean addTaskToList (TaskInfo newTask) {
 		if (taskList != null) {
+			logger.info("Adding one item to TaskListShop");
 			return taskList.add(newTask);
 		} else {
 			return false;
@@ -101,6 +105,7 @@ public class TaskListShop {
 
 		if (currentTaskToRemove != null) {
 			taskList.remove(currentTaskToRemove);
+			logger.info("One task removed");
 			return true;
 		}
 
@@ -110,6 +115,7 @@ public class TaskListShop {
 	public Vector<TaskInfo> clearAllTasks () {
 		taskList = new Vector<TaskInfo>();
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(taskList);
+		logger.info("All tasks cleared");
 		return vectorToReturn;
 	}
 	
