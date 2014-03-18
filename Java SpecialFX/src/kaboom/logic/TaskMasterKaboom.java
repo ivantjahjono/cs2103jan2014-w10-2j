@@ -120,7 +120,9 @@ public class TaskMasterKaboom {
 	 * 
 	 * Future improvement: Return task class instead.
 	 */
-	public static boolean processCommand(String userInputSentence) {		
+	public static boolean processCommand(String userInputSentence) {
+		assert userInputSentence != null;
+		
 		Command commandToExecute = null;
 		Result commandResult = null;
 		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
