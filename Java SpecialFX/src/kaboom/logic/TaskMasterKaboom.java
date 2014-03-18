@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
+import kaboom.logic.Error.ERROR_TYPE;
 import kaboom.logic.command.COMMAND_TYPE;
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandAdd;
@@ -403,10 +404,16 @@ public class TaskMasterKaboom {
 		
 		//add delete search
 		else {
-			
-			taskname = functionFindTaskname(processedText);
+			try{
+				taskname = functionFindTaskname(processedText);
+			}
+			catch (Exception e){
+				Error errorType = new Error();
+				errorType.setErrorType(ERROR_TYPE.MESSAGE_DUPLICTE_COMMAND_PARAMETERS);
+				return errorType;
+			}
 			thisTaskInfo.setTaskName(taskname);
-		thisTaskInfo.setTaskType(TASK_TYPE.FLOATING);	// HARDCODED TO DEFAULT
+			thisTaskInfo.setTaskType(TASK_TYPE.FLOATING);	// HARDCODED TO DEFAULT
 			setTypeAndDate(thisTaskInfo, processedText);
 		
 		
@@ -708,7 +715,11 @@ public class TaskMasterKaboom {
 		}
 	}
 	
-	private static String functionFindTaskname(String[] processedText){
+	private static String functionFindTaskname(String[] processedText) throws Exception{
+		if(processedText[0] == null){
+			throw new Exception();
+		}
+		
 		String actualTaskName = "";
 		int loopLength = processedText.length;
 		if(processedText[loopLength-1].contains("*")){
