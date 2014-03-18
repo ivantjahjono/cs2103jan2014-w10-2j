@@ -3,6 +3,7 @@ package kaboom.storage;
 import java.util.Vector;
 
 import kaboom.logic.TaskInfo;
+import kaboom.logic.TASK_TYPE;
 
 public class TaskListShop {
 
@@ -57,6 +58,42 @@ public class TaskListShop {
 	public Vector<TaskInfo> getAllTaskInList () {
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(taskList);
 		return vectorToReturn;
+	}
+	
+	public Vector<TaskInfo> getFloatingTasks() {
+		Vector<TaskInfo> floatingTasks = new Vector<TaskInfo>();
+		
+		for (int i = 0; i < taskList.size(); i++) {
+			TaskInfo singleTask = taskList.get(i);
+			if (singleTask.getTaskType() == TASK_TYPE.FLOATING) {
+				floatingTasks.add(singleTask);
+			}
+		}
+		return floatingTasks;
+	}
+	
+	public Vector<TaskInfo> getDeadlineTasks() {
+		Vector<TaskInfo> floatingTasks = new Vector<TaskInfo>();
+		
+		for (int i = 0; i < taskList.size(); i++) {
+			TaskInfo singleTask = taskList.get(i);
+			if (singleTask.getTaskType() == TASK_TYPE.DEADLINE) {
+				floatingTasks.add(singleTask);
+			}
+		}
+		return floatingTasks;
+	}
+	
+	public Vector<TaskInfo> getTimedTasks() {
+		Vector<TaskInfo> floatingTasks = new Vector<TaskInfo>();
+		
+		for (int i = 0; i < taskList.size(); i++) {
+			TaskInfo singleTask = taskList.get(i);
+			if (singleTask.getTaskType() == TASK_TYPE.TIMED) {
+				floatingTasks.add(singleTask);
+			}
+		}
+		return floatingTasks;
 	}
 
 	public boolean removeTaskByName (String taskName) {

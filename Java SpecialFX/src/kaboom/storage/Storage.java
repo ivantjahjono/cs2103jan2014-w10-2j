@@ -1,8 +1,11 @@
 package kaboom.storage;
 
+import kaboom.storage.TaskListShop;
+
 import java.util.Scanner;
 import java.util.Vector;
 import java.util.Calendar;
+import java.util.logging.Logger;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
@@ -26,13 +29,15 @@ public class Storage {
 	private static final int INDEX_END_HOUR = 10;
 	private static final int INDEX_END_MINUTE = 11;
 	private static final int INDEX_IMPORTANCE_LEVEL = 12;
-	
+
 	private String fileName;
-	
+
+	private static final Logger logger = Logger.getLogger("StorageLogger");
+
 	public Storage(String fileName) {
 		this.fileName = fileName;
 	}
-	
+
 	/**
 	 * This function stores all the data in taskListShop to the text file specified
 	 * in the constructor. Each task is on a new line. The task attributes are
@@ -42,13 +47,15 @@ public class Storage {
 	 */
 	public boolean store() {
 		try {
+			logger.info("Trying to write text file: " + fileName);
 			BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
 			Vector<TaskInfo> taskListShop = TaskListShop.getInstance().getAllTaskInList();
-			
+			assert(taskListShop != null);
+
 			for (int i = 0; i < taskListShop.size(); i++) {
 				StringBuilder output = new StringBuilder();
 				TaskInfo task = taskListShop.get(i);
-				
+
 				output.append(task.getTaskName() + delimiter);
 				output.append((TaskInfo.taskTypeToString(task.getTaskType()) + delimiter));
 				output.append(task.getStartDate().get(Calendar.YEAR) + delimiter);
@@ -66,14 +73,16 @@ public class Storage {
 				writer.newLine();
 				writer.flush();
 			}
-			
+
+			logger.info("Written to text file: " + fileName);
 			writer.close();
 			return true;
 		} catch (IOException e) {
+			logger.info("Cannot write to text file: " + fileName);
 			return false;
 		}
 	}
-	
+
 	/**
 	 * This function loads all the data in the text file to taskListShop. 
 	 * @param	None
@@ -81,17 +90,19 @@ public class Storage {
 	 */
 	public boolean load() {
 		try {
+			logger.info("Trying to read from text file: " + fileName);
 			File inFile = new File(fileName);
 			Scanner fileScanner = new Scanner(inFile);
 			TaskListShop taskListShop = TaskListShop.getInstance();
-			
+			assert(taskListShop != null);
+
 			while (fileScanner.hasNext()) {
 				String input = fileScanner.nextLine().trim();
 				String[] inputSplit = input.split(delimiter);
 				TaskInfo task = new TaskInfo();
 				task.setTaskName(inputSplit[INDEX_TASK_NAME]);
 				task.setTaskType(TaskInfo.getTaskType(inputSplit[INDEX_TASK_TYPE]));
-				
+
 				//THERE MIGHT STILL BE BUGS IN THE LOADING OF CALENDAR ATTRIBUTES
 				Calendar startDate = Calendar.getInstance();
 				startDate.set(Calendar.YEAR, Integer.parseInt(inputSplit[INDEX_START_YEAR]));
@@ -100,7 +111,7 @@ public class Storage {
 				startDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputSplit[INDEX_START_HOUR]));
 				startDate.set(Calendar.MINUTE, Integer.parseInt(inputSplit[INDEX_START_MINUTE]));
 				task.setStartDate(startDate);
-				
+
 				Calendar endDate = Calendar.getInstance();
 				endDate.set(Calendar.YEAR, Integer.parseInt(inputSplit[INDEX_END_YEAR]));
 				endDate.set(Calendar.MONTH, Integer.parseInt(inputSplit[INDEX_END_MONTH]));
@@ -108,22 +119,25 @@ public class Storage {
 				endDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputSplit[INDEX_END_HOUR]));
 				endDate.set(Calendar.MINUTE, Integer.parseInt(inputSplit[INDEX_END_MINUTE]));
 				task.setEndDate(endDate);
-				
+
 				task.setImportanceLevel(Integer.parseInt(inputSplit[INDEX_IMPORTANCE_LEVEL]));
 				taskListShop.addTaskToList(task);
 			}
-			
+
+			logger.info(fileName + " has been scanned and read");
 			fileScanner.close();
 			return true;
-			
+
 		} catch (IOException e) {
 			//Try to reproduce the error and find out what it is
 			File inFile = new File(fileName);
 
 			if (!inFile.exists()) {
+				logger.info(fileName + " does not exist. Skipping.");
 				return true;  //Do nothing if the file does not exist because it will be created later
 			}
 			else {
+				logger.info("Cannot read from text file: " + fileName);
 				return false;
 			}
 		}
