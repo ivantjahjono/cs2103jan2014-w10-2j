@@ -1,5 +1,6 @@
 package kaboom.ui;
 
+import java.io.IOException;
 import java.net.URL; 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +30,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.RectangleBuilder;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
 import kaboom.logic.DisplayData;
 import kaboom.logic.TaskInfoDisplay;
 import kaboom.logic.TaskMasterKaboom;
@@ -79,6 +86,9 @@ public class MainWindow implements javafx.fxml.Initializable {
 	
 	DisplayData uiData;
 	
+	private final static Logger loggerUnit = Logger.getLogger(MainWindow.class.getName());
+	private static FileHandler fh;
+	
 	public MainWindow () {
 		prevCommand = "";
 		currentCommand = "";
@@ -87,10 +97,14 @@ public class MainWindow implements javafx.fxml.Initializable {
 		pagesTab = new ArrayList<Rectangle>();
 		
 		uiData = DisplayData.getInstance();
+		
+		labelList = new Vector<Label>();
 	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) throws NullPointerException {
+		createAndStartLogging();
+		
 		try {
 			columnTaskId.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, Integer>("taskId"));
 			columnTaskName.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("taskName"));
@@ -108,7 +122,6 @@ public class MainWindow implements javafx.fxml.Initializable {
 		
 		mainPane.getStyleClass().add("root");
 		
-		labelList = new Vector<Label>();
 		labelList.add(header_all);
 		labelList.add(header_running);
 		labelList.add(header_deadline);
@@ -121,6 +134,23 @@ public class MainWindow implements javafx.fxml.Initializable {
 		setTablelistToRespondToExpiry();
 		
 		updateDisplay();
+	}
+
+	private void createAndStartLogging() {
+		try {
+			fh = new FileHandler("KaboomUI.log", false);
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Logger logger = Logger.getLogger("");
+		fh.setFormatter(new SimpleFormatter());
+		logger.addHandler(fh);
+		logger.setLevel(Level.CONFIG);
 	}
 
 	private void setTablelistToRespondToExpiry() {
@@ -192,6 +222,9 @@ public class MainWindow implements javafx.fxml.Initializable {
 	@FXML
 	private void onTextfieldAction (ActionEvent e) {
 		String command = commandTextInput.getText();
+		
+		loggerUnit.log(Level.INFO, command);
+		
 		if (command.equals("exit")) {
 			Platform.exit();
 			return;
@@ -286,14 +319,17 @@ public class MainWindow implements javafx.fxml.Initializable {
 		
 		switch(keyEvent.getCode()) {
 			case UP:
+				loggerUnit.log(Level.FINE, "Recalling previous command.");
 				recallPreviousCommand();
 				break;
 				
 			case DOWN:
+				loggerUnit.log(Level.FINE, "Recalling next command.");
 				recallStoredTypedCommand();
 				break;
 				
 			case ESCAPE:
+				loggerUnit.log(Level.FINE, "ESC pressed for minimise.");
 				windowStage.setIconified(true);
 				break;
 				
@@ -304,6 +340,7 @@ public class MainWindow implements javafx.fxml.Initializable {
 	
 	@FXML
 	private void onExitButtonPressed (MouseEvent mouseEvent) {
+		loggerUnit.log(Level.FINE, "Close button pressed.");
 		Platform.exit();
 	}
 	
@@ -387,6 +424,8 @@ public class MainWindow implements javafx.fxml.Initializable {
 	private void onHeaderMouseClicked (MouseEvent mouseEvent) {
 		Node nodePressed = (Node)mouseEvent.getSource();
 		
+		loggerUnit.log(Level.FINE, nodePressed.getId()+" header clicked.");
+		
 		previousLabelIndex = currentLabelIndex;
 		switch (nodePressed.getId()) {
 			case "header_all":
@@ -434,6 +473,7 @@ public class MainWindow implements javafx.fxml.Initializable {
 	
 	@FXML
 	private void onMinimiseMousePressed () {
+		loggerUnit.log(Level.FINE, "Minimise button pressed.");
 		windowStage.setIconified(true);
 	}
 	
@@ -445,6 +485,7 @@ public class MainWindow implements javafx.fxml.Initializable {
 	private void onPagesArrowMouseClicked (MouseEvent mouseEvent) {
 		Node nodePressed = (Node)mouseEvent.getSource();
 		
+		loggerUnit.log(Level.FINE, nodePressed.getId()+" button pressed.");
 		switch (nodePressed.getId()) {
 			case "nextArrow":
 				uiData.goToNextPage();
