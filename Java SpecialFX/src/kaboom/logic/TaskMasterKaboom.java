@@ -716,7 +716,7 @@ public class TaskMasterKaboom {
 	}
 	
 	private static String functionFindTaskname(String[] processedText) throws Exception{
-		if(processedText[0] == null){
+		if(processedText[0].equals("")){
 			throw new Exception();
 		}
 		
