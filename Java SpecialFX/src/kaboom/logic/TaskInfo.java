@@ -2,10 +2,6 @@ package kaboom.logic;
 
 import java.util.Calendar; 
 
-enum TASK_TYPE {
-	DEADLINE, FLOATING, TIMED;
-}
-
 public class TaskInfo {
 	
 	String taskname;
