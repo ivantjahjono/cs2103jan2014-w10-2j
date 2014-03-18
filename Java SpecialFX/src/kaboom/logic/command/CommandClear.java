@@ -16,6 +16,8 @@ public class CommandClear extends Command {
 	}
 
 	public Result execute() {
+		assert TaskListShop.getInstance() != null;
+		
 		tasksCleared = TaskListShop.getInstance().getAllTaskInList();
 		Vector<TaskInfo> display = TaskListShop.getInstance().clearAllTasks();
 		return createResult(display, MESSAGE_COMMAND_CLEAR_SUCCESS);
