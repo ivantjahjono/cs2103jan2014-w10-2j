@@ -14,6 +14,10 @@ public class CommandModify extends Command {
 	}
 
 	public Result execute() {
+		assert taskInfo != null;
+		assert taskInfoToBeModified != null;
+		assert TaskListShop.getInstance() != null;
+		
 		String commandFeedback = "";
 		String taskName = "";
 		

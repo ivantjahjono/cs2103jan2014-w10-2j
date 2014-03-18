@@ -18,6 +18,8 @@ public class CommandSearch extends Command {
 	}
 
 	public Result execute() {
+		assert taskInfo != null;
+		assert TaskListShop.getInstance() != null;
 		
 		String commandFeedback = "";
 	 	 

@@ -1,6 +1,7 @@
 package kaboom.logic.command;
 
 import kaboom.logic.Result;
+import kaboom.storage.TaskListShop;
 
 
 
@@ -11,6 +12,9 @@ public class CommandDelete extends Command {
 	}
 
 	public Result execute() {
+		assert taskInfo != null;
+		assert TaskListShop.getInstance() != null;
+		
 		String taskName = taskInfo.getTaskName();
 		String commandFeedback = "";
 		
