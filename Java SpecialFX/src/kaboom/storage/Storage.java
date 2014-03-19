@@ -97,6 +97,7 @@ public class Storage {
 			assert(taskListShop != null);
 
 			while (fileScanner.hasNext()) {
+				Calendar now  = Calendar.getInstance();
 				String input = fileScanner.nextLine().trim();
 				String[] inputSplit = input.split(delimiter);
 				TaskInfo task = new TaskInfo();
@@ -119,6 +120,8 @@ public class Storage {
 				endDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputSplit[INDEX_END_HOUR]));
 				endDate.set(Calendar.MINUTE, Integer.parseInt(inputSplit[INDEX_END_MINUTE]));
 				task.setEndDate(endDate);
+				
+				task.setExpiryFlag(now.after(endDate));  //Set true if current time is after endDate
 
 				task.setImportanceLevel(Integer.parseInt(inputSplit[INDEX_IMPORTANCE_LEVEL]));
 				taskListShop.addTaskToList(task);

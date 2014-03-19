@@ -65,39 +65,52 @@ public class TaskListShop {
 	}
 	
 	public Vector<TaskInfo> getFloatingTasks() {
-		Vector<TaskInfo> floatingTasks = new Vector<TaskInfo>();
+		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
 		
 		for (int i = 0; i < taskList.size(); i++) {
 			TaskInfo singleTask = taskList.get(i);
 			if (singleTask.getTaskType() == TASK_TYPE.FLOATING) {
-				floatingTasks.add(singleTask);
+				returnVector.add(singleTask);
 			}
 		}
-		return floatingTasks;
+		return returnVector;
 	}
 	
 	public Vector<TaskInfo> getDeadlineTasks() {
-		Vector<TaskInfo> floatingTasks = new Vector<TaskInfo>();
+		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
 		
 		for (int i = 0; i < taskList.size(); i++) {
 			TaskInfo singleTask = taskList.get(i);
 			if (singleTask.getTaskType() == TASK_TYPE.DEADLINE) {
-				floatingTasks.add(singleTask);
+				returnVector.add(singleTask);
 			}
 		}
-		return floatingTasks;
+		return returnVector;
 	}
 	
 	public Vector<TaskInfo> getTimedTasks() {
-		Vector<TaskInfo> floatingTasks = new Vector<TaskInfo>();
+		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
 		
 		for (int i = 0; i < taskList.size(); i++) {
 			TaskInfo singleTask = taskList.get(i);
 			if (singleTask.getTaskType() == TASK_TYPE.TIMED) {
-				floatingTasks.add(singleTask);
+				returnVector.add(singleTask);
 			}
 		}
-		return floatingTasks;
+		return returnVector;
+	}
+	
+	public Vector<TaskInfo> getExpiredTasks() {
+		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
+		
+		for (int i = 0; i < taskList.size(); i++) {
+			TaskInfo singleTask = taskList.get(i);
+			boolean isExpired = singleTask.getExpiryFlag();
+			if (isExpired) {
+				returnVector.add(singleTask);
+			}
+		}
+		return returnVector;
 	}
 
 	public boolean removeTaskByName (String taskName) {
