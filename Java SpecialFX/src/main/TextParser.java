@@ -1,5 +1,6 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -504,6 +505,59 @@ public class TextParser {
 	    keywordTable.put(KEYWORD_TYPE.PRIORITY, ""+priorityLevel);
 	    
 	    return userInputSentence;
+	}
+	
+	public static String extractTime(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+		String timeRegex1 = "\\d{3,4}";																// by 1700
+		String timeRegex2 = "\\d{1,2}[:]?\\d{2}";													// by 17:00 or 6:00
+		String timeRegex3 = "\\s+\\d{1,2}[:]?\\d{2}\\s*(am|pm)?(\\s|$)";							// by 6am or 1200pm
+		String dateRegex1 = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";					// 12/06/12 or 12.01.06 or 120106
+		
+		int startIndex = 0;
+		int endIndex = 0;
+		
+		//ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, KEYWORD_ENDTIME+timeRegex3);
+		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, KEYWORD_DATE+dateRegex1);
+		
+		if (matchList.size() == 0) {
+			return userInputSentence;
+		}
+		
+//		// List might have multiple matches. So for now get the first match
+//		String extractedTimeString = userInputSentence.substring(startIndex, endIndex).trim();
+//		
+//		// Remove the keyword and get only the time information
+//		extractedTimeString = extractedTimeString.replace(KEYWORD_ENDTIME, "").trim();
+//		keywordTable.put(KEYWORD_TYPE.END_TIME, extractedTimeString);
+//		
+//		userInputSentence = userInputSentence.substring(0, startIndex);
+		
+		return userInputSentence;
+	}
+
+	private static ArrayList<Integer> searchForPatternMatch(String userInputSentence, String regex) {
+		int startIndex = 0;
+	    int endIndex = 0;
+	    
+	    ArrayList<Integer> matchList = new ArrayList<Integer>();
+	    
+	    Pattern asteriskPattern = Pattern.compile(regex);
+		Matcher matcher = asteriskPattern.matcher(userInputSentence);
+	    while (matcher.find()) {
+	    	startIndex = matcher.start();
+	    	endIndex = matcher.end();
+	    	
+	    	matchList.add(startIndex);
+	    	matchList.add(endIndex);
+	    	
+	    	System.out.println("Start: " + startIndex + " ,End: " + endIndex);
+	    } 
+	    
+	    if (matchList.size() == 0) {
+	    	System.out.println("No match found!");
+	    }
+	    
+	    return matchList;
 	}
 	
 	public static int extractPriority2(String userInputSentence) {
