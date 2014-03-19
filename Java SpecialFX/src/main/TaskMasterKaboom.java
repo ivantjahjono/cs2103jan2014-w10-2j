@@ -220,16 +220,20 @@ public class TaskMasterKaboom {
 		
 		taskInfo.setTaskName(taskInformationTable.get(KEYWORD_TYPE.TASKNAME));
 		
-		String startDate = taskInformationTable.get(KEYWORD_TYPE.START_DATE);
-		String startTime = taskInformationTable.get(KEYWORD_TYPE.START_TIME);
-		Calendar startDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(startDate, startTime);
+		//if (taskInformationTable.contains(KEYWORD_TYPE.START_TIME)) {
+			String startDate = taskInformationTable.get(KEYWORD_TYPE.START_DATE);
+			String startTime = taskInformationTable.get(KEYWORD_TYPE.START_TIME);
+			Calendar startDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(startDate, startTime);
+			taskInfo.setStartDate(startDateAndTime);
+		//}
 		
-		String endDate = taskInformationTable.get(KEYWORD_TYPE.END_DATE);
-		String endTime = taskInformationTable.get(KEYWORD_TYPE.END_TIME);
-		Calendar endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
+		//if (taskInformationTable.contains(KEYWORD_TYPE.END_TIME)) {
+			String endDate = taskInformationTable.get(KEYWORD_TYPE.END_DATE);
+			String endTime = taskInformationTable.get(KEYWORD_TYPE.END_TIME);
+			Calendar endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
+			taskInfo.setEndDate(endDateAndTime);
+		//}
 				
-		taskInfo.setStartDate(startDateAndTime);
-		taskInfo.setEndDate(endDateAndTime);
 		taskInfo.setTaskType(TASK_TYPE.FLOATING);	// HARDCODED TO DEFAULT
 		
 		if (taskInformationTable.containsKey(KEYWORD_TYPE.PRIORITY)) {

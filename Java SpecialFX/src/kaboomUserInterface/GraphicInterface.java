@@ -11,6 +11,8 @@ import javafx.scene.Scene;
 
 public class GraphicInterface extends Application {
 	
+	private final String FXML_LOAD_ERROR_MESSAGE = "Error in loading application fxml file.";
+	
 	Parent root;
 	
 	@Override
@@ -21,6 +23,7 @@ public class GraphicInterface extends Application {
 			root = (Parent)(loader.load());
 		} catch(Exception e) {
 			e.printStackTrace();
+			System.out.println(FXML_LOAD_ERROR_MESSAGE);
 		}
 		
 		MainWindow mainWindow = loader.getController();

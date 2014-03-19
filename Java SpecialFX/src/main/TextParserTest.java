@@ -100,26 +100,94 @@ public class TextParserTest {
 //	}
 	
 	
+//	@Test
+//	public void testPriorityExtraction () {
+//		String command = "";
+//		
+//		command = "Test string ***";
+//		System.out.println(TextParser.extractPriority2(command));
+//		
+//		command = "Test string ***   ";
+//		System.out.println(TextParser.extractPriority2(command));
+//		
+//		command = "Test string *";
+//		System.out.println(TextParser.extractPriority2(command));
+//		
+//		command = " **      ";
+//		System.out.println(TextParser.extractPriority2(command));
+//		
+//		command = "asdasd**      ";
+//		System.out.println(TextParser.extractPriority2(command));
+//		
+//		command = "**asdasd      ";
+//		System.out.println(TextParser.extractPriority2(command));
+//	}
+	
 	@Test
-	public void testParsing () {
+	public void testTimeExtraction () {
 		String command = "";
 		
-		command = "Test string ***";
-		System.out.println(TextParser.extractPriority2(command));
+//		command = "by 1700";
+//		System.out.println(TextParser.extractTime(command, null));
+//		
+//		command = "by 600";
+//		System.out.println(TextParser.extractTime(command, null));
+//		
+//		command = "by 1800 ";
+//		System.out.println(TextParser.extractTime(command, null));
+//		
+//		command = "by  160";
+//		System.out.println(TextParser.extractTime(command, null));
+//		
+//		command = "by 17:00";
+//		System.out.println(TextParser.extractTime(command, null));
+//		
+//		command = "by 6:00";
+//		System.out.println(TextParser.extractTime(command, null));
+//		
+//		command = "by 180:0 ";
+//		System.out.println(TextParser.extractTime(command, null));
+//		
+//		command = "by 1:6000";
+//		System.out.println(TextParser.extractTime(command, null));
+//		
+//		command = "by :160";
+//		System.out.println(TextParser.extractTime(command, null));
+//		
+//		command = "by :160pm";
+//		System.out.println(TextParser.extractTime(command, null));
+//		
+//		command = "by 6:00ampm";
+//		System.out.println(TextParser.extractTime(command, null));
+//		
+//		command = "by    6:00pmpm ";
+//		System.out.println(TextParser.extractTime(command, null));
 		
-		command = "Test string ***   ";
-		System.out.println(TextParser.extractPriority2(command));
+		command = "on 12/06/06";
+		System.out.println(TextParser.extractTime(command, null));
 		
-		command = "Test string *";
-		System.out.println(TextParser.extractPriority2(command));
+		command = "on 12.06.06";
+		System.out.println(TextParser.extractTime(command, null));
 		
-		command = " **      ";
-		System.out.println(TextParser.extractPriority2(command));
+		command = "on 120606";
+		System.out.println(TextParser.extractTime(command, null));
 		
-		command = "asdasd**      ";
-		System.out.println(TextParser.extractPriority2(command));
+		command = "on  120606 ";
+		System.out.println(TextParser.extractTime(command, null));
 		
-		command = "**asdasd      ";
-		System.out.println(TextParser.extractPriority2(command));
+		command = "on  1206065  ";
+		System.out.println(TextParser.extractTime(command, null));
+		
+		command = "on  120.06.06 ";
+		System.out.println(TextParser.extractTime(command, null));
+		
+		command = "on  1.06.06 ";
+		System.out.println(TextParser.extractTime(command, null));
+		
+		command = "on  1.6.06 ";
+		System.out.println(TextParser.extractTime(command, null));
+		
+		command = "on  1.6.1906 ";
+		System.out.println(TextParser.extractTime(command, null));
 	}
 }
