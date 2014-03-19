@@ -66,7 +66,7 @@ public class TaskInfo {
 		return importanceLevel;
 	}
 	
-	public boolean setExpiryFlag () { 
+	public boolean getExpiryFlag () { 
 		return isExpired;
 	}
 	
