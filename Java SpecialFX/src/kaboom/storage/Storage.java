@@ -121,7 +121,8 @@ public class Storage {
 				endDate.set(Calendar.MINUTE, Integer.parseInt(inputSplit[INDEX_END_MINUTE]));
 				task.setEndDate(endDate);
 				
-				task.setExpiryFlag(now.after(endDate));  //Set true if current time is after endDate
+				boolean isExpired = now.after(endDate);
+				task.setExpiryFlag(isExpired);  //Set true if current time is after endDate
 
 				task.setImportanceLevel(Integer.parseInt(inputSplit[INDEX_IMPORTANCE_LEVEL]));
 				taskListShop.addTaskToList(task);
@@ -140,7 +141,7 @@ public class Storage {
 				return true;  //Do nothing if the file does not exist because it will be created later
 			}
 			else {
-				logger.info("Cannot read from text file: " + fileName);
+				logger.warning("Cannot read from text file: " + fileName);
 				return false;
 			}
 		}
