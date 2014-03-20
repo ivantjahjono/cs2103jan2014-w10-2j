@@ -112,6 +112,19 @@ public class TaskListShop {
 		}
 		return returnVector;
 	}
+	
+	public Vector<TaskInfo> getNonExpiredTasks() {
+		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
+		
+		for (int i = 0; i < taskList.size(); i++) {
+			TaskInfo singleTask = taskList.get(i);
+			boolean isExpired = singleTask.getExpiryFlag();
+			if (!isExpired) {
+				returnVector.add(singleTask);
+			}
+		}
+		return returnVector;
+	}
 
 	public boolean removeTaskByName (String taskName) {
 		TaskInfo currentTaskToRemove = getTaskByName(taskName);
