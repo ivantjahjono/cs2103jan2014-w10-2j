@@ -22,6 +22,10 @@ public class TaskInfo {
 		isExpired = false;
 	}
 	
+	public void setTask(TaskInfo taskInfo) {
+		//TODO for undo of modify
+	}
+	
 	public void setTaskName (String name) { 
 		taskname = name;
 	}

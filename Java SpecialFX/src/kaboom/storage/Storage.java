@@ -41,7 +41,7 @@ public class Storage {
 	/**
 	 * This function stores all the data in taskListShop to the text file specified
 	 * in the constructor. Each task is on a new line. The task attributes are
-	 * delimited by "|".
+	 * delimited by the delimiter as specified.
 	 * @param	None
 	 * @return 	True if the file is successfully written, false otherwise.
 	 */
