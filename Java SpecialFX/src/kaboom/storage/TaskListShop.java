@@ -1,5 +1,6 @@
 package kaboom.storage;
 
+import java.util.Calendar;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -131,11 +132,23 @@ public class TaskListShop {
 
 		if (currentTaskToRemove != null) {
 			taskList.remove(currentTaskToRemove);
-			logger.info("One task removed");
+			logger.info("One task " + taskName + " removed");
 			return true;
 		}
 
 		return false;
+	}
+	
+	//This function refreshes all the tasks in the vector to check
+	//whether it has expired and set to true if it has expired.
+	public void refreshTasks() {
+		for (int i = 0; i < taskList.size(); i++) {
+			TaskInfo singleTask = taskList.get(i);
+			Calendar now = Calendar.getInstance();
+			if (now.after(singleTask.getEndDate())) {
+				singleTask.setExpiryFlag(true);
+			}
+		}
 	}
 	
 	public Vector<TaskInfo> clearAllTasks () {
