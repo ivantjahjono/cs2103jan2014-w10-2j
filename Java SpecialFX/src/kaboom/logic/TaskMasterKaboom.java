@@ -39,12 +39,11 @@ public class TaskMasterKaboom {
 	
 	private static final String FILENAME = "KABOOM_FILE.dat";
 	
+	private static GraphicInterface taskUi;
 	private static DisplayData guiDisplayData;
 	private static Storage fileStorage;
 	private static History historyofCommands = new History();
-	
-	// Temporary static
-	private static int counter = 1;				// Use to create temporary task
+
 	
 	static TaskMasterKaboom instance;
 	
@@ -53,9 +52,6 @@ public class TaskMasterKaboom {
 			instance = new TaskMasterKaboom();
 		}
 		return instance;
-	}
-	
-	private TaskMasterKaboom () {
 	}
 	
 	public void initialiseKaboom() {
@@ -94,6 +90,7 @@ public class TaskMasterKaboom {
 		return true;
 	}
 	
+
 	/*
 	 * Purpose: ProcessCommand will read the userCommand and break down into
 	 * respective information for the task information. Currently, it returns
@@ -104,24 +101,22 @@ public class TaskMasterKaboom {
 	 * 
 	 * Future improvement: Return task class instead.
 	 */
-	public static boolean processCommand(String userInputSentence) {
-		assert userInputSentence != null;
-		
+	public static boolean processCommand(String userInputSentence) {		
 		Command commandToExecute = null;
 		Result commandResult = null;
-		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
-		String commandParametersString = TextParser.removeFirstWord(userInputSentence);
 		
+		String commandKeyword = TextParser.getCommandKeyWord(userInputSentence);
+		
+		COMMAND_TYPE commandType = determineCommandType(commandKeyword);
+
 		commandToExecute = createCommandBasedOnCommandType(commandType);
-		Error errorType = updateCommandInfoFromParameter(commandToExecute, commandParametersString);
+		
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.extractTaskInformation(userInputSentence);
+		
+		Error errorType = updateCommandInfoBasedOnTaskInformationTable(commandToExecute, taskInformationTable);
 		
 		if (errorType == null) {
-			try {
-				commandResult = commandToExecute.execute();
-			} catch (Exception e) {
-				commandResult = new Result();
-				commandResult.setFeedback("Error executing command! Please inform your administrator!");
-			}
+			commandResult = commandToExecute.execute();
 		} else {
 			commandResult = new Result();
 			commandResult.setFeedback(errorType.getErrorMessage());
@@ -182,27 +177,73 @@ public class TaskMasterKaboom {
 		return newlyCreatedCommand;
 	}
 
-	private static Error updateCommandInfoFromParameter(Command commandToUpdate, String parameters) {
+	
+	//********************************
+	private static Error updateCommandInfoBasedOnTaskInformationTable(Command commandToUpdate, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+		
+		TaskInfo newTaskInfo = getNewTaskInfoFromTaskInformationTable(taskInformationTable);
+		TaskInfo taskInfoToModify = getTaskInfoToModifyTaskInformationTable(taskInformationTable);
+		
+		
+		/* previous
 		TaskInfo taskInformation = new TaskInfo();
 		//to store existing taskinfo to be modified 
 		TaskInfo taskInformationToBeModified = new TaskInfo();
 		
 		Error errorType = createTaskInfoBasedOnCommand(taskInformation, taskInformationToBeModified, parameters);
-		commandToUpdate.setTaskInfo(taskInformation);
+		*/
+		
+		commandToUpdate.setTaskInfo(newTaskInfo);
 		
 		//modify
-		if (!taskInformationToBeModified.isEmpty()) {
-			commandToUpdate.setTaskInfoToBeModified(taskInformationToBeModified);
+		if (!taskInfoToModify.isEmpty()) {
+			commandToUpdate.setTaskInfoToBeModified(taskInfoToModify);
 		}
-
-		return errorType;
+		 
+		
+		return null;
 	}
 	
+	private static TaskInfo getNewTaskInfoFromTaskInformationTable(Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+		TaskInfo taskInfo = new TaskInfo();
+		
+		taskInfo.setTaskName(taskInformationTable.get(KEYWORD_TYPE.TASKNAME));
+		
+		//if (taskInformationTable.contains(KEYWORD_TYPE.START_TIME)) {
+			String startDate = taskInformationTable.get(KEYWORD_TYPE.START_DATE);
+			String startTime = taskInformationTable.get(KEYWORD_TYPE.START_TIME);
+			Calendar startDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(startDate, startTime);
+			taskInfo.setStartDate(startDateAndTime);
+		//}
+		
+		//if (taskInformationTable.contains(KEYWORD_TYPE.END_TIME)) {
+			String endDate = taskInformationTable.get(KEYWORD_TYPE.END_DATE);
+			String endTime = taskInformationTable.get(KEYWORD_TYPE.END_TIME);
+			Calendar endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
+			taskInfo.setEndDate(endDateAndTime);
+		//}
+				
+		taskInfo.setTaskType(TASK_TYPE.FLOATING);	// HARDCODED TO DEFAULT
+		
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.PRIORITY)) {
+			String priority = taskInformationTable.get(KEYWORD_TYPE.PRIORITY);
+			taskInfo.setImportanceLevel(Integer.parseInt(priority));
+		}
+		
+		return taskInfo;
+	}
+	
+	private static TaskInfo getTaskInfoToModifyTaskInformationTable(Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+		TaskInfo taskInfo = new TaskInfo();
+		taskInfo.setTaskName(taskInformationTable.get(KEYWORD_TYPE.MODIFIED_TASKNAME));
+		return taskInfo;
+	}
+	
+	
 	private static COMMAND_TYPE determineCommandType(String userCommand) {
-		String commandTypeString = TextParser.getFirstWord(userCommand);
 		
 		// Determine what command to execute
-		switch(commandTypeString) {
+		switch(userCommand) {
 			case KEYWORD_COMMAND_ADD:
 				return COMMAND_TYPE.ADD;
 			case KEYWORD_COMMAND_DELETE:
@@ -218,14 +259,5 @@ public class TaskMasterKaboom {
 		}
 	}
 	
-	private static Error createTaskInfoBasedOnCommand(TaskInfo newTaskInfo, TaskInfo oldTaskInfo, String userInputSentence) {
-		// Currently it is randomly generated.
-		//updateTaskInfoBasedOnParameter(newlyCreatedTaskInfo, userInputSentence);
-		
-		Error errorEncountered = TextParser.updateTaskInfo(newTaskInfo, oldTaskInfo, userInputSentence);
-		
-		return errorEncountered;
-	}
-
-
+	
 }
