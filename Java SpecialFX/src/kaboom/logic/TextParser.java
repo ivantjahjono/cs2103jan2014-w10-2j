@@ -8,9 +8,6 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-import kaboom.logic.Error.ERROR_TYPE;
-
 public class TextParser {
 	
 	private static final String KEYWORD_STARTTIME = "at";

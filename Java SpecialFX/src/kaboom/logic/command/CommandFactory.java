@@ -6,6 +6,7 @@ public class CommandFactory {
 	private static final String KEYWORD_COMMAND_MODIFY = "modify";
 	private static final String KEYWORD_COMMAND_SEARCH = "search";
 	private static final String KEYWORD_COMMAND_CLEAR = "clear";
+	private static final String KEYWORD_COMMAND_VIEW = "view";
 	
 	public static Command createCommand(String commandWord) {
 		COMMAND_TYPE commandType = determineCommandType(commandWord);
@@ -25,6 +26,8 @@ public class CommandFactory {
 				return COMMAND_TYPE.SEARCH;
 			case KEYWORD_COMMAND_CLEAR:
 				return COMMAND_TYPE.CLEAR;
+			case KEYWORD_COMMAND_VIEW:
+				return COMMAND_TYPE.VIEW;
 			default:
 				return COMMAND_TYPE.INVALID;
 		}
@@ -53,6 +56,9 @@ public class CommandFactory {
 			case CLEAR:
 				newlyCreatedCommand = new CommandClear();
 				break;
+				
+			case VIEW:
+				newlyCreatedCommand = new CommandView();
 				
 			default:
 				newlyCreatedCommand = new Command();

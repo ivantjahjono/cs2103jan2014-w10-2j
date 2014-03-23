@@ -7,7 +7,6 @@ import java.util.Random;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
-import kaboom.logic.Error.ERROR_TYPE;
 import kaboom.logic.command.COMMAND_TYPE;
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandFactory;
@@ -101,14 +100,9 @@ public class TaskMasterKaboom {
 		
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.extractTaskInformation(userInputSentence);
 		
-		Error errorType = updateCommandInfoBasedOnTaskInformationTable(commandToExecute, taskInformationTable);
+		updateCommandInfoBasedOnTaskInformationTable(commandToExecute, taskInformationTable);
 		
-		if (errorType == null) {
-			commandResult = commandToExecute.execute();
-		} else {
-			commandResult = new Result();
-			commandResult.setFeedback(errorType.getErrorMessage());
-		}
+		commandResult = commandToExecute.execute();
 		
 		updateUi(commandResult);
 		
@@ -134,19 +128,10 @@ public class TaskMasterKaboom {
 
 	
 	//********************************
-	private static Error updateCommandInfoBasedOnTaskInformationTable(Command commandToUpdate, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+	private static void updateCommandInfoBasedOnTaskInformationTable(Command commandToUpdate, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
 		
 		TaskInfo newTaskInfo = getNewTaskInfoFromTaskInformationTable(taskInformationTable);
 		TaskInfo taskInfoToModify = getTaskInfoToModifyTaskInformationTable(taskInformationTable);
-		
-		
-		/* previous
-		TaskInfo taskInformation = new TaskInfo();
-		//to store existing taskinfo to be modified 
-		TaskInfo taskInformationToBeModified = new TaskInfo();
-		
-		Error errorType = createTaskInfoBasedOnCommand(taskInformation, taskInformationToBeModified, parameters);
-		*/
 		
 		commandToUpdate.setTaskInfo(newTaskInfo);
 		
@@ -154,9 +139,7 @@ public class TaskMasterKaboom {
 		if (!taskInfoToModify.isEmpty()) {
 			commandToUpdate.setTaskInfoToBeModified(taskInfoToModify);
 		}
-		 
-		
-		return null;
+
 	}
 	
 	private static TaskInfo getNewTaskInfoFromTaskInformationTable(Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
