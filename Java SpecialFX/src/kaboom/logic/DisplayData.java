@@ -1,5 +1,6 @@
 package kaboom.logic;
 
+import java.util.Observable;
 import java.util.Vector;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Vector;
  * needs to display. It holds all the tasks, command feedback,
  * current page the UI is on.
  */
-public class DisplayData {
+public class DisplayData extends Observable {
 	final int NUM_OF_TASK_PER_PAGE = 10;
 	
 	static DisplayData instance;
@@ -60,6 +61,9 @@ public class DisplayData {
 		} else if (commandResult.getGoToPrevPage()) {
 			goToPreviousPage();
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**
