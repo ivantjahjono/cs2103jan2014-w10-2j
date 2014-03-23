@@ -27,8 +27,15 @@ public class TaskInfoDisplay {
 	
 	public void updateFromThisInfo (TaskInfo infoToUpdateFrom) {
 		setTaskName(infoToUpdateFrom.getTaskName());
-		setStartTime(infoToUpdateFrom.getStartDate());
-		setEndTime(infoToUpdateFrom.getEndDate());
+		
+		if (infoToUpdateFrom.getTaskType() == TASK_TYPE.TIMED) {
+			setStartTime(infoToUpdateFrom.getStartDate());
+		}
+		
+		if (infoToUpdateFrom.getTaskType() != TASK_TYPE.FLOATING) {
+			setEndTime(infoToUpdateFrom.getEndDate());
+		}
+		
 		setImportanceLevel(infoToUpdateFrom.getImportanceLevel());
 	}
 	
