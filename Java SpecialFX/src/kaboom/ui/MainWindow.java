@@ -250,7 +250,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		
 		commandTextInput.setText("");
 		
-		updateDisplay();
+		//updateDisplay();
 	}
 
 	private void updateDisplay() {
