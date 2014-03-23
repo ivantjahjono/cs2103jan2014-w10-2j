@@ -146,7 +146,8 @@ public class TaskListShop {
 			TaskInfo singleTask = taskList.get(i);
 			Calendar now = Calendar.getInstance();
 			if (now.after(singleTask.getEndDate())) {
-				singleTask.setExpiryFlag(true);
+				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING))
+					singleTask.setExpiryFlag(true);  //Floating tasks cannot expire
 			}
 		}
 	}
