@@ -10,11 +10,7 @@ import java.util.regex.Pattern;
 import kaboom.logic.Error.ERROR_TYPE;
 import kaboom.logic.command.COMMAND_TYPE;
 import kaboom.logic.command.Command;
-import kaboom.logic.command.CommandAdd;
-import kaboom.logic.command.CommandClear;
-import kaboom.logic.command.CommandDelete;
-import kaboom.logic.command.CommandModify;
-import kaboom.logic.command.CommandSearch;
+import kaboom.logic.command.CommandFactory;
 import kaboom.storage.History;
 import kaboom.storage.Storage;
 import kaboom.storage.TaskListShop;
@@ -28,12 +24,6 @@ import kaboom.ui.GraphicInterface;
 **/
 
 public class TaskMasterKaboom {
-	
-	private static final String KEYWORD_COMMAND_ADD = "add";
-	private static final String KEYWORD_COMMAND_DELETE = "delete";
-	private static final String KEYWORD_COMMAND_MODIFY = "modify";
-	private static final String KEYWORD_COMMAND_SEARCH = "search";
-	private static final String KEYWORD_COMMAND_CLEAR = "clear";
 	
 	private static final String MESSAGE_WELCOME = "Welcome back, Commander";
 	
@@ -106,10 +96,8 @@ public class TaskMasterKaboom {
 		Result commandResult = null;
 		
 		String commandKeyword = TextParser.getCommandKeyWord(userInputSentence);
-		
-		COMMAND_TYPE commandType = determineCommandType(commandKeyword);
 
-		commandToExecute = createCommandBasedOnCommandType(commandType);
+		commandToExecute = CommandFactory.createCommand(commandKeyword);
 		
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.extractTaskInformation(userInputSentence);
 		
@@ -142,39 +130,6 @@ public class TaskMasterKaboom {
 		if (command.getCommandType() != COMMAND_TYPE.INVALID) {
 			historyofCommands.addToRecentCommands(command);
 		}
-	}
-	
-	private static Command createCommandBasedOnCommandType (COMMAND_TYPE commandType) {
-		Command newlyCreatedCommand = new Command();
-		
-		switch (commandType) {
-			case ADD:
-				newlyCreatedCommand = new CommandAdd();
-				break;
-				
-			case DELETE:
-				newlyCreatedCommand = new CommandDelete();
-				break;
-				
-			case MODIFY:
-				newlyCreatedCommand = new CommandModify();
-				break;
-				
-			case SEARCH:
-				newlyCreatedCommand = new CommandSearch();
-				break;
-				
-			case CLEAR:
-				newlyCreatedCommand = new CommandClear();
-				break;
-				
-			default:
-				newlyCreatedCommand = new Command();
-				break;
-				
-		}
-		
-		return newlyCreatedCommand;
 	}
 
 	
@@ -237,26 +192,6 @@ public class TaskMasterKaboom {
 		TaskInfo taskInfo = new TaskInfo();
 		taskInfo.setTaskName(taskInformationTable.get(KEYWORD_TYPE.MODIFIED_TASKNAME));
 		return taskInfo;
-	}
-	
-	
-	private static COMMAND_TYPE determineCommandType(String userCommand) {
-		
-		// Determine what command to execute
-		switch(userCommand) {
-			case KEYWORD_COMMAND_ADD:
-				return COMMAND_TYPE.ADD;
-			case KEYWORD_COMMAND_DELETE:
-				return COMMAND_TYPE.DELETE;
-			case KEYWORD_COMMAND_MODIFY:
-				return COMMAND_TYPE.MODIFY;
-			case KEYWORD_COMMAND_SEARCH:
-				return COMMAND_TYPE.SEARCH;
-			case KEYWORD_COMMAND_CLEAR:
-				return COMMAND_TYPE.CLEAR;
-			default:
-				return COMMAND_TYPE.INVALID;
-		}
 	}
 	
 	
