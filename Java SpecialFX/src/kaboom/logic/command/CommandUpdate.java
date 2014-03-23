@@ -4,10 +4,9 @@ import kaboom.logic.Result;
 
 public class CommandUpdate extends Command {
 
-	
 	public Result execute() {
 		taskListShop.refreshTasks();
 		
-		return createResult(null, null);
+		return createResult(taskListShop.getAllTaskInList(), null);
 	}
 }
