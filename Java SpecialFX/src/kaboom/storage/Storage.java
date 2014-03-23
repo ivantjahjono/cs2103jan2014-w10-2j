@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
+import kaboom.logic.TASK_TYPE;
 import kaboom.logic.TaskInfo;
 
 
@@ -120,9 +121,14 @@ public class Storage {
 				endDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputSplit[INDEX_END_HOUR]));
 				endDate.set(Calendar.MINUTE, Integer.parseInt(inputSplit[INDEX_END_MINUTE]));
 				task.setEndDate(endDate);
-				
+
 				boolean isExpired = now.after(endDate);
-				task.setExpiryFlag(isExpired);  //Set true if current time is after endDate
+				if (!task.getTaskType().equals(TASK_TYPE.FLOATING)) {
+					task.setExpiryFlag(isExpired);  //Set true if current time is after endDate
+				}
+				else {
+					task.setExpiryFlag(false);  //Floating tasks cannot expire
+				}
 
 				task.setImportanceLevel(Integer.parseInt(inputSplit[INDEX_IMPORTANCE_LEVEL]));
 				taskListShop.addTaskToList(task);
