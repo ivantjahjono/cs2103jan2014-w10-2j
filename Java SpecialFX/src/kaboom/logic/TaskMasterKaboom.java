@@ -15,6 +15,7 @@ import kaboom.logic.command.CommandClear;
 import kaboom.logic.command.CommandDelete;
 import kaboom.logic.command.CommandModify;
 import kaboom.logic.command.CommandSearch;
+import kaboom.logic.command.CommandUpdate;
 import kaboom.storage.History;
 import kaboom.storage.Storage;
 import kaboom.storage.TaskListShop;
@@ -46,11 +47,6 @@ public class TaskMasterKaboom {
 	private static final int CORRECT_24HOUR_FORMAT_MAX = 2359;
 	
 	private static final int THE_24_HOUR_FORMAT_CODE = 1;
-	//private static final int THE_24_HOUR_FORMAT_WITH_COLON_CODE = 2;
-	//private static final int THE_AM_FORMAT_CODE = 3;
-	//private static final int THE_AM_FORMAT_WITH_COLON_CODE = 4;
-	//private static final int THE_PM_FORMAT_CODE = 5;
-	//private static final int THE_PM_FORMAT_WITH_COLON_CODE = 6;
 	private static final int START_DATE_COUNT = 1;
 	private static final int END_DATE_COUNT = 2;
 	
@@ -111,6 +107,13 @@ public class TaskMasterKaboom {
 		return true;
 	}
 	
+	public void updateTaskList () {
+		Command updateCommand = new CommandUpdate();
+		Result updateResult = updateCommand.execute();
+		
+		updateUi(updateResult);
+	}
+	
 	/*
 	 * Purpose: ProcessCommand will read the userCommand and break down into
 	 * respective information for the task information. Currently, it returns
@@ -130,18 +133,13 @@ public class TaskMasterKaboom {
 		String commandParametersString = removeFirstWord(userInputSentence);
 		
 		commandToExecute = createCommandBasedOnCommandType(commandType);
-		Error errorType = updateCommandInfoFromParameter(commandToExecute, commandParametersString);
+		updateCommandInfoFromParameter(commandToExecute, commandParametersString);
 		
-		if (errorType == null) {
-			try {
-				commandResult = commandToExecute.execute();
-			} catch (Exception e) {
-				commandResult = new Result();
-				commandResult.setFeedback("Error executing command! Please inform your administrator!");
-			}
-		} else {
+		try {
+			commandResult = commandToExecute.execute();
+		} catch (Exception e) {
 			commandResult = new Result();
-			commandResult.setFeedback(errorType.getErrorMessage());
+			commandResult.setFeedback("Error executing command! Please inform your administrator!");
 		}
 		
 		updateUi(commandResult);
