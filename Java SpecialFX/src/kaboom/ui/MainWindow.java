@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL; 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.ResourceBundle; 
 import java.util.Vector;
 
@@ -40,7 +42,7 @@ import kaboom.logic.DisplayData;
 import kaboom.logic.TaskInfoDisplay;
 import kaboom.logic.TaskMasterKaboom;
 
-public class MainWindow implements javafx.fxml.Initializable {
+public class MainWindow implements javafx.fxml.Initializable, Observer {
 	
 	private final int MAX_TABS = 5;
 	
@@ -133,6 +135,7 @@ public class MainWindow implements javafx.fxml.Initializable {
 		setHeaderLabelToSelected(labelList.get(currentLabelIndex));
 		setTablelistToRespondToExpiry();
 		
+		DisplayData.getInstance().addObserver(this);
 		updateDisplay();
 	}
 
@@ -556,5 +559,10 @@ public class MainWindow implements javafx.fxml.Initializable {
 	private void refreshPageTabContainerWithNewPageTabs() {
 		pageTabContainer.getChildren().clear();
 		pageTabContainer.getChildren().addAll(pagesTab);
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		updateDisplay();
 	}
 }
