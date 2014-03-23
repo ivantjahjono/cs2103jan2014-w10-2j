@@ -57,22 +57,6 @@ public class TaskMasterKaboom {
 		
 		// Run the UI
 		activateUi();
-		
-		// Start processing user commands
-		
-//		// Get command from UI
-//		String command = "add";
-//		
-//		// Process command line
-//		String commandFeedback = processCommand(command);
-//	
-//		// Return feedback to
-//		System.out.println("Feedback: " + commandFeedback);
-		
-//		isRunning = true;
-//		while (isRunning) {
-//			
-//		}
 	}
 	
 	private static void setupUi () {
