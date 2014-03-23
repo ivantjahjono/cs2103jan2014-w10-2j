@@ -59,7 +59,7 @@ public class GraphicInterface extends Application {
 	private Timeline setupRunningUpdate() {
 		myService = new UpdateService(mainWindow);
 
-	    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
+	    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), new EventHandler<ActionEvent>() {
 	    	@Override
 			public void handle(ActionEvent event) {
 	    		myService.restart();   // automatically on JavaFX thread, so can call restart directly
