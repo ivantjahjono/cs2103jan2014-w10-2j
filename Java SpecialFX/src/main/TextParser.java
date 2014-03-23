@@ -55,7 +55,8 @@ public class TextParser {
 		String userInputWithPriorityExtracted = extractPriority(userInputSentence,keywordTable);
 		String userInputWithEndDateAndTimeExtracted = extractDateAndTime(KEYWORD_ENDTIME,userInputWithPriorityExtracted,keywordTable);
 		String userInputWithStartDateAndTimeExtracted = extractDateAndTime(KEYWORD_STARTTIME,userInputWithEndDateAndTimeExtracted,keywordTable);
-		String taskName = extractTaskName(userInputWithStartDateAndTimeExtracted,keywordTable);
+		String userInputWithModifiedTaskNameExtracted = extractModifiedTaskName(userInputWithStartDateAndTimeExtracted,keywordTable);
+		String taskName = extractTaskName(userInputWithModifiedTaskNameExtracted,keywordTable);
 		return taskName;
 	}
 	
@@ -136,6 +137,25 @@ public class TextParser {
 		
 		userInputSentence = userInputSentence.replace(extractedDateAndTimeString, "");
 		
+		return userInputSentence;
+	}
+	
+	
+	/*
+	 * Extracts the last instance of the task name to modify
+	 */
+	public static String extractModifiedTaskName (String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {		
+		int startIndex = 0;
+		int endIndex = 0;
+		if(userInputSentence.contains(KEYWORD_MODIFY)) {
+			startIndex = userInputSentence.lastIndexOf(KEYWORD_MODIFY);
+			endIndex = userInputSentence.length();
+		
+			String modifyTaskName = userInputSentence.substring(startIndex, endIndex);
+			userInputSentence = userInputSentence.replace(modifyTaskName, "");
+			modifyTaskName = modifyTaskName.replace(KEYWORD_MODIFY, "").trim();
+			keywordTable.put(KEYWORD_TYPE.MODIFIED_TASKNAME, modifyTaskName);
+		}
 		return userInputSentence;
 	}
 	
