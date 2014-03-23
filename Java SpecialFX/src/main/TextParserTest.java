@@ -124,17 +124,29 @@ public class TextParserTest {
 //		System.out.println(TextParser.extractTime(command, null));
 //	}
 	
+//	@Test
+//	public void testParser() {
+//		Hashtable<KEYWORD_TYPE, String> keywordTable = new Hashtable<KEYWORD_TYPE, String>();
+//		//standard format
+//		assertEquals("hello world", TextParser.parser("hello world at 0700 on 14/05/12 by 0200 on 14/05/12 ***",keywordTable));
+//		assertEquals("hello world", TextParser.parser("hello world",keywordTable));
+//		assertEquals("hello world", TextParser.parser("hello world at 0700 on 14/05/12",keywordTable));
+//		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12",keywordTable));
+//		assertEquals("hello world", TextParser.parser("hello world at 0700 on 14/05/12 ***",keywordTable));
+//		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12 ***",keywordTable));
+//		assertEquals("hello world", TextParser.parser("hello world ***",keywordTable));
+//		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12 at 0700 on 14/05/12  ***",keywordTable));
+//	}
+//	
+	
 	@Test
-	public void testParser() {
+	public void testExtractModifyName() {
 		Hashtable<KEYWORD_TYPE, String> keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		//standard format
-		assertEquals("hello world", TextParser.parser("hello world at 0700 on 14/05/12 by 0200 on 14/05/12 ***",keywordTable));
-		assertEquals("hello world", TextParser.parser("hello world",keywordTable));
-		assertEquals("hello world", TextParser.parser("hello world at 0700 on 14/05/12",keywordTable));
-		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12",keywordTable));
-		assertEquals("hello world", TextParser.parser("hello world at 0700 on 14/05/12 ***",keywordTable));
-		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12 ***",keywordTable));
-		assertEquals("hello world", TextParser.parser("hello world ***",keywordTable));
-		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12 at 0700 on 14/05/12  ***",keywordTable));
+		assertEquals("hello world ", TextParser.extractModifiedTaskName("hello world > some name",keywordTable));
+		assertEquals("hello world ", TextParser.extractModifiedTaskName("hello world > aabbcc ",keywordTable));
+		assertEquals("", TextParser.extractModifiedTaskName("> hello world",keywordTable));
+		assertEquals("hello world", TextParser.extractModifiedTaskName("hello world",keywordTable));
+		//error here
+		assertEquals("> hello world ", TextParser.extractModifiedTaskName("> hello world > asd",keywordTable));
 	}
 }
