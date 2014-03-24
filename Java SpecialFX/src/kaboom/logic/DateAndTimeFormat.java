@@ -68,7 +68,7 @@ public class DateAndTimeFormat {
 		date = dateArray[0]+dateArray[1]+dateArray[2];
 		
 		if (isDateValid(date)) {
-			int year = Integer.parseInt(dateArray[2]);
+			int year = Integer.parseInt(dateArray[2]) + 2000;		// TODO Hardcode to add 2000
 			thisDate.set(Calendar.YEAR, year);
 			int month = Integer.parseInt(dateArray[1]);
 			thisDate.set(Calendar.MONTH, month-1);
