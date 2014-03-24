@@ -1,6 +1,8 @@
 package kaboom.logic;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 // Can use Java SimpleDateFormat for date checking
 
@@ -21,6 +23,8 @@ public class DateAndTimeFormat {
 	private static final int START_DATE_COUNT = 1;
 	private static final int END_DATE_COUNT = 2;
 	
+	private static final String dateFormat = "ddMMyy";		// 12/06/12 or 12.01.06 or 120106
+
 	private static DateAndTimeFormat instance = null;
 	
 	public static DateAndTimeFormat getInstance () {
@@ -31,15 +35,10 @@ public class DateAndTimeFormat {
 		return instance;
 	}
 
-	private DateAndTimeFormat () {
-	}
-	
-	
 	public Calendar formatStringToCalendar (String date, String time) {
 		Calendar cal = Calendar.getInstance();
 		
 		if(date != null) {
-			System.out.println("1");
 			dateTranslator(cal, date);
 		}
 		
@@ -55,27 +54,53 @@ public class DateAndTimeFormat {
 	
 
 	
-	public void dateTranslator(Calendar thisDate, String theDate){
+	public String dateTranslator(Calendar thisDate, String theDate){
 		//this method should already take in the proper date format. verification should be separated in another method
-		int date;
-		int month;
-		int year;
+		//Currently takes in 12/06/12 or 12.01.06 or 120106
+		String date = "";
 		String[] dateArray = new String[3];
 		
-		dateArray = theDate.split("/");
+		//extract
+		if(theDate.contains("/")) {
+			dateArray = theDate.split("/");
+		} else if (theDate.contains(".")) {
+			dateArray = theDate.split("\\.");
+		} else {
+			dateArray[0] = theDate.substring(0,2);
+			dateArray[1] = theDate.substring(2,4);
+			dateArray[2] = theDate.substring(4,6);
+		}
 		
-		if(dateArray[2] != null){
-			year = Integer.parseInt(dateArray[2]);
+		//check date and set as calendar
+		date = dateArray[0]+dateArray[1]+dateArray[2];
+		
+		if (isDateValid(date)) {
+			int year = Integer.parseInt(dateArray[2]);
 			thisDate.set(Calendar.YEAR, year);
-		}
-		if(dateArray[1] != null){
-			month = Integer.parseInt(dateArray[1]);
+			int month = Integer.parseInt(dateArray[1]);
 			thisDate.set(Calendar.MONTH, month-1);
+			int day = Integer.parseInt(dateArray[0]);
+			thisDate.set(Calendar.DAY_OF_MONTH, day);
 		}
-		if(dateArray[0] != null){
-			date = Integer.parseInt(dateArray[0]);
-			thisDate.set(Calendar.DAY_OF_MONTH, date);
+		
+		return dateArray[2];
+	}
+	
+	private boolean isDateValid (String theDate) {
+		if(theDate == null) {
+			return false;
 		}
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+		simpleDateFormat.setLenient(false);
+		
+		try {
+			Date date = simpleDateFormat.parse(theDate);
+			System.out.println(date);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
 	}
 	
 	private void timeTranslator(Calendar theTime, int correctTime, TimeFormat currTimeFormat){
