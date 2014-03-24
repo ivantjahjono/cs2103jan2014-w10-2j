@@ -1,8 +1,10 @@
 package kaboom.logic.command;
 
+import java.util.Hashtable;
 import java.util.Vector;
 
 import kaboom.logic.DisplayData;
+import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
 import kaboom.storage.TaskListShop;
@@ -31,6 +33,7 @@ public class Command {
 	protected TaskInfo taskInfo;
 	protected TaskListShop taskListShop;
 	protected DisplayData displayData;
+	protected Vector<KEYWORD_TYPE> keywordList;
 	
 	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
@@ -38,6 +41,7 @@ public class Command {
 		taskInfoToBeModified = null;
 		taskListShop = TaskListShop.getInstance();
 		displayData = DisplayData.getInstance();
+		keywordList = new Vector<KEYWORD_TYPE>();
 	}
 	
 	public void setCommandType (COMMAND_TYPE type) {
@@ -74,6 +78,12 @@ public class Command {
 		commandResult.setFeedback(feedback);
 		
 		return commandResult;
+	}
+	
+	//This function takes in the hash table that is returned from the controller
+	//extracts from the hash table and stores the information in the taskInfo variable
+	public void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHahes) {
+		//TODO
 	}
 	
 	public String undo () {
