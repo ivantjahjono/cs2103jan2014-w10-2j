@@ -35,12 +35,12 @@ public class TextParser {
 
 	//******************** Method Calls By Controller ******************************************
 	
-	private static String removeFirstWord(String userInputSentence) {
+	public static String removeFirstWord(String userInputSentence) {
 		String wordRemoved = userInputSentence.replace(getFirstWord(userInputSentence), "").trim();
 		return wordRemoved;
 	}
 
-	private static String getFirstWord(String userInputSentence) {
+	public static String getFirstWord(String userInputSentence) {
 		String[] elements = textProcess(userInputSentence);
 		String firstWord = elements[0].toLowerCase();
 		return firstWord;
