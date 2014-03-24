@@ -43,7 +43,7 @@ public class Command {
 		taskInfoToBeModified = null;
 		taskListShop = TaskListShop.getInstance();
 		displayData = DisplayData.getInstance();
-		//keywordList = new Vector<KEYWORD_TYPE>();
+		keywordList = new Vector<KEYWORD_TYPE>();
 	}
 
 	public void setCommandType (COMMAND_TYPE type) {
