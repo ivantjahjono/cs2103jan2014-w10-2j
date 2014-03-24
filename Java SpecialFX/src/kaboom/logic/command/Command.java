@@ -111,15 +111,47 @@ public class Command {
 		taskInfo.setStartDate(startDateAndTime);
 		String endDate = infoHashes.get(KEYWORD_TYPE.END_DATE);
 		String endTime = infoHashes.get(KEYWORD_TYPE.END_TIME);
+		//extra check to add 1 hour to start time if end time and date is null
+		if(startDate != null && startTime != null) {
+			if(endDate == null && endTime == null) {
+				endDate = startDate;
+				int endtime = Integer.parseInt(startTime) + 100;
+				System.out.println(endtime);
+				if(endtime >= 2400) {
+					endtime -= 2400;
+				}
+				endTime = String.format("%04d", endtime);
+				
+			}
+		}
+		
 		Calendar endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
 		taskInfo.setEndDate(endDateAndTime);
 		
 		viewType = infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
-		
-		//HARDCODE TASK TYPE
-		taskInfo.setTaskType(TASK_TYPE.TIMED);
-	}
 
+		//HARDCODE TASK TYPE
+		TASK_TYPE tasktype = getTaskType(infoHashes);
+		taskInfo.setTaskType(tasktype);
+	}
+	//test as a pair as now only accept as a pair
+	private TASK_TYPE getTaskType(Hashtable<KEYWORD_TYPE, String> infoHashes) {
+		String startDate = infoHashes.get(KEYWORD_TYPE.START_DATE);
+		String startTime = infoHashes.get(KEYWORD_TYPE.START_TIME);
+		String endDate = infoHashes.get(KEYWORD_TYPE.END_DATE);
+		String endTime = infoHashes.get(KEYWORD_TYPE.END_TIME);
+		
+		if (startDate == null && startTime == null) {
+			if (endDate != null && endTime != null) {
+				return TASK_TYPE.DEADLINE;
+			} else {
+				return TASK_TYPE.FLOATING;
+			}
+		}
+		return TASK_TYPE.TIMED;
+	}
+	
+	
 	public String undo () {
 		return MESSAGE_COMMAND_UNDO_FAIL;
 	}
