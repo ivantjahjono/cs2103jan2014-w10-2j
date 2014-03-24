@@ -24,7 +24,6 @@ public class CommandClear extends Command {
 	}
 	
 	public String undo () {
-
 		boolean isUndoSuccess = false;
 
 		for (int i = 0; i < tasksCleared.size(); i++) {
