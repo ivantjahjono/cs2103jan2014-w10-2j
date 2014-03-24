@@ -37,6 +37,7 @@ public class Command {
 	protected TaskListShop taskListShop;
 	protected DisplayData displayData;
 	protected Vector<KEYWORD_TYPE> keywordList;  //Initialized in the individual command constructor
+	protected String viewType;
 
 	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
@@ -45,6 +46,7 @@ public class Command {
 		taskListShop = TaskListShop.getInstance();
 		displayData = DisplayData.getInstance();
 		keywordList = new Vector<KEYWORD_TYPE>();
+		viewType = "";
 	}
 
 	public void setCommandType (COMMAND_TYPE type) {
@@ -111,6 +113,8 @@ public class Command {
 		String endTime = infoHashes.get(KEYWORD_TYPE.END_TIME);
 		Calendar endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
 		taskInfo.setEndDate(endDateAndTime);
+		
+		viewType = infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
 		
 		//HARDCODE TASK TYPE
 		taskInfo.setTaskType(TASK_TYPE.TIMED);
