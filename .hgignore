@@ -1,0 +1,5 @@
+syntax: glob
+*.class
+*.bat
+*.orig
+Task Master Kaboom/KABOOM_FILE.dat
