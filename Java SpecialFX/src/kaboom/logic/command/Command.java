@@ -33,7 +33,7 @@ public class Command {
 	protected TaskInfo taskInfo;
 	protected TaskListShop taskListShop;
 	protected DisplayData displayData;
-	protected Vector<KEYWORD_TYPE> keywordList;
+	protected Vector<KEYWORD_TYPE> keywordList;  //Initialized in the individual command constructor
 	
 	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
@@ -41,7 +41,7 @@ public class Command {
 		taskInfoToBeModified = null;
 		taskListShop = TaskListShop.getInstance();
 		displayData = DisplayData.getInstance();
-		keywordList = new Vector<KEYWORD_TYPE>();
+		//keywordList = new Vector<KEYWORD_TYPE>();
 	}
 	
 	public void setCommandType (COMMAND_TYPE type) {
