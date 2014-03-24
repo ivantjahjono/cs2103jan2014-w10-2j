@@ -43,6 +43,7 @@ import kaboom.logic.TaskInfoDisplay;
 import kaboom.logic.TaskMasterKaboom;
 
 public class MainWindow implements javafx.fxml.Initializable, Observer {
+	//TODO clean up class parameters
 	
 	private final int MAX_TABS = 5;
 	
@@ -86,6 +87,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	int currentLabelIndex;
 	int previousLabelIndex;
 	
+	TaskMasterKaboom applicationController;
 	DisplayData uiData;
 	
 	private final static Logger loggerUnit = Logger.getLogger(MainWindow.class.getName());
@@ -101,6 +103,8 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		uiData = DisplayData.getInstance();
 		
 		labelList = new Vector<Label>();
+		
+		applicationController = TaskMasterKaboom.getInstance();
 	}
 	
 	@Override
@@ -143,7 +147,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		try {
 			fh = new FileHandler("KaboomUI.log", false);
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
+			// TODO find ways to handle exceptions
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -242,7 +246,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		} if (isPageToggle(command)) {
 			activatePageToggle(command);
 		} else {
-			TaskMasterKaboom.processCommand(command);
+			applicationController.processCommand(command);
 		}
 		
 		prevCommand = command;
