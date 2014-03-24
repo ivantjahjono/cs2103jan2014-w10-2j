@@ -7,14 +7,9 @@ import java.util.Random;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
-import kaboom.logic.Error.ERROR_TYPE;
 import kaboom.logic.command.COMMAND_TYPE;
 import kaboom.logic.command.Command;
-import kaboom.logic.command.CommandAdd;
-import kaboom.logic.command.CommandClear;
-import kaboom.logic.command.CommandDelete;
-import kaboom.logic.command.CommandModify;
-import kaboom.logic.command.CommandSearch;
+import kaboom.logic.command.CommandFactory;
 import kaboom.logic.command.CommandUpdate;
 import kaboom.storage.History;
 import kaboom.storage.Storage;
@@ -30,22 +25,15 @@ import kaboom.ui.GraphicInterface;
 
 public class TaskMasterKaboom {
 	
-	private static final String KEYWORD_COMMAND_ADD = "add";
-	private static final String KEYWORD_COMMAND_DELETE = "delete";
-	private static final String KEYWORD_COMMAND_MODIFY = "modify";
-	private static final String KEYWORD_COMMAND_SEARCH = "search";
-	private static final String KEYWORD_COMMAND_CLEAR = "clear";
-	
 	private static final String MESSAGE_WELCOME = "Welcome back, Commander";
 	
 	private static final String FILENAME = "KABOOM_FILE.dat";
 	
+	private static GraphicInterface taskUi;
 	private static DisplayData guiDisplayData;
 	private static Storage fileStorage;
 	private static History historyofCommands = new History();
-	
-	// Temporary static
-	private static int counter = 1;				// Use to create temporary task
+
 	
 	static TaskMasterKaboom instance;
 	
@@ -54,9 +42,6 @@ public class TaskMasterKaboom {
 			instance = new TaskMasterKaboom();
 		}
 		return instance;
-	}
-	
-	private TaskMasterKaboom () {
 	}
 	
 	public void initialiseKaboom() {
@@ -120,8 +105,13 @@ public class TaskMasterKaboom {
 		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
 		String commandParametersString = TextParser.removeFirstWord(userInputSentence);
 		
-		commandToExecute = createCommandBasedOnCommandType(commandType);
+		String commandKeyword = TextParser.getCommandKeyWord(userInputSentence);
 		updateCommandInfoFromParameter(commandToExecute, commandParametersString);
+		commandToExecute = CommandFactory.createCommand(commandKeyword);
+		
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.extractTaskInformation(userInputSentence);
+		
+		updateCommandInfoBasedOnTaskInformationTable(commandToExecute, taskInformationTable);
 		
 		try {
 			commandResult = commandToExecute.execute();
@@ -151,38 +141,21 @@ public class TaskMasterKaboom {
 			historyofCommands.addToRecentCommands(command);
 		}
 	}
+
 	
-	private static Command createCommandBasedOnCommandType (COMMAND_TYPE commandType) {
-		Command newlyCreatedCommand = new Command();
+	//********************************
+	private static void updateCommandInfoBasedOnTaskInformationTable(Command commandToUpdate, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
 		
-		switch (commandType) {
-			case ADD:
-				newlyCreatedCommand = new CommandAdd();
-				break;
-				
-			case DELETE:
-				newlyCreatedCommand = new CommandDelete();
-				break;
-				
-			case MODIFY:
-				newlyCreatedCommand = new CommandModify();
-				break;
-				
-			case SEARCH:
-				newlyCreatedCommand = new CommandSearch();
-				break;
-				
-			case CLEAR:
-				newlyCreatedCommand = new CommandClear();
-				break;
-				
-			default:
-				newlyCreatedCommand = new Command();
-				break;
-				
+		TaskInfo newTaskInfo = getNewTaskInfoFromTaskInformationTable(taskInformationTable);
+		TaskInfo taskInfoToModify = getTaskInfoToModifyTaskInformationTable(taskInformationTable);
+		
+		commandToUpdate.setTaskInfo(newTaskInfo);
+		
+		//modify
+		if (!taskInfoToModify.isEmpty()) {
+			commandToUpdate.setTaskInfoToBeModified(taskInfoToModify);
 		}
-		
-		return newlyCreatedCommand;
+
 	}
 
 	private static Error updateCommandInfoFromParameter(Command commandToUpdate, String parameters) {
@@ -190,45 +163,37 @@ public class TaskMasterKaboom {
 		//to store existing taskinfo to be modified 
 		TaskInfo taskInformationToBeModified = new TaskInfo();
 		
-		Error errorType = createTaskInfoBasedOnCommand(taskInformation, taskInformationToBeModified, parameters);
-		commandToUpdate.setTaskInfo(taskInformation);
+		taskInfo.setTaskName(taskInformationTable.get(KEYWORD_TYPE.TASKNAME));
 		
-		//modify
-		if (!taskInformationToBeModified.isEmpty()) {
-			commandToUpdate.setTaskInfoToBeModified(taskInformationToBeModified);
+		//if (taskInformationTable.contains(KEYWORD_TYPE.START_TIME)) {
+			String startDate = taskInformationTable.get(KEYWORD_TYPE.START_DATE);
+			String startTime = taskInformationTable.get(KEYWORD_TYPE.START_TIME);
+			Calendar startDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(startDate, startTime);
+			taskInfo.setStartDate(startDateAndTime);
+		//}
+		
+		//if (taskInformationTable.contains(KEYWORD_TYPE.END_TIME)) {
+			String endDate = taskInformationTable.get(KEYWORD_TYPE.END_DATE);
+			String endTime = taskInformationTable.get(KEYWORD_TYPE.END_TIME);
+			Calendar endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
+			taskInfo.setEndDate(endDateAndTime);
+		//}
+				
+		taskInfo.setTaskType(TASK_TYPE.FLOATING);	// HARDCODED TO DEFAULT
+		
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.PRIORITY)) {
+			String priority = taskInformationTable.get(KEYWORD_TYPE.PRIORITY);
+			taskInfo.setImportanceLevel(Integer.parseInt(priority));
 		}
-
-		return errorType;
+		
+		return taskInfo;
 	}
 	
-	private static COMMAND_TYPE determineCommandType(String userCommand) {
-		String commandTypeString = TextParser.getFirstWord(userCommand);
-		
-		// Determine what command to execute
-		switch(commandTypeString) {
-			case KEYWORD_COMMAND_ADD:
-				return COMMAND_TYPE.ADD;
-			case KEYWORD_COMMAND_DELETE:
-				return COMMAND_TYPE.DELETE;
-			case KEYWORD_COMMAND_MODIFY:
-				return COMMAND_TYPE.MODIFY;
-			case KEYWORD_COMMAND_SEARCH:
-				return COMMAND_TYPE.SEARCH;
-			case KEYWORD_COMMAND_CLEAR:
-				return COMMAND_TYPE.CLEAR;
-			default:
-				return COMMAND_TYPE.INVALID;
-		}
+	private static TaskInfo getTaskInfoToModifyTaskInformationTable(Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+		TaskInfo taskInfo = new TaskInfo();
+		taskInfo.setTaskName(taskInformationTable.get(KEYWORD_TYPE.MODIFIED_TASKNAME));
+		return taskInfo;
 	}
 	
-	private static Error createTaskInfoBasedOnCommand(TaskInfo newTaskInfo, TaskInfo oldTaskInfo, String userInputSentence) {
-		// Currently it is randomly generated.
-		//updateTaskInfoBasedOnParameter(newlyCreatedTaskInfo, userInputSentence);
-		
-		Error errorEncountered = TextParser.updateTaskInfo(newTaskInfo, oldTaskInfo, userInputSentence);
-		
-		return errorEncountered;
-	}
-
-
+	
 }
