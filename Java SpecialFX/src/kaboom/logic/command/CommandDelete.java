@@ -1,5 +1,7 @@
 package kaboom.logic.command;
 
+import java.util.Vector;
+
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.storage.TaskListShop;
@@ -37,6 +39,7 @@ public class CommandDelete extends Command {
 	}
 	
 	private void initialiseKeywordList() {
+		keywordList.clear();
 		keywordList.add(KEYWORD_TYPE.TASKNAME);
 	}
 }

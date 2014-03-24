@@ -1,5 +1,7 @@
 package kaboom.logic.command;
 
+import java.util.Vector;
+
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
@@ -67,6 +69,7 @@ public class CommandModify extends Command {
 	}
 	
 	private void initialiseKeywordList() {
+		keywordList.clear();
 		keywordList.add(KEYWORD_TYPE.PRIORITY);
 		keywordList.add(KEYWORD_TYPE.END_TIME);
 		keywordList.add(KEYWORD_TYPE.END_DATE);
