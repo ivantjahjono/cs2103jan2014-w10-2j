@@ -127,6 +127,48 @@ public class TaskMasterKaboom {
 		return true;
 	}
 	
+	//***********************************************
+	//			THE NEW CONTROLLER IS HERE			*
+	//***********************************************
+	public boolean processCommandVersion2(String userInputSentence) {
+		assert userInputSentence != null;
+	
+		Command commandToExecute = null;
+		Result commandResult = null;
+		
+		//1. Get Command 
+		String commandKeyword = TextParser.getCommandKeyWord(userInputSentence);
+		
+		//2. Create Command
+		commandToExecute = CommandFactory.createCommand(commandKeyword);		
+		
+		//3. Get CommandKeywordList
+		Vector<KEYWORD_TYPE> commandKeywordList = commandToExecute.getKeywordList();
+		
+		//4. Extract Task Info Base on Keywords
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = extractTaskInfo(userInputSentence, commandKeywordList);
+		
+		//5. Command stores TaskInfo
+		commandToExecute.storeTaskInfo(taskInformationTable);
+		
+		try {
+			commandResult = commandToExecute.execute();
+		} catch (Exception e) {
+			commandResult = new Result();
+			commandResult.setFeedback("Error executing command! Please inform your administrator!");
+		}
+		
+		updateUi(commandResult);
+		
+		// Add recent command to History list
+		addToCommandHistory(new Command());
+		
+		// Save data to file
+		fileStorage.store();
+		
+		return true;
+	}
+	
 
 	private void updateUi(Result commandResult) {
 		guiDisplayData.updateDisplayWithResult(commandResult);
