@@ -102,13 +102,11 @@ public class TaskMasterKaboom {
 		
 		Command commandToExecute = null;
 		Result commandResult = null;
-		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
-		String commandParametersString = TextParser.removeFirstWord(userInputSentence);
+//		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
+//		String commandParametersString = TextParser.removeFirstWord(userInputSentence);
 		
 		String commandKeyword = TextParser.getCommandKeyWord(userInputSentence);
-		updateCommandInfoFromParameter(commandToExecute, commandParametersString);
-		commandToExecute = CommandFactory.createCommand(commandKeyword);
-		
+		commandToExecute = CommandFactory.createCommand(commandKeyword);		
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.extractTaskInformation(userInputSentence);
 		
 		updateCommandInfoBasedOnTaskInformationTable(commandToExecute, taskInformationTable);
@@ -158,10 +156,8 @@ public class TaskMasterKaboom {
 
 	}
 
-	private static Error updateCommandInfoFromParameter(Command commandToUpdate, String parameters) {
-		TaskInfo taskInformation = new TaskInfo();
-		//to store existing taskinfo to be modified 
-		TaskInfo taskInformationToBeModified = new TaskInfo();
+	private static TaskInfo getNewTaskInfoFromTaskInformationTable(Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+		TaskInfo taskInfo = new TaskInfo();
 		
 		taskInfo.setTaskName(taskInformationTable.get(KEYWORD_TYPE.TASKNAME));
 		
@@ -179,7 +175,7 @@ public class TaskMasterKaboom {
 			taskInfo.setEndDate(endDateAndTime);
 		//}
 				
-		taskInfo.setTaskType(TASK_TYPE.FLOATING);	// HARDCODED TO DEFAULT
+		taskInfo.setTaskType(TASK_TYPE.TIMED);	// HARDCODED TO DEFAULT
 		
 		if (taskInformationTable.containsKey(KEYWORD_TYPE.PRIORITY)) {
 			String priority = taskInformationTable.get(KEYWORD_TYPE.PRIORITY);
@@ -188,6 +184,8 @@ public class TaskMasterKaboom {
 		
 		return taskInfo;
 	}
+
+
 	
 	private static TaskInfo getTaskInfoToModifyTaskInformationTable(Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
 		TaskInfo taskInfo = new TaskInfo();
