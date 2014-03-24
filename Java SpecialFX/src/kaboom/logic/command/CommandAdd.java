@@ -1,7 +1,5 @@
 package kaboom.logic.command;
 
-import java.util.Vector;
-
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.storage.TaskListShop;

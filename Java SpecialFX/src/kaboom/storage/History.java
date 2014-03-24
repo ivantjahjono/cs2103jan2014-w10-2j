@@ -9,18 +9,27 @@ public class History {
 	
 	private final int MAX_COMMAND_TO_STORE = 10;
 	
+	private static History historyInstance = null;
 	private Vector<Command> previousCommandList;
+	
+	public static History getInstance () {
+		if (historyInstance == null) {
+			historyInstance = new History();
+		}
+		return historyInstance;
+	}
 	
 	public History () {
 		previousCommandList = new Vector<Command>();
 	}
-	
+
 	public Command getMostRecentCommand () {
 		if (isCommandListEmpty()) {
 			return null;
 		}
 		
 		Command recentCommand = previousCommandList.lastElement();
+		previousCommandList.remove(previousCommandList.size()-1);
 		return recentCommand;
 	}
 

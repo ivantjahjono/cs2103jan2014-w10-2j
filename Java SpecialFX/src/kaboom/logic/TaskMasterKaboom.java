@@ -26,7 +26,6 @@ public class TaskMasterKaboom {
 	
 	private static DisplayData guiDisplayData;
 	private static Storage fileStorage;
-	private static History historyofCommands = new History();
 
 	
 	static TaskMasterKaboom instance;
@@ -164,7 +163,7 @@ public class TaskMasterKaboom {
 		updateUi(commandResult);
 		
 		// Add recent command to History list
-		addToCommandHistory(new Command());
+		addToCommandHistory(commandToExecute);
 		
 		// Save data to file
 		fileStorage.store();
@@ -178,8 +177,9 @@ public class TaskMasterKaboom {
 	}
 	
 	private void addToCommandHistory(Command command) {
-		if (command.getCommandType() != COMMAND_TYPE.INVALID) {
-			historyofCommands.addToRecentCommands(command);
+		if (command.getCommandType() != COMMAND_TYPE.INVALID && command.getCommandType() != COMMAND_TYPE.UNDO && 
+				command.getCommandType() != COMMAND_TYPE.SEARCH) {
+			History.getInstance().addToRecentCommands(command);
 		}
 	}
 
