@@ -12,10 +12,7 @@ public class CommandSearch extends Command {
 	
 	public CommandSearch () {
 		commandType = COMMAND_TYPE.SEARCH;
-		keywordList = new Vector<KEYWORD_TYPE>();
-		keywordList.add(KEYWORD_TYPE.TASKNAME);
-		keywordList.add(KEYWORD_TYPE.END_DATE);
-		keywordList.add(KEYWORD_TYPE.END_TIME);  //Does this work?
+		initialiseKeywordList();
 	}
 
 	public Result execute() {
@@ -27,7 +24,7 @@ public class CommandSearch extends Command {
 		Vector<TaskInfo> allTasks = TaskListShop.getInstance().getAllTaskInList();
 		
 		String taskName = taskInfo.getTaskName();
-		if (taskName != null) {
+		if (!taskName.equals("")) {
 			//If taskName is not null, search by task name			
 			for (int i = 0; i < allTasks.size(); i++) {
 				TaskInfo singleTask = allTasks.get(i);
@@ -53,4 +50,10 @@ public class CommandSearch extends Command {
 	 	return createResult(tasksFound, commandFeedback);
 	}
 	
+	private void initialiseKeywordList() {
+		keywordList.clear();
+		keywordList.add(KEYWORD_TYPE.TASKNAME);
+		keywordList.add(KEYWORD_TYPE.END_DATE);
+		keywordList.add(KEYWORD_TYPE.END_TIME);  //Does this work?
+	}
 }
