@@ -1,5 +1,6 @@
 package kaboom.logic.command;
 
+import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
 import kaboom.storage.TaskListShop;
@@ -11,6 +12,7 @@ public class CommandModify extends Command {
 	
 	public CommandModify () {
 		commandType = COMMAND_TYPE.MODIFY;
+		initialiseKeywordList();
 	}
 
 	public Result execute() {
@@ -58,12 +60,19 @@ public class CommandModify extends Command {
 		
 		return createResult(taskListShop.getAllTaskInList(), commandFeedback);
 	}
-		
-		
-
 	
 	public String undo () {
 		//TODO Not done
 		return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, "My Task");
+	}
+	
+	private void initialiseKeywordList() {
+		keywordList.add(KEYWORD_TYPE.PRIORITY);
+		keywordList.add(KEYWORD_TYPE.END_TIME);
+		keywordList.add(KEYWORD_TYPE.END_DATE);
+		keywordList.add(KEYWORD_TYPE.START_TIME);
+		keywordList.add(KEYWORD_TYPE.START_DATE);
+		keywordList.add(KEYWORD_TYPE.MODIFIED_TASKNAME);
+		keywordList.add(KEYWORD_TYPE.TASKNAME);
 	}
 }
