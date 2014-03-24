@@ -80,6 +80,10 @@ public class Command {
 		return commandResult;
 	}
 	
+	public Vector<KEYWORD_TYPE> getKeywordList () {
+		return keywordList;
+	}
+	
 	//This function takes in the hash table that is returned from the controller
 	//extracts from the hash table and stores the information in the taskInfo variable
 	public void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHahes) {
