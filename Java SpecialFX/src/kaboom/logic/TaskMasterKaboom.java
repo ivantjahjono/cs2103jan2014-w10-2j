@@ -185,7 +185,12 @@ public class TaskMasterKaboom {
 		return taskInfo;
 	}
 
-
+	//This function calls the text parser to get the information that is expected in the keyword list
+	//and returns it to the caller
+	private static Hashtable<KEYWORD_TYPE, String> extractTaskInfo(Vector<KEYWORD_TYPE> expectedKeywordList) {
+		//TODO
+		return null;
+	}
 	
 	private static TaskInfo getTaskInfoToModifyTaskInformationTable(Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
 		TaskInfo taskInfo = new TaskInfo();
