@@ -17,6 +17,8 @@ import kaboom.logic.TaskMasterKaboom;
 
 public class GraphicInterface extends Application {
 	
+	private final int UPDATE_INTERVAL = 30;
+	
 	Parent root;
 	MainWindow mainWindow;
 	
@@ -59,7 +61,7 @@ public class GraphicInterface extends Application {
 	private Timeline setupRunningUpdate() {
 		myService = new UpdateService(mainWindow);
 
-	    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), new EventHandler<ActionEvent>() {
+	    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(UPDATE_INTERVAL), new EventHandler<ActionEvent>() {
 	    	@Override
 			public void handle(ActionEvent event) {
 	    		myService.restart();
@@ -75,7 +77,6 @@ public class GraphicInterface extends Application {
 	
 	public static void main (String[] args) {
 		TaskMasterKaboom.getInstance().initialiseKaboom(); 
-		
 		run(args);
 	}
 }
