@@ -8,6 +8,7 @@ import kaboom.logic.DateAndTimeFormat;
 import kaboom.logic.DisplayData;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
+import kaboom.logic.TASK_TYPE;
 import kaboom.logic.TaskInfo;
 import kaboom.storage.TaskListShop;
 
@@ -110,6 +111,9 @@ public class Command {
 		String endTime = infoHashes.get(KEYWORD_TYPE.END_TIME);
 		Calendar endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
 		taskInfo.setEndDate(endDateAndTime);
+		
+		//HARDCODE TASK TYPE
+		taskInfo.setTaskType(TASK_TYPE.TIMED);
 	}
 
 	public String undo () {
