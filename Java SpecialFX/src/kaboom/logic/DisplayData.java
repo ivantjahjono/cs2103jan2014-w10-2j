@@ -62,6 +62,10 @@ public class DisplayData extends Observable {
 			goToPreviousPage();
 		}
 		
+		if (currentPage > getMaxTaskDisplayPages()-1) {
+			currentPage = getMaxTaskDisplayPages()-1;
+		}
+		
 		setChanged();
 		notifyObservers();
 	}
