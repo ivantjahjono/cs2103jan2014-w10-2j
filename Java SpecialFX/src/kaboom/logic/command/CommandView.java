@@ -61,6 +61,7 @@ public class CommandView extends Command{
 	}
 	
 	private void initialiseKeywordList() {
+		keywordList.clear();
 		keywordList.add(KEYWORD_TYPE.VIEWTYPE);
 	}
 }

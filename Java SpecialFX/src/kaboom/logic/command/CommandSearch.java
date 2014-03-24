@@ -12,10 +12,7 @@ public class CommandSearch extends Command {
 	
 	public CommandSearch () {
 		commandType = COMMAND_TYPE.SEARCH;
-		keywordList = new Vector<KEYWORD_TYPE>();
-		keywordList.add(KEYWORD_TYPE.TASKNAME);
-		keywordList.add(KEYWORD_TYPE.END_DATE);
-		keywordList.add(KEYWORD_TYPE.END_TIME);  //Does this work?
+		initialiseKeywordList();
 	}
 
 	public Result execute() {
@@ -53,4 +50,10 @@ public class CommandSearch extends Command {
 	 	return createResult(tasksFound, commandFeedback);
 	}
 	
+	private void initialiseKeywordList() {
+		keywordList.clear();
+		keywordList.add(KEYWORD_TYPE.TASKNAME);
+		keywordList.add(KEYWORD_TYPE.END_DATE);
+		keywordList.add(KEYWORD_TYPE.END_TIME);  //Does this work?
+	}
 }
