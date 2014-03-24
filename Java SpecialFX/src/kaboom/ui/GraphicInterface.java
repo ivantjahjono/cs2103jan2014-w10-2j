@@ -53,7 +53,7 @@ public class GraphicInterface extends Application {
 
 	private void initialiseAndStartUpdateService() {
 		updateTimeline.setCycleCount(Animation.INDEFINITE);
-		updateTimeline.playFrom("end"); // can also play from start but you will have an initial 5 second delay
+		updateTimeline.playFrom("end");
 	}
 
 	private Timeline setupRunningUpdate() {
@@ -62,7 +62,7 @@ public class GraphicInterface extends Application {
 	    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), new EventHandler<ActionEvent>() {
 	    	@Override
 			public void handle(ActionEvent event) {
-	    		myService.restart();   // automatically on JavaFX thread, so can call restart directly
+	    		myService.restart();
 	    		mainWindow.updateCounter(myService.counter);
 	    	}
 	    }));

@@ -47,49 +47,60 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	
 	private final int MAX_TABS = 5;
 	
-	private Stage windowStage;
-	@FXML private AnchorPane mainPane;
+	// User interface elements
+			private Stage 		windowStage;
+	@FXML	private AnchorPane 	mainPane;
 	
-	@FXML private TableView<TaskInfoDisplay> taskDisplayTable;
-	@FXML private TableColumn<TaskInfoDisplay, Integer> columnTaskId;
-	@FXML private TableColumn<TaskInfoDisplay, String> columnTaskName;
-	@FXML private TableColumn<TaskInfoDisplay, String> columnStartTime;
-	@FXML private TableColumn<TaskInfoDisplay, String> columnEndTime;
-	@FXML private TableColumn<TaskInfoDisplay, String> columnPriority;
-	@FXML private ImageView exitButton;
-	@FXML private Label minimiseLabel;
-	@FXML private Label counter;
+	// Table ui elements and its ui columns
+	@FXML 	private TableView<TaskInfoDisplay> 				taskDisplayTable;
+	@FXML	private TableColumn<TaskInfoDisplay, Integer> 	columnTaskId;
+	@FXML 	private TableColumn<TaskInfoDisplay, String> 	columnTaskName;
+	@FXML 	private TableColumn<TaskInfoDisplay, String> 	columnStartTime;
+	@FXML 	private TableColumn<TaskInfoDisplay, String> 	columnEndTime;
+	@FXML 	private TableColumn<TaskInfoDisplay, String> 	columnPriority;
 	
-	@FXML private Label header_all;
-	@FXML private Label header_running;
-	@FXML private Label header_deadline;
-	@FXML private Label header_timed;
-	@FXML private Label header_search;
+	// Data for the task table
+			private ObservableList<TaskInfoDisplay> data;
 	
+	// Top window toolbar buttons
+	@FXML 	private ImageView 	exitButton;
+	@FXML 	private Label 		minimiseLabel;
+	@FXML 	private Label 		counter;
 	
-	@FXML private TextField commandTextInput;
-	@FXML private Pane feedbackBox;
-	@FXML private Label feedbackText;
+	// Task header to show the current type of tasks displayed
+	@FXML 	private Label header_all;
+	@FXML 	private Label header_running;
+	@FXML 	private Label header_deadline;
+	@FXML 	private Label header_timed;
+	@FXML 	private Label header_search;
 	
-	@FXML private HBox pageTabContainer;
+	// List and tracks of previously activated headers
+	private Vector<Label>	labelList;
+	private int 			currentLabelIndex;
+	private int 			previousLabelIndex;
 	
-	ArrayList<Rectangle> pagesTab;
+	// Main command input and user feedback text
+	@FXML private TextField 	commandTextInput;
+	@FXML private Pane 			feedbackBox;
+	@FXML private Label 		feedbackText;
 	
+	// Container to keep the pages tabs 
+	@FXML private HBox 					pageTabContainer;
+		  private ArrayList<Rectangle> 	pagesTab;
+	
+	// Tracks previous commands
 	private String prevCommand;
 	private String currentCommand;
 	
+	// Used in tracking window dragging
 	private double initialX;
 	private double initialY;
 	
-	private ObservableList<TaskInfoDisplay> data;
+	// Class references
+	private TaskMasterKaboom 	applicationController;
+	private DisplayData 		uiData;
 	
-	Vector<Label> labelList;
-	int currentLabelIndex;
-	int previousLabelIndex;
-	
-	TaskMasterKaboom applicationController;
-	DisplayData uiData;
-	
+	// Logging unit and file handler for output
 	private final static Logger loggerUnit = Logger.getLogger(MainWindow.class.getName());
 	private static FileHandler fh;
 	
@@ -188,18 +199,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	                    }
 	                }
 	            };
-//	            highlightRows.addListener(new ListChangeListener<Integer>() {
-//	                @Override
-//	                public void onChanged(Change<? extends Integer> change) {
-//	                    if (highlightRows.contains(row.getIndex())) {
-//	                        if (! row.getStyleClass().contains("isExpired")) {
-//	                            row.getStyleClass().add("isExpired");
-//	                        }
-//	                    } else {
-//	                        row.getStyleClass().removeAll(Collections.singleton("isExpired"));
-//	                    }
-//	                }
-//	            });
 	            return row;
 	        }
 	    });
@@ -240,9 +239,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		// Check if need to switch header
 		int switchIndexResult = getSwitchIndexFromCommand(command);
 		if (switchIndexResult != -1) {
-			previousLabelIndex = currentLabelIndex;
-			currentLabelIndex = switchIndexResult;
-			switchMainHeaderHighlight(previousLabelIndex, currentLabelIndex);
+			switchToNewHeader(switchIndexResult);
 		} if (isPageToggle(command)) {
 			activatePageToggle(command);
 		} else {
@@ -255,6 +252,12 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		commandTextInput.setText("");
 		
 		//updateDisplay();
+	}
+
+	private void switchToNewHeader(int switchIndexResult) {
+		previousLabelIndex = currentLabelIndex;
+		currentLabelIndex = switchIndexResult;
+		switchMainHeaderHighlight(previousLabelIndex, currentLabelIndex);
 	}
 
 	private void updateDisplay() {
@@ -339,6 +342,26 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				loggerUnit.log(Level.FINE, "ESC pressed for minimise.");
 				windowStage.setIconified(true);
 				break;
+				
+			case F1:
+				switchToNewHeader(0);
+				break;
+				
+			case F2:
+				switchToNewHeader(1);
+				break;
+				
+			case F3:
+				switchToNewHeader(2);
+				break;
+				
+			case F4:
+				switchToNewHeader(3);
+				break;
+				
+			case F5:
+				switchToNewHeader(4);
+				break;	
 				
 			default:
 				break;
