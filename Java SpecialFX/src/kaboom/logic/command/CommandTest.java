@@ -47,4 +47,20 @@ public class CommandTest {
 		assertEquals("Successfully added hello world ", com.execute().getFeedback());
 	}
 
+	//CommandView
+	@Test
+	public void testCommandView() {
+		Command com = new CommandView();
+		com.setTaskInfo(task);
+
+		//Test Command feedback
+		assertEquals("Invalid View Mode", com.execute().getFeedback());
+		task.setTaskName("floating");
+		assertEquals("Floating Task Mode", com.execute().getFeedback());
+		task.setTaskName("deadline");
+		assertEquals("Deadline Task Mode", com.execute().getFeedback());
+		task.setTaskName("running");
+		assertEquals("Running Task Mode", com.execute().getFeedback());
+	}
+	
 }
