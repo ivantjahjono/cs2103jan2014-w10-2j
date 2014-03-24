@@ -2,6 +2,7 @@ package kaboom.logic.command;
 
 import java.util.Vector;
 
+import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
 import kaboom.storage.TaskListShop;
@@ -21,6 +22,7 @@ public class CommandView extends Command{
 	
 	public CommandView () {
 		commandType = COMMAND_TYPE.VIEW;
+		initialiseKeywordList();
 	}
 
 	public Result execute() {
@@ -56,5 +58,9 @@ public class CommandView extends Command{
 	
 	public String undo() {
 		return null;
+	}
+	
+	private void initialiseKeywordList() {
+		keywordList.add(KEYWORD_TYPE.VIEWTYPE);
 	}
 }
