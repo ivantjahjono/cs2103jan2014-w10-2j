@@ -57,6 +57,7 @@ public class TextParser {
 		String userInputWithStartDateAndTimeExtracted = extractDateAndTime(KEYWORD_STARTTIME,userInputWithEndDateAndTimeExtracted,keywordTable);
 		String userInputWithModifiedTaskNameExtracted = extractModifiedTaskName(userInputWithStartDateAndTimeExtracted,keywordTable);
 		String taskName = extractTaskName(userInputWithModifiedTaskNameExtracted,keywordTable);
+		System.out.println(keywordTable);
 		return taskName;
 	}
 	
@@ -130,7 +131,7 @@ public class TextParser {
 			keywordTable.put(KEYWORD_TYPE.END_DATE, extractedDateString);
 			break;
 		case KEYWORD_STARTTIME:
-			keywordTable.put(KEYWORD_TYPE.START_TIME, extractedDateString);
+			keywordTable.put(KEYWORD_TYPE.START_TIME, extractedTimeString);
 			keywordTable.put(KEYWORD_TYPE.START_DATE, extractedDateString);
 			break; 
 		}
@@ -179,12 +180,9 @@ public class TextParser {
 	    	
 	    	matchList.add(startIndex);
 	    	matchList.add(endIndex);
-	    	
-	    	System.out.println("Start: " + startIndex + " ,End: " + endIndex);
 	    } 
 	    
 	    if (matchList.size() == 0) {
-	    	System.out.println("No match found!");
 	    }
 	    
 	    return matchList;

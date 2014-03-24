@@ -57,9 +57,11 @@ public class DateAndTimeFormat {
 		} else if (theDate.contains(".")) {
 			dateArray = theDate.split("\\.");
 		} else {
-			dateArray[0] = theDate.substring(0,2);
-			dateArray[1] = theDate.substring(2,4);
-			dateArray[2] = theDate.substring(4,6);
+			if(theDate.length()==6) {
+				dateArray[0] = theDate.substring(0,2);
+				dateArray[1] = theDate.substring(2,4);
+				dateArray[2] = theDate.substring(4,6);
+			}
 		}
 		
 		//check date and set as calendar
