@@ -32,11 +32,11 @@ public class DateAndTimeFormat {
 		Calendar cal = Calendar.getInstance();
 		
 		if(date != null) {
-			dateTranslator(cal, date);
+			cal = dateTranslator(cal, date);
 		}
 		
 		if(time != null) {
-			timeTranslator(cal,time);
+			cal = timeTranslator(cal,time);
 //			TimeFormat currTimeFormat = new TimeFormat();
 //			if(isTimeValid(time, currTimeFormat)){
 //				timeTranslator(cal, Integer.parseInt(time), currTimeFormat);
@@ -45,7 +45,7 @@ public class DateAndTimeFormat {
 		return cal;
 	}
 
-	private void dateTranslator(Calendar thisDate, String theDate){
+	private Calendar dateTranslator(Calendar thisDate, String theDate){
 		//this method should already take in the proper date format. verification should be separated in another method
 		//Currently takes in 12/06/12 or 12.01.06 or 120106
 		String date = "";
@@ -75,6 +75,7 @@ public class DateAndTimeFormat {
 			int day = Integer.parseInt(dateArray[0]);
 			thisDate.set(Calendar.DAY_OF_MONTH, day);
 		}
+		return thisDate;
 	}
 	
 	private boolean isDateValid (String theDate) {
@@ -94,7 +95,7 @@ public class DateAndTimeFormat {
 	}
 	
 	//Currently translate 1700 format only
-	private void timeTranslator(Calendar cal, String theTime) {
+	private Calendar timeTranslator(Calendar cal, String theTime) {
 		if (!(theTime == null || theTime.length() != 4)) {
 			String hourInString = theTime.substring(0,2);
 			String minsInString = theTime.substring(2,4);
@@ -107,6 +108,7 @@ public class DateAndTimeFormat {
 				cal.set(Calendar.MINUTE, mins);
 			}
 		}
+		return cal;
 	}
 	
 	private boolean isHourValid (int hour) {

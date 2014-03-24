@@ -220,4 +220,35 @@ public class TextParser {
 		return queue;
 	}
 	
+	public static Hashtable<KEYWORD_TYPE, String> testExtractList(String userInput, Vector<KEYWORD_TYPE> list) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = getInfoFromList(userInput,list);
+		return taskInformationTable;
+	}
+	
+	private static Hashtable<KEYWORD_TYPE, String> getInfoFromList(String userInput, Vector<KEYWORD_TYPE> list) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = new Hashtable<KEYWORD_TYPE, String>();
+		for(int i=0; i<list.size(); i++) {
+			if(list.get(i) == KEYWORD_TYPE.PRIORITY) {
+				userInput = extractPriority(userInput,taskInformationTable);
+			}
+			if(list.get(i) == KEYWORD_TYPE.END_TIME) {
+				userInput = extractDateAndTime(KEYWORD_ENDTIME,userInput,taskInformationTable);
+			}
+			if(list.get(i) == KEYWORD_TYPE.START_TIME) {
+				userInput = extractDateAndTime(KEYWORD_STARTTIME,userInput,taskInformationTable);
+			}
+			if(list.get(i) == KEYWORD_TYPE.MODIFIED_TASKNAME) {
+				userInput = extractModifiedTaskName(userInput,taskInformationTable);
+			}
+			if(list.get(i) == KEYWORD_TYPE.TASKNAME) {
+				userInput = extractTaskName(userInput,taskInformationTable);
+			}
+			if(list.get(i) == KEYWORD_TYPE.VIEWTYPE) {
+				//stub
+			}
+			
+		}
+		return taskInformationTable;
+	}
+	
 }
