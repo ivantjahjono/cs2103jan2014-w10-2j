@@ -24,7 +24,7 @@ public class CommandSearch extends Command {
 		Vector<TaskInfo> allTasks = TaskListShop.getInstance().getAllTaskInList();
 		
 		String taskName = taskInfo.getTaskName();
-		if (taskName != null) {
+		if (!taskName.equals("")) {
 			//If taskName is not null, search by task name			
 			for (int i = 0; i < allTasks.size(); i++) {
 				TaskInfo singleTask = allTasks.get(i);
