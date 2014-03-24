@@ -244,11 +244,17 @@ public class TextParser {
 				userInput = extractTaskName(userInput,taskInformationTable);
 			}
 			if(list.get(i) == KEYWORD_TYPE.VIEWTYPE) {
-				//stub
+				userInput = extractViewType(userInput,taskInformationTable);
 			}
 			
 		}
 		return taskInformationTable;
+	}
+	
+	private static String extractViewType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
+		String viewType = getFirstWord(userInput);
+		taskInformationTable.put(KEYWORD_TYPE.VIEWTYPE, viewType);
+		return removeFirstWord(userInput);
 	}
 	
 }
