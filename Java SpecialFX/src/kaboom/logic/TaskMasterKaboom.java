@@ -1,12 +1,8 @@
 package kaboom.logic;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Hashtable;
-import java.util.Random;
 import java.util.Vector;
-import java.util.regex.Pattern;
-
 import kaboom.logic.command.COMMAND_TYPE;
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandFactory;
@@ -14,7 +10,6 @@ import kaboom.logic.command.CommandUpdate;
 import kaboom.storage.History;
 import kaboom.storage.Storage;
 import kaboom.storage.TaskListShop;
-import kaboom.ui.GraphicInterface;
 
 
 /*
@@ -29,13 +24,16 @@ public class TaskMasterKaboom {
 	
 	private static final String FILENAME = "KABOOM_FILE.dat";
 	
-	private static GraphicInterface taskUi;
 	private static DisplayData guiDisplayData;
 	private static Storage fileStorage;
 	private static History historyofCommands = new History();
 
 	
 	static TaskMasterKaboom instance;
+	
+	private TaskMasterKaboom () {
+		
+	}
 	
 	public static TaskMasterKaboom getInstance () {
 		if (instance == null) {
@@ -66,14 +64,14 @@ public class TaskMasterKaboom {
 		// Start processing user commands
 	}
 
-	private static void updateUiWithFirstLoadedMemory() {
+	private void updateUiWithFirstLoadedMemory() {
 		Result introResult = new Result();
 		introResult.setTasksToDisplay(TaskListShop.getInstance().getAllTaskInList());
 		introResult.setFeedback(MESSAGE_WELCOME);
 		updateUi(introResult);
 	}
 	
-	private static boolean initialiseStorage () {
+	private boolean initialiseStorage () {
 		fileStorage = new Storage(FILENAME);
 		fileStorage.load();
 		
@@ -97,7 +95,7 @@ public class TaskMasterKaboom {
 	 * 
 	 * Future improvement: Return task class instead.
 	 */
-	public static boolean processCommand(String userInputSentence) {
+	public boolean processCommand(String userInputSentence) {
 		assert userInputSentence != null;
 		
 		Command commandToExecute = null;
@@ -130,11 +128,11 @@ public class TaskMasterKaboom {
 	}
 	
 
-	private static void updateUi(Result commandResult) {
+	private void updateUi(Result commandResult) {
 		guiDisplayData.updateDisplayWithResult(commandResult);
 	}
 	
-	private static void addToCommandHistory(Command command) {
+	private void addToCommandHistory(Command command) {
 		if (command.getCommandType() != COMMAND_TYPE.INVALID) {
 			historyofCommands.addToRecentCommands(command);
 		}
@@ -142,7 +140,7 @@ public class TaskMasterKaboom {
 
 	
 	//********************************
-	private static void updateCommandInfoBasedOnTaskInformationTable(Command commandToUpdate, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+	private void updateCommandInfoBasedOnTaskInformationTable(Command commandToUpdate, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
 		
 		TaskInfo newTaskInfo = getNewTaskInfoFromTaskInformationTable(taskInformationTable);
 		TaskInfo taskInfoToModify = getTaskInfoToModifyTaskInformationTable(taskInformationTable);
@@ -156,7 +154,7 @@ public class TaskMasterKaboom {
 
 	}
 
-	private static TaskInfo getNewTaskInfoFromTaskInformationTable(Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+	private TaskInfo getNewTaskInfoFromTaskInformationTable(Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
 		TaskInfo taskInfo = new TaskInfo();
 		
 		taskInfo.setTaskName(taskInformationTable.get(KEYWORD_TYPE.TASKNAME));
@@ -187,16 +185,14 @@ public class TaskMasterKaboom {
 
 	//This function calls the text parser to get the information that is expected in the keyword list
 	//and returns it to the caller
-	private static Hashtable<KEYWORD_TYPE, String> extractTaskInfo(Vector<KEYWORD_TYPE> expectedKeywordList) {
+	private Hashtable<KEYWORD_TYPE, String> extractTaskInfo(Vector<KEYWORD_TYPE> expectedKeywordList) {
 		//TODO
 		return null;
 	}
 	
-	private static TaskInfo getTaskInfoToModifyTaskInformationTable(Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+	private TaskInfo getTaskInfoToModifyTaskInformationTable(Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
 		TaskInfo taskInfo = new TaskInfo();
 		taskInfo.setTaskName(taskInformationTable.get(KEYWORD_TYPE.MODIFIED_TASKNAME));
 		return taskInfo;
 	}
-	
-	
 }
