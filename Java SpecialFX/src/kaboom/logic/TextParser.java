@@ -231,6 +231,8 @@ public class TextParser {
 				userInput = extractPriority(userInput,taskInformationTable);
 			}
 			if(list.get(i) == KEYWORD_TYPE.END_TIME) {
+				ArrayList<Integer> matchList = new ArrayList<Integer>();
+				checkTimeAndDateInputFormat(KEYWORD_ENDTIME, userInput, matchList);
 				userInput = extractDateAndTime(KEYWORD_ENDTIME,userInput,taskInformationTable);
 			}
 			if(list.get(i) == KEYWORD_TYPE.START_TIME) {
@@ -248,6 +250,21 @@ public class TextParser {
 			
 		}
 		return taskInformationTable;
+	}
+	
+	private static void checkTimeAndDateInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){
+		String timeRegex1 = "\\s+\\d{3,4}";																// by 1700
+		String timeRegex2 = "\\d{1,2}[:]?\\d{2}";													// by 17:00 or 6:00
+		String timeRegex3 = "\\s+\\d{1,2}[:]?\\d{2}\\s*(am|pm)?(\\s|$)";							// by 6am or 1200pm
+		String dateRegex1 = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";					// 12/06/12 or 12.01.06 or 120106
+		
+		//GET PATTERN FOR WHOLE START/END DATE AND TIME
+		matchVector = searchForPatternMatch(userInputSentence, KEYWORD_TIME+" "+timeRegex1+" "+KEYWORD_DATE+dateRegex1);
+		
+		//IF NOTHING RETURN
+		if (matchVector.size() < 2) {
+			return;
+		}
 	}
 	
 	private static String extractViewType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
