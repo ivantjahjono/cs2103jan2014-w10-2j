@@ -2,6 +2,7 @@ package KaboomTest;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Queue;
 import java.util.Vector;
@@ -68,25 +69,55 @@ public class TextParserTest {
 	@Test
 	public void testTimeAndDateExtraction () {
 		String command = "";
-		String timeKeyword = "by";
+		String timeKeyword = "at";
 		String dateKeyword = "on";
 		Hashtable<KEYWORD_TYPE, String> tempHashTable = new Hashtable<KEYWORD_TYPE, String>();
 		
 		// Full working syntax
-		command = "by 1700 on 25/12/18";
+		command = "at 1700 on 25/12/18";
 		assertEquals("", TextParser.extractDateAndTime(timeKeyword, command, tempHashTable));
 		
-		command = "by 600   on 25/12/18";
+		command = "at 600   on 25/12/18";
 		assertEquals("", TextParser.extractDateAndTime(timeKeyword, command, tempHashTable));
 		
-		command = "by 1800 on 25/12/18     ";
+		command = "at 1800 on 25/12/18     ";
 		assertEquals("", TextParser.extractDateAndTime(timeKeyword, command, tempHashTable));
 		
-		command = "by  160 on 25/12/18";
+		command = "at  160 on 25/12/18";
 		assertEquals("", TextParser.extractDateAndTime(timeKeyword, command, tempHashTable));
 		
-		command = "     by 160 on 25/12/18";
+		command = "     at 160 on 25/12/18";
 		assertEquals("", TextParser.extractDateAndTime(timeKeyword, command, tempHashTable));
+		
+		command = "     at 160       on 25/12/18";
+		assertEquals("", TextParser.extractDateAndTime(timeKeyword, command, tempHashTable));
+	}
+	
+	@Test
+	public void checkTimeAndDateExtractionCondition () {
+		String command = "";
+		String timeKeyword = "at";
+		String dateKeyword = "on";
+		ArrayList<Integer> matchVector = new ArrayList<Integer>();
+		
+		// Full working syntax
+		command = "at 1700 on 25/12/18";
+		assertTrue(TextParser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
+		
+		command = "at 600   on 25/12/18";
+		assertTrue(TextParser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
+		
+		command = "at 1800 on 25/12/18     ";
+		assertTrue(TextParser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
+		
+		command = "at  160 on 25/12/18";
+		assertTrue(TextParser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
+		
+		command = "     at 160 on 25/12/18";
+		assertTrue(TextParser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
+		
+		command = "     at 160       on 25/12/18";
+		assertTrue(TextParser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
 	}
 	
 	@Test
