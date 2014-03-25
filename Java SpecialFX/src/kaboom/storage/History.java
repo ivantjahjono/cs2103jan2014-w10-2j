@@ -48,6 +48,14 @@ public class History {
 		
 		return null;
 	}
+	
+	public int size() {
+		return previousCommandList.size();
+	}
+	
+	public void clear() {
+		previousCommandList.clear();
+	}
 
 	private boolean isCommandListEmpty() {
 		return previousCommandList.size() == 0;
