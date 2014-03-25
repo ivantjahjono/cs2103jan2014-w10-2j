@@ -22,6 +22,15 @@ public class TaskInfo {
 		isExpired = false;
 	}
 	
+	public TaskInfo (TaskInfo info) {
+		taskname = info.getTaskName();
+		startDate = info.getStartDate();
+		endDate = info.getEndDate();
+		importanceLevel = info.getImportanceLevel();
+		isExpired = info.getExpiryFlag();
+		taskType = info.getTaskType();
+	}
+	
 	public void setTask(TaskInfo taskInfo) {
 		//TODO for undo of modify
 	}
