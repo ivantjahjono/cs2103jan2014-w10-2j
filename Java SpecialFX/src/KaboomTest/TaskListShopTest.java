@@ -26,30 +26,30 @@ public class TaskListShopTest {
 		oldTaskInfoUpdate(oldTask);
 	}
 
-	public void newTaskInfoUpdate(TaskInfo task) {
+	public void newTaskInfoUpdate(TaskInfo newTask) {
 		Calendar startDate = Calendar.getInstance();
 		startDate.set(2014,1,1,8,0);
 		Calendar endDate = Calendar.getInstance();
 		endDate.set(2014,1,5,8,0);
 
-		task.setTaskName("something");
-		task.setTaskType(TASK_TYPE.FLOATING);
-		task.setStartDate(startDate);
-		task.setEndDate(endDate);
-		task.setImportanceLevel(3);
+		newTask.setTaskName("something");
+		newTask.setTaskType(TASK_TYPE.FLOATING);
+		newTask.setStartDate(startDate);
+		newTask.setEndDate(endDate);
+		newTask.setImportanceLevel(3);
 	}
 	
-	public void oldTaskInfoUpdate(TaskInfo task) {
+	public void oldTaskInfoUpdate(TaskInfo oldTask) {
 		Calendar startDate = Calendar.getInstance();
 		startDate.set(2014,1,1,8,0);
 		Calendar endDate = Calendar.getInstance();
 		endDate.set(2014,1,5,8,0);
 
-		task.setTaskName("something else");
-		task.setTaskType(TASK_TYPE.TIMED);
-		task.setStartDate(startDate);
-		task.setEndDate(endDate);
-		task.setImportanceLevel(3);
+		oldTask.setTaskName("something else");
+		oldTask.setTaskType(TASK_TYPE.TIMED);
+		oldTask.setStartDate(startDate);
+		oldTask.setEndDate(endDate);
+		oldTask.setImportanceLevel(3);
 	}
 
 	@Test
@@ -73,7 +73,7 @@ public class TaskListShopTest {
 		assertTrue(allTasks.addTaskToList(oldTask));
 		assertTrue(allTasks.addTaskToList(newTask));
 		allTasks.updateTask(newTask, oldTask);
-		assertEquals("something else", allTasks.getTaskByName("something else").getTaskName());
+		assertEquals(newTask, allTasks.getTaskByName("something else"));
 	}
 
 	@Test
