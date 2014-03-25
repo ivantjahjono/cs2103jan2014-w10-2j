@@ -38,73 +38,100 @@ public class TextParserTest {
 //	}
 
 	
+//	@Test
+//	public void testPriorityExtraction () {
+//		String command = "";
+//		Hashtable<KEYWORD_TYPE, String> tempHashTable = new Hashtable<KEYWORD_TYPE, String>();
+//		
+//		command = "Test string ***";
+//		System.out.println(TextParser.extractPriority(command, tempHashTable));
+//		
+//		command = "Test string ***   ";
+//		System.out.println(TextParser.extractPriority(command, tempHashTable));
+//		
+//		command = "Test string *";
+//		System.out.println(TextParser.extractPriority(command, tempHashTable));
+//		
+//		command = " **      ";
+//		System.out.println(TextParser.extractPriority(command, tempHashTable));
+//		
+//		command = "asdasd**      ";
+//		System.out.println(TextParser.extractPriority(command, tempHashTable));
+//		
+//		command = "**asdasd      ";
+//		System.out.println(TextParser.extractPriority(command, tempHashTable));
+//		
+//		command = " *";
+//		System.out.println(TextParser.extractPriority(command, tempHashTable));
+//	}
+	
 	@Test
-	public void testPriorityExtraction () {
+	public void testTimeAndDateExtraction () {
 		String command = "";
+		String timeKeyword = "by";
+		String dateKeyword = "on";
 		Hashtable<KEYWORD_TYPE, String> tempHashTable = new Hashtable<KEYWORD_TYPE, String>();
 		
-		command = "Test string ***";
-		System.out.println(TextParser.extractPriority(command, tempHashTable));
+		// Full working syntax
+		command = "by 1700 on 25/12/18";
+		assertEquals("", TextParser.extractDateAndTime(timeKeyword, command, tempHashTable));
 		
-		command = "Test string ***   ";
-		System.out.println(TextParser.extractPriority(command, tempHashTable));
+		command = "by 600   on 25/12/18";
+		assertEquals("", TextParser.extractDateAndTime(timeKeyword, command, tempHashTable));
 		
-		command = "Test string *";
-		System.out.println(TextParser.extractPriority(command, tempHashTable));
+		command = "by 1800 on 25/12/18     ";
+		assertEquals("", TextParser.extractDateAndTime(timeKeyword, command, tempHashTable));
 		
-		command = " **      ";
-		System.out.println(TextParser.extractPriority(command, tempHashTable));
+		command = "by  160 on 25/12/18";
+		assertEquals("", TextParser.extractDateAndTime(timeKeyword, command, tempHashTable));
 		
-		command = "asdasd**      ";
-		System.out.println(TextParser.extractPriority(command, tempHashTable));
-		
-		command = "**asdasd      ";
-		System.out.println(TextParser.extractPriority(command, tempHashTable));
-		
-		command = " *";
-		System.out.println(TextParser.extractPriority(command, tempHashTable));
+		command = "     by 160 on 25/12/18";
+		assertEquals("", TextParser.extractDateAndTime(timeKeyword, command, tempHashTable));
 	}
 	
-//	@Test
-//	public void testTimeExtraction () {
-//		String command = "";
-//		
-//		command = "by 1700";
-//		System.out.println(TextParser.extractTime(command, null));
-//		
-//		command = "by 600";
-//		System.out.println(TextParser.extractTime(command, null));
-//		
-//		command = "by 1800 ";
-//		System.out.println(TextParser.extractTime(command, null));
-//		
-//		command = "by  160";
-//		System.out.println(TextParser.extractTime(command, null));
-//		
+	@Test
+	public void testTimeExtraction () {
+		String command = "";
+		String keyword = "by";
+		Hashtable<KEYWORD_TYPE, String> tempHashTable = new Hashtable<KEYWORD_TYPE, String>();
+		
+		// Test normal format with spaces
+		command = "by 1700";
+		assertEquals("", TextParser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 600";
+		assertEquals("", TextParser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 1800 ";
+		assertEquals("", TextParser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by  160";
+		assertEquals("", TextParser.extractTimeOnly(keyword, command, tempHashTable));
+		
 //		command = "by 17:00";
-//		System.out.println(TextParser.extractTime(command, null));
+//		assertEquals("", TextParser.extractTimeOnly(keyword, command, tempHashTable));
 //		
 //		command = "by 6:00";
-//		System.out.println(TextParser.extractTime(command, null));
+//		assertEquals("", TextParser.extractTimeOnly(keyword, command, tempHashTable));
 //		
 //		command = "by 180:0 ";
-//		System.out.println(TextParser.extractTime(command, null));
+//		assertEquals("by 180:0 ", TextParser.extractTimeOnly(keyword, command, tempHashTable));
 //		
 //		command = "by 1:6000";
-//		System.out.println(TextParser.extractTime(command, null));
+//		assertEquals("by 1:6000", TextParser.extractTimeOnly(keyword, command, tempHashTable));
 //		
 //		command = "by :160";
-//		System.out.println(TextParser.extractTime(command, null));
+//		assertEquals("by :160", TextParser.extractTimeOnly(keyword, command, tempHashTable));
 //		
 //		command = "by :160pm";
-//		System.out.println(TextParser.extractTime(command, null));
+//		assertEquals("by :160pm", TextParser.extractTimeOnly(keyword, command, tempHashTable));
 //		
 //		command = "by 6:00ampm";
-//		System.out.println(TextParser.extractTime(command, null));
+//		assertEquals("by 6:00ampm", TextParser.extractTimeOnly(keyword, command, tempHashTable));
 //		
 //		command = "by    6:00pmpm ";
-//		System.out.println(TextParser.extractTime(command, null));
-//		
+//		assertEquals("by    6:00pmpm ", TextParser.extractTimeOnly(keyword, command, tempHashTable));
+		
 //		command = "on 12/06/06";
 //		System.out.println(TextParser.extractTime(command, null));
 //		
@@ -131,7 +158,7 @@ public class TextParserTest {
 //		
 //		command = "on  1.6.1906 ";
 //		System.out.println(TextParser.extractTime(command, null));
-//	}
+	}
 	
 //	@Test
 //	public void testParser() {
