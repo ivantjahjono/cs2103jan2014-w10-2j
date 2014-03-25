@@ -11,9 +11,9 @@ public class SystemTest {
 	TaskMasterKaboom controller;
 	
 	@Before
-	private void init () {
+	public void init () {
 		controller = TaskMasterKaboom.getInstance();
-		
+		controller.initialiseKaboom();
 	}
 	
 	@Test
@@ -22,6 +22,14 @@ public class SystemTest {
 		
 		// Process empty command
 		assertEquals("Invalid command!", controller.processCommand(command));
+		
+		// Process only whitespaces command
+		command = "       ";
+		assertEquals("Invalid command!", controller.processCommand(command));
+		
+		// Process only whitespaces command
+		command = "add";
+		assertEquals("Fail to add ", controller.processCommand(command));
 	}
 
 }
