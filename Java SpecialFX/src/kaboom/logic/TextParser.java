@@ -89,7 +89,7 @@ public class TextParser {
 	}
 	
 	public static String extractDateAndTime(String KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
-		String timeRegex1 = "\\d{3,4}";																// by 1700
+		String timeRegex1 = "\\s+\\d{3,4}";																// by 1700
 		String timeRegex2 = "\\d{1,2}[:]?\\d{2}";													// by 17:00 or 6:00
 		String timeRegex3 = "\\s+\\d{1,2}[:]?\\d{2}\\s*(am|pm)?(\\s|$)";							// by 6am or 1200pm
 		String dateRegex1 = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";					// 12/06/12 or 12.01.06 or 120106
