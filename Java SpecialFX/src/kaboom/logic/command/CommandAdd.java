@@ -19,7 +19,7 @@ public class CommandAdd extends Command {
 		
 		String commandFeedback = "";
 		
-		if (!taskInfo.getTaskName().equals("")) {
+		if (taskInfo != null && !taskInfo.getTaskName().equals("")) {
 			try {
 				if (taskListShop.addTaskToList(taskInfo)) {
 					commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
