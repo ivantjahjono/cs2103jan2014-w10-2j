@@ -1,4 +1,4 @@
-package kaboom.logic;
+package KaboomTest;
 
 import static org.junit.Assert.*;
 
@@ -7,6 +7,9 @@ import java.util.Queue;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import kaboom.logic.KEYWORD_TYPE;
+import kaboom.logic.TextParser;
 
 import org.junit.Test;
 
@@ -35,29 +38,33 @@ public class TextParserTest {
 //	}
 
 	
-//	@Test
-//	public void testPriorityExtraction () {
-//		String command = "";
-//		
-//		command = "Test string ***";
-//		System.out.println(TextParser.extractPriority2(command));
-//		
-//		command = "Test string ***   ";
-//		System.out.println(TextParser.extractPriority2(command));
-//		
-//		command = "Test string *";
-//		System.out.println(TextParser.extractPriority2(command));
-//		
-//		command = " **      ";
-//		System.out.println(TextParser.extractPriority2(command));
-//		
-//		command = "asdasd**      ";
-//		System.out.println(TextParser.extractPriority2(command));
-//		
-//		command = "**asdasd      ";
-//		System.out.println(TextParser.extractPriority2(command));
-//	}
-//	
+	@Test
+	public void testPriorityExtraction () {
+		String command = "";
+		Hashtable<KEYWORD_TYPE, String> tempHashTable = new Hashtable<KEYWORD_TYPE, String>();
+		
+		command = "Test string ***";
+		System.out.println(TextParser.extractPriority(command, tempHashTable));
+		
+		command = "Test string ***   ";
+		System.out.println(TextParser.extractPriority(command, tempHashTable));
+		
+		command = "Test string *";
+		System.out.println(TextParser.extractPriority(command, tempHashTable));
+		
+		command = " **      ";
+		System.out.println(TextParser.extractPriority(command, tempHashTable));
+		
+		command = "asdasd**      ";
+		System.out.println(TextParser.extractPriority(command, tempHashTable));
+		
+		command = "**asdasd      ";
+		System.out.println(TextParser.extractPriority(command, tempHashTable));
+		
+		command = " *";
+		System.out.println(TextParser.extractPriority(command, tempHashTable));
+	}
+	
 //	@Test
 //	public void testTimeExtraction () {
 //		String command = "";
@@ -126,26 +133,26 @@ public class TextParserTest {
 //		System.out.println(TextParser.extractTime(command, null));
 //	}
 	
-	@Test
-	public void testParser() {
-		//standard format
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world at 0700 on 14/05/12 by 0200 on 14/05/12 ***",keywordTable));
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world",keywordTable));
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world at 0700 on 14/05/12",keywordTable));
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12",keywordTable));
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world at 0700 on 14/05/12 ***",keywordTable));
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12 ***",keywordTable));
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world ***",keywordTable));
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12 at 0700 on 14/05/12  ***",keywordTable));
-	}
+//	@Test
+//	public void testParser() {
+//		//standard format
+//		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
+//		assertEquals("hello world", TextParser.parser("hello world at 0700 on 14/05/12 by 0200 on 14/05/12 ***",keywordTable));
+//		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
+//		assertEquals("hello world", TextParser.parser("hello world",keywordTable));
+//		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
+//		assertEquals("hello world", TextParser.parser("hello world at 0700 on 14/05/12",keywordTable));
+//		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
+//		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12",keywordTable));
+//		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
+//		assertEquals("hello world", TextParser.parser("hello world at 0700 on 14/05/12 ***",keywordTable));
+//		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
+//		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12 ***",keywordTable));
+//		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
+//		assertEquals("hello world", TextParser.parser("hello world ***",keywordTable));
+//		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
+//		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12 at 0700 on 14/05/12  ***",keywordTable));
+//	}
 	
 	
 //	@Test
