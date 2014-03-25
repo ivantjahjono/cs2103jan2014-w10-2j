@@ -112,7 +112,8 @@ public class Command {
 		String endDate = infoHashes.get(KEYWORD_TYPE.END_DATE);
 		String endTime = infoHashes.get(KEYWORD_TYPE.END_TIME);
 		//extra check to add 1 hour to start time if end time and date is null
-		if((startDate != null && startTime != null) || startTime != null) {
+		//
+		if((startDate != null && startTime != null) || (startTime != null)) {
 			if(endDate == null && endTime == null) {
 				endDate = startDate;
 				int endtime = Integer.parseInt(startTime) + 100;
@@ -142,7 +143,7 @@ public class Command {
 		String endTime = infoHashes.get(KEYWORD_TYPE.END_TIME);
 		
 		if (startDate == null && startTime == null) {
-			if ((endDate != null && endTime != null) || (endTime != null)) {
+			if ((endDate != null || endTime != null)) {
 				return TASK_TYPE.DEADLINE;
 			} else {
 				return TASK_TYPE.FLOATING;
