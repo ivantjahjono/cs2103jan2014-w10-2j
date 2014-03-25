@@ -21,6 +21,7 @@ public class TextParser {
 		return getFirstWord(userInput);
 	}
 	
+	
 	public static Hashtable<KEYWORD_TYPE, String> extractTaskInformation (String userInput) {
 		String taskInformation = removeFirstWord(userInput);
 		
@@ -50,6 +51,7 @@ public class TextParser {
 		String[] commandAndData = userInputSentence.trim().split("\\s+");
 		return commandAndData;
 	}
+	
 	
 	public static String parser(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
 		String userInputWithPriorityExtracted = extractPriority(userInputSentence,keywordTable);
@@ -88,8 +90,45 @@ public class TextParser {
 	    return userInputSentence;
 	}
 	
+	public static String extractTimeOnly(String KEYWORD_TIME, String userInputSentence ,Hashtable<KEYWORD_TYPE, String> keywordTable){
+		String timeRegex1 = "\\d{3,4}";																// by 1700
+		
+		
+		int startIndex = 0;
+		int endIndex = 0;
+		
+		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, KEYWORD_TIME+" "+timeRegex1);
+		
+		if (matchList.size() < 2) {
+			return userInputSentence;
+		}
+		
+		endIndex = matchList.get(matchList.size()-1);
+		startIndex = matchList.get(matchList.size()-2);
+		
+		String extractedTimeString = userInputSentence.substring(startIndex, endIndex).trim();
+		
+		userInputSentence = userInputSentence.replace(extractedTimeString, "");
+		
+		extractedTimeString = extractedTimeString.replace(KEYWORD_TIME, "").trim();
+		
+		switch(KEYWORD_TIME) {
+		case KEYWORD_ENDTIME: 
+			keywordTable.put(KEYWORD_TYPE.END_TIME, extractedTimeString);
+			break;
+		case KEYWORD_STARTTIME:
+			keywordTable.put(KEYWORD_TYPE.START_TIME, extractedTimeString);
+			break; 
+		}
+		
+		
+		
+		return userInputSentence;
+	}
+	
 	public static String extractDateAndTime(String KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
-		String timeRegex1 = "\\s+\\d{3,4}";																// by 1700
+		
+		String timeRegex1 = "\\d{3,4}";																// by 1700
 		String timeRegex2 = "\\d{1,2}[:]?\\d{2}";													// by 17:00 or 6:00
 		String timeRegex3 = "\\s+\\d{1,2}[:]?\\d{2}\\s*(am|pm)?(\\s|$)";							// by 6am or 1200pm
 		String dateRegex1 = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";					// 12/06/12 or 12.01.06 or 120106
@@ -97,14 +136,16 @@ public class TextParser {
 		int startIndex = 0;
 		int endIndex = 0;
 		
+		
 		//GET PATTERN FOR WHOLE START/END DATE AND TIME
 		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, KEYWORD_TIME+" "+timeRegex1+" "+KEYWORD_DATE+dateRegex1);
 		
 		//IF NOTHING RETURN
 		if (matchList.size() < 2) {
+			System.out.println("hell no");
 			return userInputSentence;
 		}
-
+		
 		//EXTRACT START/END DATE AND TIME
 		endIndex = matchList.get(matchList.size()-1);
 		startIndex = matchList.get(matchList.size()-2);
@@ -232,11 +273,23 @@ public class TextParser {
 			}
 			if(list.get(i) == KEYWORD_TYPE.END_TIME) {
 				ArrayList<Integer> matchList = new ArrayList<Integer>();
-				checkTimeAndDateInputFormat(KEYWORD_ENDTIME, userInput, matchList);
-				userInput = extractDateAndTime(KEYWORD_ENDTIME,userInput,taskInformationTable);
+				if(checkTimeAndDateInputFormat(KEYWORD_ENDTIME, userInput, matchList)){
+					userInput = extractDateAndTime(KEYWORD_ENDTIME,userInput,taskInformationTable);
+				}
+				else if(checkTimeOnlyInputFormat(KEYWORD_ENDTIME, userInput, matchList)){
+					userInput = extractTimeOnly(KEYWORD_ENDTIME,userInput,taskInformationTable);
+				}
+				
 			}
 			if(list.get(i) == KEYWORD_TYPE.START_TIME) {
-				userInput = extractDateAndTime(KEYWORD_STARTTIME,userInput,taskInformationTable);
+				//userInput = extractDateAndTime(KEYWORD_STARTTIME,userInput,taskInformationTable);
+				ArrayList<Integer> matchList = new ArrayList<Integer>();
+				if(checkTimeAndDateInputFormat(KEYWORD_STARTTIME, userInput, matchList)){
+					userInput = extractDateAndTime(KEYWORD_STARTTIME,userInput,taskInformationTable);
+				}
+				else if(checkTimeOnlyInputFormat(KEYWORD_STARTTIME, userInput, matchList)){
+					userInput = extractTimeOnly(KEYWORD_STARTTIME,userInput,taskInformationTable);
+				}
 			}
 			if(list.get(i) == KEYWORD_TYPE.MODIFIED_TASKNAME) {
 				userInput = extractModifiedTaskName(userInput,taskInformationTable);
@@ -252,10 +305,26 @@ public class TextParser {
 		return taskInformationTable;
 	}
 	
-	private static void checkTimeAndDateInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){
-		String timeRegex1 = "\\s+\\d{3,4}";																// by 1700
+	private static boolean checkTimeOnlyInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){
+		String timeRegex1 = "\\d{3,4}";																// by 1700
 		String timeRegex2 = "\\d{1,2}[:]?\\d{2}";													// by 17:00 or 6:00
 		String timeRegex3 = "\\s+\\d{1,2}[:]?\\d{2}\\s*(am|pm)?(\\s|$)";							// by 6am or 1200pm
+		
+		
+		//GET PATTERN FOR WHOLE START/END DATE AND TIME
+		matchVector = searchForPatternMatch(userInputSentence, KEYWORD_TIME+" "+timeRegex1);
+		
+		//IF NOTHING RETURN
+		if (matchVector.size() < 2) {
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	
+	private static boolean checkTimeAndDateInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){
+		String timeRegex1 = "\\d{3,4}";																// by 1700
 		String dateRegex1 = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";					// 12/06/12 or 12.01.06 or 120106
 		
 		//GET PATTERN FOR WHOLE START/END DATE AND TIME
@@ -263,7 +332,10 @@ public class TextParser {
 		
 		//IF NOTHING RETURN
 		if (matchVector.size() < 2) {
-			return;
+			return false;
+		}
+		else{
+			return true;
 		}
 	}
 	
