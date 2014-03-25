@@ -78,8 +78,17 @@ public class TaskMasterKaboom {
 	}
 	
 	public void updateTaskList () {
+		// TODO a hack around currently to update to current view mode
+		
 		Command updateCommand = new CommandUpdate();
 		Result updateResult = updateCommand.execute();
+		
+		// Get the latest view command and execute it
+		Command recentViewCommand = History.getInstance().getMostRecentCommandView();
+		
+		if (recentViewCommand != null) {
+			updateResult = recentViewCommand.execute();
+		}
 		
 		updateUi(updateResult);
 	}
