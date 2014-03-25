@@ -8,16 +8,16 @@ import kaboom.logic.TaskInfo;
 import kaboom.storage.TaskListShop;
 
 public class CommandView extends Command{
-	private static final String KEYWORD_FLOAT = "floating";
 	private static final String KEYWORD_RUNNING = "running";
 	private static final String KEYWORD_DEADLINE = "deadline";
 	private static final String KEYWORD_TIMED = "timed";
 	private static final String KEYWORD_SEARCH = "search";
+	private static final String KEYWORD_ALL = "all";
 	
-	private static final String MESSAGE_VIEW_FLOAT = "Floating Task Mode";
 	private static final String MESSAGE_VIEW_RUNNING = "Running Task Mode";
 	private static final String MESSAGE_VIEW_DEADLINE = "Deadline Task Mode";
 	private static final String MESSAGE_VIEW_TIMED = "Timed Task Mode";
+	private static final String MESSAGE_VIEW_ALL = "All Task Mode";
 	private static final String MESSAGE_VIEW_SEARCH = "Search Result Mode";
 	private static final String MESSAGE_VIEW_INVALID = "Invalid View Mode";
 	
@@ -34,12 +34,8 @@ public class CommandView extends Command{
 		Vector<TaskInfo> taskList = null;
 		
 		switch(viewType) {
-			case KEYWORD_FLOAT:
-				taskList = TaskListShop.getInstance().getFloatingTasks();
-				feedback = MESSAGE_VIEW_FLOAT;
-				break;
 			case KEYWORD_RUNNING:
-				taskList = TaskListShop.getInstance().getNonExpiredTasks();
+				taskList = TaskListShop.getInstance().getFloatingTasks();
 				feedback = MESSAGE_VIEW_RUNNING;
 				break;
 			case KEYWORD_DEADLINE:
@@ -50,6 +46,9 @@ public class CommandView extends Command{
 				taskList = TaskListShop.getInstance().getTimedTasks();
 				feedback = MESSAGE_VIEW_TIMED;
 				break;
+			case KEYWORD_ALL:
+				taskList = TaskListShop.getInstance().getAllTaskInList();
+				feedback = MESSAGE_VIEW_ALL;
 			case KEYWORD_SEARCH:
 				//UNDER CONSTRUCTION LOL
 				break;
