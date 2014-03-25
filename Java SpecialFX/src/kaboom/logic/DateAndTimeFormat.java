@@ -103,6 +103,18 @@ public class DateAndTimeFormat {
 				cal.set(Calendar.MINUTE, mins);
 			}
 		}
+		else if(!(theTime == null || theTime.length() != 3)){
+			String hourInString = theTime.substring(0,1);
+			String minsInString = theTime.substring(1,3);
+			
+			int hour = Integer.parseInt(hourInString);
+			int mins = Integer.parseInt(minsInString);
+			
+			if(isHourValid(hour) && isMinsValid(mins)) {
+				cal.set(Calendar.HOUR_OF_DAY, hour);
+				cal.set(Calendar.MINUTE, mins);
+			}
+		}
 		return cal;
 	}
 	
