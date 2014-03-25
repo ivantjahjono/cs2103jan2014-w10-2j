@@ -142,10 +142,14 @@ public class Command {
 		Calendar endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
 		taskInfo.setEndDate(endDateAndTime);
 		
-		viewType = infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
+		setViewType(infoHashes.get(KEYWORD_TYPE.VIEWTYPE));
 
 		TASK_TYPE tasktype = getTaskType(infoHashes);
 		taskInfo.setTaskType(tasktype);
+	}
+	
+	public void setViewType (String type) {
+		viewType = type;
 	}
 	
 	//test as a pair as now only accept as a pair
