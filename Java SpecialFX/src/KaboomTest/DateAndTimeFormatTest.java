@@ -26,9 +26,9 @@ public class DateAndTimeFormatTest {
 		assertEquals("4", datFormat.testMonthFromDateTranslator(cal, "130512"));
 		
 		//test year
-		assertEquals("10", datFormat.testYearFromDateTranslator(cal, "11/01/10")); 
-		assertEquals("9", datFormat.testYearFromDateTranslator(cal, "12.02.09"));
-		assertEquals("12", datFormat.testYearFromDateTranslator(cal, "130512"));
+		assertEquals("2010", datFormat.testYearFromDateTranslator(cal, "11/01/10")); 
+		assertEquals("2009", datFormat.testYearFromDateTranslator(cal, "12.02.09"));
+		assertEquals("2012", datFormat.testYearFromDateTranslator(cal, "130512"));
 	}
 	
 	@Test
