@@ -70,6 +70,7 @@ public class CommandModify extends Command {
 			}
 			if(preModifiedTaskInfo.getTaskType() == TASK_TYPE.DEADLINE){
 				if (toChangeStartTimeAndDate) {
+					temp.setTaskType (TASK_TYPE.TIMED);
 					temp.setStartDate (taskInfo.getStartDate());
 				}
 				if (toChangeEndTimeAndDate) {
