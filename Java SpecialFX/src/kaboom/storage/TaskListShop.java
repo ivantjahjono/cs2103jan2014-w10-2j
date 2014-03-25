@@ -52,6 +52,7 @@ public class TaskListShop {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (prevTaskInfo.equals(taskList.get(i))) {
 				indexOfTaskListToBeModified = i;
+				System.out.println("index="+indexOfTaskListToBeModified);
 			}
 		}
 

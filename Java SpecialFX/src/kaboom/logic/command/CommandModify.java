@@ -45,7 +45,7 @@ public class CommandModify extends Command {
 		
 		try {
 			//store TaskInfo to modify into temp taskinfo
-			TaskInfo temp = preModifiedTaskInfo;
+			TaskInfo temp = new TaskInfo(preModifiedTaskInfo);
 			//transfer all the new information over
 			if (toChangeTaskName) {
 					//bug at textparser get modified name where if time and date commands are keyed in will be saved as taskname
@@ -78,8 +78,9 @@ public class CommandModify extends Command {
 	}
 	
 	public String undo () {
-		//TODO Not done
-		return String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, "My Task");
+		System.out.println(preModifiedTaskInfo.getTaskName()+" > "+taskInfo.getTaskName());
+		TaskListShop.getInstance().updateTask(preModifiedTaskInfo, taskInfo);
+		return String.format(MESSAGE_COMMAND_UNDO_SUCCESS);
 	}
 	
 	private void initialiseKeywordList() {

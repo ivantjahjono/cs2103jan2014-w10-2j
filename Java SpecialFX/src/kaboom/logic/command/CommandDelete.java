@@ -33,9 +33,9 @@ public class CommandDelete extends Command {
 	
 	public String undo () {
 		if (taskListShop.addTaskToList(taskInfo)) {
-			return String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
+			return MESSAGE_COMMAND_UNDO_SUCCESS;
 		}
-		return String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
+		return MESSAGE_COMMAND_UNDO_FAIL;
 	}
 	
 	private void initialiseKeywordList() {

@@ -11,12 +11,13 @@ public class CommandUndo extends Command{
 	
 	public Result execute() {
 		Command commandToUndo = History.getInstance().getMostRecentCommand();
-		
+		String feedback = "";
 		if (commandToUndo == null) {
-			return createResult(taskListShop.getAllTaskInList(),MESSAGE_COMMAND_UNDO_FAIL);
+			feedback = MESSAGE_COMMAND_UNDO_FAIL;
+			return createResult(taskListShop.getAllTaskInList(),feedback);
 		}
 		
-		commandToUndo.undo();
-		return createResult(taskListShop.getAllTaskInList(),MESSAGE_COMMAND_UNDO_SUCCESS);
+		feedback = commandToUndo.undo();
+		return createResult(taskListShop.getAllTaskInList(),feedback);
 	}
 }

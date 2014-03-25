@@ -145,6 +145,8 @@ public class TextParserTest {
 		assertEquals("hello world", TextParser.parser("hello world ***",keywordTable));
 		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
 		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12 at 0700 on 14/05/12  ***",keywordTable));
+		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
+		assertEquals("hello world", TextParser.parser("hello world by 200 on 14/05/12 at 700 on 14/05/12  ***",keywordTable));
 	}
 	
 	
