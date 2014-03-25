@@ -57,6 +57,7 @@ public class TextParser {
 		String userInputWithStartDateAndTimeExtracted = extractDateAndTime(KEYWORD_STARTTIME,userInputWithEndDateAndTimeExtracted,keywordTable);
 		String userInputWithModifiedTaskNameExtracted = extractModifiedTaskName(userInputWithStartDateAndTimeExtracted,keywordTable);
 		String taskName = extractTaskName(userInputWithModifiedTaskNameExtracted,keywordTable);
+		System.out.println(keywordTable);
 		return taskName;
 	}
 	
@@ -130,7 +131,7 @@ public class TextParser {
 			keywordTable.put(KEYWORD_TYPE.END_DATE, extractedDateString);
 			break;
 		case KEYWORD_STARTTIME:
-			keywordTable.put(KEYWORD_TYPE.START_TIME, extractedDateString);
+			keywordTable.put(KEYWORD_TYPE.START_TIME, extractedTimeString);
 			keywordTable.put(KEYWORD_TYPE.START_DATE, extractedDateString);
 			break; 
 		}
@@ -179,12 +180,9 @@ public class TextParser {
 	    	
 	    	matchList.add(startIndex);
 	    	matchList.add(endIndex);
-	    	
-	    	System.out.println("Start: " + startIndex + " ,End: " + endIndex);
 	    } 
 	    
 	    if (matchList.size() == 0) {
-	    	System.out.println("No match found!");
 	    }
 	    
 	    return matchList;
@@ -220,6 +218,43 @@ public class TextParser {
 		}
 		
 		return queue;
+	}
+	
+	public static Hashtable<KEYWORD_TYPE, String> testExtractList(String userInput, Vector<KEYWORD_TYPE> list) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = getInfoFromList(userInput,list);
+		return taskInformationTable;
+	}
+	
+	private static Hashtable<KEYWORD_TYPE, String> getInfoFromList(String userInput, Vector<KEYWORD_TYPE> list) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = new Hashtable<KEYWORD_TYPE, String>();
+		for(int i=0; i<list.size(); i++) {
+			if(list.get(i) == KEYWORD_TYPE.PRIORITY) {
+				userInput = extractPriority(userInput,taskInformationTable);
+			}
+			if(list.get(i) == KEYWORD_TYPE.END_TIME) {
+				userInput = extractDateAndTime(KEYWORD_ENDTIME,userInput,taskInformationTable);
+			}
+			if(list.get(i) == KEYWORD_TYPE.START_TIME) {
+				userInput = extractDateAndTime(KEYWORD_STARTTIME,userInput,taskInformationTable);
+			}
+			if(list.get(i) == KEYWORD_TYPE.MODIFIED_TASKNAME) {
+				userInput = extractModifiedTaskName(userInput,taskInformationTable);
+			}
+			if(list.get(i) == KEYWORD_TYPE.TASKNAME) {
+				userInput = extractTaskName(userInput,taskInformationTable);
+			}
+			if(list.get(i) == KEYWORD_TYPE.VIEWTYPE) {
+				userInput = extractViewType(userInput,taskInformationTable);
+			}
+			
+		}
+		return taskInformationTable;
+	}
+	
+	private static String extractViewType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
+		String viewType = getFirstWord(userInput);
+		taskInformationTable.put(KEYWORD_TYPE.VIEWTYPE, viewType);
+		return removeFirstWord(userInput);
 	}
 	
 }
