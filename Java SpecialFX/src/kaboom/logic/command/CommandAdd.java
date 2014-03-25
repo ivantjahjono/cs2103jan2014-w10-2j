@@ -19,13 +19,18 @@ public class CommandAdd extends Command {
 		
 		String commandFeedback = "";
 		
-		try {
-			if (taskListShop.addTaskToList(taskInfo)) {
-				commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
-			} else {
-				commandFeedback = String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
+		if (!taskInfo.getTaskName().equals("")) {
+			try {
+				if (taskListShop.addTaskToList(taskInfo)) {
+					commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
+				} else {
+					commandFeedback = String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
+				}
+			} catch (Exception e) {
+				commandFeedback = "Added a file with no Task Name";
 			}
-		} catch (Exception e) {
+		}
+		else {
 			commandFeedback = "Added a file with no Task Name";
 		}
 		
