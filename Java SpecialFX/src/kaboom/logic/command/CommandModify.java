@@ -73,7 +73,7 @@ public class CommandModify extends Command {
 					temp.setTaskType (TASK_TYPE.TIMED);
 					temp.setStartDate (taskInfo.getStartDate());
 				}
-				if (toChangeEndTimeAndDate) {
+				if (!toNotChangeEndTimeAndDateFloatingCheck && toChangeEndTimeAndDate) {
 					temp.setEndDate (taskInfo.getEndDate());
 				}
 			}
