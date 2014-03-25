@@ -125,6 +125,19 @@ public class Command {
 				
 			}
 		}
+		//this condition is to make the end time one hour apart of current time
+		//and also maintain end date same as start date
+		else if(startDate != null && startTime == null){
+			if(endDate == null && endTime == null){
+				endDate = startDate;
+				//take current time and make it to 1 hour apart (* 100 is to be combined with minute and changed to string type later) 
+				int endhour = startDateAndTime.get(Calendar.HOUR_OF_DAY)*100 + 100;
+				int endminute = startDateAndTime.get(Calendar.MINUTE);
+				int endtime = endhour + endminute;
+				
+				endTime = String.format("%04d", endtime);
+			}
+		}
 		
 		Calendar endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
 		taskInfo.setEndDate(endDateAndTime);
