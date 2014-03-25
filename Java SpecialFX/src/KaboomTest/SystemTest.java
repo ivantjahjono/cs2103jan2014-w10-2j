@@ -29,7 +29,11 @@ public class SystemTest {
 		
 		// Process only whitespaces command
 		command = "add";
-		assertEquals("Fail to add ", controller.processCommand(command));
+		assertEquals("Added a file with no Task Name", controller.processCommand(command));
+		
+		// Process only whitespaces command
+		command = "add     ";
+		assertEquals("Added a file with no Task Name", controller.processCommand(command));
 	}
 
 }
