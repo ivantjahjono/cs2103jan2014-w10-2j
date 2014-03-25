@@ -1,8 +1,10 @@
-package kaboom.logic;
+package KaboomTest;
 
 import static org.junit.Assert.*;
 
 import java.util.Calendar;
+
+import kaboom.logic.DateAndTimeFormat;
 
 import org.junit.Test;
 
