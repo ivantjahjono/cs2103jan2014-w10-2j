@@ -2,6 +2,7 @@ package kaboom.storage;
 
 import java.util.Vector;
 
+import kaboom.logic.command.COMMAND_TYPE;
 import kaboom.logic.command.Command;
 
 
@@ -31,6 +32,21 @@ public class History {
 		Command recentCommand = previousCommandList.lastElement();
 		previousCommandList.remove(previousCommandList.size()-1);
 		return recentCommand;
+	}
+	
+	public Command getMostRecentCommandView () {
+		if (isCommandListEmpty()) {
+			return null;
+		}
+		
+		for (int i = previousCommandList.size()-1; i > 0; i--) {
+			Command currentCommand = previousCommandList.get(i);
+			if (currentCommand.getCommandType() == COMMAND_TYPE.VIEW) {
+				return currentCommand;
+			}
+		}
+		
+		return null;
 	}
 
 	private boolean isCommandListEmpty() {
