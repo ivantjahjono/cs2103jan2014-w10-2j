@@ -11,7 +11,7 @@ import java.util.Vector;
 
 public class Result {
 	Vector<TaskInfo> taskToDisplayList;
-	String feedback;
+	String			 feedback;
 	
 	boolean isGoToNextPage;
 	boolean isGoToPreviousPage;

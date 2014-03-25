@@ -21,11 +21,11 @@ public class CommandSearch extends Command {
 		assert TaskListShop.getInstance() != null;
 		String commandFeedback;
 		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
-		Vector<TaskInfo> allTasks = TaskListShop.getInstance().getAllTaskInList();
+		Vector<TaskInfo> allTasks = TaskListShop.getInstance().getNonExpiredTasks();
 		
 		String taskName = taskInfo.getTaskName();
 		if (!taskName.equals("")) {
-			//If taskName is not null, search by task name			
+			//If taskName is not empty, search by task name			
 			for (int i = 0; i < allTasks.size(); i++) {
 				TaskInfo singleTask = allTasks.get(i);
 				if (singleTask.getTaskName().contains(taskName)) {
@@ -43,7 +43,6 @@ public class CommandSearch extends Command {
 				}
 			}
 		}
-		//Search by end time? 
 		
 		commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
 
@@ -54,6 +53,6 @@ public class CommandSearch extends Command {
 		keywordList.clear();
 		keywordList.add(KEYWORD_TYPE.TASKNAME);
 		keywordList.add(KEYWORD_TYPE.END_DATE);
-		keywordList.add(KEYWORD_TYPE.END_TIME);  //Does this work?
+		keywordList.add(KEYWORD_TYPE.END_TIME);
 	}
 }

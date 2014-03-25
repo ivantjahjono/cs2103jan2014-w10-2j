@@ -138,7 +138,7 @@ public class TaskMasterKaboom {
 	//***********************************************
 	//			THE NEW CONTROLLER IS HERE	(LIVE)	*
 	//***********************************************
-	public boolean processCommand(String userInputSentence) {
+	public String processCommand(String userInputSentence) {
 		assert userInputSentence != null;
 	
 		Command commandToExecute = null;
@@ -177,7 +177,7 @@ public class TaskMasterKaboom {
 		// Save data to file
 		fileStorage.store();
 		
-		return true;
+		return commandResult.getFeedback();
 	}
 	
 
