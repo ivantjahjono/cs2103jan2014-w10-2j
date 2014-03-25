@@ -17,7 +17,7 @@ public class SystemTest {
 	}
 	
 	@Test
-	public void test() {
+	public void testAddAndDeleteCommands() {
 		String command = "";
 		
 		// Process empty command
@@ -28,12 +28,66 @@ public class SystemTest {
 		assertEquals("Invalid command!", controller.processCommand(command));
 		
 		// Process only whitespaces command
+		command = "      add ";
+		assertEquals("Added a file with no Task Name", controller.processCommand(command));
+		
+		// Add only command
 		command = "add";
 		assertEquals("Added a file with no Task Name", controller.processCommand(command));
 		
-		// Process only whitespaces command
+		// Add whitespaces command
 		command = "add     ";
 		assertEquals("Added a file with no Task Name", controller.processCommand(command));
+		
+		// Add whitespaces command
+		command = "add hello";
+		assertEquals("Successfully added hello", controller.processCommand(command));
+		
+		// Delete only command
+		command = "delete";
+		assertEquals(" fail to delete.", controller.processCommand(command));
+		
+		// Delete whitespaces command
+		command = "delete ";
+		assertEquals(" fail to delete.", controller.processCommand(command));
+		
+		// Delete whitespaces command
+		command = "delete hello";
+		assertEquals("hello deleted.", controller.processCommand(command));
+		
+		// Add whitespaces command
+		command = "add        hello";
+		assertEquals("Successfully added hello", controller.processCommand(command));
+		
+		// Delete whitespaces command
+		command = "delete     hello";
+		assertEquals("hello deleted.", controller.processCommand(command));	
+	}
+	
+	@Test
+	public void testViewCommands() {
+		String command = "";
+	
+		command = "view";
+		assertEquals("Invalid View Mode", controller.processCommand(command));
+		
+		command = "view     ";
+		assertEquals("Invalid View Mode", controller.processCommand(command));
+		
+		command = "view floating";
+		assertEquals("Floating Task Mode", controller.processCommand(command));
+		
+		command = "view running";
+		assertEquals("Running Task Mode", controller.processCommand(command));
+		
+		command = "view deadline";
+		assertEquals("Deadline Task Mode", controller.processCommand(command));
+		
+		command = "view timed";
+		assertEquals("Timed Task Mode", controller.processCommand(command));
+		
+		command = "view search";
+		assertEquals("", controller.processCommand(command));
 	}
 
 }
