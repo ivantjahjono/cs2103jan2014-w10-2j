@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Calendar;
 
+import kaboom.logic.TASK_TYPE;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandAdd;
@@ -28,6 +29,7 @@ public class CommandTest {
 		endDate.set(2014,1,5,8,0);
 		
 		task.setTaskName("Hello World");
+		task.setTaskType(TASK_TYPE.TIMED);
 		task.setStartDate(startDate);
 		task.setEndDate(endDate);
 		task.setImportanceLevel(3);
