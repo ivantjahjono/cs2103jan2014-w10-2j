@@ -230,28 +230,47 @@ public class TextParser {
 	
 	private static Hashtable<KEYWORD_TYPE, String> getInfoFromList(String userInput, Vector<KEYWORD_TYPE> list) {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = new Hashtable<KEYWORD_TYPE, String>();
+		
 		for(int i=0; i<list.size(); i++) {
-			if(list.get(i) == KEYWORD_TYPE.PRIORITY) {
-				userInput = extractPriority(userInput,taskInformationTable);
-			}
-			if(list.get(i) == KEYWORD_TYPE.END_TIME) {
-				userInput = extractDateAndTime(KEYWORD_ENDTIME,userInput,taskInformationTable);
-			}
-			if(list.get(i) == KEYWORD_TYPE.START_TIME) {
-				userInput = extractDateAndTime(KEYWORD_STARTTIME,userInput,taskInformationTable);
-			}
-			if(list.get(i) == KEYWORD_TYPE.MODIFIED_TASKNAME) {
-				userInput = extractModifiedTaskName(userInput,taskInformationTable);
-			}
-			if(list.get(i) == KEYWORD_TYPE.TASKNAME) {
-				userInput = extractTaskName(userInput,taskInformationTable);
-			}
-			if(list.get(i) == KEYWORD_TYPE.VIEWTYPE) {
-				userInput = extractViewType(userInput,taskInformationTable);
-			}
-			
+			KEYWORD_TYPE currentKeyword = list.get(i);
+			userInput = executeExtractionBasedOnKeywordType(userInput, taskInformationTable, currentKeyword);
 		}
+		
 		return taskInformationTable;
+	}
+
+	private static String executeExtractionBasedOnKeywordType(String userInput, 
+															Hashtable<KEYWORD_TYPE, String> taskInformationTable,
+															KEYWORD_TYPE currentKeyword) {
+		switch (currentKeyword) {
+			case PRIORITY:
+				userInput = extractPriority(userInput,taskInformationTable);
+				break;
+				
+			case END_TIME:
+				userInput = extractDateAndTime(KEYWORD_ENDTIME,userInput,taskInformationTable);
+				break;
+				
+			case START_TIME:
+				userInput = extractDateAndTime(KEYWORD_STARTTIME,userInput,taskInformationTable);
+				break;
+				
+			case MODIFIED_TASKNAME:
+				userInput = extractModifiedTaskName(userInput,taskInformationTable);
+				break;
+				
+			case TASKNAME:
+				userInput = extractTaskName(userInput,taskInformationTable);
+				break;
+				
+			case VIEWTYPE:
+				userInput = extractViewType(userInput,taskInformationTable);
+				break;
+			
+			default:
+				break;
+		}
+		return userInput;
 	}
 	
 	private static String extractViewType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
