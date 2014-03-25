@@ -59,15 +59,15 @@ public class CommandTest {
 		//Test Command feedback
 		assertEquals("Invalid View Mode", com.execute().getFeedback());
 		
-		task.setTaskName("floating");
+		com.setViewType("all");
 		com.setTaskInfo(task);
-		assertEquals("Floating Task Mode", com.execute().getFeedback());
+		assertEquals("All Task Mode", com.execute().getFeedback());
 		
-		task.setTaskName("deadline");
+		com.setViewType("deadline");
 		com.setTaskInfo(task);
 		assertEquals("Deadline Task Mode", com.execute().getFeedback());
 		
-		task.setTaskName("running");
+		com.setViewType("running");
 		com.setTaskInfo(task);
 		assertEquals("Running Task Mode", com.execute().getFeedback());
 	}
