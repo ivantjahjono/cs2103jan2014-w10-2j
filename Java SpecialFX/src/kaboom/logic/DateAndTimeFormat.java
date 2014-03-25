@@ -10,11 +10,6 @@ import java.util.Date;
 
 
 public class DateAndTimeFormat {
-
-	private static final int CORRECT_24HOUR_FORMAT_MIN = 100;
-	private static final int CORRECT_24HOUR_FORMAT_MAX = 2359;
-	
-	private static final int THE_24_HOUR_FORMAT_CODE = 1;
 	
 	private static final String dateFormat = "ddMMyy";		// 12/06/12 or 12.01.06 or 120106
 
