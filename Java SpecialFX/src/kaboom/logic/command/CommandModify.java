@@ -48,8 +48,8 @@ public class CommandModify extends Command {
 			TaskInfo temp = new TaskInfo(preModifiedTaskInfo);
 			//transfer all the new information over
 			if (toChangeTaskName) {
-					//bug at textparser get modified name where if time and date commands are keyed in will be saved as taskname
-					temp.setTaskName (taskInfo.getTaskName());
+				//bug at textparser get modified name where if time and date commands are keyed in will be saved as taskname
+				temp.setTaskName (taskInfo.getTaskName());
 			}
 			if (toChangeStartTimeAndDate) {
 				temp.setStartDate (taskInfo.getStartDate());
@@ -61,7 +61,10 @@ public class CommandModify extends Command {
 				temp.setImportanceLevel (taskInfo.getImportanceLevel());
 			}
 			//set task type (buggy due to calendar not null)
-			if(toChangeStartTimeAndDate || toChangeEndTimeAndDate) {
+			if(toChangeEndTimeAndDate) {
+				temp.setTaskType (TASK_TYPE.DEADLINE);
+			} 
+			if(toChangeStartTimeAndDate) {
 				temp.setTaskType (TASK_TYPE.TIMED);
 			}
 			//store and update in memory
@@ -119,6 +122,19 @@ public class CommandModify extends Command {
 		String startTime = infoHashes.get(KEYWORD_TYPE.START_TIME);
 		String endDate = infoHashes.get(KEYWORD_TYPE.END_DATE);
 		String endTime = infoHashes.get(KEYWORD_TYPE.END_TIME);
+		//extra check to add 1 hour to start time if end time and date is null
+		if(startDate != null && startTime != null) {
+			if(endDate == null && endTime == null) {
+				endDate = startDate;
+				int endtime = Integer.parseInt(startTime) + 100;
+				System.out.println(endtime);
+				if(endtime >= 2400) {
+					endtime -= 2400;
+				}
+				endTime = String.format("%04d", endtime);
+				
+			}
+		}
 		Calendar startDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(startDate, startTime);
 		Calendar endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
 		taskInfo.setStartDate(startDateAndTime);
