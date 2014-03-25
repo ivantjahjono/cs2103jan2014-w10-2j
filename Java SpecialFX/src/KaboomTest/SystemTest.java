@@ -74,8 +74,8 @@ public class SystemTest {
 		command = "view     ";
 		assertEquals("Invalid View Mode", controller.processCommand(command));
 		
-		command = "view floating";
-		assertEquals("Floating Task Mode", controller.processCommand(command));
+		command = "view all";
+		assertEquals("All Task Mode", controller.processCommand(command));
 		
 		command = "view running";
 		assertEquals("Running Task Mode", controller.processCommand(command));
