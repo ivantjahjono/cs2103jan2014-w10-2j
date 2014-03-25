@@ -61,11 +61,18 @@ public class CommandModify extends Command {
 				temp.setImportanceLevel (taskInfo.getImportanceLevel());
 			}
 			//set task type (buggy due to calendar not null)
-			if(toChangeEndTimeAndDate) {
-				temp.setTaskType (TASK_TYPE.DEADLINE);
-			} 
-			if(toChangeStartTimeAndDate) {
-				temp.setTaskType (TASK_TYPE.TIMED);
+			if(preModifiedTaskInfo.getTaskType() == TASK_TYPE.FLOATING){
+				if(toChangeEndTimeAndDate) {
+					temp.setTaskType (TASK_TYPE.DEADLINE);
+				} 
+				if(toChangeStartTimeAndDate) {
+					temp.setTaskType (TASK_TYPE.TIMED);
+				}
+			}
+			if(preModifiedTaskInfo.getTaskType() == TASK_TYPE.DEADLINE){
+				if(toChangeStartTimeAndDate) {
+					temp.setTaskType (TASK_TYPE.TIMED);
+				}
 			}
 			//store and update in memory
 			taskInfo = temp;
