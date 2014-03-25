@@ -176,7 +176,6 @@ public class TextParser {
 		
 		//IF NOTHING RETURN
 		if (matchList.size() < 2) {
-			System.out.println("hell no");
 			return userInputSentence;
 		}
 		
@@ -356,7 +355,6 @@ public class TextParser {
 			return false;
 		}
 		else{
-			System.out.println("it is date only");
 			return true;
 		}
 	}
