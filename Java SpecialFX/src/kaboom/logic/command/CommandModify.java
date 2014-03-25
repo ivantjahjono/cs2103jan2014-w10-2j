@@ -19,6 +19,7 @@ public class CommandModify extends Command {
 	boolean toChangeEndTimeAndDate;
 	boolean toChangeTaskName;
 	boolean toChangePriority;
+	boolean toNotChangeEndTimeAndDateFloatingCheck;
 	
 	public CommandModify () {
 		commandType = COMMAND_TYPE.MODIFY;
@@ -27,6 +28,7 @@ public class CommandModify extends Command {
 		toChangeTaskName = false;
 		toChangeStartTimeAndDate = false;
 		toChangeEndTimeAndDate= false;
+		toNotChangeEndTimeAndDateFloatingCheck = false;
 	}
 
 	public Result execute() {
@@ -51,12 +53,6 @@ public class CommandModify extends Command {
 				//bug at textparser get modified name where if time and date commands are keyed in will be saved as taskname
 				temp.setTaskName (taskInfo.getTaskName());
 			}
-			if (toChangeStartTimeAndDate) {
-				temp.setStartDate (taskInfo.getStartDate());
-			}
-			if (toChangeEndTimeAndDate) {
-				temp.setEndDate (taskInfo.getEndDate());
-			}
 			if (toChangePriority) {
 				temp.setImportanceLevel (taskInfo.getImportanceLevel());
 			}
@@ -64,16 +60,31 @@ public class CommandModify extends Command {
 			if(preModifiedTaskInfo.getTaskType() == TASK_TYPE.FLOATING){
 				if(toChangeEndTimeAndDate) {
 					temp.setTaskType (TASK_TYPE.DEADLINE);
+					temp.setEndDate (taskInfo.getEndDate());
 				} 
 				if(toChangeStartTimeAndDate) {
 					temp.setTaskType (TASK_TYPE.TIMED);
+					temp.setStartDate (taskInfo.getStartDate());
+					temp.setEndDate (taskInfo.getEndDate());
 				}
 			}
 			if(preModifiedTaskInfo.getTaskType() == TASK_TYPE.DEADLINE){
-				if(toChangeStartTimeAndDate) {
-					temp.setTaskType (TASK_TYPE.TIMED);
+				if (toChangeStartTimeAndDate) {
+					temp.setStartDate (taskInfo.getStartDate());
+				}
+				if (toChangeEndTimeAndDate) {
+					temp.setEndDate (taskInfo.getEndDate());
 				}
 			}
+			if(preModifiedTaskInfo.getTaskType() == TASK_TYPE.TIMED){
+				if(toChangeStartTimeAndDate) {
+					temp.setStartDate (taskInfo.getStartDate());
+				}
+				if (!toNotChangeEndTimeAndDateFloatingCheck && toChangeEndTimeAndDate) {
+					temp.setEndDate (taskInfo.getEndDate());
+				}
+			}
+			
 			//store and update in memory
 			taskInfo = temp;
 			TaskListShop.getInstance().updateTask(taskInfo, preModifiedTaskInfo);
@@ -139,7 +150,7 @@ public class CommandModify extends Command {
 					endtime -= 2400;
 				}
 				endTime = String.format("%04d", endtime);
-				
+				toNotChangeEndTimeAndDateFloatingCheck = true;
 			}
 		}
 		Calendar startDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(startDate, startTime);
