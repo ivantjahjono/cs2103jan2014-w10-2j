@@ -155,7 +155,9 @@ public class TextParser {
 			String modifyTaskName = userInputSentence.substring(startIndex, endIndex);
 			userInputSentence = userInputSentence.replace(modifyTaskName, "");
 			modifyTaskName = modifyTaskName.replace(KEYWORD_MODIFY, "").trim();
-			keywordTable.put(KEYWORD_TYPE.MODIFIED_TASKNAME, modifyTaskName);
+			if(!modifyTaskName.isEmpty()) {
+				keywordTable.put(KEYWORD_TYPE.MODIFIED_TASKNAME, modifyTaskName);
+			}
 		}
 		return userInputSentence;
 	}
@@ -220,6 +222,7 @@ public class TextParser {
 		return queue;
 	}
 	
+	//TEST EXTRACT FOR NEW CONTROLLER
 	public static Hashtable<KEYWORD_TYPE, String> testExtractList(String userInput, Vector<KEYWORD_TYPE> list) {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = getInfoFromList(userInput,list);
 		return taskInformationTable;

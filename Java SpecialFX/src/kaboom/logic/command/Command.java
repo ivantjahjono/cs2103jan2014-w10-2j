@@ -130,7 +130,6 @@ public class Command {
 		
 		viewType = infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
 
-		//HARDCODE TASK TYPE
 		TASK_TYPE tasktype = getTaskType(infoHashes);
 		taskInfo.setTaskType(tasktype);
 	}
