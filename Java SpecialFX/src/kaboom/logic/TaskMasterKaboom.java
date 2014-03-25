@@ -26,7 +26,6 @@ public class TaskMasterKaboom {
 	
 	private static DisplayData guiDisplayData;
 	private static Storage fileStorage;
-	private static History historyofCommands = new History();
 
 	
 	static TaskMasterKaboom instance;
@@ -95,19 +94,64 @@ public class TaskMasterKaboom {
 	 * 
 	 * Future improvement: Return task class instead.
 	 */
+//	public boolean processCommand(String userInputSentence) {
+//		assert userInputSentence != null;
+//		
+//		Command commandToExecute = null;
+//		Result commandResult = null;
+////		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
+////		String commandParametersString = TextParser.removeFirstWord(userInputSentence);
+//		
+//		String commandKeyword = TextParser.getCommandKeyWord(userInputSentence);
+//		commandToExecute = CommandFactory.createCommand(commandKeyword);		
+//		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.extractTaskInformation(userInputSentence);
+//		
+//		updateCommandInfoBasedOnTaskInformationTable(commandToExecute, taskInformationTable);
+//		
+//		try {
+//			commandResult = commandToExecute.execute();
+//		} catch (Exception e) {
+//			commandResult = new Result();
+//			commandResult.setFeedback("Error executing command! Please inform your administrator!");
+//		}
+//		
+//		updateUi(commandResult);
+//		
+//		// Add recent command to History list
+//		addToCommandHistory(new Command());
+//		
+//		// Save data to file
+//		fileStorage.store();
+//		
+//		return true;
+//	}
+	
+	//***********************************************
+	//			THE NEW CONTROLLER IS HERE	(LIVE)	*
+	//***********************************************
 	public boolean processCommand(String userInputSentence) {
 		assert userInputSentence != null;
-		
+	
 		Command commandToExecute = null;
 		Result commandResult = null;
-//		COMMAND_TYPE commandType = determineCommandType(userInputSentence);
-//		String commandParametersString = TextParser.removeFirstWord(userInputSentence);
 		
+		//1. Get Command 
 		String commandKeyword = TextParser.getCommandKeyWord(userInputSentence);
-		commandToExecute = CommandFactory.createCommand(commandKeyword);		
-		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.extractTaskInformation(userInputSentence);
 		
-		updateCommandInfoBasedOnTaskInformationTable(commandToExecute, taskInformationTable);
+		//2. Create Command
+		commandToExecute = CommandFactory.createCommand(commandKeyword);		
+		
+		//3. Remove Command Word From UserInput
+		userInputSentence = TextParser.removeFirstWord(userInputSentence);
+		
+		//4. Get CommandKeywordList
+		Vector<KEYWORD_TYPE> commandKeywordList = commandToExecute.getKeywordList();
+		
+		//5. Extract Task Info Base on Keywords
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = extractTaskInfo(userInputSentence, commandKeywordList);
+		
+		//6. Command stores TaskInfo
+		commandToExecute.storeTaskInfo(taskInformationTable);
 		
 		try {
 			commandResult = commandToExecute.execute();
@@ -119,7 +163,7 @@ public class TaskMasterKaboom {
 		updateUi(commandResult);
 		
 		// Add recent command to History list
-		addToCommandHistory(new Command());
+		addToCommandHistory(commandToExecute);
 		
 		// Save data to file
 		fileStorage.store();
@@ -133,8 +177,9 @@ public class TaskMasterKaboom {
 	}
 	
 	private void addToCommandHistory(Command command) {
-		if (command.getCommandType() != COMMAND_TYPE.INVALID) {
-			historyofCommands.addToRecentCommands(command);
+		if (command.getCommandType() != COMMAND_TYPE.INVALID && command.getCommandType() != COMMAND_TYPE.UNDO && 
+				command.getCommandType() != COMMAND_TYPE.SEARCH) {
+			History.getInstance().addToRecentCommands(command);
 		}
 	}
 
@@ -185,9 +230,10 @@ public class TaskMasterKaboom {
 
 	//This function calls the text parser to get the information that is expected in the keyword list
 	//and returns it to the caller
-	private Hashtable<KEYWORD_TYPE, String> extractTaskInfo(Vector<KEYWORD_TYPE> expectedKeywordList) {
+	private static Hashtable<KEYWORD_TYPE, String> extractTaskInfo(String userInputSentence, Vector<KEYWORD_TYPE> expectedKeywordList) {
 		//TODO
-		return null;
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.testExtractList(userInputSentence,expectedKeywordList);
+		return taskInformationTable;
 	}
 	
 	private TaskInfo getTaskInfoToModifyTaskInformationTable(Hashtable<KEYWORD_TYPE, String> taskInformationTable) {

@@ -1,5 +1,6 @@
 package kaboom.logic.command;
 
+import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.storage.TaskListShop;
 
@@ -9,6 +10,7 @@ public class CommandAdd extends Command {
 
 	public CommandAdd () {
 		commandType = COMMAND_TYPE.ADD;
+		initialiseKeywordList();
 	}
 
 	public Result execute() {
@@ -40,5 +42,15 @@ public class CommandAdd extends Command {
 		} else {
 			return MESSAGE_COMMAND_UNDO_FAIL;
 		}
+	}
+	
+	private void initialiseKeywordList() {
+		keywordList.clear();
+		keywordList.add(KEYWORD_TYPE.PRIORITY);
+		keywordList.add(KEYWORD_TYPE.END_TIME);
+		keywordList.add(KEYWORD_TYPE.END_DATE);
+		keywordList.add(KEYWORD_TYPE.START_TIME);
+		keywordList.add(KEYWORD_TYPE.START_DATE);
+		keywordList.add(KEYWORD_TYPE.TASKNAME);
 	}
 }
