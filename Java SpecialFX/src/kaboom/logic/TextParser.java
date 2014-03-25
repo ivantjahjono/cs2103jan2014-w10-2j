@@ -15,6 +15,9 @@ public class TextParser {
 	private static final String KEYWORD_DATE = "on";
 	private static final String KEYWORD_MODIFY = ">";
 	
+	private static final String TIME_REGEX = "\\s+\\d{3,4}(\\s|$)";
+	private static final String DATE_REGEX = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";
+	
 	
 	//******************** Method Calls By Controller ******************************************
 	public static String getCommandKeyWord (String userInput) {
@@ -165,7 +168,7 @@ public class TextParser {
 		String timeRegex3 = "\\s+\\d{1,2}[:]?\\d{2}\\s*(am|pm)?(\\s|$)";							// by 6am or 1200pm
 		String dateRegex1 = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";					// 12/06/12 or 12.01.06 or 120106
 		
-		String timeAndDateRegex = KEYWORD_TIME+timeRegex1+"\\s*"+KEYWORD_DATE+dateRegex1;
+		String timeAndDateRegex = KEYWORD_TIME+TIME_REGEX+"\\s*"+KEYWORD_DATE+DATE_REGEX;
 		
 		int startIndex = 0;
 		int endIndex = 0;
@@ -345,10 +348,7 @@ public class TextParser {
 	}
 	
 	private static boolean checkDateOnlyInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){
-		String dateRegex1 = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";					// 12/06/12 or 12.01.06 or 120106
-		
-		//GET PATTERN FOR WHOLE START/END DATE AND TIME
-		matchVector = searchForPatternMatch(userInputSentence, KEYWORD_TIME+dateRegex1);
+		matchVector = searchForPatternMatch(userInputSentence, KEYWORD_TIME+DATE_REGEX);
 		
 		//IF NOTHING RETURN
 		if (matchVector.size() < 2) {
@@ -359,14 +359,9 @@ public class TextParser {
 		}
 	}
 	
-	private static boolean checkTimeOnlyInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){
-		String timeRegex1 = "\\s+\\d{3,4}";																// by 1700
-		String timeRegex2 = "\\d{1,2}[:]?\\d{2}";													// by 17:00 or 6:00
-		String timeRegex3 = "\\s+\\d{1,2}[:]?\\d{2}\\s*(am|pm)?(\\s|$)";							// by 6am or 1200pm
-		
-		
+	private static boolean checkTimeOnlyInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){		
 		//GET PATTERN FOR WHOLE START/END DATE AND TIME
-		matchVector = searchForPatternMatch(userInputSentence, KEYWORD_TIME+timeRegex1);
+		matchVector = searchForPatternMatch(userInputSentence, KEYWORD_TIME+TIME_REGEX);
 		
 		//IF NOTHING RETURN
 		if (matchVector.size() < 2) {
@@ -377,12 +372,11 @@ public class TextParser {
 		}
 	}
 	
-	private static boolean checkTimeAndDateInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){
-		String timeRegex1 = "\\s+\\d{3,4}";																// by 1700
-		String dateRegex1 = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";					// 12/06/12 or 12.01.06 or 120106
+	public static boolean checkTimeAndDateInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){	
+		String timeAndDateRegex = KEYWORD_TIME+TIME_REGEX+"\\s*"+KEYWORD_DATE+DATE_REGEX;
 		
 		//GET PATTERN FOR WHOLE START/END DATE AND TIME
-		matchVector = searchForPatternMatch(userInputSentence, KEYWORD_TIME+timeRegex1+" "+KEYWORD_DATE+dateRegex1);
+		matchVector = searchForPatternMatch(userInputSentence, timeAndDateRegex);
 		
 		//IF NOTHING RETURN
 		if (matchVector.size() < 2) {
