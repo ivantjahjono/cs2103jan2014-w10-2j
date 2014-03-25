@@ -1,10 +1,13 @@
-package kaboom.logic.command;
+package KaboomTest;
 
 import static org.junit.Assert.*;
 
 import java.util.Calendar;
 
 import kaboom.logic.TaskInfo;
+import kaboom.logic.command.Command;
+import kaboom.logic.command.CommandAdd;
+import kaboom.logic.command.CommandView;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -55,11 +58,17 @@ public class CommandTest {
 
 		//Test Command feedback
 		assertEquals("Invalid View Mode", com.execute().getFeedback());
+		
 		task.setTaskName("floating");
+		com.setTaskInfo(task);
 		assertEquals("Floating Task Mode", com.execute().getFeedback());
+		
 		task.setTaskName("deadline");
+		com.setTaskInfo(task);
 		assertEquals("Deadline Task Mode", com.execute().getFeedback());
+		
 		task.setTaskName("running");
+		com.setTaskInfo(task);
 		assertEquals("Running Task Mode", com.execute().getFeedback());
 	}
 	

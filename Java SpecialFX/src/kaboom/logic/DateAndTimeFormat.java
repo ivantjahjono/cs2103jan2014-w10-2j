@@ -10,11 +10,6 @@ import java.util.Date;
 
 
 public class DateAndTimeFormat {
-
-	private static final int CORRECT_24HOUR_FORMAT_MIN = 100;
-	private static final int CORRECT_24HOUR_FORMAT_MAX = 2359;
-	
-	private static final int THE_24_HOUR_FORMAT_CODE = 1;
 	
 	private static final String dateFormat = "ddMMyy";		// 12/06/12 or 12.01.06 or 120106
 
@@ -99,6 +94,18 @@ public class DateAndTimeFormat {
 		if (!(theTime == null || theTime.length() != 4)) {
 			String hourInString = theTime.substring(0,2);
 			String minsInString = theTime.substring(2,4);
+			
+			int hour = Integer.parseInt(hourInString);
+			int mins = Integer.parseInt(minsInString);
+			
+			if(isHourValid(hour) && isMinsValid(mins)) {
+				cal.set(Calendar.HOUR_OF_DAY, hour);
+				cal.set(Calendar.MINUTE, mins);
+			}
+		}
+		else if(!(theTime == null || theTime.length() != 3)){
+			String hourInString = theTime.substring(0,1);
+			String minsInString = theTime.substring(1,3);
 			
 			int hour = Integer.parseInt(hourInString);
 			int mins = Integer.parseInt(minsInString);

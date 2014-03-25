@@ -112,7 +112,8 @@ public class Command {
 		String endDate = infoHashes.get(KEYWORD_TYPE.END_DATE);
 		String endTime = infoHashes.get(KEYWORD_TYPE.END_TIME);
 		//extra check to add 1 hour to start time if end time and date is null
-		if(startDate != null && startTime != null) {
+		//
+		if((startDate != null && startTime != null) || (startTime != null)) {
 			if(endDate == null && endTime == null) {
 				endDate = startDate;
 				int endtime = Integer.parseInt(startTime) + 100;
@@ -124,6 +125,19 @@ public class Command {
 				
 			}
 		}
+		//this condition is to make the end time one hour apart of current time
+		//and also maintain end date same as start date
+		else if(startDate != null && startTime == null){
+			if(endDate == null && endTime == null){
+				endDate = startDate;
+				//take current time and make it to 1 hour apart (* 100 is to be combined with minute and changed to string type later) 
+				int endhour = startDateAndTime.get(Calendar.HOUR_OF_DAY)*100 + 100;
+				int endminute = startDateAndTime.get(Calendar.MINUTE);
+				int endtime = endhour + endminute;
+				
+				endTime = String.format("%04d", endtime);
+			}
+		}
 		
 		Calendar endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
 		taskInfo.setEndDate(endDateAndTime);
@@ -133,6 +147,7 @@ public class Command {
 		TASK_TYPE tasktype = getTaskType(infoHashes);
 		taskInfo.setTaskType(tasktype);
 	}
+	
 	//test as a pair as now only accept as a pair
 	private TASK_TYPE getTaskType(Hashtable<KEYWORD_TYPE, String> infoHashes) {
 		String startDate = infoHashes.get(KEYWORD_TYPE.START_DATE);
@@ -141,7 +156,7 @@ public class Command {
 		String endTime = infoHashes.get(KEYWORD_TYPE.END_TIME);
 		
 		if (startDate == null && startTime == null) {
-			if (endDate != null && endTime != null) {
+			if ((endDate != null || endTime != null)) {
 				return TASK_TYPE.DEADLINE;
 			} else {
 				return TASK_TYPE.FLOATING;
