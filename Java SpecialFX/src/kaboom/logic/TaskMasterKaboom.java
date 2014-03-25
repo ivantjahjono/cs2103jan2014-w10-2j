@@ -187,7 +187,7 @@ public class TaskMasterKaboom {
 	
 	private void addToCommandHistory(Command command) {
 		if (command.getCommandType() != COMMAND_TYPE.INVALID && command.getCommandType() != COMMAND_TYPE.UNDO && 
-				command.getCommandType() != COMMAND_TYPE.SEARCH) {
+				command.getCommandType() != COMMAND_TYPE.SEARCH && command.getCommandType() != COMMAND_TYPE.VIEW) {
 			History.getInstance().addToRecentCommands(command);
 		}
 	}
