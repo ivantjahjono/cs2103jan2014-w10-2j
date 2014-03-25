@@ -69,22 +69,21 @@ public class TextParser {
 	    int endIndex = 0;
 	    int priorityLevel = 0;
 	    
-	    Matcher matcher = asteriskPattern.matcher(userInputSentence);
-	    if (matcher.find()) {
-	    	startIndex = matcher.start();
-	    	endIndex = matcher.end();
-	    }
+		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, priorityRegex);
 	    
-	    if (endIndex == 0) {
-	    	return userInputSentence;
-	    }
+		if (matchList.isEmpty()) {
+			return userInputSentence;
+		}
+		
+		endIndex = matchList.get(matchList.size()-1);
+		startIndex = matchList.get(matchList.size()-2);
 	    
 	    // Extract the priority
 	    String extractedPriorityString = userInputSentence.substring(startIndex, endIndex).trim();
-	    userInputSentence = userInputSentence.substring(0, startIndex);
-	    
 	    priorityLevel = extractedPriorityString.length();
 	    keywordTable.put(KEYWORD_TYPE.PRIORITY, ""+priorityLevel);
+	    
+	    userInputSentence = userInputSentence.replace(extractedPriorityString, "");
 	    
 	    return userInputSentence;
 	}
