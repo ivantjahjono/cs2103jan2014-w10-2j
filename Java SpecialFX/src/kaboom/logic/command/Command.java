@@ -130,10 +130,10 @@ public class Command {
 		
 		viewType = infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
 
-		//HARDCODE TASK TYPE
 		TASK_TYPE tasktype = getTaskType(infoHashes);
 		taskInfo.setTaskType(tasktype);
 	}
+	
 	//test as a pair as now only accept as a pair
 	private TASK_TYPE getTaskType(Hashtable<KEYWORD_TYPE, String> infoHashes) {
 		String startDate = infoHashes.get(KEYWORD_TYPE.START_DATE);
