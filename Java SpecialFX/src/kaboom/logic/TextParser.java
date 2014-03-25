@@ -126,6 +126,40 @@ public class TextParser {
 		return userInputSentence;
 	}
 	
+	public static String extractDateOnly(String KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable){
+		String dateRegex1 = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";																// by 1700
+		
+		
+		int startIndex = 0;
+		int endIndex = 0;
+		
+		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, KEYWORD_TIME+dateRegex1);
+		
+		if (matchList.size() < 2) {
+			return userInputSentence;
+		}
+		
+		endIndex = matchList.get(matchList.size()-1);
+		startIndex = matchList.get(matchList.size()-2);
+		
+		String extractedDateString = userInputSentence.substring(startIndex, endIndex).trim();
+		
+		userInputSentence = userInputSentence.replace(extractedDateString, "");
+		
+		extractedDateString = extractedDateString.replace(KEYWORD_TIME, "").trim();
+		
+		switch(KEYWORD_TIME) {
+		case KEYWORD_ENDTIME: 
+			keywordTable.put(KEYWORD_TYPE.END_DATE, extractedDateString);
+			break;
+		case KEYWORD_STARTTIME:
+			keywordTable.put(KEYWORD_TYPE.START_DATE, extractedDateString);
+			break; 
+		}
+		
+		return userInputSentence;
+	}
+	
 	public static String extractDateAndTime(String KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
 		
 		String timeRegex1 = "\\s+\\d{3,4}";																// by 1700
@@ -159,7 +193,7 @@ public class TextParser {
 		extractedDateString = extractedDateString.replace(KEYWORD_DATE, "").trim();
 		
 		//GET TIME
-		matchList = searchForPatternMatch(extractedDateAndTimeString, KEYWORD_TIME+" "+timeRegex1);
+		matchList = searchForPatternMatch(extractedDateAndTimeString, KEYWORD_TIME+timeRegex1);
 		endIndex = matchList.get(matchList.size()-1);
 		startIndex = matchList.get(matchList.size()-2);
 		String extractedTimeString = extractedDateAndTimeString.substring(startIndex, endIndex).trim();
@@ -279,6 +313,9 @@ public class TextParser {
 				else if(checkTimeOnlyInputFormat(KEYWORD_ENDTIME, userInput, matchList)){
 					userInput = extractTimeOnly(KEYWORD_ENDTIME,userInput,taskInformationTable);
 				}
+				else if(checkDateOnlyInputFormat(KEYWORD_ENDTIME, userInput, matchList)){
+					userInput = extractDateOnly(KEYWORD_ENDTIME,userInput,taskInformationTable);
+				}
 				
 			}
 			if(list.get(i) == KEYWORD_TYPE.START_TIME) {
@@ -289,6 +326,9 @@ public class TextParser {
 				}
 				else if(checkTimeOnlyInputFormat(KEYWORD_STARTTIME, userInput, matchList)){
 					userInput = extractTimeOnly(KEYWORD_STARTTIME,userInput,taskInformationTable);
+				}
+				else if(checkDateOnlyInputFormat(KEYWORD_STARTTIME, userInput, matchList)){
+					userInput = extractDateOnly(KEYWORD_STARTTIME,userInput,taskInformationTable);
 				}
 			}
 			if(list.get(i) == KEYWORD_TYPE.MODIFIED_TASKNAME) {
@@ -303,6 +343,22 @@ public class TextParser {
 			
 		}
 		return taskInformationTable;
+	}
+	
+	private static boolean checkDateOnlyInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){
+		String dateRegex1 = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";					// 12/06/12 or 12.01.06 or 120106
+		
+		//GET PATTERN FOR WHOLE START/END DATE AND TIME
+		matchVector = searchForPatternMatch(userInputSentence, KEYWORD_TIME+dateRegex1);
+		
+		//IF NOTHING RETURN
+		if (matchVector.size() < 2) {
+			return false;
+		}
+		else{
+			System.out.println("it is date only");
+			return true;
+		}
 	}
 	
 	private static boolean checkTimeOnlyInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){
