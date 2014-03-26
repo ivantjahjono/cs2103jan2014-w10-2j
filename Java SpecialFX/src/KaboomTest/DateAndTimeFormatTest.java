@@ -41,7 +41,14 @@ public class DateAndTimeFormatTest {
 		//test min
 		assertEquals("0", datFormat.testMinFromTimeTranslator(cal, "1200"));
 		assertEquals("11", datFormat.testMinFromTimeTranslator(cal, "0011"));
+		
+		
+		//boundary
+		//assertEquals("00", datFormat.testMinFromTimeTranslator(cal, "2400"));
 		assertEquals("59", datFormat.testMinFromTimeTranslator(cal, "2359"));
+		assertEquals("59", datFormat.testMinFromTimeTranslator(cal, "0000"));
+		assertEquals("59", datFormat.testMinFromTimeTranslator(cal, "0001"));
+		
 	}
 	
 
