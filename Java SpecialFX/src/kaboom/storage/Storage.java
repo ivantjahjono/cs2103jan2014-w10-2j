@@ -69,6 +69,7 @@ public class Storage {
 					output.append(startDate.get(Calendar.MINUTE) + delimiter);
 				}
 				else {
+					logger.info("startDate for task " + i + "is null");
 					output.append(" " + delimiter);
 					output.append(" " + delimiter);
 					output.append(" " + delimiter);
@@ -85,6 +86,7 @@ public class Storage {
 					output.append(endDate.get(Calendar.MINUTE) + delimiter);
 				}
 				else {
+					logger.info("endDate for task " + i + "is null");
 					output.append(" " + delimiter);
 					output.append(" " + delimiter);
 					output.append(" " + delimiter);
@@ -101,7 +103,7 @@ public class Storage {
 			writer.close();
 			return true;
 		} catch (IOException e) {
-			logger.info("Cannot write to text file: " + fileName);
+			logger.warning("Cannot write to text file: " + fileName);
 			return false;
 		}
 	}
@@ -129,6 +131,7 @@ public class Storage {
 
 				Calendar startDate = Calendar.getInstance();
 				if (inputSplit[INDEX_START_YEAR].equals(" ")) {
+					logger.info("startDate for task \"" + inputSplit[INDEX_TASK_NAME] + "\" is null");
 					startDate = null;
 				}
 				else {
@@ -142,6 +145,7 @@ public class Storage {
 
 				Calendar endDate = Calendar.getInstance();
 				if (inputSplit[INDEX_END_YEAR].equals("")) {
+					logger.info("endDate for task \"" + inputSplit[INDEX_TASK_NAME] + "\" is null");
 					endDate = null;
 				}
 				else {
