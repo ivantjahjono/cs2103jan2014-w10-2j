@@ -4,19 +4,29 @@ import static org.junit.Assert.*;
 
 import java.util.Calendar;
 
+import kaboom.logic.TASK_TYPE;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandAdd;
+import kaboom.logic.command.CommandDelete;
+import kaboom.logic.command.CommandModify;
 import kaboom.logic.command.CommandView;
+import kaboom.storage.Storage;
+import kaboom.storage.TaskListShop;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class CommandTest {
 	TaskInfo task;
+	Storage fileStorage;
+	TaskListShop shop;
 	
 	@Before
 	public void initialise() {
+		fileStorage = new Storage("BOOMTEST.dat");
+		fileStorage.load();
+		shop = TaskListShop.getInstance();
 		task = new TaskInfo();
 		taskInfoUpdate(task);
 	}
@@ -28,6 +38,7 @@ public class CommandTest {
 		endDate.set(2014,1,5,8,0);
 		
 		task.setTaskName("Hello World");
+		task.setTaskType(TASK_TYPE.TIMED);
 		task.setStartDate(startDate);
 		task.setEndDate(endDate);
 		task.setImportanceLevel(3);
@@ -42,14 +53,35 @@ public class CommandTest {
 		//Initial test when no taskinfo is inside to be executed
 		assertEquals("Added a file with no Task Name", com.execute().getFeedback());
 		
-		com.setTaskInfo(task);
-
 		//Test Command feedback
+		com.setTaskInfo(task);
 		assertEquals("Successfully added Hello World", com.execute().getFeedback());
 		task.setTaskName("hello world ");
 		assertEquals("Successfully added hello world ", com.execute().getFeedback());
 	}
+	
+	//CommandDelete (Unable to test unless memory is initialised);
+	@Test
+	public void testCommandDelete() {
+		Command com = new CommandDelete();
+		com.setTaskInfo(task);
+		//Test when no taskinfo in memory to be deleted
+		assertEquals("Hello World fail to delete.", com.execute().getFeedback());
+		
+		//Delete by name
+		task.setTaskName("abc");
+		assertEquals("abc fail to delete.", com.execute().getFeedback());
+	}
 
+	//CommandModify (Unable to test unless memory is initialised);
+	@Test
+	public void testCommandModify() {
+		Command com = new CommandModify();
+		com.setTaskInfoToBeModified(task);
+		//Test when no existing task to modify
+		assertEquals("Fail to modify Hello World", com.execute().getFeedback());
+	}
+	
 	//CommandView
 	@Test
 	public void testCommandView() {
@@ -57,8 +89,10 @@ public class CommandTest {
 		com.setTaskInfo(task);
 
 		//Test Command feedback
+		//No viewType set
 		assertEquals("Invalid View Mode", com.execute().getFeedback());
 		
+		//Valid ViewTypes
 		com.setViewType("all");
 		com.setTaskInfo(task);
 		assertEquals("All Task Mode", com.execute().getFeedback());
@@ -70,6 +104,25 @@ public class CommandTest {
 		com.setViewType("running");
 		com.setTaskInfo(task);
 		assertEquals("Running Task Mode", com.execute().getFeedback());
+		
+		//Boundary 
+		//To be discussed whether to accept or no
+		com.setViewType("all ");
+		com.setTaskInfo(task);
+		assertEquals("Invalid View Mode", com.execute().getFeedback());
+		
+		com.setViewType(" all");
+		com.setTaskInfo(task);
+		assertEquals("Invalid View Mode", com.execute().getFeedback());
+		
+		com.setViewType("all 123");
+		com.setTaskInfo(task);
+		assertEquals("Invalid View Mode", com.execute().getFeedback());
+		
+		//Invalid Types
+		com.setViewType("alls");
+		com.setTaskInfo(task);
+		assertEquals("Invalid View Mode", com.execute().getFeedback());
 	}
 	
 }

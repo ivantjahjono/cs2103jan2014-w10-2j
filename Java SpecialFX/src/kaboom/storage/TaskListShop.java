@@ -39,7 +39,7 @@ public class TaskListShop {
 	
 	public TaskInfo getTaskByName (String taskName) {
 		for (int i = 0; i < taskList.size(); i++) {
-			System.out.println(taskList.get(i).getTaskName());
+			//System.out.println(taskList.get(i).getTaskName());
 			if (taskName.equals(taskList.get(i).getTaskName())) {
 				return taskList.get(i);
 			}
@@ -52,7 +52,7 @@ public class TaskListShop {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (prevTaskInfo.equals(taskList.get(i))) {
 				indexOfTaskListToBeModified = i;
-				System.out.println("index="+indexOfTaskListToBeModified);
+				//System.out.println("index="+indexOfTaskListToBeModified);
 			}
 		}
 
