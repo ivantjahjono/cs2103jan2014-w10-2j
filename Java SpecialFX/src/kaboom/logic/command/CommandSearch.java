@@ -29,8 +29,11 @@ public class CommandSearch extends Command {
 			//If taskName is not empty, search by task name			
 			for (int i = 0; i < allTasks.size(); i++) {
 				TaskInfo singleTask = allTasks.get(i);
-				if (singleTask.getTaskName().contains(taskName)) {
-					tasksFound.add(singleTask);
+				if (!singleTask.getExpiryFlag()) {
+					//Tasks must not be expired
+					if (singleTask.getTaskName().contains(taskName)) {
+						tasksFound.add(singleTask);
+					}
 				}
 			}
 		}
@@ -38,15 +41,18 @@ public class CommandSearch extends Command {
 			//search by date
 			for (int i = 0; i < allTasks.size(); i++) {
 				TaskInfo singleTask = allTasks.get(i);
-				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
-					Calendar targetDate = taskInfo.getEndDate();
-					if (singleTask.getEndDate().before(targetDate)) {
-						//For deadline tasks
-						tasksFound.add(singleTask);
-					}
-					if (singleTask.getStartDate().after(targetDate) && singleTask.getEndDate().before(targetDate)) {
-						//For timed tasks
-						tasksFound.add(singleTask);
+				if (!singleTask.getExpiryFlag()) {
+					//Tasks must not be expired
+					if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
+						Calendar targetDate = taskInfo.getEndDate();
+						if (singleTask.getEndDate().before(targetDate)) {
+							//For deadline tasks
+							tasksFound.add(singleTask);
+						}
+						if (singleTask.getStartDate().after(targetDate) && singleTask.getEndDate().before(targetDate)) {
+							//For timed tasks
+							tasksFound.add(singleTask);
+						}
 					}
 				}
 			}
