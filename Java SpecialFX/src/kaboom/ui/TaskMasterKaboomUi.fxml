@@ -18,7 +18,7 @@
         <Color blue="0.937" green="0.537" red="0.176" fx:id="x4" />
       </stroke>
     </Rectangle>
-    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="$x4" height="27.0" layoutX="0.0" layoutY="0.0" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0" />
+    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="#2d89ef" height="27.0" layoutX="0.0" layoutY="0.0" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0" />
     <Pane fx:id="feedbackBox" blendMode="SRC_OVER" layoutX="13.0" layoutY="410.0" prefHeight="22.0" prefWidth="572.0" styleClass="feedback-pane">
       <children>
         <Label id="" fx:id="feedbackText" layoutX="0.0" layoutY="0.0" minHeight="22.0" prefHeight="22.0" prefWidth="567.0" text="Feedback" textFill="$x4" translateX="5.0" underline="false">
@@ -26,7 +26,7 @@
             <Font name="Segoe UI Semilight" size="16.0" />
           </font>
           <labelFor>
-            <TextField fx:id="commandTextInput" disable="false" layoutX="13.0" layoutY="434.0" onAction="#onTextfieldAction" onKeyPressed="#onTextfieldKeyPressed" prefWidth="572.0" promptText="Please enter a command" text="" />
+            <TextField fx:id="commandTextInput" disable="false" layoutX="13.0" layoutY="434.0" onAction="#onTextfieldAction" onKeyPressed="#onTextfieldKeyPressed" prefWidth="546.0" promptText="Please enter a command" text="" />
           </labelFor>
         </Label>
       </children>
@@ -126,6 +126,7 @@
         <Text fx:id="prevArrow" fill="$x5" font="$x6" layoutX="150.0" layoutY="22.0" onMouseClicked="#onPagesArrowMouseClicked" opacity="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;" />
       </children>
     </Pane>
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#00cc83" height="17.999977111816406" layoutX="567.0" layoutY="436.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="18.0" />
   </children>
   <stylesheets>
     <URL value="@application.css" />
