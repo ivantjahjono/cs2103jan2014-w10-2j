@@ -126,7 +126,7 @@
         <Text fx:id="prevArrow" fill="$x5" font="$x6" layoutX="150.0" layoutY="22.0" onMouseClicked="#onPagesArrowMouseClicked" opacity="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;" />
       </children>
     </Pane>
-    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#00cc83" height="17.999977111816406" layoutX="567.0" layoutY="436.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="18.0" />
+    <Rectangle fx:id="statusIndicator" arcHeight="5.0" arcWidth="5.0" fill="#00cc83" height="17.999977111816406" layoutX="567.0" layoutY="436.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="18.0" />
   </children>
   <stylesheets>
     <URL value="@application.css" />
