@@ -54,7 +54,7 @@
 }
 
 .isExpired:hover {
-	-fx-background-color: rgba(255,0,0,0.7);
+	-fx-background-color: rgba(255,0,0,0.2);
 }
 
 .isNotExpired {
@@ -88,6 +88,14 @@
 .pagesOff {
 	-fx-fill: #2d89ef;
 	-fx-opacity: 0.3;
+}
+
+.commandValid {
+	-fx-fill: #00cc83;
+}
+
+.commandInvalid {
+	-fx-fill: #ff3333;
 }
 
 .root {
