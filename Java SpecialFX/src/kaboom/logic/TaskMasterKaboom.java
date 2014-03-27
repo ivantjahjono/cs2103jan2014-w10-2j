@@ -180,6 +180,12 @@ public class TaskMasterKaboom {
 		return commandResult.getFeedback();
 	}
 	
+	public boolean processSyntax(String command) {
+		
+
+		return true;
+	}
+	
 
 	private void updateUi(Result commandResult) {
 		guiDisplayData.updateDisplayWithResult(commandResult);

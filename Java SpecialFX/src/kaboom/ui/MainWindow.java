@@ -87,6 +87,9 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	// Container to keep the pages tabs 
 	@FXML private HBox 					pageTabContainer;
 		  private ArrayList<Rectangle> 	pagesTab;
+		  
+	// Command keyed in status indicator
+	@FXML private Rectangle statusIndicator;
 	
 	// Tracks previous commands
 	private String prevCommand;
@@ -364,6 +367,9 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				break;	
 				
 			default:
+				String command = commandTextInput.getText();
+				boolean processResult = applicationController.processSyntax(command);
+				updateCommandStatusIndicator(processResult);
 				break;
 		}
 	}
@@ -591,5 +597,25 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		updateDisplay();
+	}
+	
+	private void updateCommandStatusIndicator(boolean status) {
+		String newStyleName;
+		String styleToRemove;
+		
+		if (status) {
+			newStyleName = "commandValid";
+			styleToRemove = "commandInvalid";
+		} else {
+			styleToRemove = "commandValid";
+			newStyleName = "commandInvalid";
+		}
+		
+		changeStatusIndicatorStyle(styleToRemove, newStyleName);
+	}
+	
+	private void changeStatusIndicatorStyle (String oldStyle, String newStyle) {
+		statusIndicator.getStyleClass().removeAll(Collections.singleton(oldStyle));
+		statusIndicator.getStyleClass().add(newStyle);
 	}
 }
