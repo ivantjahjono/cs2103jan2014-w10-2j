@@ -27,10 +27,14 @@
 	-fx-padding: 5;
 }
 
-.column-header .label, .table-view .placeholder .label {
+.column-header .label {
 	-fx-text-fill: #FFFFFF;
 	-fx-alignment: CENTER_LEFT;
 	-fx-font-family: "Segoe UI Semibold";
+}
+
+.table-view .placeholder .label {
+	-fx-text-fill: transparent;
 }
 
 .header-label-selected {
@@ -44,16 +48,19 @@
 }
 
 .isExpired {
+	-fx-border-width: 0 0 0 3;
 	-fx-background-color: #FFFFFF;
-	-fx-opacity: 0.3;
+	-fx-border-color: #FFFFFF #FF0000 #FFFFFF #FF0000;
 }
 
 .isExpired:hover {
-	-fx-background-color: #EEEEFF;
+	-fx-background-color: rgba(255,0,0,0.7);
 }
 
 .isNotExpired {
+	-fx-border-width: 0 0 0 3;
 	-fx-background-color: #FFFFFF;
+	-fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FFFFFF;
 }
 
 .isNotExpired:hover {
