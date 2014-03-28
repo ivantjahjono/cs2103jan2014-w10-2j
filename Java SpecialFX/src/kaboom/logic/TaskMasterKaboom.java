@@ -185,6 +185,34 @@ public class TaskMasterKaboom {
 		return commandResult.getFeedback();
 	}
 	
+	public boolean processSyntax(String usercommand) {
+		Command commandToExecute = null;
+		boolean processResult = false;
+		
+		if (usercommand.trim().equals("")) {
+			return true;
+		}
+		
+		System.out.println("Processing:" + usercommand);
+		
+		//1. Get Command 
+		String commandKeyword = TextParser.getCommandKeyWord(usercommand);
+		
+		//2. Create Command
+		commandToExecute = CommandFactory.createCommand(commandKeyword);
+		
+		//3. Remove Command Word From UserInput
+		usercommand = TextParser.removeFirstWord(usercommand);
+		
+		try {
+			processResult = commandToExecute.parseInfo(usercommand);
+		} catch (Exception e) {
+			
+		}
+
+		return processResult;
+	}
+	
 
 	private void updateUi(Result commandResult) {
 		guiDisplayData.updateDisplayWithResult(commandResult);
