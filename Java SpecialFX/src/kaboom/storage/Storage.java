@@ -144,7 +144,7 @@ public class Storage {
 				task.setStartDate(startDate);
 
 				Calendar endDate = Calendar.getInstance();
-				if (inputSplit[INDEX_END_YEAR].equals("")) {
+				if (inputSplit[INDEX_END_YEAR].equals(" ")) {
 					logger.info("endDate for task \"" + inputSplit[INDEX_TASK_NAME] + "\" is null");
 					endDate = null;
 				}
