@@ -69,4 +69,8 @@ public class CommandSearch extends Command {
 		keywordList.add(KEYWORD_TYPE.END_TIME);
 		keywordList.add(KEYWORD_TYPE.TASKNAME);
 	}
+	
+	public boolean parseInfo(String info) {
+		return true;
+	}
 }

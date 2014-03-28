@@ -40,4 +40,8 @@ public class CommandClear extends Command {
 			return MESSAGE_COMMAND_UNDO_FAIL;
 		}
 	}
+	
+	public boolean parseInfo(String info) {
+		return true;
+	}
 }

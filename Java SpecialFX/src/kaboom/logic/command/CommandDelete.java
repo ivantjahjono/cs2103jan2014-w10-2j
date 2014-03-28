@@ -42,4 +42,8 @@ public class CommandDelete extends Command {
 		keywordList.clear();
 		keywordList.add(KEYWORD_TYPE.TASKNAME);
 	}
+	
+	public boolean parseInfo(String info) {
+		return true;
+	}
 }

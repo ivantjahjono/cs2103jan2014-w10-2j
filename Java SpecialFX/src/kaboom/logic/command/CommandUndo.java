@@ -20,4 +20,8 @@ public class CommandUndo extends Command{
 		feedback = commandToUndo.undo();
 		return createResult(taskListShop.getAllTaskInList(),feedback);
 	}
+	
+	public boolean parseInfo(String info) {
+		return true;
+	}
 }
