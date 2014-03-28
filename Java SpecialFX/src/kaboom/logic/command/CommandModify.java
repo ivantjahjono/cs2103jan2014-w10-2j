@@ -17,6 +17,7 @@ public class CommandModify extends Command {
 	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
 	private static final String MESSAGE_COMMAND_MODIFY_FAIL = "Fail to modify %1$s";
 	
+	TaskInfo taskInfoToBeModified;
 	TaskInfo preModifiedTaskInfo;		// Use to store premodified data so that can undo later
 	boolean toChangeStartTimeAndDate;
 	boolean toChangeEndTimeAndDate;
@@ -46,7 +47,7 @@ public class CommandModify extends Command {
 		//get name of TaskInfo that user wants to modify
 		taskName = taskInfoToBeModified.getTaskName();
 		//get TaskInfo that user wants to modify;
-		preModifiedTaskInfo = TaskListShop.getInstance().getTaskByName(taskName);
+		preModifiedTaskInfo = taskListShop.getTaskByName(taskName);
 		
 		try {
 			//store TaskInfo to modify into temp taskinfo

@@ -21,7 +21,7 @@ public class CommandAdd extends Command {
 
 	public Result execute() {
 		assert taskInfo != null;
-		assert TaskListShop.getInstance() != null;
+		assert taskListShop != null;
 		
 		String commandFeedback = "";
 		

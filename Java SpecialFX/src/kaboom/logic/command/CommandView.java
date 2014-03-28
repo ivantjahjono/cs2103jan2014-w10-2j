@@ -32,26 +32,26 @@ public class CommandView extends Command{
 	}
 
 	public Result execute() {
-		assert TaskListShop.getInstance() != null;
+		assert taskListShop != null;
 		
 		String feedback = "";
 		Vector<TaskInfo> taskList = null;
 		
 		switch(viewType) {
 			case KEYWORD_RUNNING:
-				taskList = TaskListShop.getInstance().getFloatingTasks();
+				taskList = taskListShop.getFloatingTasks();
 				feedback = MESSAGE_VIEW_RUNNING;
 				break;
 			case KEYWORD_DEADLINE:
-				taskList = TaskListShop.getInstance().getDeadlineTasks();
+				taskList = taskListShop.getDeadlineTasks();
 				feedback = MESSAGE_VIEW_DEADLINE;
 				break;
 			case KEYWORD_TIMED:
-				taskList = TaskListShop.getInstance().getTimedTasks();
+				taskList = taskListShop.getTimedTasks();
 				feedback = MESSAGE_VIEW_TIMED;
 				break;
 			case KEYWORD_ALL:
-				taskList = TaskListShop.getInstance().getAllTaskInList();
+				taskList = taskListShop.getAllTaskInList();
 				feedback = MESSAGE_VIEW_ALL;
 			case KEYWORD_SEARCH:
 				//UNDER CONSTRUCTION LOL
