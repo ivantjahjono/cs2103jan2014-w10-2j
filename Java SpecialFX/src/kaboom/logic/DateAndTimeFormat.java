@@ -3,10 +3,12 @@ package kaboom.logic;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 public class DateAndTimeFormat {
 	
 	private static final String dateFormat = "ddMMyy";		// 12/06/12 or 12.01.06 or 120106
+	private static String TimeFormat24Hour = "([01]?[0-9]|2[0-3])[0-5][0-9]";
 
 	private static DateAndTimeFormat instance = null;
 	
@@ -127,13 +129,19 @@ public class DateAndTimeFormat {
 			int hour = Integer.parseInt(hourInString);
 			int mins = Integer.parseInt(minsInString);
 			
-			if(isHourValid(hour) && isMinsValid(mins)) {
+			if(/*isHourValid(hour) && isMinsValid(mins)*/isTimeValid(theTime)) {
 				cal.set(Calendar.HOUR_OF_DAY, hour);
 				cal.set(Calendar.MINUTE, mins);
 			}
 		}
 		System.out.println(cal.getTime().toString());
 		return cal;
+	}
+	
+	private boolean isTimeValid (String time) {
+		Pattern pattern;
+		pattern = Pattern.compile(TimeFormat24Hour);
+		return pattern.matcher(time).matches();
 	}
 	
 	private boolean isHourValid (int hour) {
@@ -214,6 +222,13 @@ public class DateAndTimeFormat {
 	public String testMinFromTimeTranslator (Calendar cal, String theTime) {
 		timeTranslator (cal,theTime);	
 		return Integer.toString(cal.get(Calendar.MINUTE));
+	}
+	public String isTimeValidTest (String time) {
+		if(isTimeValid(time)) {
+			return "true";
+		} else {
+			return "false";
+		}
 	}
 	//*************************** TEST METHODS **********************************
 }
