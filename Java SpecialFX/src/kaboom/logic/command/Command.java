@@ -93,14 +93,20 @@ public class Command {
 		return keywordList;
 	}
 
-	//This function takes in the hash table that is returned from the controller
-	//extracts from the hash table and stores the information in the taskInfo variable
-	public void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
+	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
 		taskInfo = new TaskInfo();
 		saveTaskName(infoHashes,taskInfo);
 		saveTaskPriority(infoHashes,taskInfo);
 		saveTaskDateAndTime(infoHashes,taskInfo);
 	}
+	
+	//This function takes in the hash table that is returned from the controller
+	//extracts from the hash table and stores the information in the taskInfo variable
+	public void extractAndStoreTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
+		storeTaskInfo(infoHashes);
+	}
+	
+
 	
 	protected String saveTaskName(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
 		String taskName = infoHashes.get(KEYWORD_TYPE.TASKNAME);

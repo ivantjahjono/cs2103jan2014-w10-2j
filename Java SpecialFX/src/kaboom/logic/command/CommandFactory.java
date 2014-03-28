@@ -36,8 +36,7 @@ public class CommandFactory {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.testExtractList(userInputSentence, commandKeywordList);
 		
 		//6. Command stores TaskInfo
-		commandToExecute.storeTaskInfo(taskInformationTable);
-		
+		commandToExecute.extractAndStoreTaskInfo(taskInformationTable);
 		
 		
 		return commandToExecute;
