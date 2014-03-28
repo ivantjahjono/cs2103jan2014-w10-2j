@@ -327,7 +327,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	}
 
 	@FXML
-	private void onTextfieldKeyPressed (KeyEvent keyEvent) {
+	private void onTextfieldKeyReleased (KeyEvent keyEvent) {
 		//System.out.println("Key pressed: " + keyEvent.getText());
 		
 		switch(keyEvent.getCode()) {
