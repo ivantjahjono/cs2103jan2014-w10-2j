@@ -51,15 +51,17 @@ public class TaskInfoDisplay {
 	
 	public void setStartTime (Calendar time) {
 		if (time != null) {
-			SimpleDateFormat sdf = new SimpleDateFormat("h:mm a dd/MM/yy");
-			startDate.set(sdf.format(time.getTime()));
+			SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+			startDate.set(timeFormat.format(time.getTime()) + "\t" + dateFormat.format(time.getTime()));
 		}
 	}
 	
 	public void setEndTime (Calendar time) {
 		if (time != null) {
-			SimpleDateFormat sdf = new SimpleDateFormat("h:mm a dd/MM/yy");
-			endDate.set(sdf.format(time.getTime()));
+			SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+			endDate.set(timeFormat.format(time.getTime()) + "\t" + dateFormat.format(time.getTime()));
 		}
 	}
 	

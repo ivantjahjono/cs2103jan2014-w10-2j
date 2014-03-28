@@ -39,7 +39,7 @@ public class History {
 			return null;
 		}
 		
-		for (int i = previousCommandList.size()-1; i > 0; i--) {
+		for (int i = previousCommandList.size()-1; i >= 0; i--) {
 			Command currentCommand = previousCommandList.get(i);
 			if (currentCommand.getCommandType() == COMMAND_TYPE.VIEW) {
 				return currentCommand;
