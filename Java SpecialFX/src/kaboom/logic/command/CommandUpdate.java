@@ -9,4 +9,8 @@ public class CommandUpdate extends Command {
 		
 		return createResult(taskListShop.getAllTaskInList(), null);
 	}
+	
+	public boolean parseInfo(String info) {
+		return true;
+	}
 }

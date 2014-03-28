@@ -58,4 +58,8 @@ public class CommandAdd extends Command {
 		keywordList.add(KEYWORD_TYPE.START_DATE);
 		keywordList.add(KEYWORD_TYPE.TASKNAME);
 	}
+	
+	public boolean parseInfo(String info) {
+		return true;
+	}
 }
