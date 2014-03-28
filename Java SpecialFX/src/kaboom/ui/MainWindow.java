@@ -242,7 +242,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		// Check if need to switch header
 		int switchIndexResult = getSwitchIndexFromCommand(command);
 		if (switchIndexResult != -1) {
-			switchToNewHeader(switchIndexResult);
+			//switchToNewHeader(switchIndexResult);
 		} if (isPageToggle(command)) {
 			activatePageToggle(command);
 		} else {
@@ -258,6 +258,11 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	}
 
 	private void switchToNewHeader(int switchIndexResult) {
+		// Is it the same label activated ?
+		if (switchIndexResult == currentLabelIndex) {
+			return;
+		}
+		
 		previousLabelIndex = currentLabelIndex;
 		currentLabelIndex = switchIndexResult;
 		switchMainHeaderHighlight(previousLabelIndex, currentLabelIndex);
@@ -267,6 +272,41 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		updateTaskTable();
 		updateFeedbackMessage();
 		updatePagesTab();
+		updateHeader();
+	}
+
+	private void updateHeader() {
+		DISPLAY_STATE newDisplayState = uiData.getCurrentDisplayState();
+		
+		int newHeaderIndex = 0;
+		switch (newDisplayState) {
+			case ALL:
+				newHeaderIndex = 0;
+				break;
+				
+			case RUNNING:
+				newHeaderIndex = 1;
+				break;
+				
+			case DEADLINE:
+				newHeaderIndex = 2;
+				break;
+				
+			case TIMED:
+				newHeaderIndex = 3;
+				break;
+				
+			case SEARCH:
+				newHeaderIndex = 4;
+				break;
+				
+			case ARCHIVE:
+				newHeaderIndex = 5;
+				break;
+				
+		}
+		
+		switchToNewHeader(newHeaderIndex);
 	}
 
 	private void activatePageToggle(String command) {
