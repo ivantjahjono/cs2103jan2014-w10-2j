@@ -1,6 +1,7 @@
 package kaboom.logic.command;
 
 import java.util.Hashtable;
+
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
@@ -9,6 +10,9 @@ import kaboom.storage.TaskListShop;
 
 
 public class CommandDelete extends Command {
+	
+	private static final String MESSAGE_COMMAND_DELETE_SUCCESS = "%1$s deleted.";
+	private static final String MESSAGE_COMMAND_DELETE_FAIL = "%1$s fail to delete.";
 	
 	public CommandDelete () {
 		commandType = COMMAND_TYPE.DELETE;
@@ -31,11 +35,11 @@ public class CommandDelete extends Command {
 		return createResult(taskListShop.getAllTaskInList(), commandFeedback);
 	}
 	
-	public String undo () {
+	public boolean undo () {
 		if (taskListShop.addTaskToList(taskInfo)) {
-			return MESSAGE_COMMAND_UNDO_SUCCESS;
+			return true;
 		}
-		return MESSAGE_COMMAND_UNDO_FAIL;
+		return false;
 	}
 	
 	private void initialiseKeywordList() {

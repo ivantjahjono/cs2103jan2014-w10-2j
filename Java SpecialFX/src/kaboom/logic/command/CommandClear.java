@@ -8,7 +8,9 @@ import kaboom.storage.TaskListShop;
 
 
 public class CommandClear extends Command {
-
+	
+	private static final String MESSAGE_COMMAND_CLEAR_SUCCESS = "Cleared memory";
+	
 	Vector<TaskInfo> tasksCleared;
 		
 	public CommandClear () {
@@ -23,21 +25,17 @@ public class CommandClear extends Command {
 		return createResult(display, MESSAGE_COMMAND_CLEAR_SUCCESS);
 	}
 	
-	public String undo () {
-		boolean isUndoSuccess = false;
+	public boolean undo () {
+		boolean isUndoSuccessful = false;
 
 		for (int i = 0; i < tasksCleared.size(); i++) {
 			TaskListShop.getInstance().addTaskToList(tasksCleared.get(i));
 		}
 		
 		if (tasksCleared.size() == TaskListShop.getInstance().shopSize()) {
-			isUndoSuccess = true;
+			isUndoSuccessful = true;
 		}
 		
-		if (isUndoSuccess) {
-			return MESSAGE_COMMAND_UNDO_SUCCESS;
-		} else {
-			return MESSAGE_COMMAND_UNDO_FAIL;
-		}
+		return isUndoSuccessful;
 	}
 }

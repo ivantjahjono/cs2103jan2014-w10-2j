@@ -18,17 +18,7 @@ import kaboom.storage.TaskListShop;
 
 public class Command {
 
-	protected static final String MESSAGE_COMMAND_ADD_SUCCESS = "Successfully added %1$s";
-	protected static final String MESSAGE_COMMAND_ADD_FAIL = "Fail to add %1$s";
-	protected static final String MESSAGE_COMMAND_DELETE_SUCCESS = "%1$s deleted.";
-	protected static final String MESSAGE_COMMAND_DELETE_FAIL = "%1$s fail to delete.";
-	protected static final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
-	protected static final String MESSAGE_COMMAND_MODIFY_FAIL = "Fail to modify %1$s";
-	protected static final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done. %d item(s) found.";
-	protected static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
-	protected static final String MESSAGE_COMMAND_UNDO_SUCCESS = "Command undone!";
-	protected static final String MESSAGE_COMMAND_UNDO_FAIL = "Fail to undo.";
-	protected static final String MESSAGE_COMMAND_CLEAR_SUCCESS = "Cleared memory";
+	private static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
 
 
 	protected COMMAND_TYPE commandType;
@@ -85,8 +75,8 @@ public class Command {
 		return commandResult;
 	}
 
-	public String undo () {
-		return MESSAGE_COMMAND_UNDO_FAIL;
+	public boolean undo () {
+		return false;
 	}
 	
 	public Vector<KEYWORD_TYPE> getKeywordList () {
@@ -95,9 +85,6 @@ public class Command {
 
 	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
 		taskInfo = new TaskInfo();
-		saveTaskName(infoHashes,taskInfo);
-		saveTaskPriority(infoHashes,taskInfo);
-		saveTaskDateAndTime(infoHashes,taskInfo);
 	}
 	
 	//This function takes in the hash table that is returned from the controller
@@ -165,10 +152,6 @@ public class Command {
 //				
 //			}
 //		}
-	}
-	
-	protected void saveViewType (Hashtable<KEYWORD_TYPE, String> infoHashes) {
-		viewType = infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
 	}
 	
 	protected void determineAndSetTaskType (TaskInfo task) {

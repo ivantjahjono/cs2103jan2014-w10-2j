@@ -1,6 +1,7 @@
 package kaboom.logic.command;
 
 import java.util.Calendar;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import kaboom.logic.Result;
@@ -10,6 +11,8 @@ import kaboom.logic.TASK_TYPE;
 import kaboom.storage.TaskListShop;
 
 public class CommandSearch extends Command {
+
+	private static final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done. %d item(s) found.";
 
 	public CommandSearch () {
 		commandType = COMMAND_TYPE.SEARCH;
@@ -68,5 +71,12 @@ public class CommandSearch extends Command {
 		keywordList.add(KEYWORD_TYPE.END_DATE);
 		keywordList.add(KEYWORD_TYPE.END_TIME);
 		keywordList.add(KEYWORD_TYPE.TASKNAME);
+	}
+	
+	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
+		taskInfo = new TaskInfo();
+		saveTaskName(infoHashes,taskInfo);
+		saveTaskPriority(infoHashes,taskInfo);
+		saveTaskDateAndTime(infoHashes,taskInfo);
 	}
 }

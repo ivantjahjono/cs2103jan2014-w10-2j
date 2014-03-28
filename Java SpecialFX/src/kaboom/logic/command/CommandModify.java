@@ -14,6 +14,9 @@ import kaboom.storage.TaskListShop;
 
 public class CommandModify extends Command {
 	
+	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
+	private static final String MESSAGE_COMMAND_MODIFY_FAIL = "Fail to modify %1$s";
+	
 	TaskInfo preModifiedTaskInfo;		// Use to store premodified data so that can undo later
 	boolean toChangeStartTimeAndDate;
 	boolean toChangeEndTimeAndDate;
@@ -99,10 +102,10 @@ public class CommandModify extends Command {
 		return createResult(taskListShop.getAllTaskInList(), feedback);
 	}
 	
-	public String undo () {
+	public boolean undo () {
 		System.out.println(preModifiedTaskInfo.getTaskName()+" > "+taskInfo.getTaskName());
 		TaskListShop.getInstance().updateTask(preModifiedTaskInfo, taskInfo);
-		return String.format(MESSAGE_COMMAND_UNDO_SUCCESS);
+		return true;
 	}
 	
 	private void initialiseKeywordList() {
@@ -117,6 +120,7 @@ public class CommandModify extends Command {
 	}
 	
 	public void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
+		
 		String taskName = infoHashes.get(KEYWORD_TYPE.TASKNAME);
 		taskInfoToBeModified = new TaskInfo();
 		

@@ -24,6 +24,8 @@ public class CommandView extends Command{
 	private static final String MESSAGE_VIEW_INVALID = "Invalid View Mode";
 	
 	
+	String viewType;
+	
 	public CommandView () {
 		commandType = COMMAND_TYPE.VIEW;
 		initialiseKeywordList();
@@ -66,6 +68,6 @@ public class CommandView extends Command{
 	}
 	
 	public void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
-		saveViewType(infoHashes);
+		viewType = infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
 	}
 }
