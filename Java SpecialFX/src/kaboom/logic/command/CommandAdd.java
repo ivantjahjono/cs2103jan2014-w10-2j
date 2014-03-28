@@ -1,12 +1,18 @@
 package kaboom.logic.command;
 
+import java.util.Hashtable;
+
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
+import kaboom.logic.TaskInfo;
 import kaboom.storage.TaskListShop;
 
 
 
 public class CommandAdd extends Command {
+	
+	private static final String MESSAGE_COMMAND_ADD_SUCCESS = "Successfully added %1$s";
+	private static final String MESSAGE_COMMAND_ADD_FAIL = "Fail to add %1$s";
 
 	public CommandAdd () {
 		commandType = COMMAND_TYPE.ADD;
@@ -37,16 +43,12 @@ public class CommandAdd extends Command {
 		return createResult(taskListShop.getAllTaskInList(), commandFeedback);
 	}
 	
-	public String undo () {
+	public boolean undo () {
 		String taskName = taskInfo.getTaskName();
 		
 		boolean isRemoveSuccess = taskListShop.removeTaskByName(taskName);
 		
-		if (isRemoveSuccess) {
-			return MESSAGE_COMMAND_UNDO_SUCCESS;
-		} else {
-			return MESSAGE_COMMAND_UNDO_FAIL;
-		}
+		return isRemoveSuccess;
 	}
 	
 	private void initialiseKeywordList() {
@@ -57,5 +59,12 @@ public class CommandAdd extends Command {
 		keywordList.add(KEYWORD_TYPE.START_TIME);
 		keywordList.add(KEYWORD_TYPE.START_DATE);
 		keywordList.add(KEYWORD_TYPE.TASKNAME);
+	}
+	
+	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
+		taskInfo = new TaskInfo();
+		saveTaskName(infoHashes,taskInfo);
+		saveTaskPriority(infoHashes,taskInfo);
+		saveTaskDateAndTime(infoHashes,taskInfo);
 	}
 }
