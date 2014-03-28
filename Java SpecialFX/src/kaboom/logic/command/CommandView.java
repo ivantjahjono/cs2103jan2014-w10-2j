@@ -62,4 +62,8 @@ public class CommandView extends Command{
 	private void initialiseKeywordList() {
 		keywordList.add(KEYWORD_TYPE.VIEWTYPE);
 	}
+	
+	public boolean parseInfo(String info) {
+		return true;
+	}
 }

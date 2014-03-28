@@ -166,4 +166,8 @@ public class CommandModify extends Command {
 			toChangeEndTimeAndDate = true;
 		}
 	}
+	
+	public boolean parseInfo(String info) {
+		return true;
+	}
 }

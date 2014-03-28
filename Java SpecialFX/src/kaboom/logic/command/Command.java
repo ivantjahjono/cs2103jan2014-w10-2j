@@ -84,6 +84,10 @@ public class Command {
 
 		return commandResult;
 	}
+	
+	public boolean parseInfo(String info) {
+		return false;
+	}
 
 	public Vector<KEYWORD_TYPE> getKeywordList () {
 		return keywordList;
