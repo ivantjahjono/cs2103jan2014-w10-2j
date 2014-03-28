@@ -111,7 +111,14 @@ public class DateAndTimeFormatTest {
 		//Test if valid if end is after start (1min before)
 		endDate = datFormat.addTimeToCalendar(startDate, 0, -1);
 		assertEquals("false",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
-		
-		
+	}
+	
+	@Test
+	public void testTimeValidity() {
+		assertEquals ("true", datFormat.isTimeValidTest("2359"));
+		assertEquals ("true", datFormat.isTimeValidTest("0000"));
+		assertEquals ("true", datFormat.isTimeValidTest("0001"));
+		assertEquals ("false", datFormat.isTimeValidTest("2400"));
+		assertEquals ("false", datFormat.isTimeValidTest("0060"));
 	}
 }
