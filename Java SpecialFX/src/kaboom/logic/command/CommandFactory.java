@@ -1,5 +1,11 @@
 package kaboom.logic.command;
 
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.logic.KEYWORD_TYPE;
+import kaboom.logic.TextParser;
+
 public class CommandFactory {
 	private static final String KEYWORD_COMMAND_ADD = "add";
 	private static final String KEYWORD_COMMAND_DELETE = "delete";
@@ -9,9 +15,32 @@ public class CommandFactory {
 	private static final String KEYWORD_COMMAND_VIEW = "view";
 	private static final String KEYWORD_COMMAND_UNDO = "undo";
 	
-	public static Command createCommand(String commandWord) {
-		COMMAND_TYPE commandType = determineCommandType(commandWord);
-		return createCommandBasedOnCommandType(commandType);
+	public static Command createCommand(String userInputSentence) {
+		
+		//1. Get Command 
+		String commandKeyword = TextParser.getCommandKeyWord(userInputSentence);
+		
+		//2. Get Command keyword
+		COMMAND_TYPE commandType = determineCommandType(commandKeyword);
+		
+		//2. Create Command
+		Command commandToExecute = createCommandBasedOnCommandType(commandType);	
+		
+		//3. Remove Command Word From UserInput
+		userInputSentence = TextParser.removeFirstWord(userInputSentence);
+		
+		//4. Get CommandKeywordList
+		Vector<KEYWORD_TYPE> commandKeywordList = commandToExecute.getKeywordList();
+		
+		//5. Extract Task Info Base on Keywords
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.testExtractList(userInputSentence, commandKeywordList);
+		
+		//6. Command stores TaskInfo
+		commandToExecute.storeTaskInfo(taskInformationTable);
+		
+		
+		
+		return commandToExecute;
 	}
 	
 	
