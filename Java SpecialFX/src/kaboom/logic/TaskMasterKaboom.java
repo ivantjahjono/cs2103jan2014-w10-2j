@@ -144,23 +144,28 @@ public class TaskMasterKaboom {
 		Command commandToExecute = null;
 		Result commandResult = null;
 		
-		//1. Get Command 
-		String commandKeyword = TextParser.getCommandKeyWord(userInputSentence);
-		
-		//2. Create Command
-		commandToExecute = CommandFactory.createCommand(commandKeyword);		
-		
-		//3. Remove Command Word From UserInput
-		userInputSentence = TextParser.removeFirstWord(userInputSentence);
-		
-		//4. Get CommandKeywordList
-		Vector<KEYWORD_TYPE> commandKeywordList = commandToExecute.getKeywordList();
-		
-		//5. Extract Task Info Base on Keywords
-		Hashtable<KEYWORD_TYPE, String> taskInformationTable = extractTaskInfo(userInputSentence, commandKeywordList);
-		
-		//6. Command stores TaskInfo
-		commandToExecute.storeTaskInfo(taskInformationTable);
+		//1. Create Command
+		commandToExecute = CommandFactory.createCommand(userInputSentence);
+	
+//**********************SHIFTED TO COMMAND FACTORY *******************************************		
+//		//1. Get Command 
+//		String commandKeyword = TextParser.getCommandKeyWord(userInputSentence);
+//		
+//		//2. Create Command
+//		commandToExecute = CommandFactory.createCommand(commandKeyword);		
+//		
+//		//3. Remove Command Word From UserInput
+//		userInputSentence = TextParser.removeFirstWord(userInputSentence);
+//		
+//		//4. Get CommandKeywordList
+//		Vector<KEYWORD_TYPE> commandKeywordList = commandToExecute.getKeywordList();
+//		
+//		//5. Extract Task Info Base on Keywords
+//		Hashtable<KEYWORD_TYPE, String> taskInformationTable = extractTaskInfo(userInputSentence, commandKeywordList);
+//		
+//		//6. Command stores TaskInfo
+//		commandToExecute.storeTaskInfo(taskInformationTable);
+//**********************SHIFTED TO COMMAND FACTORY *******************************************	
 		
 		try {
 			commandResult = commandToExecute.execute();
