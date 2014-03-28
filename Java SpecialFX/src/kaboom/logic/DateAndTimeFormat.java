@@ -4,11 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-// Can use Java SimpleDateFormat for date checking
-
-
-
-
 public class DateAndTimeFormat {
 	
 	private static final String dateFormat = "ddMMyy";		// 12/06/12 or 12.01.06 or 120106
@@ -24,25 +19,32 @@ public class DateAndTimeFormat {
 	}
 
 	public Calendar formatStringToCalendar (String date, String time) {
-		Calendar cal = Calendar.getInstance();
+		Calendar currentDateAndTime = Calendar.getInstance();
 		
-		if(date != null) {
-			cal = dateTranslator(cal, date);
+		Calendar dateAndTime = dateTranslator(currentDateAndTime, date);
+		dateAndTime = timeTranslator(dateAndTime,time);
+		
+		if(dateAndTime.equals(currentDateAndTime)) {
+			return null;
 		}
 		
-		if(time != null) {
-			cal = timeTranslator(cal,time);
-//			TimeFormat currTimeFormat = new TimeFormat();
-//			if(isTimeValid(time, currTimeFormat)){
-//				timeTranslator(cal, Integer.parseInt(time), currTimeFormat);
-//			}
-		}
-		return cal;
+		return dateAndTime;
 	}
 
+	public Calendar addTimeToCalendar (Calendar dateAndTime, int hour, int min) {
+		dateAndTime.add(Calendar.HOUR_OF_DAY, hour);
+		dateAndTime.add(Calendar.MINUTE, min);
+		return dateAndTime;
+	}
+	
 	private Calendar dateTranslator(Calendar thisDate, String theDate){
 		//this method should already take in the proper date format. verification should be separated in another method
 		//Currently takes in 12/06/12 or 12.01.06 or 120106
+		
+		if(theDate == null) {
+			return thisDate;
+		}
+		
 		String date = "";
 		String[] dateArray = new String[3];
 		
@@ -70,6 +72,7 @@ public class DateAndTimeFormat {
 			int day = Integer.parseInt(dateArray[0]);
 			thisDate.set(Calendar.DAY_OF_MONTH, day);
 		}
+		System.out.println(thisDate.getTime().toString());
 		return thisDate;
 	}
 	
@@ -91,6 +94,10 @@ public class DateAndTimeFormat {
 	
 	//Currently translate 1700 format only
 	private Calendar timeTranslator(Calendar cal, String theTime) {
+		if (theTime == null) {
+			return cal;
+		}
+		
 		if (!(theTime == null || theTime.length() != 4)) {
 			String hourInString = theTime.substring(0,2);
 			String minsInString = theTime.substring(2,4);
@@ -115,6 +122,7 @@ public class DateAndTimeFormat {
 				cal.set(Calendar.MINUTE, mins);
 			}
 		}
+		System.out.println(cal.getTime().toString());
 		return cal;
 	}
 	

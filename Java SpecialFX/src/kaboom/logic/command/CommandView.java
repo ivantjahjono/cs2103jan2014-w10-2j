@@ -1,9 +1,11 @@
 package kaboom.logic.command;
 
+import java.util.Hashtable;
 import java.util.Vector;
 
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
+import kaboom.logic.TASK_TYPE;
 import kaboom.logic.TaskInfo;
 import kaboom.storage.TaskListShop;
 
@@ -61,5 +63,9 @@ public class CommandView extends Command{
 
 	private void initialiseKeywordList() {
 		keywordList.add(KEYWORD_TYPE.VIEWTYPE);
+	}
+	
+	public void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
+		saveViewType(infoHashes);
 	}
 }

@@ -85,6 +85,10 @@ public class Command {
 		return commandResult;
 	}
 
+	public String undo () {
+		return MESSAGE_COMMAND_UNDO_FAIL;
+	}
+	
 	public Vector<KEYWORD_TYPE> getKeywordList () {
 		return keywordList;
 	}
@@ -92,85 +96,89 @@ public class Command {
 	//This function takes in the hash table that is returned from the controller
 	//extracts from the hash table and stores the information in the taskInfo variable
 	public void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
-		String taskName = infoHashes.get(KEYWORD_TYPE.TASKNAME);
-		String priority = infoHashes.get(KEYWORD_TYPE.PRIORITY);
-
 		taskInfo = new TaskInfo();
-		
-		if (taskName != null) {
-			taskInfo.setTaskName(taskName);
+		saveTaskName(infoHashes,taskInfo);
+		saveTaskPriority(infoHashes,taskInfo);
+		saveTaskDateAndTime(infoHashes,taskInfo);
+	}
+	
+	protected String saveTaskName(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
+		String taskName = infoHashes.get(KEYWORD_TYPE.TASKNAME);
+		task.setTaskName(taskName);
+		return taskName;
+	}
+	
+	protected String saveTaskPriority(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
+		String taskPriority = infoHashes.get(KEYWORD_TYPE.PRIORITY);
+		if(taskPriority != null) {
+			task.setImportanceLevel(Integer.parseInt(taskPriority));
 		}
-		if (priority != null) {
-			taskInfo.setImportanceLevel(Integer.parseInt(priority));
-		}
-
-		//The below are taken from the old controller methods
+		return taskPriority;
+	}
+	
+	protected void saveTaskDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
+		saveTaskStartDateAndTime(infoHashes, task);
+		saveTaskEndDateAndTime(infoHashes, task);
+		determineAndSetTaskType(task);
+	}
+	
+	protected void saveTaskStartDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
 		String startDate = infoHashes.get(KEYWORD_TYPE.START_DATE);
 		String startTime = infoHashes.get(KEYWORD_TYPE.START_TIME);
 		Calendar startDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(startDate, startTime);
-		taskInfo.setStartDate(startDateAndTime);
+		task.setStartDate(startDateAndTime);
+	}
+	
+	protected void saveTaskEndDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
+		Calendar startDateAndTime = task.getStartDate();
 		String endDate = infoHashes.get(KEYWORD_TYPE.END_DATE);
 		String endTime = infoHashes.get(KEYWORD_TYPE.END_TIME);
-		//extra check to add 1 hour to start time if end time and date is null
-		//
-		if((startDate != null && startTime != null) || (startTime != null)) {
-			if(endDate == null && endTime == null) {
-				endDate = startDate;
-				int endtime = Integer.parseInt(startTime) + 100;
-				System.out.println(endtime);
-				if(endtime >= 2400) {
-					endtime -= 2400;
-				}
-				endTime = String.format("%04d", endtime);
-				
-			}
-		}
+		Calendar endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
+		
 		//this condition is to make the end time one hour apart of current time
 		//and also maintain end date same as start date
-		else if(startDate != null && startTime == null){
-			if(endDate == null && endTime == null){
-				endDate = startDate;
-				//take current time and make it to 1 hour apart (* 100 is to be combined with minute and changed to string type later) 
-				int endhour = startDateAndTime.get(Calendar.HOUR_OF_DAY)*100 + 100;
-				int endminute = startDateAndTime.get(Calendar.MINUTE);
-				int endtime = endhour + endminute;
-				
-				endTime = String.format("%04d", endtime);
+		if (endDateAndTime == null) {
+			if (startDateAndTime != null) {
+				int addingHour = 1;
+				int addingMins = 0;
+				endDateAndTime = DateAndTimeFormat.getInstance().addTimeToCalendar(startDateAndTime, addingHour, addingMins);
 			}
 		}
 		
-		Calendar endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
-		taskInfo.setEndDate(endDateAndTime);
+		task.setEndDate(endDateAndTime);
 		
-		setViewType(infoHashes.get(KEYWORD_TYPE.VIEWTYPE));
+//		if((startDate != null && startTime != null) || (startTime != null)) {
+//			if(endDate == null && endTime == null) {
+//				endDate = startDate;
+//				int endtime = Integer.parseInt(startTime) + 100;
+//				System.out.println(endtime);
+//				if(endtime >= 2400) {
+//					endtime -= 2400;
+//				}
+//				endTime = String.format("%04d", endtime);
+//				
+//			}
+//		}
+	}
+	
+	protected void saveViewType (Hashtable<KEYWORD_TYPE, String> infoHashes) {
+		viewType = infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
+	}
+	
+	protected void determineAndSetTaskType (TaskInfo task) {
+		Calendar startDateAndTime = task.getStartDate();
+		Calendar endDateAndTime = task.getEndDate();
+		
+		if (startDateAndTime == null && endDateAndTime == null) {
+			task.setTaskType(TASK_TYPE.FLOATING);
+		} else {
+			task.setTaskType(TASK_TYPE.TIMED);
+		}
+		if (startDateAndTime == null && endDateAndTime != null) {
+			task.setTaskType(TASK_TYPE.DEADLINE);
+		} 
+	}
+	
+	
 
-		TASK_TYPE tasktype = getTaskType(infoHashes);
-		taskInfo.setTaskType(tasktype);
-	}
-	
-	public void setViewType (String type) {
-		viewType = type;
-	}
-	
-	//test as a pair as now only accept as a pair
-	private TASK_TYPE getTaskType(Hashtable<KEYWORD_TYPE, String> infoHashes) {
-		String startDate = infoHashes.get(KEYWORD_TYPE.START_DATE);
-		String startTime = infoHashes.get(KEYWORD_TYPE.START_TIME);
-		String endDate = infoHashes.get(KEYWORD_TYPE.END_DATE);
-		String endTime = infoHashes.get(KEYWORD_TYPE.END_TIME);
-		
-		if (startDate == null && startTime == null) {
-			if ((endDate != null || endTime != null)) {
-				return TASK_TYPE.DEADLINE;
-			} else {
-				return TASK_TYPE.FLOATING;
-			}
-		}
-		return TASK_TYPE.TIMED;
-	}
-	
-	
-	public String undo () {
-		return MESSAGE_COMMAND_UNDO_FAIL;
-	}
 }
