@@ -6,6 +6,7 @@ import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
 import kaboom.storage.TaskListShop;
+import kaboom.ui.DISPLAY_STATE;
 
 public class CommandView extends Command{
 	private static final String KEYWORD_RUNNING = "running";
@@ -32,31 +33,38 @@ public class CommandView extends Command{
 		
 		String feedback = "";
 		Vector<TaskInfo> taskList = null;
+		Result commandResult = createResult(taskList, feedback);
 		
 		switch(viewType) {
 			case KEYWORD_RUNNING:
 				taskList = TaskListShop.getInstance().getFloatingTasks();
 				feedback = MESSAGE_VIEW_RUNNING;
+				commandResult.setDisplayState(DISPLAY_STATE.RUNNING);
 				break;
 			case KEYWORD_DEADLINE:
 				taskList = TaskListShop.getInstance().getDeadlineTasks();
 				feedback = MESSAGE_VIEW_DEADLINE;
+				commandResult.setDisplayState(DISPLAY_STATE.DEADLINE);
 				break;
 			case KEYWORD_TIMED:
 				taskList = TaskListShop.getInstance().getTimedTasks();
 				feedback = MESSAGE_VIEW_TIMED;
+				commandResult.setDisplayState(DISPLAY_STATE.TIMED);
 				break;
 			case KEYWORD_ALL:
 				taskList = TaskListShop.getInstance().getAllTaskInList();
 				feedback = MESSAGE_VIEW_ALL;
+				commandResult.setDisplayState(DISPLAY_STATE.ALL);
 			case KEYWORD_SEARCH:
 				//UNDER CONSTRUCTION LOL
 				break;
 			default:
 				feedback = MESSAGE_VIEW_INVALID;
 		}
-
-		return createResult(taskList, feedback);
+		
+		commandResult.setTasksToDisplay(taskList);
+		commandResult.setFeedback(feedback);
+		return commandResult;
 	}
 
 	private void initialiseKeywordList() {
