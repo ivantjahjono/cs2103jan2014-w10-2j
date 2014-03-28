@@ -20,8 +20,9 @@ public class DateAndTimeFormat {
 
 	public Calendar formatStringToCalendar (String date, String time) {
 		Calendar currentDateAndTime = Calendar.getInstance();
+		Calendar dateAndTime = (Calendar) currentDateAndTime.clone();
 		
-		Calendar dateAndTime = dateTranslator(currentDateAndTime, date);
+		dateAndTime = dateTranslator(dateAndTime, date);
 		dateAndTime = timeTranslator(dateAndTime,time);
 		
 		if(dateAndTime.equals(currentDateAndTime)) {
@@ -32,9 +33,18 @@ public class DateAndTimeFormat {
 	}
 
 	public Calendar addTimeToCalendar (Calendar dateAndTime, int hour, int min) {
-		dateAndTime.add(Calendar.HOUR_OF_DAY, hour);
-		dateAndTime.add(Calendar.MINUTE, min);
-		return dateAndTime;
+		Calendar dateAndTimeToAdd = (Calendar) dateAndTime.clone();
+		dateAndTimeToAdd.add(Calendar.HOUR_OF_DAY, hour);
+		dateAndTimeToAdd.add(Calendar.MINUTE, min);
+		return dateAndTimeToAdd;
+	}
+	
+	//testing phase
+	public String dateValidityForStartAndEndDate (Calendar startDate, Calendar endDate) {
+		if (startDate.before(endDate)) {
+			return "true";
+		}
+		return "false";
 	}
 	
 	private Calendar dateTranslator(Calendar thisDate, String theDate){
