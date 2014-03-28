@@ -20,6 +20,13 @@ public class CommandSearch extends Command {
 
 		assert taskInfo != null;
 		assert TaskListShop.getInstance() != null;
+		
+		//Set the end time to 2359 for searching
+		Calendar endDate = taskInfo.getEndDate();
+		endDate.set(Calendar.HOUR_OF_DAY, 23);
+		endDate.set(Calendar.MINUTE, 59);
+		taskInfo.setEndDate(endDate);
+		
 		String commandFeedback;
 		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
 		Vector<TaskInfo> allTasks = TaskListShop.getInstance().getNonExpiredTasks();
@@ -49,9 +56,11 @@ public class CommandSearch extends Command {
 							//For deadline tasks
 							tasksFound.add(singleTask);
 						}
-						if (singleTask.getStartDate().after(targetDate) && singleTask.getEndDate().before(targetDate)) {
+						if (singleTask.getStartDate().before(targetDate) && singleTask.getEndDate().after(targetDate)) {
 							//For timed tasks
-							tasksFound.add(singleTask);
+							if (!tasksFound.contains(singleTask)) {
+								tasksFound.add(singleTask);
+							}
 						}
 					}
 				}
