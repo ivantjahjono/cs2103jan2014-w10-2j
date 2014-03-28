@@ -22,10 +22,10 @@ public class CommandSearch extends Command {
 	public Result execute() {
 
 		assert taskInfo != null;
-		assert TaskListShop.getInstance() != null;
+		assert taskListShop != null;
 		String commandFeedback;
 		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
-		Vector<TaskInfo> allTasks = TaskListShop.getInstance().getNonExpiredTasks();
+		Vector<TaskInfo> allTasks = taskListShop.getNonExpiredTasks();
 
 		String taskName = taskInfo.getTaskName();
 		if (!taskName.equals("")) {

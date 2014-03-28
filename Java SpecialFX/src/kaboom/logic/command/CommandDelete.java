@@ -21,7 +21,7 @@ public class CommandDelete extends Command {
 
 	public Result execute() {
 		assert taskInfo != null;
-		assert TaskListShop.getInstance() != null;
+		assert taskListShop != null;
 		
 		String taskName = taskInfo.getTaskName();
 		String commandFeedback = "";

@@ -77,7 +77,7 @@ public class CommandTest {
 	@Test
 	public void testCommandModify() {
 		Command com = new CommandModify();
-		com.setTaskInfoToBeModified(task);
+		//com.setTaskInfoToBeModified(task);
 		//Test when no existing task to modify
 		assertEquals("Fail to modify Hello World", com.execute().getFeedback());
 	}

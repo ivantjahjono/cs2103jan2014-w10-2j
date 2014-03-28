@@ -20,23 +20,18 @@ public class Command {
 
 	private static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
 
-
 	protected COMMAND_TYPE commandType;
-	protected TaskInfo taskInfoToBeModified;
 	protected TaskInfo taskInfo;
 	protected TaskListShop taskListShop;
 	protected DisplayData displayData;
 	protected Vector<KEYWORD_TYPE> keywordList;  //Initialized in the individual command constructor
-	protected String viewType;
 
 	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
 		taskInfo = null;
-		taskInfoToBeModified = null;
 		taskListShop = TaskListShop.getInstance();
 		displayData = DisplayData.getInstance();
 		keywordList = new Vector<KEYWORD_TYPE>();
-		viewType = "";
 	}
 
 	public void setCommandType (COMMAND_TYPE type) {
@@ -47,20 +42,12 @@ public class Command {
 		taskInfo = info;
 	}
 
-	public void setTaskInfoToBeModified (TaskInfo info) {
-		taskInfoToBeModified = info;
-	}
-
 	public COMMAND_TYPE getCommandType () {
 		return commandType;
 	}
 
 	public TaskInfo getTaskInfo () {
 		return taskInfo;
-	}
-
-	public TaskInfo getTaskInfoToBeModified () {
-		return taskInfoToBeModified;
 	}
 
 	public Result execute() {

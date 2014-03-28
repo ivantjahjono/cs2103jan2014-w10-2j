@@ -156,49 +156,7 @@ public class DateAndTimeFormat {
 		}
 		return false;
 	}
-	
-	
-//	private boolean isTimeValid(String allegedTime, TimeFormat currTimeFormat) {
-//		
-//		try{
-//			//check if it's the 24 hour format without separation. Eg: 1700, 1000
-//			int correctTimeFormat = Integer.parseInt(allegedTime);
-//			//check if the time is in logical number
-//			//!!!!!!!!!revise this again. Logic error
-//			if((correctTimeFormat >= CORRECT_24HOUR_FORMAT_MIN) && (correctTimeFormat <= CORRECT_24HOUR_FORMAT_MAX) ){
-//				currTimeFormat.setTimeFormatCode(THE_24_HOUR_FORMAT_CODE);
-//				return true;
-//			}
-//			else {
-//				return false;
-//			}
-//			
-//		}
-//		catch(IllegalArgumentException exception){
-//			//this means either invalid format or the other different formats
-//			//5am, 5pm, 17:00, 5:00am, etc
-//			return false;
-//		}
-//		
-//		//this is a stub
-//		//return false;
-//	}
-//	
-//	
-//	
-//	private void timeTranslator(Calendar theTime, int correctTime, TimeFormat currTimeFormat){
-//		//this method translates ALL time formats
-//		if(currTimeFormat.getTimeFormatCode() == THE_24_HOUR_FORMAT_CODE){
-//			int hour = correctTime / CORRECT_24HOUR_FORMAT_MIN;
-//			int minute = correctTime % CORRECT_24HOUR_FORMAT_MIN;
-//			theTime.set(Calendar.HOUR_OF_DAY, hour);
-//			theTime.set(Calendar.MINUTE, minute);
-//		}
-//		else{
-//			return;
-//		}
-//		return;
-//	}
+
 	
 	//*************************** TEST METHODS **********************************
 	//Date tests

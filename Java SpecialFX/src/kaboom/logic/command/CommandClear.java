@@ -18,10 +18,10 @@ public class CommandClear extends Command {
 	}
 
 	public Result execute() {
-		assert TaskListShop.getInstance() != null;
+		assert taskListShop != null;
 		
-		tasksCleared = TaskListShop.getInstance().getAllTaskInList();
-		Vector<TaskInfo> display = TaskListShop.getInstance().clearAllTasks();
+		tasksCleared = taskListShop.getAllTaskInList();
+		Vector<TaskInfo> display = taskListShop.clearAllTasks();
 		return createResult(display, MESSAGE_COMMAND_CLEAR_SUCCESS);
 	}
 	
@@ -29,10 +29,10 @@ public class CommandClear extends Command {
 		boolean isUndoSuccessful = false;
 
 		for (int i = 0; i < tasksCleared.size(); i++) {
-			TaskListShop.getInstance().addTaskToList(tasksCleared.get(i));
+			taskListShop.addTaskToList(tasksCleared.get(i));
 		}
 		
-		if (tasksCleared.size() == TaskListShop.getInstance().shopSize()) {
+		if (tasksCleared.size() == taskListShop.shopSize()) {
 			isUndoSuccessful = true;
 		}
 		
