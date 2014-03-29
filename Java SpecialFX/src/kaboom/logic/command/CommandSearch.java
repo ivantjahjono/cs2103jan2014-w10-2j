@@ -27,52 +27,45 @@ public class CommandSearch extends Command {
 
 		Calendar endDate = taskInfo.getEndDate();
 		if(endDate != null){
-		//Set the end time to 2359 for searching		
+			//Set the end time to 2359 for searching		
 			endDate.set(Calendar.HOUR_OF_DAY, 23);
 			endDate.set(Calendar.MINUTE, 59);
 			taskInfo.setEndDate(endDate);
 		}
-		
+
 		History history = History.getInstance();
 		history.taskID.clear();
 
 		String commandFeedback;
 		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
-		Vector<TaskInfo> allTasks = taskListShop.getNonExpiredTasks();
+		Vector<TaskInfo> allTasks = taskListShop.getAllTaskInList();
 
 		String taskName = taskInfo.getTaskName();
 		if (!taskName.equals("")) {
 			//If taskName is not empty, search by task name			
 			for (int i = 0; i < allTasks.size(); i++) {
 				TaskInfo singleTask = allTasks.get(i);
-				if (!singleTask.getExpiryFlag()) {
-					//Tasks must not be expired
-					if (singleTask.getTaskName().contains(taskName)) {
-						history.taskID.add(TaskListShop.getInstance().getAllTaskInList().indexOf(singleTask));
-						tasksFound.add(singleTask);
-					}
+				if (singleTask.getTaskName().contains(taskName)) {
+					tasksFound.add(singleTask);  //Expired tasks are considered too
 				}
 			}
 		}
-		else if(endDate != null){
+		else if (endDate != null){
 			//search by date
 			for (int i = 0; i < allTasks.size(); i++) {
 				TaskInfo singleTask = allTasks.get(i);
-				if (!singleTask.getExpiryFlag()) {
-					//Tasks must not be expired
-					if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
-						Calendar targetDate = taskInfo.getEndDate();
-						if (singleTask.getEndDate().before(targetDate)) {
-							//For deadline tasks
-							tasksFound.add(singleTask);
-							history.taskID.add(TaskListShop.getInstance().getAllTaskInList().indexOf(singleTask));
-						}
-						if ((singleTask.getStartDate() != null && singleTask.getStartDate().before(targetDate)) || singleTask.getEndDate().after(targetDate)) {
-							//For timed tasks
-							if (!tasksFound.contains(singleTask)) {
-								tasksFound.add(singleTask);
-								history.taskID.add(TaskListShop.getInstance().getAllTaskInList().indexOf(singleTask));
-							}
+				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
+					Calendar targetDate = taskInfo.getEndDate();
+					if (singleTask.getEndDate().before(targetDate)) {
+						//For deadline tasks
+						tasksFound.add(singleTask);
+						history.taskID.add(TaskListShop.getInstance().getAllTaskInList().indexOf(singleTask));
+					}
+					if ((singleTask.getStartDate() != null && singleTask.getStartDate().before(targetDate)) || 
+							singleTask.getEndDate().after(targetDate)) {
+						//For timed tasks
+						if (!tasksFound.contains(singleTask)) {
+							tasksFound.add(singleTask);  //Expired tasks are considered too
 						}
 					}
 				}
@@ -95,7 +88,7 @@ public class CommandSearch extends Command {
 	public boolean parseInfo(String info) {
 		return true;
 	}
-	
+
 	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
 		taskInfo = new TaskInfo();
 		saveTaskName(infoHashes,taskInfo);
