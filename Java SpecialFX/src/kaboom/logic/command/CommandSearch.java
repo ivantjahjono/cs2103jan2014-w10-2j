@@ -26,7 +26,7 @@ public class CommandSearch extends Command {
 		assert taskListShop != null;
 
 		Calendar endDate = taskInfo.getEndDate();
-		if(endDate != null){
+		if (endDate != null) {
 			//Set the end time to 2359 for searching		
 			endDate.set(Calendar.HOUR_OF_DAY, 23);
 			endDate.set(Calendar.MINUTE, 59);
