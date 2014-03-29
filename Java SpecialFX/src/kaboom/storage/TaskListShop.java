@@ -1,11 +1,17 @@
 package kaboom.storage;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.TASK_TYPE;
+import kaboom.logic.command.ComparatorEndDate;
+import kaboom.logic.command.ComparatorName;
+import kaboom.logic.command.ComparatorPriority;
+import kaboom.logic.command.ComparatorStartDate;
 
 public class TaskListShop {
 
@@ -159,7 +165,17 @@ public class TaskListShop {
 	//whether it has expired and set to true if it has expired.
 	//Sets to false if the task has not expired
 	//Floating tasks have a default of not expired
+	//Also changes current tasks to archived tasks and vice versa
 	public void refreshTasks() {
+		for (int i = 0; i < archivedTaskList.size(); i++) {
+			TaskInfo singleTask = archivedTaskList.get(i);
+			
+			if (!singleTask.getDone()) {
+				currentTaskList.add(singleTask);
+				archivedTaskList.remove(singleTask);
+			}
+		}
+		
 		for (int i = 0; i < currentTaskList.size(); i++) {
 			TaskInfo singleTask = currentTaskList.get(i);
 			Calendar now = Calendar.getInstance();
@@ -172,6 +188,11 @@ public class TaskListShop {
 				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
 					singleTask.setExpiryFlag(false);
 				}
+			}
+			
+			if (singleTask.getDone()) {
+				archivedTaskList.add(singleTask);
+				currentTaskList.remove(singleTask);
 			}
 		}
 	}
@@ -190,6 +211,21 @@ public class TaskListShop {
 		}
 		return taskID;
 		//Do you want to return null instead if the list is empty?
+	}
+	
+	public void sort(KEYWORD_TYPE type) {
+		if (type == KEYWORD_TYPE.TASKNAME) {
+			Collections.sort(currentTaskList, new ComparatorName());
+		}
+		else if (type == KEYWORD_TYPE.START_DATE) {
+			Collections.sort(currentTaskList, new ComparatorStartDate());
+		}
+		else if (type == KEYWORD_TYPE.END_DATE){
+			Collections.sort(currentTaskList, new ComparatorEndDate());
+		}
+		else if (type == KEYWORD_TYPE.PRIORITY) {
+			Collections.sort(currentTaskList, new ComparatorPriority());
+		}
 	}
 
 	public int shopSize () {
