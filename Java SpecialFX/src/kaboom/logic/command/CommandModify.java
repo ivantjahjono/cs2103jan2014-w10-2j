@@ -45,7 +45,7 @@ public class CommandModify extends Command {
 			
 			if(taskName.isEmpty()) {
 				feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
-				return createResult(taskListShop.getAllTaskInList(), feedback);
+				return createResult(taskListShop.getAllCurrentTasks(), feedback);
 			}
 			
 			//get TaskInfo that user wants to modify;
