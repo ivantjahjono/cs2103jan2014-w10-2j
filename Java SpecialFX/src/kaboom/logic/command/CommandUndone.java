@@ -28,20 +28,20 @@ public class CommandUndone extends Command{
 		if(taskToBeModified == null) {
 			//can throw exception (task does not exist)
 			feedback = String.format(MESSAGE_COMMAND_UNDONE_FAIL, taskName);
-			return createResult(taskListShop.getAllTaskInList(), feedback);
+			return createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
 		
 		if(!taskToBeModified.isDone()) {
 			//can throw exception (command incomplete)
 			feedback = String.format(MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE, taskName);
-			return createResult(taskListShop.getAllTaskInList(), feedback);
+			return createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
 		
 		taskInfo = new TaskInfo(taskToBeModified);
 		taskInfo.setDone(false);
 		taskListShop.updateTask(taskInfo, taskToBeModified);
 		feedback = String.format(MESSAGE_COMMAND_UNDONE_SUCCESS, taskName);
-		return createResult(taskListShop.getAllTaskInList(), feedback);
+		return createResult(taskListShop.getAllCurrentTasks(), feedback);
 	}
 	
 	public boolean undo() {

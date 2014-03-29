@@ -28,20 +28,20 @@ public class CommandDone extends Command{
 		if(taskToBeModified == null) {
 			//can throw exception (task does not exist)
 			feedback = String.format(MESSAGE_COMMAND_DONE_FAIL, taskName);
-			return createResult(taskListShop.getAllTaskInList(), feedback);
+			return createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
 		
 		if(taskToBeModified.isDone()) {
 			//can throw exception (command incomplete)
 			feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
-			return createResult(taskListShop.getAllTaskInList(), feedback);
+			return createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
 		
 		taskInfo = new TaskInfo(taskToBeModified);
 		taskInfo.setDone(true);
 		taskListShop.updateTask(taskInfo, taskToBeModified);
 		feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
-		return createResult(taskListShop.getAllTaskInList(), feedback);
+		return createResult(taskListShop.getAllCurrentTasks(), feedback);
 	}
 	
 	public boolean undo() {
