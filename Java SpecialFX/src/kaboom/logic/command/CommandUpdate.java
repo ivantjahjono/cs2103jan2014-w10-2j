@@ -7,7 +7,7 @@ public class CommandUpdate extends Command {
 	public Result execute() {
 		taskListShop.refreshTasks();
 		
-		return createResult(taskListShop.getAllTaskInList(), null);
+		return createResult(taskListShop.getAllCurrentTasks(), null);
 	}
 	
 	public boolean parseInfo(String info) {

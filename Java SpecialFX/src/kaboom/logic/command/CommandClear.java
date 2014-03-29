@@ -20,7 +20,7 @@ public class CommandClear extends Command {
 	public Result execute() {
 		assert taskListShop != null;
 		
-		tasksCleared = taskListShop.getAllTaskInList();
+		tasksCleared = taskListShop.getAllCurrentTasks();
 		Vector<TaskInfo> display = taskListShop.clearAllTasks();
 		return createResult(display, MESSAGE_COMMAND_CLEAR_SUCCESS);
 	}

@@ -40,7 +40,7 @@ public class CommandAdd extends Command {
 			commandFeedback = "Added a file with no Task Name";
 		}
 		
-		return createResult(taskListShop.getAllTaskInList(), commandFeedback);
+		return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
 	}
 	
 	public boolean undo () {

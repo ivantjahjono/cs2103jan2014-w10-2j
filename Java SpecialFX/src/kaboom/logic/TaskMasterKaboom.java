@@ -62,7 +62,7 @@ public class TaskMasterKaboom {
 
 	private void updateUiWithFirstLoadedMemory() {
 		Result introResult = new Result();
-		introResult.setTasksToDisplay(TaskListShop.getInstance().getAllTaskInList());
+		introResult.setTasksToDisplay(TaskListShop.getInstance().getAllCurrentTasks());
 		introResult.setFeedback(MESSAGE_WELCOME);
 		updateUi(introResult);
 	}

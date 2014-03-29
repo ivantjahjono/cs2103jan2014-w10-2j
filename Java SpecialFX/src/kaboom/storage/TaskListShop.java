@@ -62,7 +62,7 @@ public class TaskListShop {
 		}
 	}
 
-	public Vector<TaskInfo> getAllTaskInList () {
+	public Vector<TaskInfo> getAllCurrentTasks () {
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(currentTaskList);
 		return vectorToReturn;
 	}
