@@ -128,23 +128,23 @@ public class DateAndTimeFormat {
 			} catch (Exception e) {	
 			}
 		}
-		
-		//24hr format check
-		for(int i = 0; i < time24HrFormatList.length; i++) {
-			try {
-				//validate time
-				time24HrFormatList[i].setLenient(false);
-				Date time = time24HrFormatList[i].parse(theTime);
-				//set time to thisTime
-				Calendar getTime = Calendar.getInstance();
-				getTime.setTime(time);
-				thisTime.set(Calendar.HOUR_OF_DAY, getTime.get(Calendar.HOUR_OF_DAY));
-				thisTime.set(Calendar.MINUTE, getTime.get(Calendar.MINUTE));
-				return thisTime;
-			} catch (Exception e) {	
+		if(!theTime.contains("pm") || theTime.contains("am")) {
+			//24hr format check
+			for(int i = 0; i < time24HrFormatList.length; i++) {
+				try {
+					//validate time
+					time24HrFormatList[i].setLenient(false);
+					Date time = time24HrFormatList[i].parse(theTime);
+					//set time to thisTime
+					Calendar getTime = Calendar.getInstance();
+					getTime.setTime(time);
+					thisTime.set(Calendar.HOUR_OF_DAY, getTime.get(Calendar.HOUR_OF_DAY));
+					thisTime.set(Calendar.MINUTE, getTime.get(Calendar.MINUTE));
+					return thisTime;
+				} catch (Exception e) {	
+				}
 			}
 		}
-
 		
 		/*
 		//testing this method for flexible time format
@@ -218,13 +218,15 @@ public class DateAndTimeFormat {
 		if(theTime == null) {
 			return false;
 		}
-		for(int i = 0; i < time24HrFormatList.length; i++) {
-			try {
-				time24HrFormatList[i].setLenient(false);
-				Date date = time24HrFormatList[i].parse(theTime);
-				System.out.println(date);
-				return true;
-			} catch (Exception e) {	
+		if(!theTime.contains("pm") || theTime.contains("am")) {
+			for(int i = 0; i < time24HrFormatList.length; i++) {
+				try {
+					time24HrFormatList[i].setLenient(false);
+					Date date = time24HrFormatList[i].parse(theTime);
+					System.out.println(date);
+					return true;
+				} catch (Exception e) {	
+				}
 			}
 		}
 		return false;
@@ -235,6 +237,7 @@ public class DateAndTimeFormat {
 		}
 		for(int i = 0; i < time12HrFormatList.length; i++) {
 			try {
+				
 				time12HrFormatList[i].setLenient(false);
 				Date date = time12HrFormatList[i].parse(theTime);
 				System.out.println(date);
