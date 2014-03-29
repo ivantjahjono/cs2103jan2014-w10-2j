@@ -2,6 +2,7 @@ package kaboom.logic.command;
 
 import java.util.Hashtable;
 
+import kaboom.logic.DateAndTimeFormat;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
@@ -11,8 +12,10 @@ import kaboom.storage.TaskListShop;
 
 public class CommandAdd extends Command {
 	
-	private static final String MESSAGE_COMMAND_ADD_SUCCESS = "Successfully added %1$s";
-	private static final String MESSAGE_COMMAND_ADD_FAIL = "Fail to add %1$s";
+	private static final String MESSAGE_COMMAND_ADD_SUCCESS = "WOOT! <%1$s> ADDED. MORE STUFF TO DO!";
+	private static final String MESSAGE_COMMAND_ADD_FAIL = "Fail to add <%1$s>... Error somewhere...";
+	private static final String MESSAGE_COMMAND_ADD_FAIL_NO_NAME = "Enter a task name please :'(";
+	private static final String MESSAGE_COMMAND_ADD_FAIL_STARTDATE_OVER_ENDDATE = "Wow! How did the task end before it even started? 0.0";
 
 	public CommandAdd () {
 		commandType = COMMAND_TYPE.ADD;
@@ -25,19 +28,20 @@ public class CommandAdd extends Command {
 		
 		String commandFeedback = "";
 		
-		if (taskInfo != null && !taskInfo.getTaskName().equals("")) {
-			try {
+		if (!taskInfo.getTaskName().isEmpty()) {
+			if(DateAndTimeFormat.getInstance().dateValidityForStartAndEndDate(taskInfo.getStartDate(),taskInfo.getEndDate())) {
 				if (taskListShop.addTaskToList(taskInfo)) {
 					commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
 				} else {
 					commandFeedback = String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
 				}
-			} catch (Exception e) {
-				commandFeedback = "Added a file with no Task Name";
+			} else {
+				commandFeedback = MESSAGE_COMMAND_ADD_FAIL_STARTDATE_OVER_ENDDATE;
 			}
+			
 		}
 		else {
-			commandFeedback = "Added a file with no Task Name";
+			commandFeedback = MESSAGE_COMMAND_ADD_FAIL_NO_NAME;
 		}
 		
 		return createResult(taskListShop.getAllTaskInList(), commandFeedback);
