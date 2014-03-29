@@ -50,12 +50,12 @@ public class Storage {
 		try {
 			logger.info("Trying to write text file: " + fileName);
 			BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
-			Vector<TaskInfo> taskListShop = TaskListShop.getInstance().getAllTaskInList();
-			assert(taskListShop != null);
+			Vector<TaskInfo> currentTaskList = TaskListShop.getInstance().getAllCurrentTasks();
+			assert(currentTaskList != null);
 
-			for (int i = 0; i < taskListShop.size(); i++) {
+			for (int i = 0; i < currentTaskList.size(); i++) {
 				StringBuilder output = new StringBuilder();
-				TaskInfo task = taskListShop.get(i);
+				TaskInfo task = currentTaskList.get(i);
 
 				output.append(task.getTaskName() + delimiter);
 				output.append((TaskInfo.taskTypeToString(task.getTaskType()) + delimiter));
@@ -118,8 +118,8 @@ public class Storage {
 			logger.info("Trying to read from text file: " + fileName);
 			File inFile = new File(fileName);
 			Scanner fileScanner = new Scanner(inFile);
-			TaskListShop taskListShop = TaskListShop.getInstance();
-			assert(taskListShop != null);
+			TaskListShop currentTaskList = TaskListShop.getInstance();
+			assert(currentTaskList != null);
 
 			while (fileScanner.hasNext()) {
 				Calendar now  = Calendar.getInstance();
@@ -166,7 +166,7 @@ public class Storage {
 				}
 
 				task.setImportanceLevel(Integer.parseInt(inputSplit[INDEX_IMPORTANCE_LEVEL]));
-				taskListShop.addTaskToList(task);
+				currentTaskList.addTaskToList(task);
 			}
 
 			logger.info(fileName + " has been scanned and read");
