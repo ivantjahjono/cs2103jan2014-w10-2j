@@ -31,7 +31,7 @@ public class CommandUndone extends Command{
 			return createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
 		
-		if(!taskToBeModified.isDone()) {
+		if(!taskToBeModified.getDone()) {
 			//can throw exception (command incomplete)
 			feedback = String.format(MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE, taskName);
 			return createResult(taskListShop.getAllCurrentTasks(), feedback);

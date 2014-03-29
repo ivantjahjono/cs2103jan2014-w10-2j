@@ -41,7 +41,7 @@ public class TaskInfoDisplay {
 		setImportanceLevel(infoToUpdateFrom.getImportanceLevel());
 		
 		setExpiryFlag(infoToUpdateFrom.getExpiryFlag());
-		setDoneFlag(infoToUpdateFrom.isDone());
+		setDoneFlag(infoToUpdateFrom.getDone());
 	}
 	
 	public void setTaskId (int id) {
