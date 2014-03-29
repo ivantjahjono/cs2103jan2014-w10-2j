@@ -8,8 +8,6 @@ import java.util.regex.Pattern;
 public class DateAndTimeFormat {
 	
 	private static final String dateFormat = "ddMMyy";		// 12/06/12 or 12.01.06 or 120106
-	private static String TimeFormat24Hour = "([01]?[0-9]|2[0-3])[0-5][0-9]";
-	
 	
 	
 	private static DateAndTimeFormat instance = null;
@@ -23,15 +21,15 @@ public class DateAndTimeFormat {
 	}
 
 	public Calendar formatStringToCalendar (String date, String time) {
+		if(date == null && time == null) {
+			return null;
+		}
+		
 		Calendar currentDateAndTime = Calendar.getInstance();
 		Calendar dateAndTime = (Calendar) currentDateAndTime.clone();
 		
 		dateAndTime = dateTranslator(dateAndTime, date);
 		dateAndTime = timeTranslator(dateAndTime,time);
-		
-		if(dateAndTime.equals(currentDateAndTime)) {
-			return null;
-		}
 		
 		return dateAndTime;
 	}
@@ -155,12 +153,6 @@ public class DateAndTimeFormat {
 		}
 		System.out.println(cal.getTime().toString());
 		return cal;
-	}
-	
-	private boolean isTimeValid (String time) {
-		Pattern pattern;
-		pattern = Pattern.compile(TimeFormat24Hour);
-		return pattern.matcher(time).matches();
 	}
 	
 	private boolean isHourValid (int hour) {
