@@ -37,6 +37,15 @@ public class TaskListShop {
 			return false;
 		}
 	}
+	
+	public boolean addTaskToArchivedList (TaskInfo newTask) {
+		if (archivedTaskList != null) {
+			logger.info("Adding one item to TaskListShop");
+			return archivedTaskList.add(newTask);
+		} else {
+			return false;
+		}
+	}
 
 	public TaskInfo getTaskByName (String taskName) {
 		for (int i = currentTaskList.size()-1; i >= 0; i--) {
@@ -64,6 +73,11 @@ public class TaskListShop {
 
 	public Vector<TaskInfo> getAllCurrentTasks () {
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(currentTaskList);
+		return vectorToReturn;
+	}
+	
+	public Vector<TaskInfo> getAllArchivedTasks () {
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(archivedTaskList);
 		return vectorToReturn;
 	}
 
