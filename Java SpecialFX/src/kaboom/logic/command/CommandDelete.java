@@ -11,8 +11,8 @@ import kaboom.storage.TaskListShop;
 
 public class CommandDelete extends Command {
 	
-	private static final String MESSAGE_COMMAND_DELETE_SUCCESS = "%1$s deleted.";
-	private static final String MESSAGE_COMMAND_DELETE_FAIL = "%1$s fail to delete.";
+	private static final String MESSAGE_COMMAND_DELETE_SUCCESS = "<%1$s> deleted. 1 less work to do :D";
+	private static final String MESSAGE_COMMAND_DELETE_FAIL = "Aww... fail to delete <%1$s>.";
 	
 	public CommandDelete () {
 		commandType = COMMAND_TYPE.DELETE;
