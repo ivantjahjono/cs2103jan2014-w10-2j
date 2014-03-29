@@ -25,12 +25,15 @@ public class CommandSearch extends Command {
 		assert taskInfo != null;
 		assert taskListShop != null;
 
-		//Set the end time to 2359 for searching
 		Calendar endDate = taskInfo.getEndDate();
-		endDate.set(Calendar.HOUR_OF_DAY, 23);
-		endDate.set(Calendar.MINUTE, 59);
-		taskInfo.setEndDate(endDate);
-
+		if(endDate != null){
+			System.out.println(endDate);
+		//Set the end time to 2359 for searching		
+			endDate.set(Calendar.HOUR_OF_DAY, 23);
+			endDate.set(Calendar.MINUTE, 59);
+			taskInfo.setEndDate(endDate);
+		}
+		
 		History history = History.getInstance();
 		history.taskID.clear();
 
@@ -52,7 +55,7 @@ public class CommandSearch extends Command {
 				}
 			}
 		}
-		else {
+		else if(endDate != null){
 			//search by date
 			for (int i = 0; i < allTasks.size(); i++) {
 				TaskInfo singleTask = allTasks.get(i);
@@ -65,7 +68,7 @@ public class CommandSearch extends Command {
 							tasksFound.add(singleTask);
 							history.taskID.add(TaskListShop.getInstance().getAllTaskInList().indexOf(singleTask));
 						}
-						if (singleTask.getStartDate().before(targetDate) && singleTask.getEndDate().after(targetDate)) {
+						if ((singleTask.getStartDate() != null && singleTask.getStartDate().before(targetDate)) || singleTask.getEndDate().after(targetDate)) {
 							//For timed tasks
 							if (!tasksFound.contains(singleTask)) {
 								tasksFound.add(singleTask);
@@ -92,6 +95,7 @@ public class CommandSearch extends Command {
 
 	public boolean parseInfo(String info) {
 		return true;
+	}
 	
 	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
 		taskInfo = new TaskInfo();

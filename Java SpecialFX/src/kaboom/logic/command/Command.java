@@ -62,7 +62,10 @@ public class Command {
 		return commandResult;
 	}
 	
-	public boolean undo () {
+	public boolean undo() {
+		return false;
+	}
+	
 	public boolean parseInfo(String info) {
 		return false;
 	}
@@ -81,7 +84,6 @@ public class Command {
 		storeTaskInfo(infoHashes);
 	}
 	
-
 	
 	protected String saveTaskName(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
 		String taskName = infoHashes.get(KEYWORD_TYPE.TASKNAME);
