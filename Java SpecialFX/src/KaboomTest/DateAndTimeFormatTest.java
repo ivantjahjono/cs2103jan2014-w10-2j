@@ -183,9 +183,7 @@ public class DateAndTimeFormatTest {
 		assertFalse ("Valid",datFormat.isTimeValid("23.00"));
 		
 		//HH:mm format
-		assertTrue ("Valid",datFormat.isTimeValid("1200 am"));
-		assertTrue ("Valid",datFormat.isTimeValid("1200 am"));
-		assertTrue ("Valid",datFormat.isTimeValid("1200 pm"));
-		assertFalse ("Valid",datFormat.isTimeValid("1300 am"));
+		assertTrue ("Valid",datFormat.isTimeValid("1100 PM"));
+
 	}
 }

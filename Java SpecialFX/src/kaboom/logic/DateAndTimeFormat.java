@@ -43,10 +43,15 @@ public class DateAndTimeFormat {
 		if(date == null && time == null) {
 			return null;
 		}
-		Calendar dateAndTime = Calendar.getInstance();
+		Calendar currentDateAndTime = Calendar.getInstance();
+		Calendar dateAndTime = (Calendar) currentDateAndTime.clone();
 	
 		dateAndTime = dateTranslator(dateAndTime, date);
 		dateAndTime = timeTranslator(dateAndTime,time);
+		
+		if (currentDateAndTime.equals(dateAndTime)) {
+			return null;
+		}
 		
 		return dateAndTime;
 	}
@@ -77,6 +82,7 @@ public class DateAndTimeFormat {
 		for(int i = 0; i < dateFormatList.length; i++) {
 			try {
 				//validate date
+				dateFormatList[i].setLenient(false);
 				Date date = dateFormatList[i].parse(theDate);
 				//set date to thisDate
 				Calendar getDate = Calendar.getInstance();
@@ -99,6 +105,7 @@ public class DateAndTimeFormat {
 		for(int i = 0; i < timeFormatList.length; i++) {
 			try {
 				//validate time
+				timeFormatList[i].setLenient(false);
 				Date time = timeFormatList[i].parse(theTime);
 				//set time to thisTime
 				Calendar getTime = Calendar.getInstance();
