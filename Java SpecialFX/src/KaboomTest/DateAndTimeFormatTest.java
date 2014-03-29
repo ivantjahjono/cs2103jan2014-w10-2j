@@ -178,7 +178,7 @@ public class DateAndTimeFormatTest {
 		//invalid format
 		assertFalse ("Invalid: format",datFormat.is24hrTimeValid("abcd"));
 		assertTrue ("Invalid: format",datFormat.is24hrTimeValid("1200 pm"));
-		
+		assertTrue ("Valid", datFormat.is24hrTimeValid("1300am"));
 		//HH:mm format
 		assertTrue ("Valid",datFormat.is24hrTimeValid("23:00"));
 		assertFalse ("Valid",datFormat.is24hrTimeValid("23.00"));
@@ -190,7 +190,7 @@ public class DateAndTimeFormatTest {
 		assertTrue ("Valid",datFormat.is12hrTimeValid("0100 pm"));
 		assertFalse ("Invalid",datFormat.is12hrTimeValid("1300 pm"));
 		assertFalse ("Invalid",datFormat.is12hrTimeValid("1300 am"));
-
+		
 		//h:mm format
 		assertTrue ("Valid",datFormat.is12hrTimeValid("1:00pm"));
 		

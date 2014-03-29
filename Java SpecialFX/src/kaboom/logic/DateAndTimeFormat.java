@@ -10,7 +10,7 @@ public class DateAndTimeFormat {
 	private static final String dateFormat2 = "dd'/'MM'/'yy";
 	private static final String dateFormat3 = "dd'.'MM'.'yy";
 	
-	private static final String time24hrFormat1 = "HHmm";
+	private static final String time24hrFormat1 = "HHmm"; 
 	private static final String time24hrFormat2 = "HH':'mm";
 	private static final String time12hrFormat1 = "hhmma";
 	private static final String time12hrFormat2 = "hhmm a";
@@ -124,6 +124,7 @@ public class DateAndTimeFormat {
 				thisTime.set(Calendar.HOUR, getTime.get(Calendar.HOUR));
 				thisTime.set(Calendar.MINUTE, getTime.get(Calendar.MINUTE));
 				thisTime.set(Calendar.AM_PM, getTime.get(Calendar.AM_PM));
+				
 				return thisTime;
 			} catch (Exception e) {	
 			}
