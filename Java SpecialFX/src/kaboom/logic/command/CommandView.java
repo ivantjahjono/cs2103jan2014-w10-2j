@@ -38,6 +38,9 @@ public class CommandView extends Command{
 		Vector<TaskInfo> taskList = null;
 		Result commandResult = createResult(taskList, feedback);
 		
+		if(viewType == null) {
+			viewType = "Nothing to view";
+		}
 		switch(viewType) {
 			case KEYWORD_RUNNING:
 				taskList = taskListShop.getFloatingTasks();
@@ -88,5 +91,10 @@ public class CommandView extends Command{
 	
 	public boolean parseInfo(String info) {
 		return true;
+	}
+	
+	//For testing purposes
+	public void setViewType(String view) {
+		viewType = view;
 	}
 }
