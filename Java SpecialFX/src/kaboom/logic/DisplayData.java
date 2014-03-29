@@ -174,12 +174,18 @@ public class DisplayData extends Observable {
 		if (currentPage > maxPage) {
 			currentPage = maxPage;
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 	
 	public void goToPreviousPage () {
 		if (currentPage > 0) {
 			currentPage--;
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 	
 	public DISPLAY_STATE getCurrentDisplayState() {
