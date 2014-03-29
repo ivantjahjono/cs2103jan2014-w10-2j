@@ -15,6 +15,7 @@ public class TaskInfoDisplay {
 	
 	private SimpleStringProperty importanceLevel;
 	private SimpleBooleanProperty isExpired;
+	private SimpleBooleanProperty isDone;
 	
 	public TaskInfoDisplay () {
 		taskId = new SimpleIntegerProperty(0);
@@ -23,6 +24,7 @@ public class TaskInfoDisplay {
 		endDate = new SimpleStringProperty("-");
 		importanceLevel = new SimpleStringProperty("");
 		isExpired = new SimpleBooleanProperty(false);
+		isDone = new SimpleBooleanProperty(false);
 	}
 	
 	public void updateFromThisInfo (TaskInfo infoToUpdateFrom) {
@@ -39,6 +41,7 @@ public class TaskInfoDisplay {
 		setImportanceLevel(infoToUpdateFrom.getImportanceLevel());
 		
 		setExpiryFlag(infoToUpdateFrom.getExpiryFlag());
+		setDoneFlag(infoToUpdateFrom.isDone());
 	}
 	
 	public void setTaskId (int id) {
@@ -79,6 +82,10 @@ public class TaskInfoDisplay {
 		isExpired.set(flag);
 	}
 	
+	public void setDoneFlag (boolean flag) {
+		isDone.set(flag);
+	}
+	
 	public int getTaskId () {
 		return taskId.get();
 	}
@@ -101,6 +108,10 @@ public class TaskInfoDisplay {
 	
 	public boolean isExpired () {
 		return isExpired.get();
+	}
+	
+	public boolean isDone () {
+		return isDone.get();
 	}
 }
 
