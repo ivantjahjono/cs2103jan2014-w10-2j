@@ -30,6 +30,8 @@ public class Storage {
 	private static final int INDEX_END_HOUR = 10;
 	private static final int INDEX_END_MINUTE = 11;
 	private static final int INDEX_IMPORTANCE_LEVEL = 12;
+	private static final int INDEX_IS_EXPIRED = 13;
+	private static final int INDEX_IS_DONE = 14;
 
 	private String fileName;
 
@@ -48,9 +50,61 @@ public class Storage {
 	 */
 	public boolean store() {
 		try {
-			logger.info("Trying to write text file: " + fileName);
+			logger.info("Trying to write current tasks text file: " + fileName);
 			BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
 			Vector<TaskInfo> currentTaskList = TaskListShop.getInstance().getAllCurrentTasks();
+			assert(currentTaskList != null);
+
+			for (int i = 0; i < currentTaskList.size(); i++) {
+				StringBuilder output = new StringBuilder();
+				TaskInfo task = currentTaskList.get(i);
+
+				output.append(task.getTaskName() + delimiter);
+				output.append((TaskInfo.taskTypeToString(task.getTaskType()) + delimiter));
+
+				Calendar startDate = task.getStartDate();
+				if (startDate != null) {
+					output.append(startDate.get(Calendar.YEAR) + delimiter);
+					output.append(startDate.get(Calendar.MONTH) + delimiter);
+					output.append(startDate.get(Calendar.DAY_OF_MONTH) + delimiter);
+					output.append(startDate.get(Calendar.HOUR_OF_DAY) + delimiter);
+					output.append(startDate.get(Calendar.MINUTE) + delimiter);
+				}
+				else {
+					logger.info("startDate for task " + i + "is null");
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+				}
+
+				Calendar endDate = task.getEndDate();
+				if (endDate != null) {
+					output.append(endDate.get(Calendar.YEAR) + delimiter);
+					output.append(endDate.get(Calendar.MONTH) + delimiter);
+					output.append(endDate.get(Calendar.DAY_OF_MONTH) + delimiter);
+					output.append(endDate.get(Calendar.HOUR_OF_DAY) + delimiter);
+					output.append(endDate.get(Calendar.MINUTE) + delimiter);
+				}
+				else {
+					logger.info("endDate for task " + i + "is null");
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+				}
+				output.append(task.getImportanceLevel() + delimiter);
+				output.append(task.getExpiryFlag() + delimiter);
+				output.append(task.getDone() + delimiter);
+				writer.write(output.toString());
+				writer.newLine();
+				writer.flush();
+			}
+
+			logger.info("Trying to write archived tasks text file: " + fileName);
+			currentTaskList = TaskListShop.getInstance().getAllArchivedTasks();
 			assert(currentTaskList != null);
 
 			for (int i = 0; i < currentTaskList.size(); i++) {
@@ -166,7 +220,15 @@ public class Storage {
 				}
 
 				task.setImportanceLevel(Integer.parseInt(inputSplit[INDEX_IMPORTANCE_LEVEL]));
-				currentTaskList.addTaskToList(task);
+				task.setExpiryFlag(Boolean.parseBoolean(inputSplit[INDEX_IS_EXPIRED]));
+				task.setDone(Boolean.parseBoolean(inputSplit[INDEX_IS_DONE]));
+
+				if (task.getDone()) {
+					currentTaskList.addTaskToArchivedList(task);
+				}
+				else {
+					currentTaskList.addTaskToList(task);
+				}
 			}
 
 			logger.info(fileName + " has been scanned and read");
