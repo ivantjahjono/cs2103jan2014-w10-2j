@@ -13,6 +13,7 @@ public class TaskInfo {
 	int importanceLevel;
 	
 	boolean isExpired;
+	boolean isDone;
 	
 	public TaskInfo () {
 		taskname = "";
@@ -20,6 +21,7 @@ public class TaskInfo {
 		endDate = null;
 		importanceLevel = 0;
 		isExpired = false;
+		isDone = false;
 	}
 	
 	public TaskInfo (TaskInfo info) {
@@ -59,6 +61,10 @@ public class TaskInfo {
 		isExpired = flag;
 	}
 	
+	public void setDone (boolean flag) {
+		isDone = flag;
+	}
+	
 	public String getTaskName () { 
 		return taskname;
 	}
@@ -81,6 +87,10 @@ public class TaskInfo {
 	
 	public boolean getExpiryFlag () { 
 		return isExpired;
+	}
+	
+	public boolean isDone () {
+		return isDone;
 	}
 	
 	public boolean isEmpty () {

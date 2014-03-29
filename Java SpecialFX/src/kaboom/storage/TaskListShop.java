@@ -12,8 +12,8 @@ public class TaskListShop {
 	private static TaskListShop taskListInstance = null;
 	private static final Logger logger = Logger.getLogger("TaskListShopLogger");
 
-	private Vector<TaskInfo> taskList;
-
+	private Vector<TaskInfo> currentTaskList;
+	private Vector<TaskInfo> archivedTaskList;
 
 	public static TaskListShop getInstance () {
 		if (taskListInstance == null) {
@@ -25,23 +25,24 @@ public class TaskListShop {
 	}
 
 	private TaskListShop () {
-		taskList = new Vector<TaskInfo>();
+		currentTaskList = new Vector<TaskInfo>();
+		archivedTaskList = new Vector<TaskInfo>();
 	}
 
 	public boolean addTaskToList (TaskInfo newTask) {
-		if (taskList != null) {
+		if (currentTaskList != null) {
 			logger.info("Adding one item to TaskListShop");
-			return taskList.add(newTask);
+			return currentTaskList.add(newTask);
 		} else {
 			return false;
 		}
 	}
 
 	public TaskInfo getTaskByName (String taskName) {
-		for (int i = 0; i < taskList.size(); i++) {
+		for (int i = currentTaskList.size()-1; i >= 0; i--) {
 			//System.out.println(taskList.get(i).getTaskName());
-			if (taskName.equals(taskList.get(i).getTaskName())) {
-				return taskList.get(i);
+			if (taskName.equals(currentTaskList.get(i).getTaskName())) {
+				return currentTaskList.get(i);
 			}
 		}
 		return null;
@@ -49,28 +50,28 @@ public class TaskListShop {
 
 	public void updateTask (TaskInfo newTaskInfo, TaskInfo prevTaskInfo) {
 		int indexOfTaskListToBeModified = -1;
-		for (int i = 0; i < taskList.size(); i++) {
-			if (prevTaskInfo.equals(taskList.get(i))) {
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			if (prevTaskInfo.equals(currentTaskList.get(i))) {
 				indexOfTaskListToBeModified = i;
 				//System.out.println("index="+indexOfTaskListToBeModified);
 			}
 		}
 
 		if (indexOfTaskListToBeModified != -1) {
-			taskList.set(indexOfTaskListToBeModified, newTaskInfo);
+			currentTaskList.set(indexOfTaskListToBeModified, newTaskInfo);
 		}
 	}
 
 	public Vector<TaskInfo> getAllTaskInList () {
-		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(taskList);
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(currentTaskList);
 		return vectorToReturn;
 	}
 
 	public Vector<TaskInfo> getFloatingTasks() {
 		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
 
-		for (int i = 0; i < taskList.size(); i++) {
-			TaskInfo singleTask = taskList.get(i);
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
 			if (singleTask.getTaskType() == TASK_TYPE.FLOATING) {
 				returnVector.add(singleTask);
 			}
@@ -81,8 +82,8 @@ public class TaskListShop {
 	public Vector<TaskInfo> getDeadlineTasks() {
 		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
 
-		for (int i = 0; i < taskList.size(); i++) {
-			TaskInfo singleTask = taskList.get(i);
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
 			if (singleTask.getTaskType() == TASK_TYPE.DEADLINE) {
 				returnVector.add(singleTask);
 			}
@@ -93,8 +94,8 @@ public class TaskListShop {
 	public Vector<TaskInfo> getTimedTasks() {
 		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
 
-		for (int i = 0; i < taskList.size(); i++) {
-			TaskInfo singleTask = taskList.get(i);
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
 			if (singleTask.getTaskType() == TASK_TYPE.TIMED) {
 				returnVector.add(singleTask);
 			}
@@ -105,8 +106,8 @@ public class TaskListShop {
 	public Vector<TaskInfo> getExpiredTasks() {
 		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
 
-		for (int i = 0; i < taskList.size(); i++) {
-			TaskInfo singleTask = taskList.get(i);
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
 			boolean isExpired = singleTask.getExpiryFlag();
 			if (isExpired) {
 				returnVector.add(singleTask);
@@ -118,8 +119,8 @@ public class TaskListShop {
 	public Vector<TaskInfo> getNonExpiredTasks() {
 		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
 
-		for (int i = 0; i < taskList.size(); i++) {
-			TaskInfo singleTask = taskList.get(i);
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
 			boolean isExpired = singleTask.getExpiryFlag();
 			if (!isExpired) {
 				returnVector.add(singleTask);
@@ -132,7 +133,7 @@ public class TaskListShop {
 		TaskInfo currentTaskToRemove = getTaskByName(taskName);
 
 		if (currentTaskToRemove != null) {
-			taskList.remove(currentTaskToRemove);
+			currentTaskList.remove(currentTaskToRemove);
 			logger.info("One task " + taskName + " removed");
 			return true;
 		}
@@ -145,8 +146,8 @@ public class TaskListShop {
 	//Sets to false if the task has not expired
 	//Floating tasks have a default of not expired
 	public void refreshTasks() {
-		for (int i = 0; i < taskList.size(); i++) {
-			TaskInfo singleTask = taskList.get(i);
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
 			Calendar now = Calendar.getInstance();
 			if (now.after(singleTask.getEndDate())) {
 				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
@@ -162,13 +163,13 @@ public class TaskListShop {
 	}
 
 	public Vector<TaskInfo> clearAllTasks () {
-		taskList = new Vector<TaskInfo>();
-		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(taskList);
+		currentTaskList = new Vector<TaskInfo>();
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(currentTaskList);
 		logger.info("All tasks cleared");
 		return vectorToReturn;
 	}
 
 	public int shopSize () {
-		return taskList.size();
+		return currentTaskList.size();
 	}
 }

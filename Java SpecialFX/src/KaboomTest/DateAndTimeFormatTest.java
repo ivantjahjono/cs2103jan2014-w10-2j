@@ -51,6 +51,81 @@ public class DateAndTimeFormatTest {
 		
 	}
 	
-
-
+	@Test
+	public void addTimeToCalendarTest() {
+		Calendar date = Calendar.getInstance();
+		Calendar dateAfterAddition = null;
+		date.set(Calendar.HOUR_OF_DAY, 12);
+		date.set(Calendar.MINUTE, 0);
+		
+		//Test for no manipulation
+		dateAfterAddition = datFormat.addTimeToCalendar(date, 0, 0);
+		assertEquals("12", Integer.toString(dateAfterAddition.get(Calendar.HOUR_OF_DAY)));
+		assertEquals("0", Integer.toString(dateAfterAddition.get(Calendar.MINUTE)));
+		
+		//Test for 1 Hour After
+		dateAfterAddition = datFormat.addTimeToCalendar(date, 1, 0);
+		assertEquals("13", Integer.toString(dateAfterAddition.get(Calendar.HOUR_OF_DAY)));
+		assertEquals("0", Integer.toString(dateAfterAddition.get(Calendar.MINUTE)));
+		
+		//Test for 30 Mins After
+		dateAfterAddition = datFormat.addTimeToCalendar(date, 0, 30);
+		assertEquals("12", Integer.toString(dateAfterAddition.get(Calendar.HOUR_OF_DAY)));
+		assertEquals("30", Integer.toString(dateAfterAddition.get(Calendar.MINUTE)));
+		
+		//Test for 1 Hour Before
+		dateAfterAddition = datFormat.addTimeToCalendar(date, -1, 0);
+		assertEquals("11", Integer.toString(dateAfterAddition.get(Calendar.HOUR_OF_DAY)));
+		assertEquals("0", Integer.toString(dateAfterAddition.get(Calendar.MINUTE)));
+		
+		//Test for 30 Mins Before
+		dateAfterAddition = datFormat.addTimeToCalendar(date, 0, -30);
+		assertEquals("11", Integer.toString(dateAfterAddition.get(Calendar.HOUR_OF_DAY)));
+		assertEquals("30", Integer.toString(dateAfterAddition.get(Calendar.MINUTE)));
+		
+		//Date Boundaries (Next Day)
+		date.set(Calendar.HOUR_OF_DAY, 23);
+		date.set(Calendar.MINUTE, 59);
+		date.set(Calendar.DAY_OF_MONTH, 10);
+		
+		//Test 1 Hour After
+		dateAfterAddition = datFormat.addTimeToCalendar(date, 1, 0);
+		assertEquals("0", Integer.toString(dateAfterAddition.get(Calendar.HOUR_OF_DAY)));
+		assertEquals("59", Integer.toString(dateAfterAddition.get(Calendar.MINUTE)));
+		assertEquals("11", Integer.toString(dateAfterAddition.get(Calendar.DAY_OF_MONTH)));
+		
+		//Test 1 Min After
+		dateAfterAddition = datFormat.addTimeToCalendar(date, 0, 1);
+		assertEquals("0", Integer.toString(dateAfterAddition.get(Calendar.HOUR_OF_DAY)));
+		assertEquals("0", Integer.toString(dateAfterAddition.get(Calendar.MINUTE)));
+		assertEquals("11", Integer.toString(dateAfterAddition.get(Calendar.DAY_OF_MONTH)));
+		
+	}
+	
+	@Test
+	public void startDateAndEndDateValidityTest() {
+		Calendar startDate = Calendar.getInstance();
+		Calendar endDate = null;
+				
+		//Test if valid if same start and end
+		endDate = datFormat.addTimeToCalendar(startDate, 0, 0);
+		assertEquals("false",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
+		
+		//Test if valid if end is after start (1min later)
+		endDate = datFormat.addTimeToCalendar(startDate, 0, 1);
+		assertEquals("true",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
+		
+		//Test if valid if end is after start (1min before)
+		endDate = datFormat.addTimeToCalendar(startDate, 0, -1);
+		assertEquals("false",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
+	}
+	
+	@Test
+	public void testTimeValidity() {
+		assertEquals ("true", datFormat.isTimeValidTest("2359"));
+		assertEquals ("true", datFormat.isTimeValidTest("0000"));
+		assertEquals ("true", datFormat.isTimeValidTest("0001"));
+		assertEquals ("false", datFormat.isTimeValidTest("2400"));
+		assertEquals ("false", datFormat.isTimeValidTest("0060"));
+	}
 }

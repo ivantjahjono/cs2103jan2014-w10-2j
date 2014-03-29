@@ -1,9 +1,11 @@
 package kaboom.logic.command;
 
+import java.util.Hashtable;
 import java.util.Vector;
 
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
+import kaboom.logic.TASK_TYPE;
 import kaboom.logic.TaskInfo;
 import kaboom.storage.TaskListShop;
 import kaboom.ui.DISPLAY_STATE;
@@ -23,13 +25,15 @@ public class CommandView extends Command{
 	private static final String MESSAGE_VIEW_INVALID = "Invalid View Mode";
 	
 	
+	String viewType;
+	
 	public CommandView () {
 		commandType = COMMAND_TYPE.VIEW;
 		initialiseKeywordList();
 	}
 
 	public Result execute() {
-		assert TaskListShop.getInstance() != null;
+		assert taskListShop != null;
 		
 		String feedback = "";
 		Vector<TaskInfo> taskList = null;
@@ -37,22 +41,22 @@ public class CommandView extends Command{
 		
 		switch(viewType) {
 			case KEYWORD_RUNNING:
-				taskList = TaskListShop.getInstance().getFloatingTasks();
+				taskList = taskListShop.getFloatingTasks();
 				feedback = MESSAGE_VIEW_RUNNING;
 				commandResult.setDisplayState(DISPLAY_STATE.RUNNING);
 				break;
 			case KEYWORD_DEADLINE:
-				taskList = TaskListShop.getInstance().getDeadlineTasks();
+				taskList = taskListShop.getDeadlineTasks();
 				feedback = MESSAGE_VIEW_DEADLINE;
 				commandResult.setDisplayState(DISPLAY_STATE.DEADLINE);
 				break;
 			case KEYWORD_TIMED:
-				taskList = TaskListShop.getInstance().getTimedTasks();
+				taskList = taskListShop.getTimedTasks();
 				feedback = MESSAGE_VIEW_TIMED;
 				commandResult.setDisplayState(DISPLAY_STATE.TIMED);
 				break;
 			case KEYWORD_ALL:
-				taskList = TaskListShop.getInstance().getAllTaskInList();
+				taskList = taskListShop.getAllTaskInList();
 				feedback = MESSAGE_VIEW_ALL;
 				commandResult.setDisplayState(DISPLAY_STATE.ALL);
 			case KEYWORD_SEARCH:
@@ -69,6 +73,10 @@ public class CommandView extends Command{
 
 	private void initialiseKeywordList() {
 		keywordList.add(KEYWORD_TYPE.VIEWTYPE);
+	}
+	
+	public void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
+		viewType = infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
 	}
 	
 	public boolean parseInfo(String info) {
