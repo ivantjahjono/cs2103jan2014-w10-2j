@@ -8,7 +8,7 @@ public class UIIntegrationTest {
 
 	@Test
 	public void test() {
-		fail("Not yet implemented");
+		fail("Dunno how to test UI");
 	}
 
 }
