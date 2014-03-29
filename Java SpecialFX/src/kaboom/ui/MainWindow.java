@@ -42,9 +42,7 @@ import kaboom.logic.DisplayData;
 import kaboom.logic.TaskInfoDisplay;
 import kaboom.logic.TaskMasterKaboom;
 
-public class MainWindow implements javafx.fxml.Initializable, Observer {
-	//TODO clean up class parameters
-	
+public class MainWindow implements javafx.fxml.Initializable, Observer {	
 	private final int MAX_TABS = 5;
 	
 	// User interface elements
@@ -240,10 +238,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		}
 		
 		// Check if need to switch header
-		int switchIndexResult = getSwitchIndexFromCommand(command);
-		if (switchIndexResult != -1) {
-			switchToNewHeader(switchIndexResult);
-		} if (isPageToggle(command)) {
+		if (isPageToggle(command)) {
 			activatePageToggle(command);
 		} else {
 			applicationController.processCommand(command);
@@ -253,11 +248,14 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		currentCommand = "";
 		
 		commandTextInput.setText("");
-		
-		//updateDisplay();
 	}
 
 	private void switchToNewHeader(int switchIndexResult) {
+		// Is it the same label activated ?
+		if (switchIndexResult == currentLabelIndex) {
+			return;
+		}
+		
 		previousLabelIndex = currentLabelIndex;
 		currentLabelIndex = switchIndexResult;
 		switchMainHeaderHighlight(previousLabelIndex, currentLabelIndex);
@@ -267,6 +265,41 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		updateTaskTable();
 		updateFeedbackMessage();
 		updatePagesTab();
+		updateHeader();
+	}
+
+	private void updateHeader() {
+		DISPLAY_STATE newDisplayState = uiData.getCurrentDisplayState();
+		
+		int newHeaderIndex = 0;
+		switch (newDisplayState) {
+			case ALL:
+				newHeaderIndex = 0;
+				break;
+				
+			case RUNNING:
+				newHeaderIndex = 1;
+				break;
+				
+			case DEADLINE:
+				newHeaderIndex = 2;
+				break;
+				
+			case TIMED:
+				newHeaderIndex = 3;
+				break;
+				
+			case SEARCH:
+				newHeaderIndex = 4;
+				break;
+				
+			case ARCHIVE:
+				newHeaderIndex = 5;
+				break;
+				
+		}
+		
+		switchToNewHeader(newHeaderIndex);
 	}
 
 	private void activatePageToggle(String command) {
@@ -461,35 +494,40 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		Node nodePressed = (Node)mouseEvent.getSource();
 		
 		loggerUnit.log(Level.FINE, nodePressed.getId()+" header clicked.");
-		
-		previousLabelIndex = currentLabelIndex;
+		// TODO need to activate the view command without creating string.
+		DISPLAY_STATE headerTypeClicked = DISPLAY_STATE.ALL;
+		String command = "";
 		switch (nodePressed.getId()) {
 			case "header_all":
-				currentLabelIndex = 0;
+				headerTypeClicked = DISPLAY_STATE.ALL;
+				command = "view all";
 				break;
 				
 			case "header_running":
-				currentLabelIndex = 1;
+				headerTypeClicked = DISPLAY_STATE.RUNNING;
+				command = "view running";
 				break;
 				
 			case "header_deadline":
-				currentLabelIndex = 2;
+				headerTypeClicked = DISPLAY_STATE.DEADLINE;
+				command = "view deadline";
 				break;
 				
 			case "header_timed":
-				currentLabelIndex = 3;
+				headerTypeClicked = DISPLAY_STATE.TIMED;
+				command = "view timed";
 				break;
 				
 			case "header_search":
-				currentLabelIndex = 4;
+				headerTypeClicked = DISPLAY_STATE.SEARCH;
+				command = "view search";
 				break;
 				
 			default:
 				return;
 		}
 		
-		setHeaderLabelToNormal(labelList.get(previousLabelIndex));
-		setHeaderLabelToSelected(labelList.get(currentLabelIndex));
+		applicationController.processCommand(command);
 	}
 
 	private void switchMainHeaderHighlight(int prevIndex, int currIndex) {

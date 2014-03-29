@@ -85,8 +85,8 @@ public class CommandTest {
 	//CommandView
 	@Test
 	public void testCommandView() {
-		Command com = new CommandView();
-		com.setTaskInfo(task);
+		CommandView com = new CommandView();
+		com.setViewType("");
 
 		//Test Command feedback
 		//No viewType set
