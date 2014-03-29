@@ -109,15 +109,15 @@ public class DateAndTimeFormatTest {
 				
 		//Test if valid if same start and end
 		endDate = datFormat.addTimeToCalendar(startDate, 0, 0);
-		assertEquals("false",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
+		assertFalse("false",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
 		
 		//Test if valid if end is after start (1min later)
 		endDate = datFormat.addTimeToCalendar(startDate, 0, 1);
-		assertEquals("true",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
+		assertTrue("true",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
 		
 		//Test if valid if end is after start (1min before)
 		endDate = datFormat.addTimeToCalendar(startDate, 0, -1);
-		assertEquals("false",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
+		assertFalse("false",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
 	}
 
 	

@@ -57,11 +57,14 @@ public class DateAndTimeFormat {
 	}
 	
 	//testing phase
-	public String dateValidityForStartAndEndDate (Calendar startDate, Calendar endDate) {
-		if (startDate.before(endDate)) {
-			return "true";
+	public boolean dateValidityForStartAndEndDate (Calendar startDate, Calendar endDate) {
+		if (startDate == null || endDate == null) {
+			return true;
 		}
-		return "false";
+		if (startDate.before(endDate)) {
+			return true;
+		}
+		return false;
 	}
 	
 	private Calendar dateTranslator(Calendar thisDate, String theDate){
