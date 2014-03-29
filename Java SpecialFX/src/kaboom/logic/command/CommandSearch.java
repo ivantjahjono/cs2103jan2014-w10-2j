@@ -38,7 +38,7 @@ public class CommandSearch extends Command {
 
 		String commandFeedback;
 		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
-		Vector<TaskInfo> allTasks = taskListShop.getAllTaskInList();
+		Vector<TaskInfo> allTasks = taskListShop.getAllCurrentTasks();
 
 		String taskName = taskInfo.getTaskName();
 		if (!taskName.equals("")) {
@@ -59,7 +59,7 @@ public class CommandSearch extends Command {
 					if (singleTask.getEndDate().before(targetDate)) {
 						//For deadline tasks
 						tasksFound.add(singleTask);
-						history.taskID.add(TaskListShop.getInstance().getAllTaskInList().indexOf(singleTask));
+						history.taskID.add(TaskListShop.getInstance().getAllCurrentTasks().indexOf(singleTask));
 					}
 					if ((singleTask.getStartDate() != null && singleTask.getStartDate().before(targetDate)) || 
 							singleTask.getEndDate().after(targetDate)) {

@@ -79,7 +79,7 @@ public class TaskListShopTest {
 
 	@Test
 	public void testGetAllTaskInList() {
-		assertNotNull(allTasks.getAllTaskInList());
+		assertNotNull(allTasks.getAllCurrentTasks());
 	}
 
 	@Test

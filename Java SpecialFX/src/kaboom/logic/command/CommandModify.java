@@ -55,10 +55,10 @@ public class CommandModify extends Command {
 			taskListShop.updateTask(taskInfo, preModifiedTaskInfo);
 		} catch (Exception e) {
 			feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL, taskName);
-			return createResult(taskListShop.getAllTaskInList(), feedback);
+			return createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
 		feedback = String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, preModifiedTaskInfo.getTaskName());
-		return createResult(taskListShop.getAllTaskInList(), feedback);
+		return createResult(taskListShop.getAllCurrentTasks(), feedback);
 	}
 	
 	public boolean undo () {

@@ -51,7 +51,7 @@ public class CommandView extends Command{
 				feedback = MESSAGE_VIEW_TIMED;
 				break;
 			case KEYWORD_ALL:
-				taskList = taskListShop.getAllTaskInList();
+				taskList = taskListShop.getAllCurrentTasks();
 				feedback = MESSAGE_VIEW_ALL;
 			case KEYWORD_SEARCH:
 				//UNDER CONSTRUCTION LOL

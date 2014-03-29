@@ -32,7 +32,7 @@ public class CommandDelete extends Command {
 			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
 		}
 		
-		return createResult(taskListShop.getAllTaskInList(), commandFeedback);
+		return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
 	}
 	
 	public boolean undo () {
