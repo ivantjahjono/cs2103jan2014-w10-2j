@@ -28,7 +28,7 @@ public class CommandAdd extends Command {
 		
 		String commandFeedback = "";
 		
-		if (!taskInfo.getTaskName().isEmpty()) {
+		if (taskInfo!=null && !taskInfo.getTaskName().isEmpty()) {
 			if(DateAndTimeFormat.getInstance().dateValidityForStartAndEndDate(taskInfo.getStartDate(),taskInfo.getEndDate())) {
 				if (taskListShop.addTaskToList(taskInfo)) {
 					commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
