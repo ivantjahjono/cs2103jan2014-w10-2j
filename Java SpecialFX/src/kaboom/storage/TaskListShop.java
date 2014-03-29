@@ -168,6 +168,15 @@ public class TaskListShop {
 		logger.info("All tasks cleared");
 		return vectorToReturn;
 	}
+	
+	public Vector<Integer> getCorrespondingID(Vector<TaskInfo> taskList) {
+		Vector<Integer> taskID = new Vector<Integer>();
+		for (int i = 0; i < taskList.size(); i++) {
+			taskID.add(currentTaskList.indexOf(taskList.get(i)));
+		}
+		return taskID;
+		//Do you want to return null instead if the list is empty?
+	}
 
 	public int shopSize () {
 		return currentTaskList.size();

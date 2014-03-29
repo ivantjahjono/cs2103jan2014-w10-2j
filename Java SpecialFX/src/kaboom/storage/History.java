@@ -54,6 +54,11 @@ public class History {
 		return null;
 	}
 	
+	public void setViewingTasks(Vector<TaskInfo> viewingTasks) {
+		tasksToView = viewingTasks;
+		taskID = TaskListShop.getInstance().getCorrespondingID(viewingTasks);
+	}
+	
 	public int size() {
 		return previousCommandList.size();
 	}
