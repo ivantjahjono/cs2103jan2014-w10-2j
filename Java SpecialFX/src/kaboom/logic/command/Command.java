@@ -88,6 +88,12 @@ public class Command {
 		return taskName;
 	}
 	
+	protected String saveModifiedTaskName(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
+		String taskName = infoHashes.get(KEYWORD_TYPE.MODIFIED_TASKNAME);
+		task.setTaskName(taskName);
+		return taskName;
+	}
+	
 	protected String saveTaskPriority(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
 		String taskPriority = infoHashes.get(KEYWORD_TYPE.PRIORITY);
 		if(taskPriority != null) {
@@ -96,11 +102,11 @@ public class Command {
 		return taskPriority;
 	}
 	
-	protected void saveTaskDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
-		saveTaskStartDateAndTime(infoHashes, task);
-		saveTaskEndDateAndTime(infoHashes, task);
-		determineAndSetTaskType(task);
-	}
+//	protected void saveTaskDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
+//		saveTaskStartDateAndTime(infoHashes, task);
+//		saveTaskEndDateAndTime(infoHashes, task);
+//		determineAndSetTaskType(task);
+//	}
 	
 	protected void saveTaskStartDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
 		String startDate = infoHashes.get(KEYWORD_TYPE.START_DATE);
@@ -110,35 +116,26 @@ public class Command {
 	}
 	
 	protected void saveTaskEndDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
-		Calendar startDateAndTime = task.getStartDate();
 		String endDate = infoHashes.get(KEYWORD_TYPE.END_DATE);
 		String endTime = infoHashes.get(KEYWORD_TYPE.END_TIME);
 		Calendar endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
-		
+		task.setEndDate(endDateAndTime);
+	}
+	
+	protected void setEndDateAndTimeToHourBlock (TaskInfo task) {
+		Calendar startDateAndTime = task.getStartDate();
+		Calendar endDateAndTime = task.getEndDate();
 		//this condition is to make the end time one hour apart of current time
 		//and also maintain end date same as start date
-		if (endDateAndTime == null) {
+		if(endDateAndTime == null) {
 			if (startDateAndTime != null) {
 				int addingHour = 1;
 				int addingMins = 0;
 				endDateAndTime = DateAndTimeFormat.getInstance().addTimeToCalendar(startDateAndTime, addingHour, addingMins);
+				task.setEndDate(endDateAndTime);
 			}
 		}
-		
-		task.setEndDate(endDateAndTime);
-		
-//		if((startDate != null && startTime != null) || (startTime != null)) {
-//			if(endDate == null && endTime == null) {
-//				endDate = startDate;
-//				int endtime = Integer.parseInt(startTime) + 100;
-//				System.out.println(endtime);
-//				if(endtime >= 2400) {
-//					endtime -= 2400;
-//				}
-//				endTime = String.format("%04d", endtime);
-//				
-//			}
-//		}
+	
 	}
 	
 	protected void determineAndSetTaskType (TaskInfo task) {
@@ -154,7 +151,5 @@ public class Command {
 			task.setTaskType(TASK_TYPE.DEADLINE);
 		} 
 	}
-	
-	
 
 }

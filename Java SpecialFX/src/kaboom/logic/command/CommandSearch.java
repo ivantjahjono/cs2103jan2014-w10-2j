@@ -77,6 +77,7 @@ public class CommandSearch extends Command {
 		taskInfo = new TaskInfo();
 		saveTaskName(infoHashes,taskInfo);
 		saveTaskPriority(infoHashes,taskInfo);
-		saveTaskDateAndTime(infoHashes,taskInfo);
+		saveTaskStartDateAndTime(infoHashes,taskInfo);
+		saveTaskEndDateAndTime(infoHashes,taskInfo);
 	}
 }
