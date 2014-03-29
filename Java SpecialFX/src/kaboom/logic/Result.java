@@ -2,6 +2,8 @@ package kaboom.logic;
 
 import java.util.Vector;
 
+import kaboom.ui.DISPLAY_STATE;
+
 
 // TODO
 // 1) Have to include information to somehow inform GUI to go to next or previous or first page or last page
@@ -16,10 +18,13 @@ public class Result {
 	boolean isGoToNextPage;
 	boolean isGoToPreviousPage;
 	
+	DISPLAY_STATE stateToChangeTo;
+	
 	public Result () {
 		feedback = "";
 		isGoToNextPage = false;
 		isGoToPreviousPage = false;
+		stateToChangeTo = null;
 	}
 	
 	public void setTasksToDisplay (Vector<TaskInfo> taskList) {
@@ -32,6 +37,10 @@ public class Result {
 	
 	public void setFeedback (String newFeedback) {
 		feedback = newFeedback;
+	}
+	
+	public void setDisplayState (DISPLAY_STATE newState) {
+		stateToChangeTo = newState;
 	}
 	
 	public String getFeedback () {
@@ -52,5 +61,9 @@ public class Result {
 	
 	public boolean getGoToPrevPage () {
 		return isGoToPreviousPage;
+	}
+	
+	public DISPLAY_STATE getDisplayState () {
+		return stateToChangeTo;	
 	}
 }
