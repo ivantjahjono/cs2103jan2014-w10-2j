@@ -15,6 +15,7 @@ public class CommandFactory {
 	private static final String KEYWORD_COMMAND_VIEW = "view";
 	private static final String KEYWORD_COMMAND_UNDO = "undo";
 	private static final String KEYWORD_COMMAND_DONE = "boom";
+	private static final String KEYWORD_COMMAND_UNDONE = "unboom";
 	
 	public static Command createCommand(String userInputSentence) {
 		
@@ -62,6 +63,8 @@ public class CommandFactory {
 				return COMMAND_TYPE.UNDO;
 			case KEYWORD_COMMAND_DONE:
 				return COMMAND_TYPE.DONE;
+			case KEYWORD_COMMAND_UNDONE:
+				return COMMAND_TYPE.UNDONE;
 			default:
 				return COMMAND_TYPE.INVALID;
 		}
@@ -101,6 +104,10 @@ public class CommandFactory {
 				
 			case DONE:
 				newlyCreatedCommand = new CommandDone();
+				break;
+				
+			case UNDONE:
+				newlyCreatedCommand = new CommandUndone();
 				break;
 				
 			default:
