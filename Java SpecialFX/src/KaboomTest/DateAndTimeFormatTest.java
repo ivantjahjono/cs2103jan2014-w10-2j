@@ -46,8 +46,8 @@ public class DateAndTimeFormatTest {
 		//boundary
 		//assertEquals("00", datFormat.testMinFromTimeTranslator(cal, "2400"));
 		assertEquals("59", datFormat.testMinFromTimeTranslator(cal, "2359"));
-		assertEquals("59", datFormat.testMinFromTimeTranslator(cal, "0000"));
-		assertEquals("59", datFormat.testMinFromTimeTranslator(cal, "0001"));
+		//assertEquals("59", datFormat.testMinFromTimeTranslator(cal, "0000"));
+		//assertEquals("59", datFormat.testMinFromTimeTranslator(cal, "0001"));
 		
 	}
 	
@@ -109,23 +109,77 @@ public class DateAndTimeFormatTest {
 				
 		//Test if valid if same start and end
 		endDate = datFormat.addTimeToCalendar(startDate, 0, 0);
-		assertEquals("false",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
+		assertFalse("false",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
 		
 		//Test if valid if end is after start (1min later)
 		endDate = datFormat.addTimeToCalendar(startDate, 0, 1);
-		assertEquals("true",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
+		assertTrue("true",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
 		
 		//Test if valid if end is after start (1min before)
 		endDate = datFormat.addTimeToCalendar(startDate, 0, -1);
-		assertEquals("false",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
+		assertFalse("false",datFormat.dateValidityForStartAndEndDate(startDate, endDate));
+	}
+
+	
+	
+	
+	/*
+	 * SimpleDateFormat Year Boundary: 2 digit years range from 1934 to 2033
+	 */
+	@Test
+	public void testDateValidity() {
+		//Null
+		assertFalse ("Null test",datFormat.isDateValid(null));
+		
+		//ddMMyy Format
+		assertTrue ("Valid: ddMMyy format",datFormat.isDateValid("010414"));
+		//invalid date
+		assertFalse ("Invalid: day",datFormat.isDateValid("000414"));
+		//invalid month
+		assertFalse ("Invalid: month",datFormat.isDateValid("011314"));
+		//Year boundary (millennium year)
+		assertTrue ("Valid: 2000",datFormat.isDateValid("010100"));
+		//Year boundary 1999
+		assertTrue ("Valid: 1999",datFormat.isDateValid("010101"));
+		//Year boundary 2001
+		assertTrue ("Valid: 2001",datFormat.isDateValid("010199"));
+		
+		System.out.println("----------------------------------------------------------------");
+		//dd/MM/yy Format
+		assertTrue ("Valid: dd/MM/yy format",datFormat.isDateValid("21/04/14"));
+		assertTrue ("Valid: dd/MM/yy format",datFormat.isDateValid("21/04/33"));
+		//invalid day
+		assertFalse ("Invalid: day",datFormat.isDateValid("31/04/14"));
+		//invalid Format 
+		assertFalse ("Invalid: format",datFormat.isDateValid("31.04/14"));
+		//invalid Format 
+		assertFalse ("Invalid: format",datFormat.isDateValid("31004014"));
+		
+		//dd.MM.yy Format
+		assertTrue ("Valid: dd/MM/yy format",datFormat.isDateValid("21.04.14"));
+		assertTrue ("Valid: dd/MM/yy format",datFormat.isDateValid("21.04.34"));
+		assertFalse ("Invalid: month",datFormat.isDateValid("21.00.34"));
+		assertFalse ("Invalid: format",datFormat.isDateValid("21/00/34"));
+		assertFalse ("Invalid: format",datFormat.isDateValid("21-00-34"));
 	}
 	
 	@Test
 	public void testTimeValidity() {
-		assertEquals ("true", datFormat.isTimeValidTest("2359"));
-		assertEquals ("true", datFormat.isTimeValidTest("0000"));
-		assertEquals ("true", datFormat.isTimeValidTest("0001"));
-		assertEquals ("false", datFormat.isTimeValidTest("2400"));
-		assertEquals ("false", datFormat.isTimeValidTest("0060"));
+		//Null
+		assertFalse ("Null test",datFormat.isTimeValid(null));
+		
+		//HHmm format
+		assertTrue ("Valid",datFormat.isTimeValid("2300"));
+		//HHmm format boundary
+		assertTrue ("Valid",datFormat.isTimeValid("0000"));
+		assertTrue ("Valid",datFormat.isTimeValid("2359"));
+		assertFalse ("Invalid",datFormat.isTimeValid("2400"));
+		assertFalse ("Invalid",datFormat.isTimeValid("2360"));
+		//invalid format
+		assertFalse ("Invalid: format",datFormat.isTimeValid("abcd"));
+		
+		//HH:mm format
+		assertTrue ("Valid",datFormat.isTimeValid("23:00"));
+		assertFalse ("Valid",datFormat.isTimeValid("23.00"));
 	}
 }
