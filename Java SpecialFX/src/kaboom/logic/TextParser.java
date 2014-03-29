@@ -91,6 +91,7 @@ public class TextParser {
 	}
 	
 	public static String extractTimeOnly(String KEYWORD_TIME, String userInputSentence ,Hashtable<KEYWORD_TYPE, String> keywordTable){
+																	
 		int startIndex = 0;
 		int endIndex = 0;
 		
