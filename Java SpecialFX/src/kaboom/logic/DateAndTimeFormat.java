@@ -10,9 +10,12 @@ public class DateAndTimeFormat {
 	private static final String dateFormat2 = "dd'/'MM'/'yy";
 	private static final String dateFormat3 = "dd'.'MM'.'yy";
 	
-	private static final String timeFormat1 = "HHmm";
-	private static final String timeFormat2 = "HH':'mm";
-	private static final String timeAmPm = "hhmm a";
+	private static final String time24hrFormat1 = "HHmm";
+	private static final String time24hrFormat2 = "HH':'mm";
+	private static final String time12hrFormat1 = "hhmma";
+	private static final String time12hrFormat2 = "hhmm a";
+	private static final String time12hrFormat3 = "h':'mma";
+	private static final String time12hrFormat4 = "h':'mm a";
 	
 	private static final SimpleDateFormat[] dateFormatList = { 
 		new SimpleDateFormat(dateFormat1),
@@ -21,12 +24,15 @@ public class DateAndTimeFormat {
 	};
 	
 	private static final SimpleDateFormat[] time24HrFormatList = {
-		new SimpleDateFormat(timeFormat1),
-		new SimpleDateFormat(timeFormat2)
+		new SimpleDateFormat(time24hrFormat1),
+		new SimpleDateFormat(time24hrFormat2)
 	};
 	
 	private static final SimpleDateFormat[] time12HrFormatList = {
-		new SimpleDateFormat(timeAmPm)
+		new SimpleDateFormat(time12hrFormat1),
+		new SimpleDateFormat(time12hrFormat2),
+		new SimpleDateFormat(time12hrFormat3),
+		new SimpleDateFormat(time12hrFormat4)
 	};
 	
 	private static DateAndTimeFormat instance = null;
@@ -106,6 +112,23 @@ public class DateAndTimeFormat {
 			return thisTime;
 		}
 		
+		//12hr format check
+		for(int i = 0; i < time12HrFormatList.length; i++) {
+			try {
+				//validate time
+				time12HrFormatList[i].setLenient(false);
+				Date time = time12HrFormatList[i].parse(theTime);
+				//set time to thisTime
+				Calendar getTime = Calendar.getInstance();
+				getTime.setTime(time);
+				thisTime.set(Calendar.HOUR, getTime.get(Calendar.HOUR));
+				thisTime.set(Calendar.MINUTE, getTime.get(Calendar.MINUTE));
+				thisTime.set(Calendar.AM_PM, getTime.get(Calendar.AM_PM));
+				return thisTime;
+			} catch (Exception e) {	
+			}
+		}
+		
 		//24hr format check
 		for(int i = 0; i < time24HrFormatList.length; i++) {
 			try {
@@ -121,21 +144,7 @@ public class DateAndTimeFormat {
 			} catch (Exception e) {	
 			}
 		}
-		//12hr format check
-		for(int i = 0; i < time12HrFormatList.length; i++) {
-			try {
-				//validate time
-				time12HrFormatList[i].setLenient(true);
-				Date time = time12HrFormatList[i].parse(theTime);
-				//set time to thisTime
-				Calendar getTime = Calendar.getInstance();
-				getTime.setTime(time);
-				thisTime.set(Calendar.HOUR_OF_DAY, getTime.get(Calendar.HOUR_OF_DAY));
-				thisTime.set(Calendar.MINUTE, getTime.get(Calendar.MINUTE));
-				return thisTime;
-			} catch (Exception e) {	
-			}
-		}
+
 		
 		/*
 		//testing this method for flexible time format
@@ -226,7 +235,7 @@ public class DateAndTimeFormat {
 		}
 		for(int i = 0; i < time12HrFormatList.length; i++) {
 			try {
-				time12HrFormatList[i].setLenient(true);
+				time12HrFormatList[i].setLenient(false);
 				Date date = time12HrFormatList[i].parse(theTime);
 				System.out.println(date);
 				return true;
