@@ -10,7 +10,10 @@ import kaboom.storage.TaskListShop;
 public class CommandModify extends Command {
 	
 	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
-	private static final String MESSAGE_COMMAND_MODIFY_FAIL = "Fail to modify %1$s";
+	private static final String MESSAGE_COMMAND_MODIFY_FAIL = "Fail to cast a spell on <%1$s>";
+	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_NAME_CHANGE = "<%1$s> has evolved into <%2$s>";
+	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_TIME_CHANGE = "<%1$s> has manipulated time";
+	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_PRIORITY_CHANGE = "<%1$s> is seeing stars";
 	
 	TaskInfo preModifiedTaskInfo;		// Use to store premodified data so that can undo later
 	
@@ -25,18 +28,19 @@ public class CommandModify extends Command {
 		String feedback = "";
 		String taskName = "";
 		
-		//get name of TaskInfo that user wants to modify
-		taskName = preModifiedTaskInfo.getTaskName();
-		//get TaskInfo that user wants to modify;
-		preModifiedTaskInfo = taskListShop.getTaskByName(taskName);
-		
 		try {
+			//get name of TaskInfo that user wants to modify
+			taskName = preModifiedTaskInfo.getTaskName();
+			//get TaskInfo that user wants to modify;
+			preModifiedTaskInfo = taskListShop.getTaskByName(taskName);
+			
 			//store TaskInfo to modify into temp taskinfo
 			TaskInfo temp = new TaskInfo(preModifiedTaskInfo);
 			//transfer all the new information over
 			if (taskInfo.getTaskName() != null) {
 				//bug at textparser get modified name where if time and date commands are keyed in will be saved as taskname
 				temp.setTaskName (taskInfo.getTaskName());
+				
 			}
 			if (taskInfo.getImportanceLevel() != preModifiedTaskInfo.getImportanceLevel()) {
 				temp.setImportanceLevel (taskInfo.getImportanceLevel());
@@ -92,5 +96,10 @@ public class CommandModify extends Command {
 	
 	public boolean parseInfo(String info) {
 		return true;
+	}
+	
+	//for testing
+	public void setPreModifiedTask(TaskInfo task) {
+		preModifiedTaskInfo = task;
 	}
 }
