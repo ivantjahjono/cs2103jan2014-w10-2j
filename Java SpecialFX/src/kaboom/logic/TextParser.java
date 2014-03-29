@@ -130,7 +130,6 @@ public class TextParser {
 	public static String extractDateOnly(String KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable){
 		String dateRegex1 = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";																// by 1700
 		
-		
 		int startIndex = 0;
 		int endIndex = 0;
 		

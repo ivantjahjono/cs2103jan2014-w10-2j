@@ -23,12 +23,12 @@ public class TaskMasterKaboom {
 	
 	private static DisplayData guiDisplayData;
 	private static Storage fileStorage;
-
+	private History commandHistory;
 	
 	static TaskMasterKaboom instance;
 	
 	private TaskMasterKaboom () {
-		
+		commandHistory = History.getInstance();
 	}
 	
 	public static TaskMasterKaboom getInstance () {
@@ -139,7 +139,7 @@ public class TaskMasterKaboom {
 			return true;
 		}
 		
-		System.out.println("Processing:" + usercommand);
+		//System.out.println("Processing:" + usercommand);
 		
 		//1. Get Command 
 		String commandKeyword = TextParser.getCommandKeyWord(usercommand);
@@ -165,13 +165,30 @@ public class TaskMasterKaboom {
 	}
 	
 	private void addToCommandHistory(Command command) {
-		if (command.getCommandType() != COMMAND_TYPE.INVALID && command.getCommandType() != COMMAND_TYPE.UNDO && 
-				command.getCommandType() != COMMAND_TYPE.SEARCH && command.getCommandType() != COMMAND_TYPE.VIEW) {
-			History.getInstance().addToRecentCommands(command);
+		COMMAND_TYPE currentCommandType = command.getCommandType();
+		
+		switch (currentCommandType) {
+			case VIEW:
+				commandHistory.setCurrentViewCommand(command);
+				break;
+				
+			case ADD:
+			case DELETE:
+			case MODIFY:
+				commandHistory.addToRecentCommands(command);
+				break;
+				
+			case INVALID:
+			case UNDO:
+			case SEARCH:
+				break;
+				
+			default:
+				break;
 		}
 	}
-
 	
 	//********************************
+
 
 }
