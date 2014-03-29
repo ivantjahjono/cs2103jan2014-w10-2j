@@ -11,15 +11,26 @@ public class CommandModify extends Command {
 	
 	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
 	private static final String MESSAGE_COMMAND_MODIFY_FAIL = "Fail to cast a spell on <%1$s>";
-	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_NAME_CHANGE = "<%1$s> has evolved into <%2$s>";
-	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_TIME_CHANGE = "<%1$s> has manipulated time";
-	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_PRIORITY_CHANGE = "<%1$s> is seeing stars";
+	private static final String MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME = "Trying to manipulate air";
+	private static final String MESSAGE_COMMAND_MODIFY_FAIL_NO_CHANGE = "Nothing happened...";
+	
+	private static final String MESSAGE_TASK_NAME = "<%1$s>";
+	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_NAME_CHANGE = " has evolved into <%1$s>";
+	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_TIME_CHANGE = " has manipulated time";
+	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_PRIORITY_CHANGE = " is seeing stars";
+	private static final String MESSAGE_COMMAND_MODIFY_CONNECTOR = ",";
 	
 	TaskInfo preModifiedTaskInfo;		// Use to store premodified data so that can undo later
+	boolean hasNameChanged;
+	boolean hasTimeChanged;
+	boolean hasPriorityChanged;
 	
 	public CommandModify () {
 		commandType = COMMAND_TYPE.MODIFY;
 		initialiseKeywordList();
+		hasNameChanged = false;
+		hasTimeChanged = false;
+		hasPriorityChanged = false;
 	}
 
 	public Result execute() {
@@ -31,8 +42,16 @@ public class CommandModify extends Command {
 		try {
 			//get name of TaskInfo that user wants to modify
 			taskName = preModifiedTaskInfo.getTaskName();
+			
+			if(taskName.isEmpty()) {
+				feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
+				return createResult(taskListShop.getAllTaskInList(), feedback);
+			}
+			
 			//get TaskInfo that user wants to modify;
 			preModifiedTaskInfo = taskListShop.getTaskByName(taskName);
+		
+			feedback += String.format(MESSAGE_TASK_NAME, taskName);
 			
 			//store TaskInfo to modify into temp taskinfo
 			TaskInfo temp = new TaskInfo(preModifiedTaskInfo);
@@ -40,16 +59,19 @@ public class CommandModify extends Command {
 			if (taskInfo.getTaskName() != null) {
 				//bug at textparser get modified name where if time and date commands are keyed in will be saved as taskname
 				temp.setTaskName (taskInfo.getTaskName());
-				
+				hasNameChanged = true;
 			}
 			if (taskInfo.getImportanceLevel() != preModifiedTaskInfo.getImportanceLevel()) {
 				temp.setImportanceLevel (taskInfo.getImportanceLevel());
+				hasPriorityChanged = true;
 			}
 			if (taskInfo.getStartDate() != null) {
 				temp.setStartDate (taskInfo.getStartDate());
+				hasTimeChanged = true;
 			}
 			if (taskInfo.getEndDate() != null) {
 				temp.setEndDate (taskInfo.getEndDate());
+				hasTimeChanged = true;
 			}
 			setEndDateAndTimeToHourBlock (temp);
 			determineAndSetTaskType(temp);
@@ -61,7 +83,7 @@ public class CommandModify extends Command {
 			feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL, taskName);
 			return createResult(taskListShop.getAllTaskInList(), feedback);
 		}
-		feedback = String.format(MESSAGE_COMMAND_MODIFY_SUCCESS, preModifiedTaskInfo.getTaskName());
+		feedback = feedbackGenerator();
 		return createResult(taskListShop.getAllTaskInList(), feedback);
 	}
 	
@@ -101,5 +123,33 @@ public class CommandModify extends Command {
 	//for testing
 	public void setPreModifiedTask(TaskInfo task) {
 		preModifiedTaskInfo = task;
+	}
+	
+	private String feedbackGenerator() {
+		String feedback = String.format(MESSAGE_TASK_NAME, preModifiedTaskInfo.getTaskName());
+		int countNumOfModifications = 0;
+		if(hasNameChanged) {
+			countNumOfModifications++;
+			feedback += String.format(MESSAGE_COMMAND_MODIFY_SUCCESS_NAME_CHANGE, taskInfo.getTaskName());
+		}
+		if(hasTimeChanged) {
+			if (countNumOfModifications > 0) {
+				feedback += MESSAGE_COMMAND_MODIFY_CONNECTOR;
+			}
+			countNumOfModifications++;
+			feedback += MESSAGE_COMMAND_MODIFY_SUCCESS_TIME_CHANGE;
+		}
+		if(hasPriorityChanged) {
+			if (countNumOfModifications > 0) {
+				feedback += MESSAGE_COMMAND_MODIFY_CONNECTOR;
+			}
+			feedback += MESSAGE_COMMAND_MODIFY_SUCCESS_PRIORITY_CHANGE;
+		}
+		
+		if(!hasNameChanged && !hasTimeChanged && !hasPriorityChanged) {
+			feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_CHANGE;
+		}
+		
+		return feedback;
 	}
 }
