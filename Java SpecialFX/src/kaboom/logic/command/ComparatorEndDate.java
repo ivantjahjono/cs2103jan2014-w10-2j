@@ -7,6 +7,11 @@ import kaboom.logic.TaskInfo;
 public class ComparatorEndDate implements Comparator<TaskInfo> {
 
 	public int compare(TaskInfo task1, TaskInfo task2) {
-		return task1.getEndDate().compareTo(task2.getEndDate());
+		if (task1.getEndDate() != null) {
+			return task1.getEndDate().compareTo(task2.getEndDate());
+		}
+		else {
+			return -1;
+		}
 	}
 }
