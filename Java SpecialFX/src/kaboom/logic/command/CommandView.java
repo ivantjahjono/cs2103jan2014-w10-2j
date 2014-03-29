@@ -93,8 +93,4 @@ public class CommandView extends Command{
 		return true;
 	}
 	
-	//For testing purposes
-	public void setViewType(String view) {
-		viewType = view;
-	}
 }
