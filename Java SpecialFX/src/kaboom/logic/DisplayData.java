@@ -3,6 +3,8 @@ package kaboom.logic;
 import java.util.Observable;
 import java.util.Vector;
 
+import kaboom.ui.DISPLAY_STATE;
+
 /**
  * Returns a vector of TaskInfoDisplay which contains all the 
  * tasks that is displayed.
@@ -21,6 +23,8 @@ public class DisplayData extends Observable {
 	
 	String 	userFeedbackMessage;
 	int 	currentPage;
+	
+	DISPLAY_STATE currentDisplayState;
 	
 	/**
 	 * Returns a DisplayData instance of the class.
@@ -41,6 +45,7 @@ public class DisplayData extends Observable {
 		tasksDataToDisplay = new Vector<TaskInfoDisplay>();
 		userFeedbackMessage = "";
 		currentPage = 0;
+		currentDisplayState = DISPLAY_STATE.ALL;
 	}
 	
 	/**
@@ -60,6 +65,12 @@ public class DisplayData extends Observable {
 			goToNextPage();
 		} else if (commandResult.getGoToPrevPage()) {
 			goToPreviousPage();
+		}
+		
+		// Update display state
+		DISPLAY_STATE stateChange = commandResult.getDisplayState();
+		if (stateChange != null) {
+			currentDisplayState = stateChange; 
 		}
 		
 		if (currentPage > getMaxTaskDisplayPages()-1) {
@@ -163,11 +174,21 @@ public class DisplayData extends Observable {
 		if (currentPage > maxPage) {
 			currentPage = maxPage;
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 	
 	public void goToPreviousPage () {
 		if (currentPage > 0) {
 			currentPage--;
 		}
+		
+		setChanged();
+		notifyObservers();
+	}
+	
+	public DISPLAY_STATE getCurrentDisplayState() {
+		return currentDisplayState;
 	}
 }

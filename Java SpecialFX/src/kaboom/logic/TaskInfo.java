@@ -89,7 +89,7 @@ public class TaskInfo {
 		return isExpired;
 	}
 	
-	public boolean setDone () {
+	public boolean isDone () {
 		return isDone;
 	}
 	
