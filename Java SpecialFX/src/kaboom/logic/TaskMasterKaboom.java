@@ -159,6 +159,10 @@ public class TaskMasterKaboom {
 		return processResult;
 	}
 	
+	
+	public void activateCommand (COMMAND_TYPE commandToActivate) {
+		
+	}
 
 	private void updateUi(Result commandResult) {
 		guiDisplayData.updateDisplayWithResult(commandResult);
