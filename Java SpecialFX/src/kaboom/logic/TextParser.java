@@ -94,13 +94,11 @@ public class TextParser {
 	}
 	
 	public static String extractTimeOnly(String KEYWORD_TIME, String userInputSentence ,Hashtable<KEYWORD_TYPE, String> keywordTable){
-		String timeRegex1 = "\\s+\\d{3,4}(\\s|$)";																// by 1700
-		
-		
+																	
 		int startIndex = 0;
 		int endIndex = 0;
 		
-		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, KEYWORD_TIME+timeRegex1);
+		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, KEYWORD_TIME+TIME_REGEX);
 		
 		if (matchList.size() < 2) {
 			return userInputSentence;
@@ -128,13 +126,11 @@ public class TextParser {
 	}
 	
 	public static String extractDateOnly(String KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable){
-		String dateRegex1 = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";																// by 1700
-		
 		
 		int startIndex = 0;
 		int endIndex = 0;
 		
-		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, KEYWORD_TIME+dateRegex1);
+		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, KEYWORD_TIME+DATE_REGEX);
 		
 		if (matchList.size() < 2) {
 			return userInputSentence;
@@ -163,11 +159,6 @@ public class TextParser {
 	
 	public static String extractDateAndTime(String KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
 		
-		String timeRegex1 = "\\s+\\d{3,4}(\\s|$)";													// by 1700
-		String timeRegex2 = "\\d{1,2}[:]?\\d{2}";													// by 17:00 or 6:00
-		String timeRegex3 = "\\s+\\d{1,2}[:]?\\d{2}\\s*(am|pm)?(\\s|$)";							// by 6am or 1200pm
-		String dateRegex1 = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";					// 12/06/12 or 12.01.06 or 120106
-		
 		String timeAndDateRegex = KEYWORD_TIME+TIME_REGEX+"\\s*"+KEYWORD_DATE+DATE_REGEX;
 		
 		int startIndex = 0;
@@ -188,14 +179,14 @@ public class TextParser {
 		String extractedDateAndTimeString = userInputSentence.substring(startIndex, endIndex);
 		
 		//GET DATE
-		matchList = searchForPatternMatch(extractedDateAndTimeString, KEYWORD_DATE+dateRegex1);
+		matchList = searchForPatternMatch(extractedDateAndTimeString, KEYWORD_DATE+DATE_REGEX);
 		endIndex = matchList.get(matchList.size()-1);
 		startIndex = matchList.get(matchList.size()-2);
 		String extractedDateString = extractedDateAndTimeString.substring(startIndex, endIndex);
 		extractedDateString = extractedDateString.replace(KEYWORD_DATE, "").trim();
 		
 		//GET TIME
-		matchList = searchForPatternMatch(extractedDateAndTimeString, KEYWORD_TIME+timeRegex1);
+		matchList = searchForPatternMatch(extractedDateAndTimeString, KEYWORD_TIME+TIME_REGEX);
 		endIndex = matchList.get(matchList.size()-1);
 		startIndex = matchList.get(matchList.size()-2);
 		String extractedTimeString = extractedDateAndTimeString.substring(startIndex, endIndex);

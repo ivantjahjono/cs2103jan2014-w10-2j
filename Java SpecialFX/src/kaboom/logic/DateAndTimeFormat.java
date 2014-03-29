@@ -13,7 +13,8 @@ public class DateAndTimeFormat {
 	
 	private static final String dateFormat = "ddMMyy";		// 12/06/12 or 12.01.06 or 120106
 	
-	
+	private static final String time24Hr = "HHmm";
+	private static final String timeAmPm = "hhmm a";
 	
 	private static DateAndTimeFormat instance = null;
 	
@@ -33,7 +34,9 @@ public class DateAndTimeFormat {
 		}
 		
 		if(time != null) {
-			cal = timeTranslator(cal,time);
+			
+			cal = isTimeValid(cal, time);
+			//cal = timeTranslator(cal,time);
 //			TimeFormat currTimeFormat = new TimeFormat();
 //			if(isTimeValid(time, currTimeFormat)){
 //				timeTranslator(cal, Integer.parseInt(time), currTimeFormat);
@@ -92,21 +95,35 @@ public class DateAndTimeFormat {
 		return false;
 	}
 	
-	private boolean isTimeValid (String theDate) {
-		if(theDate == null) {
+	private Calendar isTimeValid (Calendar calTime, String theTime) {
+		/*if(theTime == null) {
 			return false;
-		}
+		}*/
+		//testing this method for flexible time format
+		Date time = new Date();
 		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HHmm");
-		simpleDateFormat.setLenient(false);
+		SimpleDateFormat simpletime24HrFormat = new SimpleDateFormat(time24Hr);
+		simpletime24HrFormat.setLenient(false);
 		
 		try {
-			simpleDateFormat.parse(theDate);
-			return true;
+			time = simpletime24HrFormat.parse(theTime);
+			calTime.set(Calendar.HOUR_OF_DAY, time.getHours());
+			calTime.set(Calendar.MINUTE, time.getMinutes());
 		} catch (Exception e) {
 			
 		}
-		return false;
+		
+		SimpleDateFormat simpletimeAmPmFormat = new SimpleDateFormat(timeAmPm);
+		simpletimeAmPmFormat.setLenient(false);
+		
+		try {
+			time = simpletimeAmPmFormat.parse(theTime);
+			calTime.set(Calendar.HOUR, time.getHours());
+			calTime.set(Calendar.MINUTE, time.getMinutes());
+		} catch (Exception e) {
+			
+		}
+		return calTime;
 	}
 	//Currently translate 1700 format only
 	private Calendar timeTranslator(Calendar cal, String theTime) {
