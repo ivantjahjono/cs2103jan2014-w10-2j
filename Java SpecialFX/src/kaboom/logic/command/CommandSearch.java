@@ -27,7 +27,6 @@ public class CommandSearch extends Command {
 
 		Calendar endDate = taskInfo.getEndDate();
 		if(endDate != null){
-			System.out.println(endDate);
 		//Set the end time to 2359 for searching		
 			endDate.set(Calendar.HOUR_OF_DAY, 23);
 			endDate.set(Calendar.MINUTE, 59);
