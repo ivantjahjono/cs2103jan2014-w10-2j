@@ -8,7 +8,9 @@ import kaboom.storage.TaskListShop;
 
 
 public class CommandClear extends Command {
-
+	
+	private static final String MESSAGE_COMMAND_CLEAR_SUCCESS = "Cleared memory";
+	
 	Vector<TaskInfo> tasksCleared;
 		
 	public CommandClear () {
@@ -16,29 +18,25 @@ public class CommandClear extends Command {
 	}
 
 	public Result execute() {
-		assert TaskListShop.getInstance() != null;
+		assert taskListShop != null;
 		
-		tasksCleared = TaskListShop.getInstance().getAllTaskInList();
-		Vector<TaskInfo> display = TaskListShop.getInstance().clearAllTasks();
+		tasksCleared = taskListShop.getAllTaskInList();
+		Vector<TaskInfo> display = taskListShop.clearAllTasks();
 		return createResult(display, MESSAGE_COMMAND_CLEAR_SUCCESS);
 	}
 	
-	public String undo () {
-		boolean isUndoSuccess = false;
+	public boolean undo () {
+		boolean isUndoSuccessful = false;
 
 		for (int i = 0; i < tasksCleared.size(); i++) {
-			TaskListShop.getInstance().addTaskToList(tasksCleared.get(i));
+			taskListShop.addTaskToList(tasksCleared.get(i));
 		}
 		
-		if (tasksCleared.size() == TaskListShop.getInstance().shopSize()) {
-			isUndoSuccess = true;
+		if (tasksCleared.size() == taskListShop.shopSize()) {
+			isUndoSuccessful = true;
 		}
 		
-		if (isUndoSuccess) {
-			return MESSAGE_COMMAND_UNDO_SUCCESS;
-		} else {
-			return MESSAGE_COMMAND_UNDO_FAIL;
-		}
+		return isUndoSuccessful;
 	}
 	
 	public boolean parseInfo(String info) {

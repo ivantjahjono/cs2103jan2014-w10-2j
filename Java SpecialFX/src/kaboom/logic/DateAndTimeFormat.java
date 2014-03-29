@@ -3,15 +3,12 @@ package kaboom.logic;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-// Can use Java SimpleDateFormat for date checking
-
-
-
+import java.util.regex.Pattern;
 
 public class DateAndTimeFormat {
 	
 	private static final String dateFormat = "ddMMyy";		// 12/06/12 or 12.01.06 or 120106
+	private static String TimeFormat24Hour = "([01]?[0-9]|2[0-3])[0-5][0-9]";
 	
 	
 	
@@ -26,25 +23,42 @@ public class DateAndTimeFormat {
 	}
 
 	public Calendar formatStringToCalendar (String date, String time) {
-		Calendar cal = Calendar.getInstance();
+		Calendar currentDateAndTime = Calendar.getInstance();
+		Calendar dateAndTime = (Calendar) currentDateAndTime.clone();
 		
-		if(date != null) {
-			cal = dateTranslator(cal, date);
+		dateAndTime = dateTranslator(dateAndTime, date);
+		dateAndTime = timeTranslator(dateAndTime,time);
+		
+		if(dateAndTime.equals(currentDateAndTime)) {
+			return null;
 		}
 		
-		if(time != null) {
-			cal = timeTranslator(cal,time);
-//			TimeFormat currTimeFormat = new TimeFormat();
-//			if(isTimeValid(time, currTimeFormat)){
-//				timeTranslator(cal, Integer.parseInt(time), currTimeFormat);
-//			}
-		}
-		return cal;
+		return dateAndTime;
 	}
 
+	public Calendar addTimeToCalendar (Calendar dateAndTime, int hour, int min) {
+		Calendar dateAndTimeToAdd = (Calendar) dateAndTime.clone();
+		dateAndTimeToAdd.add(Calendar.HOUR_OF_DAY, hour);
+		dateAndTimeToAdd.add(Calendar.MINUTE, min);
+		return dateAndTimeToAdd;
+	}
+	
+	//testing phase
+	public String dateValidityForStartAndEndDate (Calendar startDate, Calendar endDate) {
+		if (startDate.before(endDate)) {
+			return "true";
+		}
+		return "false";
+	}
+	
 	private Calendar dateTranslator(Calendar thisDate, String theDate){
 		//this method should already take in the proper date format. verification should be separated in another method
 		//Currently takes in 12/06/12 or 12.01.06 or 120106
+		
+		if(theDate == null) {
+			return thisDate;
+		}
+		
 		String date = "";
 		String[] dateArray = new String[3];
 		
@@ -72,6 +86,7 @@ public class DateAndTimeFormat {
 			int day = Integer.parseInt(dateArray[0]);
 			thisDate.set(Calendar.DAY_OF_MONTH, day);
 		}
+		System.out.println(thisDate.getTime().toString());
 		return thisDate;
 	}
 	
@@ -110,6 +125,10 @@ public class DateAndTimeFormat {
 	}
 	//Currently translate 1700 format only
 	private Calendar timeTranslator(Calendar cal, String theTime) {
+		if (theTime == null) {
+			return cal;
+		}
+		
 		if (!(theTime == null || theTime.length() != 4)) {
 			String hourInString = theTime.substring(0,2);
 			String minsInString = theTime.substring(2,4);
@@ -129,12 +148,19 @@ public class DateAndTimeFormat {
 			int hour = Integer.parseInt(hourInString);
 			int mins = Integer.parseInt(minsInString);
 			
-			if(isHourValid(hour) && isMinsValid(mins)) {
+			if(/*isHourValid(hour) && isMinsValid(mins)*/isTimeValid(theTime)) {
 				cal.set(Calendar.HOUR_OF_DAY, hour);
 				cal.set(Calendar.MINUTE, mins);
 			}
 		}
+		System.out.println(cal.getTime().toString());
 		return cal;
+	}
+	
+	private boolean isTimeValid (String time) {
+		Pattern pattern;
+		pattern = Pattern.compile(TimeFormat24Hour);
+		return pattern.matcher(time).matches();
 	}
 	
 	private boolean isHourValid (int hour) {
@@ -149,49 +175,7 @@ public class DateAndTimeFormat {
 		}
 		return false;
 	}
-	
-	
-//	private boolean isTimeValid(String allegedTime, TimeFormat currTimeFormat) {
-//		
-//		try{
-//			//check if it's the 24 hour format without separation. Eg: 1700, 1000
-//			int correctTimeFormat = Integer.parseInt(allegedTime);
-//			//check if the time is in logical number
-//			//!!!!!!!!!revise this again. Logic error
-//			if((correctTimeFormat >= CORRECT_24HOUR_FORMAT_MIN) && (correctTimeFormat <= CORRECT_24HOUR_FORMAT_MAX) ){
-//				currTimeFormat.setTimeFormatCode(THE_24_HOUR_FORMAT_CODE);
-//				return true;
-//			}
-//			else {
-//				return false;
-//			}
-//			
-//		}
-//		catch(IllegalArgumentException exception){
-//			//this means either invalid format or the other different formats
-//			//5am, 5pm, 17:00, 5:00am, etc
-//			return false;
-//		}
-//		
-//		//this is a stub
-//		//return false;
-//	}
-//	
-//	
-//	
-//	private void timeTranslator(Calendar theTime, int correctTime, TimeFormat currTimeFormat){
-//		//this method translates ALL time formats
-//		if(currTimeFormat.getTimeFormatCode() == THE_24_HOUR_FORMAT_CODE){
-//			int hour = correctTime / CORRECT_24HOUR_FORMAT_MIN;
-//			int minute = correctTime % CORRECT_24HOUR_FORMAT_MIN;
-//			theTime.set(Calendar.HOUR_OF_DAY, hour);
-//			theTime.set(Calendar.MINUTE, minute);
-//		}
-//		else{
-//			return;
-//		}
-//		return;
-//	}
+
 	
 	//*************************** TEST METHODS **********************************
 	//Date tests
@@ -215,6 +199,13 @@ public class DateAndTimeFormat {
 	public String testMinFromTimeTranslator (Calendar cal, String theTime) {
 		timeTranslator (cal,theTime);	
 		return Integer.toString(cal.get(Calendar.MINUTE));
+	}
+	public String isTimeValidTest (String time) {
+		if(isTimeValid(time)) {
+			return "true";
+		} else {
+			return "false";
+		}
 	}
 	//*************************** TEST METHODS **********************************
 }
