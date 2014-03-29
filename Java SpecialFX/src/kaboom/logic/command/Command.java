@@ -61,8 +61,9 @@ public class Command {
 
 		return commandResult;
 	}
-
+	
 	public boolean undo () {
+	public boolean parseInfo(String info) {
 		return false;
 	}
 	

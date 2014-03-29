@@ -51,4 +51,8 @@ public class CommandDelete extends Command {
 		taskInfo = new TaskInfo();
 		saveTaskName(infoHashes, taskInfo);
 	}
+	
+	public boolean parseInfo(String info) {
+		return true;
+	}
 }

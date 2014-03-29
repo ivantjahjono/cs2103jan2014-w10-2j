@@ -70,4 +70,8 @@ public class CommandView extends Command{
 	public void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
 		viewType = infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
 	}
+	
+	public boolean parseInfo(String info) {
+		return true;
+	}
 }

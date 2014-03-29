@@ -70,4 +70,8 @@ public class CommandAdd extends Command {
 		setEndDateAndTimeToHourBlock (taskInfo);
 		determineAndSetTaskType(taskInfo);
 	}
+	
+	public boolean parseInfo(String info) {
+		return true;
+	}
 }

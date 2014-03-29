@@ -89,3 +89,7 @@ public class CommandModify extends Command {
 		saveTaskEndDateAndTime(infoHashes, taskInfo);
 	}
 }
+	
+	public boolean parseInfo(String info) {
+		return true;
+	}

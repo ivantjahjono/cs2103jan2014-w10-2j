@@ -38,4 +38,8 @@ public class CommandClear extends Command {
 		
 		return isUndoSuccessful;
 	}
+	
+	public boolean parseInfo(String info) {
+		return true;
+	}
 }

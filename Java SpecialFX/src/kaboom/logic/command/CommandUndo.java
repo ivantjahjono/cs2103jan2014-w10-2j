@@ -34,4 +34,8 @@ public class CommandUndo extends Command{
 		feedback = MESSAGE_COMMAND_UNDO_FAIL;
 		return createResult(taskListShop.getAllTaskInList(),feedback);
 	}
+	
+	public boolean parseInfo(String info) {
+		return true;
+	}
 }

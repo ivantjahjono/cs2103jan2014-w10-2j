@@ -15,7 +15,7 @@ public class TextParser {
 	private static final String KEYWORD_DATE = "on";
 	private static final String KEYWORD_MODIFY = ">";
 	
-	private static final String TIME_REGEX = "\\s+\\d{3,4}(\\s|$)";
+	private static final String TIME_REGEX = "\\s+\\d{1,2}[:]?\\d{2}\\s*(am|pm)?(\\s|$)";
 	private static final String DATE_REGEX = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";
 	
 	

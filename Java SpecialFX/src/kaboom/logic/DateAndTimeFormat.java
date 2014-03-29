@@ -9,7 +9,9 @@ public class DateAndTimeFormat {
 	
 	private static final String dateFormat = "ddMMyy";		// 12/06/12 or 12.01.06 or 120106
 	private static String TimeFormat24Hour = "([01]?[0-9]|2[0-3])[0-5][0-9]";
-
+	
+	
+	
 	private static DateAndTimeFormat instance = null;
 	
 	public static DateAndTimeFormat getInstance () {
@@ -98,12 +100,29 @@ public class DateAndTimeFormat {
 		
 		try {
 			simpleDateFormat.parse(theDate);
+			return true;
 		} catch (Exception e) {
-			return false;
+			
 		}
-		return true;
+		return false;
 	}
 	
+	private boolean isTimeValid (String theDate) {
+		if(theDate == null) {
+			return false;
+		}
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HHmm");
+		simpleDateFormat.setLenient(false);
+		
+		try {
+			simpleDateFormat.parse(theDate);
+			return true;
+		} catch (Exception e) {
+			
+		}
+		return false;
+	}
 	//Currently translate 1700 format only
 	private Calendar timeTranslator(Calendar cal, String theTime) {
 		if (theTime == null) {
