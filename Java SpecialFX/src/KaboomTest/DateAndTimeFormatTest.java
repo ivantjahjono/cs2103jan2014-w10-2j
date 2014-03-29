@@ -166,24 +166,26 @@ public class DateAndTimeFormatTest {
 	@Test
 	public void testTimeValidity() {
 		//Null
-		assertFalse ("Null test",datFormat.isTimeValid(null));
+		assertFalse ("Null test",datFormat.is24hrTimeValid(null));
 		
 		//HHmm format
-		assertTrue ("Valid",datFormat.isTimeValid("2300"));
+		assertTrue ("Valid",datFormat.is24hrTimeValid("2300"));
 		//HHmm format boundary
-		assertTrue ("Valid",datFormat.isTimeValid("0000"));
-		assertTrue ("Valid",datFormat.isTimeValid("2359"));
-		assertFalse ("Invalid",datFormat.isTimeValid("2400"));
-		assertFalse ("Invalid",datFormat.isTimeValid("2360"));
+		assertTrue ("Valid",datFormat.is24hrTimeValid("0000"));
+		assertTrue ("Valid",datFormat.is24hrTimeValid("2359"));
+		assertFalse ("Invalid",datFormat.is24hrTimeValid("2400"));
+		assertFalse ("Invalid",datFormat.is24hrTimeValid("2360"));
 		//invalid format
-		assertFalse ("Invalid: format",datFormat.isTimeValid("abcd"));
+		assertFalse ("Invalid: format",datFormat.is24hrTimeValid("abcd"));
 		
 		//HH:mm format
-		assertTrue ("Valid",datFormat.isTimeValid("23:00"));
-		assertFalse ("Valid",datFormat.isTimeValid("23.00"));
+		assertTrue ("Valid",datFormat.is24hrTimeValid("23:00"));
+		assertFalse ("Valid",datFormat.is24hrTimeValid("23.00"));
 		
 		//HH:mm format
-		assertTrue ("Valid",datFormat.isTimeValid("1100 PM"));
+		assertTrue ("Valid",datFormat.is12hrTimeValid("1100 pm"));
+		assertTrue ("Valid",datFormat.is12hrTimeValid("1200 am"));
+		assertTrue ("Valid",datFormat.is12hrTimeValid("1300 pm"));
 
 	}
 }
