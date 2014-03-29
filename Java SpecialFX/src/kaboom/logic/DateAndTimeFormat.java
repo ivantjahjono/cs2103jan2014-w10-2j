@@ -12,19 +12,20 @@ public class DateAndTimeFormat {
 	
 	private static final String timeFormat1 = "HHmm";
 	private static final String timeFormat2 = "HH':'mm";
-	private static final String time24Hr = "HHmm";
 	private static final String timeAmPm = "hhmm a";
 	
 	private static final SimpleDateFormat[] dateFormatList = { 
 		new SimpleDateFormat(dateFormat1),
 		new SimpleDateFormat(dateFormat2),
-		new SimpleDateFormat(dateFormat3),
+		new SimpleDateFormat(dateFormat3)
 	};
 	
 	private static final SimpleDateFormat[] timeFormatList = {
 		new SimpleDateFormat(timeFormat1),
 		new SimpleDateFormat(timeFormat2),
+		new SimpleDateFormat(timeAmPm)
 	};
+	
 	private static DateAndTimeFormat instance = null;
 	
 	private DateAndTimeFormat() {
@@ -71,27 +72,10 @@ public class DateAndTimeFormat {
 	private Calendar dateTranslator(Calendar thisDate, String theDate){
 		if(theDate == null) {
 			return thisDate;
-		}*/
-		//testing this method for flexible time format
-		Date time = new Date();
-		
-		SimpleDateFormat simpletime24HrFormat = new SimpleDateFormat(time24Hr);
-		simpletime24HrFormat.setLenient(false);
-		
-		try {
-			time = simpletime24HrFormat.parse(theTime);
-			calTime.set(Calendar.HOUR_OF_DAY, time.getHours());
-			calTime.set(Calendar.MINUTE, time.getMinutes());
-		} catch (Exception e) {
-			
 		}
+		
 		for(int i = 0; i < dateFormatList.length; i++) {
-		SimpleDateFormat simpletimeAmPmFormat = new SimpleDateFormat(timeAmPm);
-		simpletimeAmPmFormat.setLenient(false);
 			try {
-			time = simpletimeAmPmFormat.parse(theTime);
-			calTime.set(Calendar.HOUR, time.getHours());
-			calTime.set(Calendar.MINUTE, time.getMinutes());
 				//validate date
 				Date date = dateFormatList[i].parse(theDate);
 				//set date to thisDate
@@ -125,6 +109,30 @@ public class DateAndTimeFormat {
 			} catch (Exception e) {	
 			}
 		}
+		/*
+		//testing this method for flexible time format
+		Date time = new Date();
+		
+		SimpleDateFormat simpletime24HrFormat = new SimpleDateFormat(time24Hr);
+		simpletime24HrFormat.setLenient(false);
+		
+		try {
+			time = simpletime24HrFormat.parse(theTime);
+			calTime.set(Calendar.HOUR_OF_DAY, time.getHours());
+			calTime.set(Calendar.MINUTE, time.getMinutes());
+		} catch (Exception e) {
+			
+		}
+		*/
+		/*
+		SimpleDateFormat simpletimeAmPmFormat = new SimpleDateFormat(timeAmPm);
+		simpletimeAmPmFormat.setLenient(false);
+		
+		time = simpletimeAmPmFormat.parse(theTime);
+		calTime.set(Calendar.HOUR, time.getHours());
+		calTime.set(Calendar.MINUTE, time.getMinutes());
+		*/
+		
 		//throw invalid time exception
 		return thisTime;
 	}
@@ -183,7 +191,8 @@ public class DateAndTimeFormat {
 		for(int i = 0; i < timeFormatList.length; i++) {
 			try {
 				timeFormatList[i].setLenient(false);
-				timeFormatList[i].parse(theTime);
+				Date date = timeFormatList[i].parse(theTime);
+				System.out.println(date);
 				return true;
 			} catch (Exception e) {	
 			}
