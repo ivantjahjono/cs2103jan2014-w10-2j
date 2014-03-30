@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import kaboom.logic.DateAndTimeFormat;
 import kaboom.logic.DisplayData;
+import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TASK_TYPE;
@@ -66,7 +67,14 @@ public class Command {
 		return false;
 	}
 	
-	public boolean parseInfo(String info) {
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		// All in command are invalid
+		FormatIdentify newIdentity = new FormatIdentify();
+		
+		newIdentity.setEndIndex(0);
+		newIdentity.setEndIndex(info.length());
+		newIdentity.setType(KEYWORD_TYPE.INVALID);
+		
 		return false;
 	}
 	
