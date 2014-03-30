@@ -62,6 +62,24 @@ public class TaskListShop {
 		}
 		return null;
 	}
+	
+	public TaskInfo getArchivedTaskByName (String taskName) {
+		for (int i = archivedTaskList.size()-1; i >= 0; i--) {
+			//System.out.println(taskList.get(i).getTaskName());
+			if (taskName.equals(archivedTaskList.get(i).getTaskName())) {
+				return archivedTaskList.get(i);
+			}
+		}
+		return null;
+	}
+	
+	public TaskInfo getTaskByID(int index) {
+		return currentTaskList.get(index);
+	}
+	
+	public TaskInfo getArchivedTaskByID(int index) {
+		return archivedTaskList.get(index);
+	}
 
 	public void updateTask (TaskInfo newTaskInfo, TaskInfo prevTaskInfo) {
 		int indexOfTaskListToBeModified = -1;
@@ -74,6 +92,20 @@ public class TaskListShop {
 
 		if (indexOfTaskListToBeModified != -1) {
 			currentTaskList.set(indexOfTaskListToBeModified, newTaskInfo);
+		}
+	}
+	
+	public void updateArchivedTask(TaskInfo newTaskInfo, TaskInfo prevTaskInfo) {
+		int indexOfTaskListToBeModified = -1;
+		for (int i = 0; i < archivedTaskList.size(); i++) {
+			if (prevTaskInfo.equals(archivedTaskList.get(i))) {
+				indexOfTaskListToBeModified = i;
+				//System.out.println("index="+indexOfTaskListToBeModified);
+			}
+		}
+
+		if (indexOfTaskListToBeModified != -1) {
+			archivedTaskList.set(indexOfTaskListToBeModified, newTaskInfo);
 		}
 	}
 
@@ -160,6 +192,13 @@ public class TaskListShop {
 
 		return false;
 	}
+	
+	public void removeTaskByID(int taskID) {
+		assert taskID <= currentTaskList.size();
+		
+		//TaskID is the position of the task in the vector
+		currentTaskList.remove(taskID);
+	}
 
 	//This function refreshes all the tasks in the vector to check
 	//whether it has expired and set to true if it has expired.
@@ -195,6 +234,8 @@ public class TaskListShop {
 				currentTaskList.remove(singleTask);
 			}
 		}
+		
+		History.getInstance().setViewingTasks(currentTaskList);
 	}
 
 	public Vector<TaskInfo> clearAllTasks () {

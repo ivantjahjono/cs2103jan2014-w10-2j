@@ -3,7 +3,7 @@ package kaboom.logic;
 import java.util.Calendar; 
 
 public class TaskInfo {
-	
+		
 	String taskname;
 	TASK_TYPE taskType;
 	
