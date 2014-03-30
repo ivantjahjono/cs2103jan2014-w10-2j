@@ -4,9 +4,11 @@ import kaboom.logic.command.COMMAND_TYPE;
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandFactory;
 import kaboom.logic.command.CommandUpdate;
+import kaboom.logic.command.CommandView;
 import kaboom.storage.History;
 import kaboom.storage.Storage;
 import kaboom.storage.TaskListShop;
+import kaboom.ui.DISPLAY_STATE;
 
 
 /*
@@ -76,16 +78,17 @@ public class TaskMasterKaboom {
 	
 	public void updateTaskList () {
 		// TODO a hack around currently to update to current view mode
+		Result updateResult;
 		
 		Command updateCommand = new CommandUpdate();
-		Result updateResult = updateCommand.execute();
+		updateCommand.execute();
 		
-		// Get the latest view command and execute it
-		Command recentViewCommand = History.getInstance().getMostRecentCommandView();
+		// Get current display state
+		DISPLAY_STATE currentDisplayState = guiDisplayData.getCurrentDisplayState();
 		
-		if (recentViewCommand != null) {
-			updateResult = recentViewCommand.execute();
-		}
+		CommandView updateViewCommand = new CommandView();
+		updateViewCommand.setDisplayState(currentDisplayState);
+		updateResult = updateViewCommand.execute();
 		
 		//4. Save data to file
 		fileStorage.store();
