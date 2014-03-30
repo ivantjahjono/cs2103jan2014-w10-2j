@@ -15,6 +15,7 @@ public class CommandView extends Command{
 	private static final String KEYWORD_DEADLINE = "deadline";
 	private static final String KEYWORD_TIMED = "timed";
 	private static final String KEYWORD_SEARCH = "search";
+	private static final String KEYWORD_ARCHIVE = "archive";
 	private static final String KEYWORD_ALL = "all";
 	
 	private static final String MESSAGE_VIEW_RUNNING = "Running Task Mode";
@@ -22,6 +23,7 @@ public class CommandView extends Command{
 	private static final String MESSAGE_VIEW_TIMED = "Timed Task Mode";
 	private static final String MESSAGE_VIEW_ALL = "All Task Mode";
 	private static final String MESSAGE_VIEW_SEARCH = "Search Result Mode";
+	private static final String MESSAGE_VIEW_ARCHIVE = "Archive View Mode";
 	private static final String MESSAGE_VIEW_INVALID = "Invalid View Mode";
 	
 	String viewType;
@@ -62,7 +64,11 @@ public class CommandView extends Command{
 				feedback = MESSAGE_VIEW_ALL;
 				break;
 			case SEARCH:
-				//UNDER CONSTRUCTION LOL
+				feedback = MESSAGE_VIEW_SEARCH;
+				break;
+			case ARCHIVE:
+				taskList = taskListShop.getAllArchivedTasks();
+				feedback = MESSAGE_VIEW_ARCHIVE;
 				break;
 			default:
 				feedback = MESSAGE_VIEW_INVALID;
@@ -86,6 +92,8 @@ public class CommandView extends Command{
 				return DISPLAY_STATE.ALL;
 			case KEYWORD_SEARCH:
 				return DISPLAY_STATE.SEARCH;
+			case KEYWORD_ARCHIVE:
+				return DISPLAY_STATE.ARCHIVE;
 			default:
 				return DISPLAY_STATE.INVALID;
 		}
@@ -111,5 +119,4 @@ public class CommandView extends Command{
 	public boolean parseInfo(String info) {
 		return true;
 	}
-	
 }
