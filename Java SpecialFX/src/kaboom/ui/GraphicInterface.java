@@ -44,7 +44,7 @@ public class GraphicInterface extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.initStyle(StageStyle.TRANSPARENT);
 		primaryStage.setWidth(700);
-		primaryStage.setHeight(500);
+		primaryStage.setHeight(550);
 		primaryStage.show();
 		
 		mainWindow.prepareTextfieldFocus();
