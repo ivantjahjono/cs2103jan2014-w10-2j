@@ -14,6 +14,8 @@ import kaboom.ui.DISPLAY_STATE;
  * current page the UI is on.
  */
 public class DisplayData extends Observable {
+	// TODO clean up methods
+	
 	final int NUM_OF_TASK_PER_PAGE = 10;
 	
 	static DisplayData instance;
@@ -43,6 +45,7 @@ public class DisplayData extends Observable {
 	
 	private DisplayData () {
 		tasksDataToDisplay = new Vector<TaskInfoDisplay>();
+		searchResultDataToDisplay = new Vector<TaskInfoDisplay>();
 		userFeedbackMessage = "";
 		currentPage = 0;
 		currentDisplayState = DISPLAY_STATE.ALL;
@@ -56,9 +59,21 @@ public class DisplayData extends Observable {
 	 */
 	public void updateDisplayWithResult (Result commandResult) {
 		// TODO Hardcoded way of forcing to show to default if there is no tasks to display
-		if (commandResult.getTasksToDisplay() != null) {
-			setTaskDisplayToThese(commandResult.getTasksToDisplay());
+		
+		// Update display state
+		DISPLAY_STATE stateChange = commandResult.getDisplayState();
+		if (stateChange != null) {
+			currentDisplayState = stateChange; 
 		}
+		
+		if (commandResult.getTasksToDisplay() != null) {
+			if (stateChange == DISPLAY_STATE.SEARCH) {
+				setTaskDisplayToThese(commandResult.getTasksToDisplay(), searchResultDataToDisplay);
+			} else {
+				setTaskDisplayToThese(commandResult.getTasksToDisplay(), tasksDataToDisplay);
+			}
+		}
+		
 		setFeedbackMessage(commandResult.getFeedback());
 		
 		if (commandResult.getGoToNextPage()) {
@@ -67,14 +82,10 @@ public class DisplayData extends Observable {
 			goToPreviousPage();
 		}
 		
-		// Update display state
-		DISPLAY_STATE stateChange = commandResult.getDisplayState();
-		if (stateChange != null) {
-			currentDisplayState = stateChange; 
-		}
-		
-		if (currentPage > getMaxTaskDisplayPages()-1) {
-			currentPage = getMaxTaskDisplayPages()-1;
+		Vector<TaskInfoDisplay> currentTaskList = getCurrentTaskListBasedOnView();
+		int maxPages = getMaxTaskDisplayPages(currentTaskList)-1;
+		if (currentPage > maxPages) {
+			currentPage = maxPages;
 		}
 		
 		setChanged();
@@ -106,28 +117,30 @@ public class DisplayData extends Observable {
 	public Vector<TaskInfoDisplay> getTaskDisplay () {
 		Vector<TaskInfoDisplay> selectedTaskToDisplay = new Vector<TaskInfoDisplay>();
 		int startTaskIndex = currentPage*NUM_OF_TASK_PER_PAGE;
-		int endTaskIndex = getLastIndexOfPage(currentPage);
+		int endTaskIndex = getLastIndexOfCurrentPage(currentPage);
 		
+		Vector<TaskInfoDisplay> taskListToReturn = getCurrentTaskListBasedOnView();
 		for (int i = startTaskIndex; i < endTaskIndex; i++) {
-			selectedTaskToDisplay.add(tasksDataToDisplay.get(i));
+			selectedTaskToDisplay.add(taskListToReturn.get(i));
 		}
 		
 		return selectedTaskToDisplay;
 	}
 
-	private int getLastIndexOfPage(int startPage) {
+	private int getLastIndexOfCurrentPage(int startPage) {
 		int maxCurrentPage = (currentPage+1)*NUM_OF_TASK_PER_PAGE;
 		
-		if (maxCurrentPage > tasksDataToDisplay.size()) {
-			return tasksDataToDisplay.size();
+		Vector<TaskInfoDisplay> currentTaskList = getCurrentTaskListBasedOnView();
+		if (maxCurrentPage > currentTaskList.size()) {
+			return currentTaskList.size();
 		}
 		
 		return maxCurrentPage;
 	}
 	
-	public void setTaskDisplayToThese (Vector<TaskInfo> taskList) {
-		tasksDataToDisplay.clear();
-		convertTasksIntoDisplayData(taskList, tasksDataToDisplay);
+	public void setTaskDisplayToThese (Vector<TaskInfo> taskList, Vector<TaskInfoDisplay> taskListToStoreIn) {
+		taskListToStoreIn.clear();
+		convertTasksIntoDisplayData(taskList, taskListToStoreIn);
 	}
 
 	private void convertTasksIntoDisplayData(Vector<TaskInfo> taskList, Vector<TaskInfoDisplay> taskListToAddinto) {
@@ -155,11 +168,18 @@ public class DisplayData extends Observable {
 		userFeedbackMessage = message;
 	}
 	
-	public int getMaxTaskDisplayPages () {
-		if (tasksDataToDisplay.size() == 0) {
+	public int getMaxTaskDisplayPagesForCurrentView () {
+		Vector<TaskInfoDisplay> currentTaskList = getCurrentTaskListBasedOnView();
+		int maxPages = getMaxTaskDisplayPages(currentTaskList)-1;
+		
+		return maxPages;
+	}
+	
+	private int getMaxTaskDisplayPages (Vector<TaskInfoDisplay> taskUnderConcern) {
+		if (taskUnderConcern.size() == 0) {
 			return 1;
 		} else {
-			return ((tasksDataToDisplay.size()-1)/NUM_OF_TASK_PER_PAGE)+1;
+			return ((taskUnderConcern.size()-1)/NUM_OF_TASK_PER_PAGE)+1;
 		}
 	}
 	
@@ -167,10 +187,18 @@ public class DisplayData extends Observable {
 		return currentPage;
 	}
 	
+	private Vector<TaskInfoDisplay> getCurrentTaskListBasedOnView () {
+		if (currentDisplayState == DISPLAY_STATE.SEARCH) {
+			return searchResultDataToDisplay;
+		} else {
+			return tasksDataToDisplay;
+		}
+	}
+	
 	public void goToNextPage () {
 		currentPage++;
 		
-		int maxPage = getMaxTaskDisplayPages()-1;
+		int maxPage = getMaxTaskDisplayPagesForCurrentView();
 		if (currentPage > maxPage) {
 			currentPage = maxPage;
 		}

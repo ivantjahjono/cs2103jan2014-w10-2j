@@ -38,12 +38,12 @@
 }
 
 .header-label-selected {
-	-fx-font-size: 24px;
+	-fx-font-size: 20px;
 	-fx-text-fill: #0066FF;
 }
 
 .header-label-normal {
-	-fx-font-size: 20px;
+	-fx-font-size: 16px;
 	-fx-text-fill: #9F9F9F;
 }
 
@@ -55,6 +55,16 @@
 
 .isExpired:hover {
 	-fx-background-color: rgba(255,0,0,0.2);
+}
+
+.isComplete {
+	-fx-border-width: 0 3 0 0;
+	-fx-background-color: #FFFFFF;
+	-fx-border-color: #FFFFFF #00FF00 #FFFFFF #FF0000;
+}
+
+.isComplete:hover {
+	-fx-background-color: #EEFFEE;
 }
 
 .isNotExpired {

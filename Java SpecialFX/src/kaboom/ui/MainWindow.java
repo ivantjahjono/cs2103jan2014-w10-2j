@@ -71,6 +71,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	@FXML 	private Label header_deadline;
 	@FXML 	private Label header_timed;
 	@FXML 	private Label header_search;
+	@FXML 	private Label header_archive;
 	
 	// List and tracks of previously activated headers
 	private Vector<Label>	labelList;
@@ -145,6 +146,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		labelList.add(header_deadline);
 		labelList.add(header_timed);
 		labelList.add(header_search);
+		labelList.add(header_archive);
 		currentLabelIndex = 0;
 		previousLabelIndex = 0;
 		
@@ -183,6 +185,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	                    
 	                    getStyleClass().removeAll(Collections.singleton("isNotExpired"));
 	                    getStyleClass().removeAll(Collections.singleton("isExpired"));
+	                    getStyleClass().removeAll(Collections.singleton("isComplete"));
 	                    getStyleClass().removeAll(Collections.singleton("isEmpty"));
 	                    
 	                    if (person == null) {
@@ -190,11 +193,10 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	                    	 return;
 	                    }
 	                    
-	                    if (person.isExpired()) {
-	                    //if (highlightRows.contains(getIndex())) {
-	                        if (! getStyleClass().contains("isExpired")) {
+	                    if (person.isDone()) {
+	                    	getStyleClass().add("isComplete");
+	                    } else if (person.isExpired()) {
 	                            getStyleClass().add("isExpired");
-	                        }
 	                    } else {   
 	                        getStyleClass().add("isNotExpired");
 	                    }
@@ -297,6 +299,9 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				newHeaderIndex = 5;
 				break;
 				
+			default:
+				break;
+				
 		}
 		
 		switchToNewHeader(newHeaderIndex);
@@ -397,6 +402,10 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				
 			case F5:
 				switchToNewHeader(4);
+				break;
+				
+			case F6:
+				switchToNewHeader(5);
 				break;	
 				
 			default:
@@ -523,6 +532,11 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				command = "view search";
 				break;
 				
+			case "header_archive":
+				headerTypeClicked = DISPLAY_STATE.ARCHIVE;
+				command = "view archive";
+				break;
+				
 			default:
 				return;
 		}
@@ -574,7 +588,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	}
 
 	private void updatePagesTab() {
-		int maxPages = uiData.getMaxTaskDisplayPages();
+		int maxPages = uiData.getMaxTaskDisplayPagesForCurrentView();
 		int maxTabs = maxPages;
 		
 		if (maxTabs > MAX_TABS) {
