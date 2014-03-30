@@ -5,8 +5,7 @@ import java.util.Hashtable;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
-import kaboom.storage.TaskListShop;
-
+import kaboom.storage.History;
 
 
 public class CommandDelete extends Command {
@@ -25,13 +24,20 @@ public class CommandDelete extends Command {
 		
 		String taskName = taskInfo.getTaskName();
 		String commandFeedback = "";
-		
-		if (taskListShop.removeTaskByName(taskName)) {
-			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
-		} else {
-			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
+
+		if (!taskName.equals("")) {
+			if (taskListShop.removeTaskByName(taskName)) {
+				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
+			} else {
+				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
+			}
 		}
-		
+		else {
+			int index = History.getInstance().taskID.get(taskInfo.getID());
+			taskListShop.removeTaskByID(index);
+			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskInfo.getID());
+		}
+
 		return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
 	}
 	
@@ -44,6 +50,7 @@ public class CommandDelete extends Command {
 	
 	private void initialiseKeywordList() {
 		keywordList.clear();
+		keywordList.add(KEYWORD_TYPE.TASKID);
 		keywordList.add(KEYWORD_TYPE.TASKNAME);
 	}
 	
