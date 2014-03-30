@@ -57,6 +57,16 @@
 	-fx-background-color: rgba(255,0,0,0.2);
 }
 
+.isComplete {
+	-fx-border-width: 0 3 0 0;
+	-fx-background-color: #FFFFFF;
+	-fx-border-color: #FFFFFF #00FF00 #FFFFFF #FF0000;
+}
+
+.isComplete:hover {
+	-fx-background-color: #EEFFEE;
+}
+
 .isNotExpired {
 	-fx-border-width: 0 0 0 3;
 	-fx-background-color: #FFFFFF;
