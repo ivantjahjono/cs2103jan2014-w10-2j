@@ -145,7 +145,7 @@
 }
 
 .parseCommandTypeName {
-	-fx-font-family: "Segoe UI Semilight";
+	-fx-font-family: "Segoe UI Semibold";
 	-fx-text-fill: #2d89ef;
 	-fx-font-weight: bold;
 }
