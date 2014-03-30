@@ -4,6 +4,10 @@ import java.util.Calendar;
 
 public class TaskInfo {
 	
+	//TaskID is never attached to any task
+	//It is only used for deleting, modifying, done and undone
+	int taskID;
+	
 	String taskname;
 	TASK_TYPE taskType;
 	
@@ -31,6 +35,10 @@ public class TaskInfo {
 		importanceLevel = info.getImportanceLevel();
 		isExpired = info.getExpiryFlag();
 		taskType = info.getTaskType();
+	}
+	
+	public void setID(int ID) {
+		taskID = ID;
 	}
 	
 	public void setTask(TaskInfo taskInfo) {
@@ -63,6 +71,10 @@ public class TaskInfo {
 	
 	public void setDone (boolean flag) {
 		isDone = flag;
+	}
+	
+	public int getID() {
+		return taskID;
 	}
 	
 	public String getTaskName () { 
