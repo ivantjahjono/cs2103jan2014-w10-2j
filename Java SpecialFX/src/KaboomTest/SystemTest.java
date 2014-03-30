@@ -29,39 +29,39 @@ public class SystemTest {
 		
 		// Process only whitespaces command
 		command = "      add ";
-		assertEquals("Added a file with no Task Name", controller.processCommand(command));
+		assertEquals("Enter a task name please :'(", controller.processCommand(command));
 		
 		// Add only command
 		command = "add";
-		assertEquals("Added a file with no Task Name", controller.processCommand(command));
+		assertEquals("Enter a task name please :'(", controller.processCommand(command));
 		
 		// Add whitespaces command
 		command = "add     ";
-		assertEquals("Added a file with no Task Name", controller.processCommand(command));
+		assertEquals("Enter a task name please :'(", controller.processCommand(command));
 		
 		// Add whitespaces command
 		command = "add hello";
-		assertEquals("Successfully added hello", controller.processCommand(command));
+		assertEquals("WOOT! <hello> ADDED. MORE STUFF TO DO!", controller.processCommand(command));
 		
 		// Delete only command
 		command = "delete";
-		assertEquals(" fail to delete.", controller.processCommand(command));
+		assertEquals("Aww... fail to delete <>.", controller.processCommand(command));
 		
 		// Delete whitespaces command
 		command = "delete ";
-		assertEquals(" fail to delete.", controller.processCommand(command));
+		assertEquals("Aww... fail to delete <>.", controller.processCommand(command));
 		
 		// Delete whitespaces command
 		command = "delete hello";
-		assertEquals("hello deleted.", controller.processCommand(command));
+		assertEquals("<hello> deleted. 1 less work to do :D", controller.processCommand(command));
 		
 		// Add whitespaces command
 		command = "add        hello";
-		assertEquals("Successfully added hello", controller.processCommand(command));
+		assertEquals("WOOT! <hello> ADDED. MORE STUFF TO DO!", controller.processCommand(command));
 		
 		// Delete whitespaces command
 		command = "delete     hello";
-		assertEquals("hello deleted.", controller.processCommand(command));	
+		assertEquals("<hello> deleted. 1 less work to do :D", controller.processCommand(command));	
 	}
 	
 	@Test
