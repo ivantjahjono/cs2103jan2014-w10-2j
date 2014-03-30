@@ -144,10 +144,6 @@ public class TaskMasterKaboom {
 		boolean processResult = false;
 		Vector<FormatIdentify> characterIndexList = new Vector<FormatIdentify>();
 		
-		if (usercommand.trim().equals("")) {
-			return true;
-		}
-		
 		//System.out.println("Processing:" + usercommand);
 		
 		//1. Get Command 
@@ -156,18 +152,13 @@ public class TaskMasterKaboom {
 		//2. Create Command
 		commandToExecute = CommandFactory.createCommand(commandKeyword);
 		
-		//3. Remove Command Word From UserInput
-		//usercommand = TextParser.removeFirstWord(usercommand);
-		
 		try {
 			processResult = commandToExecute.parseInfo(usercommand, characterIndexList);
 		} catch (Exception e) {
 			
 		}
-		
-		guiDisplayData.setFormatText(usercommand);
+	
 		guiDisplayData.setFormatDisplay(characterIndexList);
-
 		return processResult;
 	}
 	
