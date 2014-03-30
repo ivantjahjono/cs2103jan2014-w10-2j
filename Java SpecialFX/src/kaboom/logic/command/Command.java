@@ -1,6 +1,7 @@
 package kaboom.logic.command;
 
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -11,6 +12,7 @@ import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TASK_TYPE;
 import kaboom.logic.TaskInfo;
+import kaboom.logic.TextParser;
 import kaboom.storage.TaskListShop;
 
 /* 
@@ -69,13 +71,54 @@ public class Command {
 	
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
 		// All in command are invalid
-		FormatIdentify newIdentity = new FormatIdentify();
-		
-		newIdentity.setEndIndex(0);
-		newIdentity.setEndIndex(info.length());
-		newIdentity.setType(KEYWORD_TYPE.INVALID);
+		setRemainingAsInvalidString(info, indexList);
 		
 		return false;
+	}
+	
+	protected Hashtable<KEYWORD_TYPE, String> updateFormatList (String info, Vector<FormatIdentify> indexList) {
+		getCommandString(info, indexList);
+		info = TextParser.removeFirstWord(info);
+		
+		//5. Extract Task Info Base on Keywords
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.testExtractList(info, keywordList);
+		
+		return taskInformationTable;
+	}
+	
+	protected void updateFormatListBasedOnHashtable(Vector<FormatIdentify> indexList, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+		Enumeration<KEYWORD_TYPE> elementItr =  taskInformationTable.keys();
+		
+		while (elementItr.hasMoreElements()) {
+			KEYWORD_TYPE currentKeyword = elementItr.nextElement();
+			FormatIdentify newIdentity = new FormatIdentify();
+			
+			newIdentity.setCommandStringFormat(taskInformationTable.get(currentKeyword));
+			newIdentity.setType(currentKeyword);
+			indexList.add(newIdentity);
+		}
+	}
+
+	protected void setRemainingAsInvalidString(String info,
+			Vector<FormatIdentify> indexList) {
+		FormatIdentify newIdentity = new FormatIdentify();
+		
+		newIdentity.setCommandStringFormat(info);
+		newIdentity.setType(KEYWORD_TYPE.INVALID);
+		
+		indexList.add(newIdentity);
+	}
+	
+	protected void getCommandString(String info, Vector<FormatIdentify> indexList) {
+		//3. Remove Command Word From UserInput
+		String commandString = TextParser.getFirstWord(info);
+		
+		FormatIdentify newIdentity = new FormatIdentify();
+		
+		newIdentity.setCommandStringFormat(commandString);
+		newIdentity.setType(KEYWORD_TYPE.COMMAND);
+		
+		indexList.add(newIdentity);
 	}
 	
 	public Vector<KEYWORD_TYPE> getKeywordList () {

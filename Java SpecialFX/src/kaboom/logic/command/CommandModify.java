@@ -2,8 +2,10 @@ package kaboom.logic.command;
 
 import java.util.Calendar;
 import java.util.Hashtable;
+import java.util.Vector;
 
 import kaboom.logic.DateAndTimeFormat;
+import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
@@ -130,7 +132,7 @@ public class CommandModify extends Command {
 	}
 
 	
-	public boolean parseInfo(String info) {
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
 		return true;
 	}
 	
