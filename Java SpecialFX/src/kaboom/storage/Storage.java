@@ -148,6 +148,8 @@ public class Storage {
 					output.append(" " + delimiter);
 				}
 				output.append(task.getImportanceLevel() + delimiter);
+				output.append(task.getExpiryFlag() + delimiter);
+				output.append(task.getDone() + delimiter);
 				writer.write(output.toString());
 				writer.newLine();
 				writer.flush();
