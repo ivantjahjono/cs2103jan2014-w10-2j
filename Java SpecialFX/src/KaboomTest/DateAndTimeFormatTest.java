@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.Calendar;
 
 import kaboom.logic.DateAndTimeFormat;
+import kaboom.logic.InvalidDateAndTimeException;
 
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ public class DateAndTimeFormatTest {
 	Calendar cal = Calendar.getInstance();
 	
 	@Test
-	public void dateTranslatorTest() {
+	public void dateTranslatorTest() throws InvalidDateAndTimeException {
 		//test day
 		assertEquals("11", datFormat.testDayFromDateTranslator(cal, "11/10/12"));
 		assertEquals("12", datFormat.testDayFromDateTranslator(cal, "12.10.12"));
@@ -32,7 +33,7 @@ public class DateAndTimeFormatTest {
 	}
 	
 	@Test
-	public void timeTranslatorTest() {
+	public void timeTranslatorTest() throws InvalidDateAndTimeException {
 		//test hour
 		assertEquals("12", datFormat.testHourFromTimeTranslator(cal, "1200"));
 		assertEquals("0", datFormat.testHourFromTimeTranslator(cal, "0000"));
