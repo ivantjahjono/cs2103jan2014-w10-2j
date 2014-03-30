@@ -5,11 +5,21 @@ public class FormatIdentify {
 	int endIndex;
 	
 	KEYWORD_TYPE type;
+	String stringText;
 	
 	public FormatIdentify () {
 		startIndex = 0;
 		endIndex = 0;
 		type = KEYWORD_TYPE.INVALID;
+		stringText = "";
+	}
+	
+	public void setCommandStringFormat (String text) {
+		stringText = text;
+	}
+	
+	public String getCommandStringFormat () {
+		return stringText;
 	}
 	
 	public void setStartIndex (int index) {
