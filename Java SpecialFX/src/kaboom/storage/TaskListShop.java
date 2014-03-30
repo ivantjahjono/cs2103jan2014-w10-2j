@@ -160,6 +160,13 @@ public class TaskListShop {
 
 		return false;
 	}
+	
+	public void removeTaskByID(int taskID) {
+		assert taskID <= currentTaskList.size();
+		
+		//TaskID is the position of the task in the vector
+		currentTaskList.remove(taskID);
+	}
 
 	//This function refreshes all the tasks in the vector to check
 	//whether it has expired and set to true if it has expired.
