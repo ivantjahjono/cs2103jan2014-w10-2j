@@ -1,0 +1,121 @@
+.feedback-pane {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #2d89ef;
+    -fx-font-family: "Segoe UI Semilight";
+}
+
+.table-view {
+  -fx-table-cell-border-color: transparent;
+  -fx-border-width: 0 0 0 0;
+  -fx-border-color: #FFFFFF;
+  -fx-background-insets: 0, 0, 0, 0;
+}
+
+.table-view .filler {
+  -fx-border-color: transparent;
+}
+
+.table-view .table-cell {
+	-fx-padding: 5;
+	-fx-font-family: "Segoe UI Semibold";
+}
+
+.column-header {
+	-fx-background-color: #2d89ef;
+	-fx-border-width: 0, 1, 0, 0;
+	-fx-border-color: #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF;
+	-fx-padding: 5;
+}
+
+.column-header .label {
+	-fx-text-fill: #FFFFFF;
+	-fx-alignment: CENTER_LEFT;
+	-fx-font-family: "Segoe UI Semibold";
+}
+
+.table-view .placeholder .label {
+	-fx-text-fill: transparent;
+}
+
+.header-label-selected {
+	-fx-font-size: 20px;
+	-fx-text-fill: #0066FF;
+}
+
+.header-label-normal {
+	-fx-font-size: 16px;
+	-fx-text-fill: #9F9F9F;
+}
+
+.isExpired {
+	-fx-border-width: 0 0 0 3;
+	-fx-background-color: #FFDDDD;
+	-fx-border-color: #FFFFFF #FF0000 #FFFFFF #FF0000;
+}
+
+.isExpired:hover {
+	-fx-background-color: rgba(255,0,0,0.2);
+}
+
+.isComplete {
+	-fx-border-width: 0 3 0 0;
+	-fx-background-color: #FFFFFF;
+	-fx-border-color: #FFFFFF #00FF00 #FFFFFF #FF0000;
+}
+
+.isComplete:hover {
+	-fx-background-color: #EEFFEE;
+}
+
+.isNotExpired {
+	-fx-border-width: 0 0 0 3;
+	-fx-background-color: #FFFFFF;
+	-fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FFFFFF;
+}
+
+.isNotExpired:hover {
+	-fx-background-color: #EEEEFF;
+}
+
+.isEmpty {
+	-fx-background-color: #FFFFFF;
+}
+
+.table-view .table-row {
+	-fx-background-color: #FFFFFF;
+}
+
+.pages-tab-hbox {
+	-fx-spacing: 5; 
+}
+
+.pagesOn {
+	-fx-fill: #2d89ef;
+	-fx-border-color: red;
+	-fx-opacity: 1;
+}
+
+.pagesOff {
+	-fx-fill: #2d89ef;
+	-fx-opacity: 0.3;
+}
+
+.commandValid {
+	-fx-fill: #00cc83;
+}
+
+.commandInvalid {
+	-fx-fill: #ff3333;
+}
+
+.root {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0.5, 0.0, 0.0);
+    -fx-background-radius: 5;
+    -fx-padding: 50;
+}
+
+.content {
+    -fx-background-color: #c0c0c0;
+    -fx-background-radius: 5;
+    -fx-padding: 10;
+}
