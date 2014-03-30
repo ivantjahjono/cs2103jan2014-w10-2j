@@ -11,14 +11,14 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" fx:id="mainPane" blendMode="SRC_OVER" focusTraversable="true" layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="470.0" prefWidth="600.0" snapToPixel="true" styleClass="root" translateX="0.0" translateY="0.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboom.ui.MainWindow">
+<AnchorPane id="AnchorPane" fx:id="mainPane" blendMode="SRC_OVER" focusTraversable="true" layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="484.00006103515625" prefWidth="600.0" snapToPixel="true" styleClass="root" translateX="0.0" translateY="0.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboom.ui.MainWindow">
   <children>
-    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="WHITE" height="469.9999694824219" layoutX="0.0" layoutY="0.0" opacity="1.0" smooth="true" strokeType="INSIDE" strokeWidth="1.0" styleClass="column-header" width="600.0">
+    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="WHITE" height="484.00006948241935" layoutX="0.0" layoutY="0.0" opacity="1.0" smooth="true" strokeType="INSIDE" strokeWidth="1.0" styleClass="column-header" width="600.0">
       <stroke>
         <Color blue="0.937" green="0.537" red="0.176" fx:id="x4" />
       </stroke>
     </Rectangle>
-    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="#2d89ef" height="27.0" layoutX="0.0" layoutY="0.0" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0" />
+    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_ATOP" fill="#2d89ef" height="27.0" layoutX="0.0" layoutY="0.0" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0" />
     <Pane fx:id="feedbackBox" blendMode="SRC_OVER" layoutX="13.0" layoutY="410.0" prefHeight="22.0" prefWidth="572.0" styleClass="feedback-pane">
       <children>
         <Label id="" fx:id="feedbackText" layoutX="0.0" layoutY="0.0" minHeight="22.0" prefHeight="22.0" prefWidth="567.0" text="Feedback" textFill="$x4" translateX="5.0" underline="false">
@@ -132,6 +132,20 @@
       </children>
     </Pane>
     <Rectangle fx:id="statusIndicator" arcHeight="5.0" arcWidth="5.0" fill="#00cc83" height="17.999977111816406" layoutX="567.0" layoutY="436.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="18.0" />
+    <HBox id="HBox" alignment="CENTER" layoutX="19.0" layoutY="460.0" spacing="0.0">
+      <children>
+        <Label mnemonicParsing="false" mouseTransparent="true" styleClass="parseCommandTypeName" text="command">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label styleClass="parseCommandName" text="taskname" />
+        <Label styleClass="parseCommandStartDate" text="startdate" />
+        <Label styleClass="parseCommandEndDate" text="enddate" />
+        <Label styleClass="parseCommandPriority" text="priority" />
+        <Label styleClass="parseCommandInvalid" text="invalid" />
+      </children>
+    </HBox>
   </children>
   <stylesheets>
     <URL value="@application.css" />
