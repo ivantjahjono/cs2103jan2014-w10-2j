@@ -49,7 +49,7 @@
 
 .isExpired {
 	-fx-border-width: 0 0 0 3;
-	-fx-background-color: #FFFFFF;
+	-fx-background-color: #FFDDDD;
 	-fx-border-color: #FFFFFF #FF0000 #FFFFFF #FF0000;
 }
 
