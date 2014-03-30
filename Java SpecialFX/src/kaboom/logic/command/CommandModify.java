@@ -15,16 +15,20 @@ public class CommandModify extends Command {
 	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
 	private static final String MESSAGE_COMMAND_MODIFY_FAIL = "Fail to cast a spell on <%1$s>";
 	private static final String MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME = "Trying to manipulate air";
+	private static final String MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_TO_MODIFY = "<%1$s> does not exist...";
 	private static final String MESSAGE_COMMAND_MODIFY_FAIL_NO_CHANGE = "Nothing happened...";
-	private static final String MESSAGE_COMMAND_MODIFY_FAIL_INVALID_STARTANDEND_TIME = "Trying to set <%1$s> to end before it even started...";
+	private static final String MESSAGE_COMMAND_MODIFY_FAIL_SET_ENDDATEBOFORESTARDATE = "Trying to let <%1$s> end before it even started...";
+	private static final String MESSAGE_COMMAND_MODIFY_FAIL_SET_STARTDATEAFTERENDDATE = "Trying to let <%1$s> start after it ended...";
 	
-	private static final String MESSAGE_TASK_NAME = "<%1$s>";
-	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_NAME_CHANGE = " has evolved into <%1$s>";
-	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_TIME_CHANGE = " has manipulated time";
-	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_PRIORITY_CHANGE = " is seeing stars";
+	private static final String MESSAGE_TASK_NAME = "<%1$s> has";
+	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_NAME_CHANGE = " evolved into <%1$s>";
+	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_TIME_CHANGE = " manipulated time";
+	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_PRIORITY_CHANGE = " consulted the stars";
 	private static final String MESSAGE_COMMAND_MODIFY_CONNECTOR = ",";
 	
 	TaskInfo preModifiedTaskInfo;		// Use to store premodified data so that can undo later
+	TaskInfo taskInfoToModify;
+	Hashtable<KEYWORD_TYPE, String> taskInfoTable;
 	boolean hasNameChanged;
 	boolean hasTimeChanged;
 	boolean hasPriorityChanged;
@@ -37,68 +41,177 @@ public class CommandModify extends Command {
 		hasPriorityChanged = false;
 	}
 
+	/*
+	 * Bug: Will overwrite prev dates if input date is invalid
+	 * 
+	 */
 	public Result execute() {
 		assert taskListShop != null;
+		assert taskInfoTable != null;
+		
+		if(taskInfoTable == null) {
+			return createResult(taskListShop.getAllCurrentTasks(), "No TaskInfoTable");
+		}
+
 		
 		String feedback = "";
 		String taskName = "";
 		
-		try {
-			//get name of TaskInfo that user wants to modify
-			taskName = preModifiedTaskInfo.getTaskName();
-			
-			if(taskName.isEmpty()) {
-				feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
-				return createResult(taskListShop.getAllCurrentTasks(), feedback);
-			}
-			
-			//get TaskInfo that user wants to modify;
+		if (taskInfoTable.get(KEYWORD_TYPE.TASKNAME) != null) {
+			taskName = taskInfoTable.get(KEYWORD_TYPE.TASKNAME);
 			preModifiedTaskInfo = taskListShop.getTaskByName(taskName);
-			
-			//store TaskInfo to modify into temp taskinfo
+		} else {
+			feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
+			return createResult(taskListShop.getAllCurrentTasks(), feedback);
+		}
+		
+		if (taskInfoTable.get(KEYWORD_TYPE.TASKNAME).isEmpty()) {
+			feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
+			return createResult(taskListShop.getAllCurrentTasks(), feedback);
+		}
+		
+		if (preModifiedTaskInfo != null) {
 			TaskInfo temp = new TaskInfo(preModifiedTaskInfo);
-			//transfer all the new information over
-			if (taskInfo.getTaskName() != null) {
+			
+			//Modify task name
+			if (taskInfoTable.get(KEYWORD_TYPE.MODIFIED_TASKNAME) != null) {
 				//bug at textparser get modified name where if time and date commands are keyed in will be saved as taskname
-				temp.setTaskName (taskInfo.getTaskName());
+				temp.setTaskName (taskInfoTable.get(KEYWORD_TYPE.MODIFIED_TASKNAME));
 				hasNameChanged = true;
 			}
-			if (taskInfo.getImportanceLevel() != preModifiedTaskInfo.getImportanceLevel()) {
-				temp.setImportanceLevel (taskInfo.getImportanceLevel());
-				hasPriorityChanged = true;
-			}
-
-			Calendar startDate = preModifiedTaskInfo.getStartDate();
-			Calendar endDate = preModifiedTaskInfo.getEndDate();	
-			if(taskInfo.getStartDate() != null) {
-				startDate = taskInfo.getStartDate();
-			}
-			if(taskInfo.getEndDate() != null) {
-				endDate = taskInfo.getEndDate();
+			
+			//Modify priority
+			String taskPriority = taskInfoTable.get(KEYWORD_TYPE.PRIORITY);
+			int originalPriorityLevel = temp.getImportanceLevel();
+			if(taskPriority != null) {
+				int priorityLevelAfterChange = Integer.parseInt(taskPriority);
+				if (originalPriorityLevel != priorityLevelAfterChange) {
+					temp.setImportanceLevel (priorityLevelAfterChange);
+					hasPriorityChanged = true;
+				}
 			}
 			
-			if(DateAndTimeFormat.getInstance().dateValidityForStartAndEndDate(startDate, endDate)){
-				hasTimeChanged = true;
-				temp.setStartDate (startDate);
-				temp.setEndDate (endDate);
-			} else {
-				feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_INVALID_STARTANDEND_TIME, taskName);
+			//Modify Date And Time			
+			String startDate = null;
+			String startTime = null;
+			String endDate = null;
+			String endTime = null;
+			if(preModifiedTaskInfo.getStartDate() != null) {
+				startDate = DateAndTimeFormat.getInstance().dateFromCalendarToString(preModifiedTaskInfo.getStartDate());
+				startTime = DateAndTimeFormat.getInstance().timeFromCalendarToString(preModifiedTaskInfo.getStartDate());
+			}
+			if(preModifiedTaskInfo.getEndDate() != null) {
+				endDate = DateAndTimeFormat.getInstance().dateFromCalendarToString(preModifiedTaskInfo.getEndDate());
+				endTime = DateAndTimeFormat.getInstance().timeFromCalendarToString(preModifiedTaskInfo.getEndDate());
+			}
+			//transfer part
+			if(taskInfoTable.get(KEYWORD_TYPE.START_DATE) != null) {
+				startDate = taskInfoTable.get(KEYWORD_TYPE.START_DATE);
+			}
+			if(taskInfoTable.get(KEYWORD_TYPE.START_TIME) != null) {
+				startTime = taskInfoTable.get(KEYWORD_TYPE.START_TIME);
+			}
+			if(taskInfoTable.get(KEYWORD_TYPE.END_DATE) != null) {
+				endDate = taskInfoTable.get(KEYWORD_TYPE.END_DATE);
+			}
+			if(taskInfoTable.get(KEYWORD_TYPE.END_TIME) != null) {
+				endTime = taskInfoTable.get(KEYWORD_TYPE.END_TIME);
+			}
+			
+			try {
+				Calendar startDateCal = DateAndTimeFormat.getInstance().formatStringToCalendar(startDate, startTime);
+				Calendar endDateCal = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
+				
+				if(taskInfoTable.get(KEYWORD_TYPE.START_DATE) != null || taskInfoTable.get(KEYWORD_TYPE.START_TIME) != null || 
+						taskInfoTable.get(KEYWORD_TYPE.END_DATE) != null || taskInfoTable.get(KEYWORD_TYPE.END_TIME) != null) {
+					if(DateAndTimeFormat.getInstance().dateValidityForStartAndEndDate(startDateCal, endDateCal)){
+						hasTimeChanged = true;
+						temp.setStartDate (startDateCal);
+						temp.setEndDate (endDateCal);
+					} else {
+						if (taskInfoTable.get(KEYWORD_TYPE.START_DATE) != null || taskInfoTable.get(KEYWORD_TYPE.START_TIME) != null) {
+							feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_SET_STARTDATEAFTERENDDATE, taskName);
+						} else {
+							feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_SET_ENDDATEBOFORESTARDATE, taskName);
+						}
+						return createResult(taskListShop.getAllCurrentTasks(), feedback);
+					}
+				}
+				setEndDateAndTimeToHourBlock (temp);
+			} catch (Exception e) {
+				feedback = e.toString();
 				return createResult(taskListShop.getAllCurrentTasks(), feedback);
 			}
 			
-			//1hr block error
-			setEndDateAndTimeToHourBlock (temp);
 			determineAndSetTaskType(temp);
-			
 			//store and update in memory
 			taskInfo = temp;
 			taskListShop.updateTask(taskInfo, preModifiedTaskInfo);
-		} catch (Exception e) {
-			feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL, taskName);
+		} else {
+			feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_TO_MODIFY,taskName);
 			return createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
+		
 		feedback = feedbackGenerator();
 		return createResult(taskListShop.getAllCurrentTasks(), feedback);
+		
+//		try {
+//	
+//			//get name of TaskInfo that user wants to modify
+//			taskName = preModifiedTaskInfo.getTaskName();
+//			
+//			if(taskName.isEmpty()) {
+//				feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
+//				return createResult(taskListShop.getAllCurrentTasks(), feedback);
+//			}
+//			
+//			//get TaskInfo that user wants to modify;
+//			preModifiedTaskInfo = taskListShop.getTaskByName(taskName);
+//			
+//			//store TaskInfo to modify into temp taskinfo
+//			TaskInfo temp = new TaskInfo(preModifiedTaskInfo);
+//			//transfer all the new information over
+//			if (taskInfo.getTaskName() != null) {
+//				//bug at textparser get modified name where if time and date commands are keyed in will be saved as taskname
+//				temp.setTaskName (taskInfo.getTaskName());
+//				hasNameChanged = true;
+//			}
+//			if (taskInfo.getImportanceLevel() != preModifiedTaskInfo.getImportanceLevel()) {
+//				temp.setImportanceLevel (taskInfo.getImportanceLevel());
+//				hasPriorityChanged = true;
+//			}
+//
+//			Calendar startDate = preModifiedTaskInfo.getStartDate();
+//			Calendar endDate = preModifiedTaskInfo.getEndDate();	
+//			if(taskInfo.getStartDate() != null) {
+//				startDate = taskInfo.getStartDate();
+//			}
+//			if(taskInfo.getEndDate() != null) {
+//				endDate = taskInfo.getEndDate();
+//			}
+//			
+//			if(DateAndTimeFormat.getInstance().dateValidityForStartAndEndDate(startDate, endDate)){
+//				hasTimeChanged = true;
+//				temp.setStartDate (startDate);
+//				temp.setEndDate (endDate);
+//			} else {
+//				feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_INVALID_STARTANDEND_TIME, taskName);
+//				return createResult(taskListShop.getAllCurrentTasks(), feedback);
+//			}
+//			
+//			//1hr block error
+//			setEndDateAndTimeToHourBlock (temp);
+//			determineAndSetTaskType(temp);
+//			
+//			//store and update in memory
+//			taskInfo = temp;
+//			taskListShop.updateTask(taskInfo, preModifiedTaskInfo);
+//		} catch (Exception e) {
+//			feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL, taskName);
+//			return createResult(taskListShop.getAllCurrentTasks(), feedback);
+//		}
+//		feedback = feedbackGenerator();
+//		return createResult(taskListShop.getAllCurrentTasks(), feedback);
 	}
 	
 	public boolean undo () {
@@ -118,15 +231,17 @@ public class CommandModify extends Command {
 		keywordList.add(KEYWORD_TYPE.TASKNAME);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
-		taskInfo = new TaskInfo();
-		preModifiedTaskInfo = new TaskInfo();
-		
-		saveTaskName(infoHashes, preModifiedTaskInfo);
-		saveModifiedTaskName(infoHashes, taskInfo);
-		saveTaskPriority(infoHashes, taskInfo);
-		saveTaskStartDateAndTime(infoHashes, taskInfo);
-		saveTaskEndDateAndTime(infoHashes, taskInfo);
+//		taskInfo = new TaskInfo();
+//		preModifiedTaskInfo = new TaskInfo();
+//		
+//		saveTaskName(infoHashes, preModifiedTaskInfo);
+//		saveModifiedTaskName(infoHashes, taskInfo);
+//		saveTaskPriority(infoHashes, taskInfo);
+//		saveTaskStartDateAndTime(infoHashes, taskInfo);
+//		saveTaskEndDateAndTime(infoHashes, taskInfo);
+		taskInfoTable = (Hashtable<KEYWORD_TYPE, String>) infoHashes.clone();
 	}
 
 	

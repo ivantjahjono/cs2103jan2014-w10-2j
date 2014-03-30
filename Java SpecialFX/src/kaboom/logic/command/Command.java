@@ -114,15 +114,25 @@ public class Command {
 	protected void saveTaskStartDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
 		String startDate = infoHashes.get(KEYWORD_TYPE.START_DATE);
 		String startTime = infoHashes.get(KEYWORD_TYPE.START_TIME);
-		Calendar startDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(startDate, startTime);
-		task.setStartDate(startDateAndTime);
+		Calendar startDateAndTime = null;
+		try {
+			startDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(startDate, startTime);
+			task.setStartDate(startDateAndTime);
+		} catch (Exception e) {
+			task.setStartDate(startDateAndTime);
+		}
 	}
 	
 	protected void saveTaskEndDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
 		String endDate = infoHashes.get(KEYWORD_TYPE.END_DATE);
 		String endTime = infoHashes.get(KEYWORD_TYPE.END_TIME);
-		Calendar endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
-		task.setEndDate(endDateAndTime);
+		Calendar endDateAndTime = null;
+		try {
+			endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
+			task.setEndDate(endDateAndTime);
+		} catch (Exception e) {
+			task.setEndDate(endDateAndTime);
+		}
 	}
 	
 	protected void setEndDateAndTimeToHourBlock (TaskInfo task) {

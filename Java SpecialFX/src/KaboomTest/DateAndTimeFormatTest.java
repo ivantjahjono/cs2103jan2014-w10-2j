@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.Calendar;
 
 import kaboom.logic.DateAndTimeFormat;
+import kaboom.logic.InvalidDateAndTimeException;
 
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ public class DateAndTimeFormatTest {
 	Calendar cal = Calendar.getInstance();
 	
 	@Test
-	public void dateTranslatorTest() {
+	public void dateTranslatorTest() throws InvalidDateAndTimeException {
 		//test day
 		assertEquals("11", datFormat.testDayFromDateTranslator(cal, "11/10/12"));
 		assertEquals("12", datFormat.testDayFromDateTranslator(cal, "12.10.12"));
@@ -32,7 +33,7 @@ public class DateAndTimeFormatTest {
 	}
 	
 	@Test
-	public void timeTranslatorTest() {
+	public void timeTranslatorTest() throws InvalidDateAndTimeException {
 		//test hour
 		assertEquals("12", datFormat.testHourFromTimeTranslator(cal, "1200"));
 		assertEquals("0", datFormat.testHourFromTimeTranslator(cal, "0000"));
@@ -196,5 +197,27 @@ public class DateAndTimeFormatTest {
 		
 		//hh:mm format
 		assertTrue ("Valid",datFormat.is12hrTimeValid("10:00pm"));
+	}
+	
+	@Test
+	public void dateFromCalendarToStringConverterTest() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(2014, Calendar.MAY, 01);
+		assertEquals("010514",datFormat.dateFromCalendarToString (cal)); 
+		cal.set(2000, Calendar.JULY, 01);
+		assertEquals("010700",datFormat.dateFromCalendarToString (cal));  
+		cal.set(Calendar.MONTH,Calendar.JANUARY);
+		assertEquals("010100",datFormat.dateFromCalendarToString (cal));  
+	}
+	
+	@Test
+	public void timeFromCalendarToStringConverterTest() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 15);
+		cal.set(Calendar.MINUTE, 30);
+		assertEquals("1530",datFormat.timeFromCalendarToString (cal)); 
+		cal.set(Calendar.HOUR_OF_DAY, 01);
+		cal.set(Calendar.MINUTE, 30);
+		assertEquals("0130",datFormat.timeFromCalendarToString (cal));  
 	}
 }
