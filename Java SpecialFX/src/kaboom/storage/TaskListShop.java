@@ -63,8 +63,22 @@ public class TaskListShop {
 		return null;
 	}
 	
+	public TaskInfo getArchivedTaskByName (String taskName) {
+		for (int i = archivedTaskList.size()-1; i >= 0; i--) {
+			//System.out.println(taskList.get(i).getTaskName());
+			if (taskName.equals(archivedTaskList.get(i).getTaskName())) {
+				return archivedTaskList.get(i);
+			}
+		}
+		return null;
+	}
+	
 	public TaskInfo getTaskByID(int index) {
 		return currentTaskList.get(index);
+	}
+	
+	public TaskInfo getArchivedTaskByID(int index) {
+		return archivedTaskList.get(index);
 	}
 
 	public void updateTask (TaskInfo newTaskInfo, TaskInfo prevTaskInfo) {
