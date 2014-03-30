@@ -40,7 +40,6 @@ public class CommandFactory {
 		//6. Command stores TaskInfo
 		commandToExecute.extractAndStoreTaskInfo(taskInformationTable);
 		
-		
 		return commandToExecute;
 	}
 	
