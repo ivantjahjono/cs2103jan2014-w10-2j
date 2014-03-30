@@ -574,7 +574,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	}
 
 	private void updatePagesTab() {
-		int maxPages = uiData.getMaxTaskDisplayPages();
+		int maxPages = uiData.getMaxTaskDisplayPagesForCurrentView();
 		int maxTabs = maxPages;
 		
 		if (maxTabs > MAX_TABS) {
