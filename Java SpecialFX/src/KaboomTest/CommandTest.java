@@ -10,10 +10,12 @@ import kaboom.logic.TaskInfo;
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandAdd;
 import kaboom.logic.command.CommandDelete;
+import kaboom.logic.command.CommandFactory;
 import kaboom.logic.command.CommandModify;
 import kaboom.logic.command.CommandView;
 import kaboom.storage.Storage;
 import kaboom.storage.TaskListShop;
+import kaboom.ui.DISPLAY_STATE;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -88,44 +90,46 @@ public class CommandTest {
 	//CommandView
 	@Test
 	public void testCommandView() {
+		String viewString = "view";
+		
+		Command currentCommand = null;
 		CommandView com = new CommandView();
-		com.setViewType("");
 
 		//Test Command feedback
 		//No viewType set
 		assertEquals("Invalid View Mode", com.execute().getFeedback());
 		
 		//Valid ViewTypes
-		com.setViewType("all");
+		com.setDisplayState(DISPLAY_STATE.ALL);
 		com.setTaskInfo(task);
 		assertEquals("All Task Mode", com.execute().getFeedback());
 		
-		com.setViewType("deadline");
+		com.setDisplayState(DISPLAY_STATE.DEADLINE);
 		com.setTaskInfo(task);
 		assertEquals("Deadline Task Mode", com.execute().getFeedback());
 		
-		com.setViewType("running");
+		com.setDisplayState(DISPLAY_STATE.RUNNING);
 		com.setTaskInfo(task);
 		assertEquals("Running Task Mode", com.execute().getFeedback());
 		
 		//Boundary 
 		//To be discussed whether to accept or no
-		com.setViewType("all ");
+		currentCommand = CommandFactory.createCommand(viewString+" all ");
 		com.setTaskInfo(task);
-		assertEquals("Invalid View Mode", com.execute().getFeedback());
+		assertEquals("All Task Mode", currentCommand.execute().getFeedback());
 		
-		com.setViewType(" all");
+		currentCommand = CommandFactory.createCommand(viewString+" all");
 		com.setTaskInfo(task);
-		assertEquals("Invalid View Mode", com.execute().getFeedback());
+		assertEquals("All Task Mode", currentCommand.execute().getFeedback());
 		
-		com.setViewType("all 123");
+		currentCommand = CommandFactory.createCommand(viewString+" all 123");
 		com.setTaskInfo(task);
-		assertEquals("Invalid View Mode", com.execute().getFeedback());
+		assertEquals("Invalid View Mode", currentCommand.execute().getFeedback());
 		
 		//Invalid Types
-		com.setViewType("alls");
+		currentCommand = CommandFactory.createCommand(viewString+" alls");
 		com.setTaskInfo(task);
-		assertEquals("Invalid View Mode", com.execute().getFeedback());
+		assertEquals("Invalid View Mode", currentCommand.execute().getFeedback());
 		}
 	
 }
