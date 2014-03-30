@@ -24,23 +24,29 @@ public class CommandDelete extends Command {
 		
 		String taskName = taskInfo.getTaskName();
 		String commandFeedback = "";
-
-		if (!taskName.equals("")) {
-			if (taskListShop.removeTaskByName(taskName)) {
-				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
-			} else {
-				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
-			}
-		}
-		else {
-			int index = History.getInstance().taskID.get(taskInfo.getID());
+		
+		History history = History.getInstance();
+		
+		if (isNumeric(taskName)) {
+			history.taskID = taskListShop.getCorrespondingID(taskListShop.getAllCurrentTasks());
+			int index = history.taskID.get(Integer.parseInt(taskName));
 			taskListShop.removeTaskByID(index);
-			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskInfo.getID());
+			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
 		}
-
+		
+		else if (taskListShop.removeTaskByName(taskName)) {
+			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
+		} else {
+			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
+		}
+		
 		return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
 	}
 	
+	private boolean isNumeric(String taskName) {
+		return taskName.matches("\\d{1,4}");
+	}
+
 	public boolean undo () {
 		if (taskListShop.addTaskToList(taskInfo)) {
 			return true;
@@ -50,7 +56,6 @@ public class CommandDelete extends Command {
 	
 	private void initialiseKeywordList() {
 		keywordList.clear();
-		keywordList.add(KEYWORD_TYPE.TASKID);
 		keywordList.add(KEYWORD_TYPE.TASKNAME);
 	}
 	
