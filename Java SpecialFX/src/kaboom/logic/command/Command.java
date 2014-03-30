@@ -71,7 +71,7 @@ public class Command {
 	
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
 		// All in command are invalid
-		setRemainingAsInvalidString(info, indexList);
+		addThisStringToFormatList(info, indexList, KEYWORD_TYPE.INVALID);
 		
 		return false;
 	}
@@ -91,32 +91,20 @@ public class Command {
 		
 		while (elementItr.hasMoreElements()) {
 			KEYWORD_TYPE currentKeyword = elementItr.nextElement();
-			FormatIdentify newIdentity = new FormatIdentify();
-			
-			newIdentity.setCommandStringFormat(taskInformationTable.get(currentKeyword));
-			newIdentity.setType(currentKeyword);
-			indexList.add(newIdentity);
+			addThisStringToFormatList(taskInformationTable.get(currentKeyword), indexList, currentKeyword);
 		}
-	}
-
-	protected void setRemainingAsInvalidString(String info,
-			Vector<FormatIdentify> indexList) {
-		FormatIdentify newIdentity = new FormatIdentify();
-		
-		newIdentity.setCommandStringFormat(info);
-		newIdentity.setType(KEYWORD_TYPE.INVALID);
-		
-		indexList.add(newIdentity);
 	}
 	
 	protected void getCommandString(String info, Vector<FormatIdentify> indexList) {
-		//3. Remove Command Word From UserInput
 		String commandString = TextParser.getFirstWord(info);
-		
+		addThisStringToFormatList(commandString, indexList, KEYWORD_TYPE.COMMAND);
+	}
+	
+	protected void addThisStringToFormatList(String info, Vector<FormatIdentify> indexList, KEYWORD_TYPE type) {
 		FormatIdentify newIdentity = new FormatIdentify();
 		
-		newIdentity.setCommandStringFormat(commandString);
-		newIdentity.setType(KEYWORD_TYPE.COMMAND);
+		newIdentity.setCommandStringFormat(info);
+		newIdentity.setType(type);
 		
 		indexList.add(newIdentity);
 	}
