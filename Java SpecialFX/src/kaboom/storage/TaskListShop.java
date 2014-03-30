@@ -94,6 +94,20 @@ public class TaskListShop {
 			currentTaskList.set(indexOfTaskListToBeModified, newTaskInfo);
 		}
 	}
+	
+	public void updateArchivedTask(TaskInfo newTaskInfo, TaskInfo prevTaskInfo) {
+		int indexOfTaskListToBeModified = -1;
+		for (int i = 0; i < archivedTaskList.size(); i++) {
+			if (prevTaskInfo.equals(archivedTaskList.get(i))) {
+				indexOfTaskListToBeModified = i;
+				//System.out.println("index="+indexOfTaskListToBeModified);
+			}
+		}
+
+		if (indexOfTaskListToBeModified != -1) {
+			archivedTaskList.set(indexOfTaskListToBeModified, newTaskInfo);
+		}
+	}
 
 	public Vector<TaskInfo> getAllCurrentTasks () {
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(currentTaskList);
