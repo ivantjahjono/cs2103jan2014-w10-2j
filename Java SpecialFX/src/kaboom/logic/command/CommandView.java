@@ -25,9 +25,11 @@ public class CommandView extends Command{
 	private static final String MESSAGE_VIEW_INVALID = "Invalid View Mode";
 	
 	String viewType;
+	DISPLAY_STATE stateToSet;
 	
 	public CommandView () {
 		commandType = COMMAND_TYPE.VIEW;
+		stateToSet = DISPLAY_STATE.INVALID;
 		initialiseKeywordList();
 	}
 
@@ -41,36 +43,52 @@ public class CommandView extends Command{
 		if(viewType == null) {
 			viewType = "Nothing to view";
 		}
-		switch(viewType) {
-			case KEYWORD_RUNNING:
+		
+		switch(stateToSet) {
+			case RUNNING:
 				taskList = taskListShop.getFloatingTasks();
 				feedback = MESSAGE_VIEW_RUNNING;
-				commandResult.setDisplayState(DISPLAY_STATE.RUNNING);
 				break;
-			case KEYWORD_DEADLINE:
+			case DEADLINE:
 				taskList = taskListShop.getDeadlineTasks();
 				feedback = MESSAGE_VIEW_DEADLINE;
-				commandResult.setDisplayState(DISPLAY_STATE.DEADLINE);
 				break;
-			case KEYWORD_TIMED:
+			case TIMED:
 				taskList = taskListShop.getTimedTasks();
 				feedback = MESSAGE_VIEW_TIMED;
-				commandResult.setDisplayState(DISPLAY_STATE.TIMED);
 				break;
-			case KEYWORD_ALL:
+			case ALL:
 				taskList = taskListShop.getAllCurrentTasks();
 				feedback = MESSAGE_VIEW_ALL;
-				commandResult.setDisplayState(DISPLAY_STATE.ALL);
-			case KEYWORD_SEARCH:
+				break;
+			case SEARCH:
 				//UNDER CONSTRUCTION LOL
 				break;
 			default:
 				feedback = MESSAGE_VIEW_INVALID;
 		}
 		
+		commandResult.setDisplayState(stateToSet);
 		commandResult.setTasksToDisplay(taskList);
 		commandResult.setFeedback(feedback);
 		return commandResult;
+	}
+
+	private DISPLAY_STATE determineDisplayState(String viewType2) {
+		switch(viewType) {
+			case KEYWORD_RUNNING:
+				return DISPLAY_STATE.RUNNING;
+			case KEYWORD_DEADLINE:
+				return DISPLAY_STATE.DEADLINE;
+			case KEYWORD_TIMED:
+				return DISPLAY_STATE.RUNNING;
+			case KEYWORD_ALL:
+				return DISPLAY_STATE.ALL;
+			case KEYWORD_SEARCH:
+				return DISPLAY_STATE.SEARCH;
+			default:
+				return DISPLAY_STATE.INVALID;
+		}
 	}
 
 	private void initialiseKeywordList() {
@@ -79,14 +97,15 @@ public class CommandView extends Command{
 	
 	public void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
 		viewType = infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
+		stateToSet = determineDisplayState(viewType);
 	}
 	
-	public void setViewType (String newViewType) {
-		viewType = newViewType;
+	public void setDisplayState (DISPLAY_STATE state) {
+		stateToSet = state;
 	}
 	
-	public String getViewType () {
-		return viewType;
+	public DISPLAY_STATE getDisplayState () {
+		return stateToSet;
 	}
 	
 	public boolean parseInfo(String info) {
