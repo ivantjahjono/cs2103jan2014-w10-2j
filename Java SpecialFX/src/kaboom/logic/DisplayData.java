@@ -59,21 +59,27 @@ public class DisplayData extends Observable {
 	 */
 	public void updateDisplayWithResult (Result commandResult) {
 		// TODO Hardcoded way of forcing to show to default if there is no tasks to display
-		if (commandResult.getTasksToDisplay() != null) {
-			setTaskDisplayToThese(commandResult.getTasksToDisplay());
+		
+		// Update display state
+		DISPLAY_STATE stateChange = commandResult.getDisplayState();
+		if (stateChange != null) {
+			currentDisplayState = stateChange; 
 		}
+		
+		if (commandResult.getTasksToDisplay() != null) {
+			if (stateChange == DISPLAY_STATE.SEARCH) {
+				setTaskDisplayToThese(commandResult.getTasksToDisplay(), searchResultDataToDisplay);
+			} else {
+				setTaskDisplayToThese(commandResult.getTasksToDisplay(), tasksDataToDisplay);
+			}
+		}
+		
 		setFeedbackMessage(commandResult.getFeedback());
 		
 		if (commandResult.getGoToNextPage()) {
 			goToNextPage();
 		} else if (commandResult.getGoToPrevPage()) {
 			goToPreviousPage();
-		}
-		
-		// Update display state
-		DISPLAY_STATE stateChange = commandResult.getDisplayState();
-		if (stateChange != null) {
-			currentDisplayState = stateChange; 
 		}
 		
 		Vector<TaskInfoDisplay> currentTaskList = getCurrentTaskListBasedOnView();
@@ -113,8 +119,9 @@ public class DisplayData extends Observable {
 		int startTaskIndex = currentPage*NUM_OF_TASK_PER_PAGE;
 		int endTaskIndex = getLastIndexOfCurrentPage(currentPage);
 		
+		Vector<TaskInfoDisplay> taskListToReturn = getCurrentTaskListBasedOnView();
 		for (int i = startTaskIndex; i < endTaskIndex; i++) {
-			selectedTaskToDisplay.add(tasksDataToDisplay.get(i));
+			selectedTaskToDisplay.add(taskListToReturn.get(i));
 		}
 		
 		return selectedTaskToDisplay;
@@ -131,9 +138,9 @@ public class DisplayData extends Observable {
 		return maxCurrentPage;
 	}
 	
-	public void setTaskDisplayToThese (Vector<TaskInfo> taskList) {
-		tasksDataToDisplay.clear();
-		convertTasksIntoDisplayData(taskList, tasksDataToDisplay);
+	public void setTaskDisplayToThese (Vector<TaskInfo> taskList, Vector<TaskInfoDisplay> taskListToStoreIn) {
+		taskListToStoreIn.clear();
+		convertTasksIntoDisplayData(taskList, taskListToStoreIn);
 	}
 
 	private void convertTasksIntoDisplayData(Vector<TaskInfo> taskList, Vector<TaskInfoDisplay> taskListToAddinto) {
