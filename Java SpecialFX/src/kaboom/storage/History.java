@@ -7,7 +7,6 @@ import kaboom.logic.command.COMMAND_TYPE;
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandFactory;
 
-
 public class History {
 
 	private final int MAX_COMMAND_TO_STORE = 10;
