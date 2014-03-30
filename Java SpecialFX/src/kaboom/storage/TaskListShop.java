@@ -220,6 +220,8 @@ public class TaskListShop {
 				currentTaskList.remove(singleTask);
 			}
 		}
+		
+		History.getInstance().setViewingTasks(currentTaskList);
 	}
 
 	public Vector<TaskInfo> clearAllTasks () {
