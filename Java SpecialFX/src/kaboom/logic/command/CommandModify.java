@@ -1,6 +1,9 @@
 package kaboom.logic.command;
 
+import java.util.Calendar;
 import java.util.Hashtable;
+
+import kaboom.logic.DateAndTimeFormat;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
@@ -13,6 +16,7 @@ public class CommandModify extends Command {
 	private static final String MESSAGE_COMMAND_MODIFY_FAIL = "Fail to cast a spell on <%1$s>";
 	private static final String MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME = "Trying to manipulate air";
 	private static final String MESSAGE_COMMAND_MODIFY_FAIL_NO_CHANGE = "Nothing happened...";
+	private static final String MESSAGE_COMMAND_MODIFY_FAIL_INVALID_STARTANDEND_TIME = "Trying to set <%1$s> to end before it even started...";
 	
 	private static final String MESSAGE_TASK_NAME = "<%1$s>";
 	private static final String MESSAGE_COMMAND_MODIFY_SUCCESS_NAME_CHANGE = " has evolved into <%1$s>";
@@ -50,8 +54,6 @@ public class CommandModify extends Command {
 			
 			//get TaskInfo that user wants to modify;
 			preModifiedTaskInfo = taskListShop.getTaskByName(taskName);
-		
-			feedback += String.format(MESSAGE_TASK_NAME, taskName);
 			
 			//store TaskInfo to modify into temp taskinfo
 			TaskInfo temp = new TaskInfo(preModifiedTaskInfo);
@@ -65,14 +67,26 @@ public class CommandModify extends Command {
 				temp.setImportanceLevel (taskInfo.getImportanceLevel());
 				hasPriorityChanged = true;
 			}
-			if (taskInfo.getStartDate() != null) {
-				temp.setStartDate (taskInfo.getStartDate());
-				hasTimeChanged = true;
+
+			Calendar startDate = preModifiedTaskInfo.getStartDate();
+			Calendar endDate = preModifiedTaskInfo.getEndDate();	
+			if(taskInfo.getStartDate() != null) {
+				startDate = taskInfo.getStartDate();
 			}
-			if (taskInfo.getEndDate() != null) {
-				temp.setEndDate (taskInfo.getEndDate());
-				hasTimeChanged = true;
+			if(taskInfo.getEndDate() != null) {
+				endDate = taskInfo.getEndDate();
 			}
+			
+			if(DateAndTimeFormat.getInstance().dateValidityForStartAndEndDate(startDate, endDate)){
+				hasTimeChanged = true;
+				temp.setStartDate (startDate);
+				temp.setEndDate (endDate);
+			} else {
+				feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_INVALID_STARTANDEND_TIME, taskName);
+				return createResult(taskListShop.getAllCurrentTasks(), feedback);
+			}
+			
+			//1hr block error
 			setEndDateAndTimeToHourBlock (temp);
 			determineAndSetTaskType(temp);
 			
