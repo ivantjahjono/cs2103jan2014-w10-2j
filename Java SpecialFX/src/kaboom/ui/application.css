@@ -38,12 +38,12 @@
 }
 
 .header-label-selected {
-	-fx-font-size: 24px;
+	-fx-font-size: 20px;
 	-fx-text-fill: #0066FF;
 }
 
 .header-label-normal {
-	-fx-font-size: 20px;
+	-fx-font-size: 16px;
 	-fx-text-fill: #9F9F9F;
 }
 
