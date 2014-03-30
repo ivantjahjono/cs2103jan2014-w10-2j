@@ -3,10 +3,7 @@ package kaboom.storage;
 import java.util.Vector;
 
 import kaboom.logic.TaskInfo;
-import kaboom.logic.command.COMMAND_TYPE;
 import kaboom.logic.command.Command;
-import kaboom.logic.command.CommandFactory;
-
 
 public class History {
 
