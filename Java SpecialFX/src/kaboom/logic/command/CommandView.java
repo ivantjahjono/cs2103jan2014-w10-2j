@@ -81,7 +81,7 @@ public class CommandView extends Command{
 			case KEYWORD_DEADLINE:
 				return DISPLAY_STATE.DEADLINE;
 			case KEYWORD_TIMED:
-				return DISPLAY_STATE.RUNNING;
+				return DISPLAY_STATE.TIMED;
 			case KEYWORD_ALL:
 				return DISPLAY_STATE.ALL;
 			case KEYWORD_SEARCH:
