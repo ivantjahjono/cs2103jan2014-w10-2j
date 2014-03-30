@@ -87,6 +87,9 @@ public class TaskMasterKaboom {
 			updateResult = recentViewCommand.execute();
 		}
 		
+		//4. Save data to file
+		fileStorage.store();
+		
 		updateUi(updateResult);
 	}
 	
