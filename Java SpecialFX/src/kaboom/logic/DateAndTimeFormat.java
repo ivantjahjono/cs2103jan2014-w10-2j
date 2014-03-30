@@ -64,6 +64,21 @@ public class DateAndTimeFormat {
 		
 		return dateAndTime;
 	}
+	
+	public String dateFromCalendarToString (Calendar cal) {
+		String day = String.format("%02d", cal.get(Calendar.DATE));
+		String month = String.format("%02d", cal.get(Calendar.MONTH)+1);
+		String year = String.format("%02d", cal.get(Calendar.YEAR)%100);
+		String date = day+month+year;
+		return date;
+	}
+	
+	public String timeFromCalendarToString (Calendar cal) {
+		String hour = String.format("%02d", cal.get(Calendar.HOUR_OF_DAY));
+		String min = String.format("%02d", cal.get(Calendar.MINUTE));
+		String time = hour+min;
+		return time;
+	}
 
 	public Calendar addTimeToCalendar (Calendar dateAndTime, int hour, int min) {
 		Calendar dateAndTimeToAdd = (Calendar) dateAndTime.clone();
