@@ -96,7 +96,7 @@
             <URL value="@application.css" />
           </stylesheets>
         </Label>
-        <Label id="header_search" alignment="CENTER" contentDisplay="TEXT_ONLY" disable="false" focusTraversable="false" font="$x1" graphicTextGap="1.0" onMouseClicked="#onHeaderMouseClicked" prefWidth="90.0" styleClass="header-label-normal" text="ARCHIVE" textAlignment="LEFT" textFill="$x3" underline="false">
+        <Label fx:id="header_archive" alignment="CENTER" contentDisplay="TEXT_ONLY" disable="false" focusTraversable="false" font="$x1" graphicTextGap="1.0" onMouseClicked="#onHeaderMouseClicked" prefWidth="90.0" styleClass="header-label-normal" text="ARCHIVE" textAlignment="LEFT" textFill="$x3" underline="false">
           <stylesheets>
             <URL value="@application.css" />
           </stylesheets>
