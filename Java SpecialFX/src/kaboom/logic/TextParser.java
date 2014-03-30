@@ -327,10 +327,24 @@ public class TextParser {
 			}
 			if(list.get(i) == KEYWORD_TYPE.VIEWTYPE) {
 				userInput = extractViewType(userInput,taskInformationTable);
-			}
-			
+			}	
 		}
+		
+		// If there is still unextracted information after parsing, consider it as invalid command
+		if (!userInput.equals("")) {
+			extractUnknownCommandString(userInput, taskInformationTable);
+		}
+		
 		return taskInformationTable;
+	}
+
+
+	private static String extractUnknownCommandString(String userInput, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+		String unknownCommandString = userInput.substring(0);
+		taskInformationTable.put(KEYWORD_TYPE.INVALID, unknownCommandString);
+		userInput  = userInput.replace(unknownCommandString, "").trim();
+		
+		return userInput;
 	}
 	
 	private static boolean checkDateOnlyInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){
@@ -374,8 +388,10 @@ public class TextParser {
 	}
 	
 	private static String extractViewType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
-		String viewType = getFirstWord(userInput);
+		String viewType = userInput;
 		taskInformationTable.put(KEYWORD_TYPE.VIEWTYPE, viewType);
+		userInput  = userInput.replace(viewType, "").trim();
+		
 		return removeFirstWord(userInput);
 	}
 	
