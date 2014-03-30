@@ -132,7 +132,7 @@
       </children>
     </Pane>
     <Rectangle fx:id="statusIndicator" arcHeight="5.0" arcWidth="5.0" fill="#00cc83" height="17.999977111816406" layoutX="567.0" layoutY="436.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="18.0" />
-    <HBox id="HBox" alignment="CENTER" layoutX="19.0" layoutY="460.0" spacing="0.0">
+    <HBox id="HBox" fx:id="commandFormatFeedback" alignment="CENTER_LEFT" layoutX="19.0" layoutY="460.0" maxWidth="540.0" prefWidth="540.0" spacing="0.0">
       <children>
         <Label mnemonicParsing="false" mouseTransparent="true" styleClass="parseCommandTypeName" text="command">
           <stylesheets>
