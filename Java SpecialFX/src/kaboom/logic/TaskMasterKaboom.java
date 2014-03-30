@@ -164,6 +164,9 @@ public class TaskMasterKaboom {
 		} catch (Exception e) {
 			
 		}
+		
+		guiDisplayData.setFormatText(usercommand);
+		guiDisplayData.setFormatDisplay(characterIndexList);
 
 		return processResult;
 	}
