@@ -5,9 +5,7 @@ import java.util.Vector;
 
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
-import kaboom.logic.TASK_TYPE;
 import kaboom.logic.TaskInfo;
-import kaboom.storage.TaskListShop;
 import kaboom.ui.DISPLAY_STATE;
 
 public class CommandView extends Command{

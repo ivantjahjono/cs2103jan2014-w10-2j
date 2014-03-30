@@ -4,7 +4,6 @@ import java.util.Vector;
 
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
-import kaboom.storage.TaskListShop;
 
 
 public class CommandClear extends Command {

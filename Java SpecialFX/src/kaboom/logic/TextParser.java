@@ -227,6 +227,12 @@ public class TextParser {
 		keywordTable.put(KEYWORD_TYPE.TASKNAME, taskName);
 		return taskName;
 	}
+	
+	public static String extractTaskId(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+		String taskId = userInputSentence.trim();
+		keywordTable.put(KEYWORD_TYPE.TASKID, taskId);
+		return taskId;
+	}
 
 	private static ArrayList<Integer> searchForPatternMatch(String userInputSentence, String regex) {
 		int startIndex = 0;
@@ -327,6 +333,9 @@ public class TextParser {
 			}
 			if(list.get(i) == KEYWORD_TYPE.VIEWTYPE) {
 				userInput = extractViewType(userInput,taskInformationTable);
+			}	
+			if(list.get(i) == KEYWORD_TYPE.TASKID) {
+				userInput = extractTaskId(userInput,taskInformationTable);
 			}	
 		}
 		
