@@ -48,7 +48,7 @@ public class DateAndTimeFormat {
 		return instance;
 	}
 
-	public Calendar formatStringToCalendar (String date, String time) {
+	public Calendar formatStringToCalendar (String date, String time) throws InvalidDateAndTimeException {
 		if(date == null && time == null) {
 			return null;
 		}
@@ -98,7 +98,7 @@ public class DateAndTimeFormat {
 		return false;
 	}
 	
-	private Calendar dateTranslator(Calendar thisDate, String theDate){
+	private Calendar dateTranslator(Calendar thisDate, String theDate) throws InvalidDateAndTimeException{
 		if(theDate == null) {
 			return thisDate;
 		}
@@ -118,11 +118,12 @@ public class DateAndTimeFormat {
 			} catch (Exception e) {	
 			}
 		}
+		throw new InvalidDateAndTimeException("Invalid Date");
 		//throw invalid date exception
-		return thisDate;
+//		return thisDate;
 	}
 	
-	private Calendar timeTranslator(Calendar thisTime, String theTime){
+	private Calendar timeTranslator(Calendar thisTime, String theTime) throws InvalidDateAndTimeException{
 		if(theTime == null) {
 			return thisTime;
 		}
@@ -161,57 +162,34 @@ public class DateAndTimeFormat {
 				}
 			}
 		}
-		
-		/*
-		//testing this method for flexible time format
-		Date time = new Date();
-		
-		SimpleDateFormat simpletime24HrFormat = new SimpleDateFormat(time24Hr);
-		simpletime24HrFormat.setLenient(false);
-		
-		try {
-			time = simpletime24HrFormat.parse(theTime);
-			calTime.set(Calendar.HOUR_OF_DAY, time.getHours());
-			calTime.set(Calendar.MINUTE, time.getMinutes());
-		} catch (Exception e) {
-			
-		}
-		*/
-		/*
-		SimpleDateFormat simpletimeAmPmFormat = new SimpleDateFormat(timeAmPm);
-		simpletimeAmPmFormat.setLenient(false);
-		
-		time = simpletimeAmPmFormat.parse(theTime);
-		calTime.set(Calendar.HOUR, time.getHours());
-		calTime.set(Calendar.MINUTE, time.getMinutes());
-		*/
-		
+
 		//throw invalid time exception
-		return thisTime;
+//		return thisTime;
+		throw new InvalidDateAndTimeException("Invalid Time");
 	}
 	
 
 	
 	//*************************** TEST METHODS **********************************
 	//Date tests
-	public String testDayFromDateTranslator (Calendar thisDate, String theDate) {
+	public String testDayFromDateTranslator (Calendar thisDate, String theDate) throws InvalidDateAndTimeException {
 		dateTranslator (thisDate,theDate);	
 		return Integer.toString(thisDate.get(Calendar.DAY_OF_MONTH));
 	}
-	public String testMonthFromDateTranslator (Calendar thisDate, String theDate) {
+	public String testMonthFromDateTranslator (Calendar thisDate, String theDate) throws InvalidDateAndTimeException {
 		dateTranslator (thisDate,theDate);	
 		return Integer.toString(thisDate.get(Calendar.MONTH));
 	}
-	public String testYearFromDateTranslator (Calendar thisDate, String theDate) {
+	public String testYearFromDateTranslator (Calendar thisDate, String theDate) throws InvalidDateAndTimeException {
 		dateTranslator (thisDate,theDate);	
 		return Integer.toString(thisDate.get(Calendar.YEAR));
 	}
 	//Time tests
-	public String testHourFromTimeTranslator (Calendar cal, String theTime) {
+	public String testHourFromTimeTranslator (Calendar cal, String theTime) throws InvalidDateAndTimeException {
 		timeTranslator (cal,theTime);	
 		return Integer.toString(cal.get(Calendar.HOUR_OF_DAY));
 	}
-	public String testMinFromTimeTranslator (Calendar cal, String theTime) {
+	public String testMinFromTimeTranslator (Calendar cal, String theTime) throws InvalidDateAndTimeException {
 		timeTranslator (cal,theTime);	
 		return Integer.toString(cal.get(Calendar.MINUTE));
 	}

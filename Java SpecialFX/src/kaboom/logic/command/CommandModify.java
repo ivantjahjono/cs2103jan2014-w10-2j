@@ -118,25 +118,31 @@ public class CommandModify extends Command {
 				endTime = taskInfoTable.get(KEYWORD_TYPE.END_TIME);
 			}
 			
-			Calendar startDateCal = DateAndTimeFormat.getInstance().formatStringToCalendar(startDate, startTime);
-			Calendar endDateCal = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
-			
-			if(taskInfoTable.get(KEYWORD_TYPE.START_DATE) != null || taskInfoTable.get(KEYWORD_TYPE.START_TIME) != null || 
-					taskInfoTable.get(KEYWORD_TYPE.END_DATE) != null || taskInfoTable.get(KEYWORD_TYPE.END_TIME) != null) {
-				if(DateAndTimeFormat.getInstance().dateValidityForStartAndEndDate(startDateCal, endDateCal)){
-					hasTimeChanged = true;
-					temp.setStartDate (startDateCal);
-					temp.setEndDate (endDateCal);
-				} else {
-					if (taskInfoTable.get(KEYWORD_TYPE.START_DATE) != null || taskInfoTable.get(KEYWORD_TYPE.START_TIME) != null) {
-						feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_SET_STARTDATEAFTERENDDATE, taskName);
+			try {
+				Calendar startDateCal = DateAndTimeFormat.getInstance().formatStringToCalendar(startDate, startTime);
+				Calendar endDateCal = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
+				
+				if(taskInfoTable.get(KEYWORD_TYPE.START_DATE) != null || taskInfoTable.get(KEYWORD_TYPE.START_TIME) != null || 
+						taskInfoTable.get(KEYWORD_TYPE.END_DATE) != null || taskInfoTable.get(KEYWORD_TYPE.END_TIME) != null) {
+					if(DateAndTimeFormat.getInstance().dateValidityForStartAndEndDate(startDateCal, endDateCal)){
+						hasTimeChanged = true;
+						temp.setStartDate (startDateCal);
+						temp.setEndDate (endDateCal);
 					} else {
-						feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_SET_ENDDATEBOFORESTARDATE, taskName);
+						if (taskInfoTable.get(KEYWORD_TYPE.START_DATE) != null || taskInfoTable.get(KEYWORD_TYPE.START_TIME) != null) {
+							feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_SET_STARTDATEAFTERENDDATE, taskName);
+						} else {
+							feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_SET_ENDDATEBOFORESTARDATE, taskName);
+						}
+						return createResult(taskListShop.getAllCurrentTasks(), feedback);
 					}
-					return createResult(taskListShop.getAllCurrentTasks(), feedback);
 				}
+				setEndDateAndTimeToHourBlock (temp);
+			} catch (Exception e) {
+				feedback = e.toString();
+				return createResult(taskListShop.getAllCurrentTasks(), feedback);
 			}
-			setEndDateAndTimeToHourBlock (temp);
+			
 			determineAndSetTaskType(temp);
 			//store and update in memory
 			taskInfo = temp;
