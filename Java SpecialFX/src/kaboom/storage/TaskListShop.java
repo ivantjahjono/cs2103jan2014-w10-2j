@@ -62,6 +62,10 @@ public class TaskListShop {
 		}
 		return null;
 	}
+	
+	public TaskInfo getTaskByID(int index) {
+		return currentTaskList.get(index);
+	}
 
 	public void updateTask (TaskInfo newTaskInfo, TaskInfo prevTaskInfo) {
 		int indexOfTaskListToBeModified = -1;
