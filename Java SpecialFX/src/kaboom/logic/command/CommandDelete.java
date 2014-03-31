@@ -35,8 +35,9 @@ public class CommandDelete extends Command {
 		String commandFeedback;
 
 		History history = History.getInstance();
+		int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
 
-		if (taskListShop.numOfTasksWithSimilarNames(taskName) > 1) {
+		if (taskCount > 1) {
 			commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
 
 			Command search = new CommandSearch();
@@ -47,7 +48,7 @@ public class CommandDelete extends Command {
 			int index = history.taskID.get(Integer.parseInt(taskName)-1);
 			prevTask = taskListShop.removeTaskByID(index);  //Set for undo
 			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
-		} else if (taskListShop.numOfTasksWithSimilarNames(taskName) == 1){
+		} else if (taskCount == 1){
 			prevTask = taskListShop.removeTaskByName(taskName);
 			assert prevTask != null;
 			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
