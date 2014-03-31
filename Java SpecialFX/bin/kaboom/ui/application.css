@@ -93,6 +93,17 @@
 	-fx-text-fill: #9F9F9F;
 }
 
+.isRecent {
+	-fx-border-width: 0 0 0 3;
+	-fx-padding: 0 0 0 -3;
+	-fx-background-color: #DDDDFF;
+	-fx-border-color: #FFFFFF #FF0000 #FFFFFF #0000FF;
+}
+
+.isRecent:hover {
+	-fx-background-color: rgba(0,0,255,0.2);
+}
+
 .isExpired {
 	-fx-border-width: 0 0 0 3;
 	-fx-padding: 0 0 0 -3;
