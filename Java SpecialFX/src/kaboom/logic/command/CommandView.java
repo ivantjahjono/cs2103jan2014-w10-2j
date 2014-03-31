@@ -9,6 +9,7 @@ import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.TextParser;
+import kaboom.storage.History;
 import kaboom.ui.DISPLAY_STATE;
 
 public class CommandView extends Command{
@@ -75,6 +76,7 @@ public class CommandView extends Command{
 				feedback = MESSAGE_VIEW_INVALID;
 		}
 		
+		History.getInstance().setViewingTasks(taskList);
 		commandResult.setDisplayState(stateToSet);
 		commandResult.setTasksToDisplay(taskList);
 		commandResult.setFeedback(feedback);

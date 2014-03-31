@@ -46,8 +46,7 @@ public class CommandDelete extends Command {
 //		}
 
 		if (isNumeric(taskName)) {
-			history.taskID = taskListShop.getCorrespondingID(taskListShop.getAllCurrentTasks());
-			int index = history.taskID.get(Integer.parseInt(taskName));
+			int index = history.taskID.get(Integer.parseInt(taskName)-1);
 			taskListShop.removeTaskByID(index);
 			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
 		}

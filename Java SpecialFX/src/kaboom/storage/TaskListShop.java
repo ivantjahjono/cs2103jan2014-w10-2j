@@ -251,7 +251,6 @@ public class TaskListShop {
 			taskID.add(currentTaskList.indexOf(taskList.get(i)));
 		}
 		return taskID;
-		//Do you want to return null instead if the list is empty?
 	}
 	
 	public void sort(KEYWORD_TYPE type) {
