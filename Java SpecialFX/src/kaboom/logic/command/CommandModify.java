@@ -148,6 +148,7 @@ public class CommandModify extends Command {
 			determineAndSetTaskType(temp);
 			//store and update in memory
 			taskInfo = temp;
+			taskInfo.setRecent(true);
 			taskListShop.updateTask(taskInfo, preModifiedTaskInfo);
 		} else {
 			feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_TO_MODIFY,taskName);

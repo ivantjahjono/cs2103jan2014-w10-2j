@@ -46,6 +46,7 @@ public class CommandDone extends Command{
 
 		taskInfo = new TaskInfo(taskToBeModified);
 		taskInfo.setDone(true);
+		taskInfo.setRecent(true);
 		taskListShop.updateTask(taskInfo, taskToBeModified);
 		feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
 		return createResult(taskListShop.getAllCurrentTasks(), feedback);
