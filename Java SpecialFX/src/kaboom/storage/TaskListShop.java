@@ -277,6 +277,16 @@ public class TaskListShop {
 		}
 		return count;
 	}
+	
+	public int numOfArchivedTasksWithSimilarNames(String name) {
+		int count = 0;
+		for (int i = 0; i < archivedTaskList.size(); i++) {
+			if (archivedTaskList.get(i).getTaskName().contains(name)) {
+				count++;
+			}
+		}
+		return count;
+	}
 
 	public int shopSize () {
 		return currentTaskList.size();
