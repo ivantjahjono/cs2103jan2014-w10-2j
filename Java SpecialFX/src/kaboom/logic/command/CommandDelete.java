@@ -36,14 +36,14 @@ public class CommandDelete extends Command {
 
 		History history = History.getInstance();
 
-//		if(hasMultipleTaskOfSimilarName(taskName)) {
-//			commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
-//
-//			Command search = new CommandSearch();
-//			search.storeTaskInfo(taskInfoTable);
-//			history.addToRecentCommands(search);
-//			return search.execute();
-//		}
+		if (taskListShop.numOfTasksWithSimilarNames(taskName) > 1) {
+			commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
+
+			Command search = new CommandSearch();
+			search.storeTaskInfo(taskInfoTable);
+			history.addToRecentCommands(search);
+			return search.execute();
+		}
 
 		if (isNumeric(taskName)) {
 			int index = history.taskID.get(Integer.parseInt(taskName)-1);
