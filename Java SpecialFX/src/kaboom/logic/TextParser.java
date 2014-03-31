@@ -399,11 +399,11 @@ public class TextParser {
 	}
 	
 	private static String extractViewType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
-		String viewType = userInput;
+		String viewType = getFirstWord(userInput);
 		taskInformationTable.put(KEYWORD_TYPE.VIEWTYPE, viewType);
-		userInput  = userInput.replace(viewType, "").trim();
 		
-		return removeFirstWord(userInput);
+		userInput  = userInput.replace(viewType, "").trim();
+		return userInput;
 	}
 	
 }
