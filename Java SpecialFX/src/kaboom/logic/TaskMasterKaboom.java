@@ -1,5 +1,7 @@
 package kaboom.logic;
 
+import java.util.Vector;
+
 import kaboom.logic.command.COMMAND_TYPE;
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandFactory;
@@ -140,10 +142,7 @@ public class TaskMasterKaboom {
 	public boolean processSyntax(String usercommand) {
 		Command commandToExecute = null;
 		boolean processResult = false;
-		
-		if (usercommand.trim().equals("")) {
-			return true;
-		}
+		Vector<FormatIdentify> characterIndexList = new Vector<FormatIdentify>();
 		
 		//System.out.println("Processing:" + usercommand);
 		
@@ -153,15 +152,13 @@ public class TaskMasterKaboom {
 		//2. Create Command
 		commandToExecute = CommandFactory.createCommand(commandKeyword);
 		
-		//3. Remove Command Word From UserInput
-		usercommand = TextParser.removeFirstWord(usercommand);
-		
 		try {
-			processResult = commandToExecute.parseInfo(usercommand);
+			processResult = commandToExecute.parseInfo(usercommand, characterIndexList);
 		} catch (Exception e) {
 			
 		}
-
+	
+		guiDisplayData.setFormatDisplay(characterIndexList);
 		return processResult;
 	}
 	
