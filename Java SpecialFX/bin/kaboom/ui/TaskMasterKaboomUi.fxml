@@ -26,7 +26,7 @@
             <Font name="Segoe UI Semilight" size="16.0" />
           </font>
           <labelFor>
-            <TextField fx:id="commandTextInput" disable="false" layoutX="14.0" layoutY="434.0" onAction="#onTextfieldAction" onKeyReleased="#onTextfieldKeyReleased" prefWidth="546.0" promptText="Please enter a command" text="" />
+            <TextField fx:id="commandTextInput" disable="false" layoutX="14.0" layoutY="434.0" onAction="#onTextfieldAction" onKeyReleased="#onTextfieldKeyReleased" prefWidth="546.0" promptText="Please enter a command" styleClass="text-field-correct" text="" />
           </labelFor>
         </Label>
       </children>
