@@ -267,6 +267,16 @@ public class TaskListShop {
 			Collections.sort(currentTaskList, new ComparatorPriority());
 		}
 	}
+	
+	public int numOfTasksWithSimilarNames(String name) {
+		int count = 0;
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			if (currentTaskList.get(i).getTaskName().contains(name)) {
+				count++;
+			}
+		}
+		return count;
+	}
 
 	public int shopSize () {
 		return currentTaskList.size();
