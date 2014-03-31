@@ -26,7 +26,7 @@
             <Font name="Segoe UI Semilight" size="16.0" />
           </font>
           <labelFor>
-            <TextField fx:id="commandTextInput" disable="false" layoutX="14.0" layoutY="434.0" onAction="#onTextfieldAction" onKeyReleased="#onTextfieldKeyReleased" prefWidth="546.0" promptText="Please enter a command" styleClass="text-field-correct" text="" />
+            <TextField fx:id="commandTextInput" disable="false" layoutX="14.0" layoutY="434.0" onAction="#onTextfieldAction" onKeyReleased="#onTextfieldKeyReleased" prefWidth="572.0" promptText="Please enter a command" styleClass="text-field-correct" text="" />
           </labelFor>
         </Label>
       </children>
@@ -131,7 +131,6 @@
         <Text fx:id="prevArrow" fill="$x5" font="$x6" layoutX="150.0" layoutY="22.0" onMouseClicked="#onPagesArrowMouseClicked" opacity="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;" />
       </children>
     </Pane>
-    <Rectangle fx:id="statusIndicator" arcHeight="5.0" arcWidth="5.0" fill="#00cc83" height="17.999977111816406" layoutX="567.0" layoutY="436.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="18.0" />
     <HBox id="HBox" fx:id="commandFormatFeedback" alignment="CENTER_LEFT" layoutX="19.0" layoutY="460.0" maxWidth="540.0" prefWidth="540.0" spacing="0.0">
       <children>
         <Label mnemonicParsing="false" mouseTransparent="true" styleClass="parseCommandTypeName" text="command">
