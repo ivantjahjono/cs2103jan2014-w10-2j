@@ -180,21 +180,21 @@ public class TextParserTest {
 	public void testParser() {
 		//standard format
 		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world at 0700 on 14/05/12 by 0200 on 14/05/12 ***",keywordTable));
+		assertEquals("", TextParser.parser("hello world at 0700 on 14/05/12 by 0200 on 14/05/12 ***",keywordTable));
 		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world",keywordTable));
+		assertEquals("", TextParser.parser("hello world",keywordTable));
 		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world at 0700 on 14/05/12",keywordTable));
+		assertEquals("", TextParser.parser("hello world at 0700 on 14/05/12",keywordTable));
 		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12",keywordTable));
+		assertEquals("", TextParser.parser("hello world by 0200 on 14/05/12",keywordTable));
 		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world at 0700 on 14/05/12 ***",keywordTable));
+		assertEquals("", TextParser.parser("hello world at 0700 on 14/05/12 ***",keywordTable));
 		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12 ***",keywordTable));
+		assertEquals("", TextParser.parser("hello world by 0200 on 14/05/12 ***",keywordTable));
 		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world ***",keywordTable));
+		assertEquals("", TextParser.parser("hello world ***",keywordTable));
 		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("hello world", TextParser.parser("hello world by 0200 on 14/05/12 at 0700 on 14/05/12  ***",keywordTable));
+		assertEquals("", TextParser.parser("hello world by 0200 on 14/05/12 at 0700 on 14/05/12  ***",keywordTable));
 	}
 	
 	@Test

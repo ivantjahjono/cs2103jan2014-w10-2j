@@ -1,15 +1,18 @@
 package kaboom.logic.command;
 
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
 import kaboom.logic.DateAndTimeFormat;
 import kaboom.logic.DisplayData;
+import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TASK_TYPE;
 import kaboom.logic.TaskInfo;
+import kaboom.logic.TextParser;
 import kaboom.storage.TaskListShop;
 
 /* 
@@ -66,8 +69,48 @@ public class Command {
 		return false;
 	}
 	
-	public boolean parseInfo(String info) {
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		if (info.equals("")) {
+			return true;
+		}
+		
+		// All in command are invalid
+		addThisStringToFormatList(info, indexList, KEYWORD_TYPE.INVALID);
+		
 		return false;
+	}
+	
+	protected Hashtable<KEYWORD_TYPE, String> updateFormatList (String info, Vector<FormatIdentify> indexList) {
+		getCommandString(info, indexList);
+		info = TextParser.removeFirstWord(info);
+		
+		//5. Extract Task Info Base on Keywords
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.testExtractList(info, keywordList);
+		
+		return taskInformationTable;
+	}
+	
+	protected void updateFormatListBasedOnHashtable(Vector<FormatIdentify> indexList, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+		Enumeration<KEYWORD_TYPE> elementItr =  taskInformationTable.keys();
+		
+		while (elementItr.hasMoreElements()) {
+			KEYWORD_TYPE currentKeyword = elementItr.nextElement();
+			addThisStringToFormatList(taskInformationTable.get(currentKeyword), indexList, currentKeyword);
+		}
+	}
+	
+	protected void getCommandString(String info, Vector<FormatIdentify> indexList) {
+		String commandString = TextParser.getFirstWord(info);
+		addThisStringToFormatList(commandString, indexList, KEYWORD_TYPE.COMMAND);
+	}
+	
+	protected void addThisStringToFormatList(String info, Vector<FormatIdentify> indexList, KEYWORD_TYPE type) {
+		FormatIdentify newIdentity = new FormatIdentify();
+		
+		newIdentity.setCommandStringFormat(info);
+		newIdentity.setType(type);
+		
+		indexList.add(newIdentity);
 	}
 	
 	public Vector<KEYWORD_TYPE> getKeywordList () {
