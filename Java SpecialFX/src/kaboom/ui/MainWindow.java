@@ -190,6 +190,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	                    getStyleClass().removeAll(Collections.singleton("isExpired"));
 	                    getStyleClass().removeAll(Collections.singleton("isComplete"));
 	                    getStyleClass().removeAll(Collections.singleton("isEmpty"));
+	                    getStyleClass().removeAll(Collections.singleton("isRecent"));
 	                    
 	                    if (person == null) {
 	                    	 getStyleClass().add("isEmpty");
@@ -199,7 +200,9 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	                    if (person.isDone()) {
 	                    	getStyleClass().add("isComplete");
 	                    } else if (person.isExpired()) {
-	                            getStyleClass().add("isExpired");
+	                    	getStyleClass().add("isExpired");
+	                    } else if (person.isRecent()) {
+	                    	getStyleClass().add("isRecent");
 	                    } else {   
 	                        getStyleClass().add("isNotExpired");
 	                    }
