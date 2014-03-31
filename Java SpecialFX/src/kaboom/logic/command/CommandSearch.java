@@ -51,6 +51,14 @@ public class CommandSearch extends Command {
 					tasksFound.add(singleTask);  //Expired tasks are considered too
 				}
 			}
+			
+			//task id search (have to convert to get from task id)
+			if(taskName.matches("\\d+")) {
+				int id = Integer.parseInt(taskName);
+				if(id < allTasks.size() && id >= 0) {
+					tasksFound.add(allTasks.get(id-1));
+				}
+			}
 		}
 		else if (endDate != null){
 			//search by date
@@ -73,6 +81,7 @@ public class CommandSearch extends Command {
 				}
 			}
 		}
+
 
 		history.tasksToView = new Vector<TaskInfo>(tasksFound);
 		commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
