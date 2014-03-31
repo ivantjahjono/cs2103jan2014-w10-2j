@@ -95,6 +95,7 @@
 
 .isExpired {
 	-fx-border-width: 0 0 0 3;
+	-fx-padding: 0 0 0 -3;
 	-fx-background-color: #FFDDDD;
 	-fx-border-color: #FFFFFF #FF0000 #FFFFFF #FF0000;
 }
@@ -105,6 +106,7 @@
 
 .isComplete {
 	-fx-border-width: 0 3 0 0;
+	-fx-padding: 0 -3 0 0;
 	-fx-background-color: #FFFFFF;
 	-fx-border-color: #FFFFFF #00FF00 #FFFFFF #FFFFFF;
 }
@@ -114,7 +116,7 @@
 }
 
 .isNotExpired {
-	-fx-border-width: 0 0 0 3;
+	-fx-border-width: 0 0 0 0;
 	-fx-background-color: #FFFFFF;
 	-fx-border-color: #FFFFFF #FFFFFF #FFFFFF #FFFFFF;
 }
@@ -124,6 +126,7 @@
 }
 
 .isEmpty {
+	-fx-border-width: 0 0 0 0;
 	-fx-background-color: #FFFFFF;
 }
 
