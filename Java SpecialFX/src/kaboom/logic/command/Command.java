@@ -70,6 +70,10 @@ public class Command {
 	}
 	
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		if (info.equals("")) {
+			return true;
+		}
+		
 		// All in command are invalid
 		addThisStringToFormatList(info, indexList, KEYWORD_TYPE.INVALID);
 		
