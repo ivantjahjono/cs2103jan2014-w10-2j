@@ -133,6 +133,13 @@ public class CommandModify extends Command {
 
 	
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+		
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+		
 		return true;
 	}
 	
