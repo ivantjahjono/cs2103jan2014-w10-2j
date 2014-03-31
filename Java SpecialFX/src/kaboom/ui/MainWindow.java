@@ -92,9 +92,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	// Container to keep the pages tabs 
 	@FXML private HBox 					pageTabContainer;
 		  private ArrayList<Rectangle> 	pagesTab;
-		  
-	// Command keyed in status indicator
-	@FXML private Rectangle statusIndicator;
 	
 	// Tracks previous commands
 	private String prevCommand;
@@ -568,7 +565,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		
 		loggerUnit.log(Level.FINE, nodePressed.getId()+" header clicked.");
 		// TODO need to activate the view command without creating string.
-		DISPLAY_STATE headerTypeClicked = DISPLAY_STATE.ALL;
+		DISPLAY_STATE headerTypeClicked = null;
 		String command = "";
 		switch (nodePressed.getId()) {
 			case "header_all":
@@ -720,18 +717,18 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		String styleToRemove;
 		
 		if (status) {
-			newStyleName = "commandValid";
-			styleToRemove = "commandInvalid";
+			newStyleName = "text-field-correct";
+			styleToRemove = "text-field-wrong";
 		} else {
-			styleToRemove = "commandValid";
-			newStyleName = "commandInvalid";
+			styleToRemove = "text-field-correct";
+			newStyleName = "text-field-wrong";
 		}
 		
 		changeStatusIndicatorStyle(styleToRemove, newStyleName);
 	}
 	
 	private void changeStatusIndicatorStyle (String oldStyle, String newStyle) {
-		statusIndicator.getStyleClass().removeAll(Collections.singleton(oldStyle));
-		statusIndicator.getStyleClass().add(newStyle);
+		commandTextInput.getStyleClass().removeAll(Collections.singleton(oldStyle));
+		commandTextInput.getStyleClass().add(newStyle);
 	}
 }
