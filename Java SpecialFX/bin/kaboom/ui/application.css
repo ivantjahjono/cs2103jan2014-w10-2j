@@ -8,6 +8,14 @@
 	-fx-font-family: "Segoe UI Semilight";
 }
 
+.text-field-correct:focused {
+    -fx-background-color: green, -fx-text-box-border, -fx-control-inner-background;
+}
+
+.text-field-wrong:focused {
+    -fx-background-color: red, -fx-text-box-border, -fx-control-inner-background;
+}
+
 .text-area {
 	-fx-background-color: white ;
     -fx-text-fill: #111111;
