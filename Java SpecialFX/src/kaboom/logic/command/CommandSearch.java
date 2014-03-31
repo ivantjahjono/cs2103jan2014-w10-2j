@@ -35,9 +35,6 @@ public class CommandSearch extends Command {
 			taskInfo.setEndDate(endDate);
 		}
 
-		History history = History.getInstance();
-		history.taskID.clear();
-
 		String commandFeedback;
 		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
 		Vector<TaskInfo> allTasks = taskListShop.getAllCurrentTasks();
@@ -69,7 +66,6 @@ public class CommandSearch extends Command {
 					if (singleTask.getEndDate().before(targetDate)) {
 						//For deadline tasks
 						tasksFound.add(singleTask);
-						history.taskID.add(TaskListShop.getInstance().getAllCurrentTasks().indexOf(singleTask));
 					}
 					if ((singleTask.getStartDate() != null && singleTask.getStartDate().before(targetDate)) || 
 							singleTask.getEndDate().after(targetDate)) {
@@ -82,8 +78,7 @@ public class CommandSearch extends Command {
 			}
 		}
 
-
-		history.tasksToView = new Vector<TaskInfo>(tasksFound);
+		History.getInstance().setViewingTasks(tasksFound);
 		commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
 
 		Result commandResult = createResult(tasksFound, commandFeedback);
