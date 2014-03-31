@@ -181,23 +181,21 @@ public class TaskListShop {
 		return returnVector;
 	}
 
-	public boolean removeTaskByName (String taskName) {
-		TaskInfo currentTaskToRemove = getTaskByName(taskName);
-
-		if (currentTaskToRemove != null) {
-			currentTaskList.remove(currentTaskToRemove);
-			logger.fine("One task " + taskName + " removed");
-			return true;
+	public TaskInfo removeTaskByName (String taskName) {
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
+			if (singleTask.getTaskName().equals(taskName)) {
+				return currentTaskList.remove(currentTaskList.indexOf(singleTask));
+			}
 		}
-
-		return false;
+		return null;
 	}
 	
-	public void removeTaskByID(int taskID) {
+	public TaskInfo removeTaskByID(int taskID) {
 		assert taskID <= currentTaskList.size();
 		
 		//TaskID is the position of the task in the vector
-		currentTaskList.remove(taskID);
+		return currentTaskList.remove(taskID);
 	}
 
 	//This function refreshes all the tasks in the vector to check
