@@ -19,7 +19,7 @@ public class TaskInfo {
 		taskname = "";
 		startDate = null;
 		endDate = null;
-		importanceLevel = 0;
+		importanceLevel = 1;
 		isExpired = false;
 		isDone = false;
 	}
