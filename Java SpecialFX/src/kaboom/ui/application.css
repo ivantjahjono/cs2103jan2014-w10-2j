@@ -13,7 +13,9 @@
 }
 
 .text-field-wrong:focused {
-    -fx-background-color: red, -fx-text-box-border, -fx-control-inner-background;
+    -fx-background-color: #FFAAAA;
+    -fx-control-inner-background: #FF4444;
+    -fx-text-box-border: #FF4444;
 }
 
 .text-area {
