@@ -127,25 +127,51 @@ public class DateAndTimeFormat {
 		if(theTime == null) {
 			return thisTime;
 		}
-		
-		//12hr format check
-		for(int i = 0; i < time12HrFormatList.length; i++) {
-			try {
-				//validate time
-				time12HrFormatList[i].setLenient(false);
-				Date time = time12HrFormatList[i].parse(theTime);
-				//set time to thisTime
-				Calendar getTime = Calendar.getInstance();
-				getTime.setTime(time);
-				thisTime.set(Calendar.HOUR, getTime.get(Calendar.HOUR));
-				thisTime.set(Calendar.MINUTE, getTime.get(Calendar.MINUTE));
-				thisTime.set(Calendar.AM_PM, getTime.get(Calendar.AM_PM));
-				
-				return thisTime;
-			} catch (Exception e) {	
+		theTime = theTime.toLowerCase();
+		System.out.println(theTime);
+		if(theTime.contains("pm") || theTime.contains("am")) {
+			String indicator12HourFormat = "";
+			if(theTime.contains("pm")) {
+				indicator12HourFormat = "pm";
+				theTime = theTime.replace("pm", "").trim();
+				System.out.println("1 "+theTime);
+			}
+			if(theTime.contains("am")) {
+				indicator12HourFormat = "am";
+				theTime = theTime.replace("am", "").trim();
+				System.out.println("1.1 "+theTime);
+			}
+			
+			if(!theTime.contains(":")) {
+				theTime = String.format("%04d",Integer.parseInt(theTime));
+				System.out.println("2 "+theTime);
+			}
+			
+			theTime = theTime + indicator12HourFormat;
+			System.out.println("5 "+theTime);
+			//12hr format check
+			for(int i = 0; i < time12HrFormatList.length; i++) {
+				try {
+					//validate time
+					time12HrFormatList[i].setLenient(false);
+					Date time = time12HrFormatList[i].parse(theTime);
+					//set time to thisTime
+					Calendar getTime = Calendar.getInstance();
+					getTime.setTime(time);
+					thisTime.set(Calendar.HOUR, getTime.get(Calendar.HOUR));
+					thisTime.set(Calendar.MINUTE, getTime.get(Calendar.MINUTE));
+					thisTime.set(Calendar.AM_PM, getTime.get(Calendar.AM_PM));
+					
+					return thisTime;
+				} catch (Exception e) {	
+				}
 			}
 		}
-		if(!theTime.contains("pm") || theTime.contains("am")) {
+		else {
+			if(!theTime.contains(":")) {
+				theTime = String.format("%04d",Integer.parseInt(theTime));
+				System.out.println("6 "+theTime);
+			}
 			//24hr format check
 			for(int i = 0; i < time24HrFormatList.length; i++) {
 				try {

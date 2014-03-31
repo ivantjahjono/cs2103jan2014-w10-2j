@@ -24,7 +24,7 @@ public class TaskListShop {
 	public static TaskListShop getInstance () {
 		if (taskListInstance == null) {
 			taskListInstance = new TaskListShop();
-			logger.info("New singleton TaskListShop instance created");
+			logger.fine("New singleton TaskListShop instance created");
 		}
 
 		return taskListInstance;
@@ -37,7 +37,7 @@ public class TaskListShop {
 
 	public boolean addTaskToList (TaskInfo newTask) {
 		if (currentTaskList != null) {
-			logger.info("Adding one item to TaskListShop");
+			logger.fine("Adding one item to TaskListShop");
 			return currentTaskList.add(newTask);
 		} else {
 			return false;
@@ -46,7 +46,7 @@ public class TaskListShop {
 	
 	public boolean addTaskToArchivedList (TaskInfo newTask) {
 		if (archivedTaskList != null) {
-			logger.info("Adding one item to TaskListShop");
+			logger.fine("Adding one item to TaskListShop");
 			return archivedTaskList.add(newTask);
 		} else {
 			return false;
@@ -186,7 +186,7 @@ public class TaskListShop {
 
 		if (currentTaskToRemove != null) {
 			currentTaskList.remove(currentTaskToRemove);
-			logger.info("One task " + taskName + " removed");
+			logger.fine("One task " + taskName + " removed");
 			return true;
 		}
 
@@ -241,7 +241,7 @@ public class TaskListShop {
 	public Vector<TaskInfo> clearAllTasks () {
 		currentTaskList = new Vector<TaskInfo>();
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(currentTaskList);
-		logger.info("All tasks cleared");
+		logger.fine("All tasks cleared");
 		return vectorToReturn;
 	}
 	
