@@ -10,6 +10,8 @@ import java.util.ResourceBundle;
 import java.util.Vector;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -17,9 +19,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
@@ -39,6 +43,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import kaboom.logic.DisplayData;
+import kaboom.logic.FormatIdentify;
 import kaboom.logic.TaskInfoDisplay;
 import kaboom.logic.TaskMasterKaboom;
 
@@ -82,13 +87,11 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	@FXML private TextField 	commandTextInput;
 	@FXML private Pane 			feedbackBox;
 	@FXML private Label 		feedbackText;
+	@FXML private HBox 			commandFormatFeedback;
 	
 	// Container to keep the pages tabs 
 	@FXML private HBox 					pageTabContainer;
 		  private ArrayList<Rectangle> 	pagesTab;
-		  
-	// Command keyed in status indicator
-	@FXML private Rectangle statusIndicator;
 	
 	// Tracks previous commands
 	private String prevCommand;
@@ -268,6 +271,65 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		updateFeedbackMessage();
 		updatePagesTab();
 		updateHeader();
+		
+		updateCommandFormat();
+	}
+
+	private void updateCommandFormat() {
+		Label newLabel;
+		
+		// TODO Auto-generated method stub
+		if (commandFormatFeedback.getChildren() != null) {
+			commandFormatFeedback.getChildren().clear();
+		}
+		
+		// get the text
+		String textToFormat = "";
+		
+		// Get list from uidata
+		Vector<FormatIdentify> list = uiData.getFormatDisplay();
+		
+		// loop through the list
+		for (int i = 0; i < list.size(); i++) {
+			FormatIdentify currentInfo = list.get(i);
+			
+			textToFormat += currentInfo.getCommandStringFormat();
+			newLabel = new Label();
+			newLabel.setText(textToFormat);
+			
+			switch (currentInfo.getType()) {
+				case COMMAND:
+					newLabel.getStyleClass().add("parseCommandTypeName");
+					break;
+					
+				case TASKNAME:
+				case VIEWTYPE:
+					newLabel.getStyleClass().add("parseCommandName");
+					break;
+					
+				case START_DATE:
+				case START_TIME:
+					newLabel.getStyleClass().add("parseCommandStartDate");
+					break;
+					
+				case END_DATE:
+				case END_TIME:
+					newLabel.getStyleClass().add("parseCommandEndDate");
+					break;
+					
+				case PRIORITY:
+					newLabel.getStyleClass().add("parseCommandPriority");
+					break;
+					
+				default:
+					newLabel.getStyleClass().add("parseCommandInvalid");
+					break;
+			}
+			
+			commandFormatFeedback.getChildren().add(newLabel);
+			
+			textToFormat = " ";
+		}
 	}
 
 	private void updateHeader() {
@@ -504,7 +566,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		
 		loggerUnit.log(Level.FINE, nodePressed.getId()+" header clicked.");
 		// TODO need to activate the view command without creating string.
-		DISPLAY_STATE headerTypeClicked = DISPLAY_STATE.ALL;
+		DISPLAY_STATE headerTypeClicked = null;
 		String command = "";
 		switch (nodePressed.getId()) {
 			case "header_all":
@@ -656,18 +718,18 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		String styleToRemove;
 		
 		if (status) {
-			newStyleName = "commandValid";
-			styleToRemove = "commandInvalid";
+			newStyleName = "text-field-correct";
+			styleToRemove = "text-field-wrong";
 		} else {
-			styleToRemove = "commandValid";
-			newStyleName = "commandInvalid";
+			styleToRemove = "text-field-correct";
+			newStyleName = "text-field-wrong";
 		}
 		
 		changeStatusIndicatorStyle(styleToRemove, newStyleName);
 	}
 	
 	private void changeStatusIndicatorStyle (String oldStyle, String newStyle) {
-		statusIndicator.getStyleClass().removeAll(Collections.singleton(oldStyle));
-		statusIndicator.getStyleClass().add(newStyle);
+		commandTextInput.getStyleClass().removeAll(Collections.singleton(oldStyle));
+		commandTextInput.getStyleClass().add(newStyle);
 	}
 }
