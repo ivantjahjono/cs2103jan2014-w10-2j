@@ -87,7 +87,7 @@ public class SystemTest {
 		assertEquals("Timed Task Mode", controller.processCommand(command));
 		
 		command = "view search";
-		assertEquals("", controller.processCommand(command));
+		assertEquals("Search Result Mode", controller.processCommand(command));
 	}
 
 }

@@ -1,7 +1,9 @@
 package kaboom.logic.command;
 
 import java.util.Hashtable;
+import java.util.Vector;
 
+import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
@@ -64,7 +66,14 @@ public class CommandDelete extends Command {
 		saveTaskName(infoHashes, taskInfo);
 	}
 	
-	public boolean parseInfo(String info) {
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+		
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+		
 		return true;
 	}
 }

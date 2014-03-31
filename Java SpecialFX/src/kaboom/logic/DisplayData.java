@@ -23,6 +23,9 @@ public class DisplayData extends Observable {
 	Vector<TaskInfoDisplay> tasksDataToDisplay;
 	Vector<TaskInfoDisplay> searchResultDataToDisplay;
 	
+	Vector<FormatIdentify> formattingCommand;
+	String formatText;
+	
 	String 	userFeedbackMessage;
 	int 	currentPage;
 	
@@ -49,6 +52,9 @@ public class DisplayData extends Observable {
 		userFeedbackMessage = "";
 		currentPage = 0;
 		currentDisplayState = DISPLAY_STATE.ALL;
+		
+		formattingCommand = new Vector<FormatIdentify>();
+		formatText = "";
 	}
 	
 	/**
@@ -218,5 +224,24 @@ public class DisplayData extends Observable {
 	
 	public DISPLAY_STATE getCurrentDisplayState() {
 		return currentDisplayState;
+	}
+	
+	public void setFormatDisplay (Vector<FormatIdentify> formatList) {
+		formattingCommand = formatList;
+		
+		setChanged();
+		notifyObservers();
+	}
+	
+	public Vector<FormatIdentify> getFormatDisplay () {
+		return formattingCommand;
+	}
+	
+	public void setFormatText (String text) {
+		formatText = text;
+	}
+	
+	public String getFormatText () {
+		return formatText;
 	}
 }

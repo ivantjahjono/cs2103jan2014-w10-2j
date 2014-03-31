@@ -225,7 +225,9 @@ public class TextParser {
 	public static String extractTaskName(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
 		String taskName = userInputSentence.trim();
 		keywordTable.put(KEYWORD_TYPE.TASKNAME, taskName);
-		return taskName;
+		userInputSentence  = userInputSentence.replace(userInputSentence, "");
+		
+		return userInputSentence;
 	}
 	
 	public static String extractTaskId(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
