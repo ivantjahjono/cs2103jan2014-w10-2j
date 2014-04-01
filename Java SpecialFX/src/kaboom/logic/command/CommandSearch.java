@@ -9,8 +9,8 @@ import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.TASK_TYPE;
-import kaboom.storage.History;
 import kaboom.ui.DISPLAY_STATE;
+import kaboom.ui.TaskView;
 
 public class CommandSearch extends Command {
 
@@ -25,6 +25,7 @@ public class CommandSearch extends Command {
 
 		assert taskInfo != null;
 		assert taskListShop != null;
+		TaskView taskView = TaskView.getInstance();
 
 		Calendar endDate = taskInfo.getEndDate();
 		if (endDate != null) {
@@ -77,8 +78,8 @@ public class CommandSearch extends Command {
 			}
 		}
 
-		History.getInstance().setViewingTasks(tasksFound);
-		History.getInstance().setSearchTaskResult(tasksFound);
+		taskView.setSearchView(tasksFound);
+		//History.getInstance().setSearchTaskResult(tasksFound);
 		commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
 
 		Result commandResult = createResult(tasksFound, commandFeedback);

@@ -239,6 +239,39 @@ public class TaskListShop {
 
 		History.getInstance().setViewingTasks(currentTaskList);
 	}
+	
+	public void refreshTasks(Vector<TaskInfo> viewingTasks) {
+		for (int i = 0; i < archivedTaskList.size(); i++) {
+			TaskInfo singleTask = archivedTaskList.get(i);
+
+			if (!singleTask.getDone()) {
+				currentTaskList.add(singleTask);
+				archivedTaskList.remove(singleTask);
+			}
+		}
+
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
+			Calendar now = Calendar.getInstance();
+			if (now.after(singleTask.getEndDate())) {
+				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
+					singleTask.setExpiryFlag(true);  //Floating tasks cannot expire
+				}
+			}
+			else {
+				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
+					singleTask.setExpiryFlag(false);
+				}
+			}
+
+			if (singleTask.getDone()) {
+				archivedTaskList.add(singleTask);
+				currentTaskList.remove(singleTask);
+			}
+		}
+
+		History.getInstance().setViewingTasks(viewingTasks);
+	}
 
 	public Vector<TaskInfo> clearAllTasks () {
 		currentTaskList = new Vector<TaskInfo>();
