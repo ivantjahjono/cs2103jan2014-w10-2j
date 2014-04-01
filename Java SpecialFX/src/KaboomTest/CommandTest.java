@@ -71,11 +71,11 @@ public class CommandTest {
 		CommandDelete com = new CommandDelete();
 		com.setTaskInfo(task);
 		//Test when no taskinfo in memory to be deleted
-		assertEquals("Aww... fail to delete <Hello World>.", com.execute().getFeedback());
+		assertEquals("<Hello World> does not exist...", com.execute().getFeedback());
 		
 		//Delete by name
 		task.setTaskName("abc");
-		assertEquals("Aww... fail to delete <abc>.", com.execute().getFeedback());
+		assertEquals("<abc> does not exist...", com.execute().getFeedback());
 	}
 
 	//CommandModify (Unable to test unless memory is initialised);
