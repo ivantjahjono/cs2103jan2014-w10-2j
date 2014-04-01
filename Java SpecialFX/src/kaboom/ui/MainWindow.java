@@ -243,7 +243,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		
 		loggerUnit.log(Level.INFO, command);
 		
-		if (command.equals("exit")) {
+		if (isExitCommand(command)) {
 			Platform.exit();
 			return;
 		}
@@ -259,6 +259,10 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		currentCommand = "";
 		
 		commandTextInput.setText("");
+	}
+
+	private boolean isExitCommand(String command) {
+		return command.equals("exit");
 	}
 
 	private void switchToNewHeader(int switchIndexResult) {
@@ -299,7 +303,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		for (int i = 0; i < list.size(); i++) {
 			FormatIdentify currentInfo = list.get(i);
 			
-			textToFormat += currentInfo.getCommandStringFormat();
+			textToFormat = currentInfo.getCommandStringFormat() + " ";	// Extra space is needed to separate each parsing info
 			newLabel = new Label();
 			newLabel.setText(textToFormat);
 			
@@ -333,8 +337,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			}
 			
 			commandFormatFeedback.getChildren().add(newLabel);
-			
-			textToFormat = " ";
 		}
 	}
 
@@ -435,7 +437,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	@FXML
 	private void onTextfieldKeyReleased (KeyEvent keyEvent) {
 		//System.out.println("Key pressed: " + keyEvent.getText());
-		
+		boolean processResult = false;
 		switch(keyEvent.getCode()) {
 			case UP:
 				loggerUnit.log(Level.FINE, "Recalling previous command.");
@@ -478,7 +480,12 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				
 			default:
 				String command = commandTextInput.getText();
-				boolean processResult = applicationController.processSyntax(command);
+				if (isPageToggle(command) || isExitCommand(command)) {
+					processResult = true;
+				} else {
+					processResult = applicationController.processSyntax(command);
+				}
+				
 				updateCommandStatusIndicator(processResult);
 				break;
 		}
