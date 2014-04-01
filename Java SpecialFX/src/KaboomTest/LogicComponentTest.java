@@ -5,7 +5,8 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ LogicComponentTest.class, })
-public class Stage1 {
+@SuiteClasses({ CommandTest.class, DateAndTimeFormatTest.class,
+		TextParserTest.class })
+public class LogicComponentTest {
 
 }

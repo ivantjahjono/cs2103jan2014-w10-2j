@@ -8,9 +8,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ 
 		Stage1.class,
-		StorageTest.class,
-		HistoryTest.class,
-		TaskListShopTest.class,
+		StorageComponentTest.class
 		})
 public class Stage2 {
 
