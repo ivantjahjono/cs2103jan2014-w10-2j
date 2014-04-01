@@ -78,6 +78,7 @@ public class CommandSearch extends Command {
 		}
 
 		History.getInstance().setViewingTasks(tasksFound);
+		History.getInstance().setSearchTaskResult(tasksFound);
 		commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
 
 		Result commandResult = createResult(tasksFound, commandFeedback);
