@@ -137,6 +137,7 @@ public class TextParserTest {
 		assertEquals("by    6:00pmpm ", TextParser.extractTimeOnly(keyword, command, tempHashTable));
 	}
 	
+	@Test
 	public void testDateExtraction () {
 		String command = "";
 		String keyword = "on";
@@ -152,7 +153,7 @@ public class TextParserTest {
 		assertEquals("", TextParser.extractDateOnly(keyword, command, tempHashTable));
 		
 		command = "on  120606 ";
-		assertEquals("", TextParser.extractDateOnly(keyword, command, tempHashTable));
+		assertEquals(" ", TextParser.extractDateOnly(keyword, command, tempHashTable));
 		
 		command = "on  1206065  ";
 		assertEquals(command, TextParser.extractDateOnly(keyword, command, tempHashTable));
@@ -161,10 +162,10 @@ public class TextParserTest {
 		assertEquals(command, TextParser.extractDateOnly(keyword, command, tempHashTable));
 		
 		command = "on  1.06.06 ";
-		assertEquals(command, TextParser.extractDateOnly(keyword, command, tempHashTable));
+		assertEquals(" ", TextParser.extractDateOnly(keyword, command, tempHashTable));
 		
 		command = "on  1.6.06 ";
-		assertEquals(command, TextParser.extractDateOnly(keyword, command, tempHashTable));
+		assertEquals(" ", TextParser.extractDateOnly(keyword, command, tempHashTable));
 		
 		command = "on  1.6.1906 ";
 		assertEquals(command, TextParser.extractDateOnly(keyword, command, tempHashTable));
@@ -200,5 +201,17 @@ public class TextParserTest {
 		assertEquals("hello world", TextParser.extractModifiedTaskName("hello world",keywordTable));
 		//error here
 		assertEquals("> hello world ", TextParser.extractModifiedTaskName("> hello world > asd",keywordTable));
+	}
+	
+	@Test
+	public void testExtractTaskId() {
+		Hashtable<KEYWORD_TYPE, String> keywordTable = new Hashtable<KEYWORD_TYPE, String>();
+		assertEquals("", TextParser.extractTaskId("#123",keywordTable));
+		assertEquals("", TextParser.extractTaskId(" #123",keywordTable));
+		assertEquals("", TextParser.extractTaskId("  #123  ",keywordTable));
+		assertEquals("asd", TextParser.extractTaskId("asd",keywordTable));
+		assertEquals("", TextParser.extractTaskId("#1 ",keywordTable));
+		assertEquals("sometaskname", TextParser.extractTaskId("#1 sometaskname",keywordTable));
+		assertEquals("sometaskname #1", TextParser.extractTaskId("sometaskname #1",keywordTable));
 	}
 }

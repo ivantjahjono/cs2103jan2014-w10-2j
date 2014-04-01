@@ -17,7 +17,6 @@ public class CommandDelete extends Command {
 	private static final String MESSAGE_COMMAND_DELETE_INVALID = "Enter a taskname or task id, please ?";
 	private static final String MESSAGE_COMMAND_DELETE_NO_SUCH_TASK = "<%1$s> does not exist...";
 
-	String taskId;
 	Hashtable<KEYWORD_TYPE,String> taskInfoTable;
 	TaskInfo prevTask;
 
@@ -35,7 +34,7 @@ public class CommandDelete extends Command {
 
 		String taskName = taskInfo.getTaskName();
 		String commandFeedback;
-
+		System.out.println("TaskId = "+taskId);
 		if (taskName.equals("")) {
 			commandFeedback = MESSAGE_COMMAND_DELETE_INVALID;
 			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
@@ -83,16 +82,15 @@ public class CommandDelete extends Command {
 
 	private void initialiseKeywordList() {
 		keywordList.clear();
-		keywordList.add(KEYWORD_TYPE.TASKNAME);
 		keywordList.add(KEYWORD_TYPE.TASKID);
+		keywordList.add(KEYWORD_TYPE.TASKNAME);
 	}
 
 	public void storeTaskInfo (Hashtable<KEYWORD_TYPE, String> infoHashes) {
 		taskInfo = new TaskInfo();
 		taskInfoTable = infoHashes;
 		saveTaskName(infoHashes, taskInfo);
-		taskId = infoHashes.get(KEYWORD_TYPE.TASKID);
-
+		saveTaskID(infoHashes);
 	}
 
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {

@@ -31,6 +31,7 @@ public class Command {
 	protected DisplayData displayData;
 	protected Vector<KEYWORD_TYPE> keywordList;  //Initialized in the individual command constructor
 	Hashtable<KEYWORD_TYPE, Object> commandObjectTable;
+	protected Integer taskId;
 
 	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
@@ -38,7 +39,7 @@ public class Command {
 		taskListShop = TaskListShop.getInstance();
 		displayData = DisplayData.getInstance();
 		keywordList = new Vector<KEYWORD_TYPE>();
-		
+		taskId = null;
 		commandObjectTable = new Hashtable<KEYWORD_TYPE, Object>();
 	}
 
@@ -291,6 +292,13 @@ public class Command {
 			task.setEndDate(endDateAndTime);
 		} catch (Exception e) {
 			task.setEndDate(endDateAndTime);
+		}
+	}
+	
+	protected void saveTaskID(Hashtable<KEYWORD_TYPE, String> infoHashes) {
+		String taskIdInString = infoHashes.get(KEYWORD_TYPE.TASKID);
+		if(taskIdInString != null) {
+			taskId = Integer.parseInt(taskIdInString);
 		}
 	}
 	

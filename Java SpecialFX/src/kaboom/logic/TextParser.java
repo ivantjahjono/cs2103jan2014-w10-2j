@@ -14,10 +14,12 @@ public class TextParser {
 	private static final String KEYWORD_ENDTIME = "by";
 	private static final String KEYWORD_DATE = "on";
 	private static final String KEYWORD_MODIFY = ">";
+	private static final String KEYWORD_TASKID = "#";
 	
 	private static final String TIME_REGEX = "\\s+\\d{1,2}[:]?\\d{2}\\s*(am|pm)?(\\s|$)";
 	private static final String DATE_REGEX = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";
 	private static final String PRIORITY_REGEX = "[\\s+]\\*{1,3}[\\s\\W]*";
+	private static final String ID_REGEX = "^\\s*[#]\\d+(\\s+|$)";
 	
 	//******************** Method Calls By Controller ******************************************
 	public static String getCommandKeyWord (String userInput) {
@@ -32,7 +34,7 @@ public class TextParser {
 		Hashtable<KEYWORD_TYPE, String> keywordHashTable = new Hashtable<KEYWORD_TYPE, String>();
 		TextParser.parser(taskInformation, keywordHashTable);
 
-		System.out.println(keywordHashTable);
+		//System.out.println(keywordHashTable);
 		
 		return keywordHashTable;	
 	}
@@ -62,7 +64,7 @@ public class TextParser {
 		String userInputWithStartDateAndTimeExtracted = extractDateAndTime(KEYWORD_STARTTIME,userInputWithEndDateAndTimeExtracted,keywordTable);
 		String userInputWithModifiedTaskNameExtracted = extractModifiedTaskName(userInputWithStartDateAndTimeExtracted,keywordTable);
 		String taskName = extractTaskName(userInputWithModifiedTaskNameExtracted,keywordTable);
-		System.out.println(keywordTable);
+		//System.out.println(keywordTable);
 		return taskName;
 	}
 	
@@ -231,9 +233,20 @@ public class TextParser {
 	}
 	
 	public static String extractTaskId(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
-		String taskId = userInputSentence.trim();
+		int startIndex = 0;
+		int endIndex = 0;
+		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, ID_REGEX);
+		if (matchList.size() < 2) {
+			return userInputSentence;
+		}
+		endIndex = matchList.get(matchList.size()-1);
+		startIndex = matchList.get(matchList.size()-2);
+		String taskId = userInputSentence.substring(startIndex, endIndex);
+		userInputSentence = userInputSentence.replace(taskId, "");
+		taskId = taskId.replace(KEYWORD_TASKID, "").trim();
 		keywordTable.put(KEYWORD_TYPE.TASKID, taskId);
-		return taskId;
+		System.out.println(taskId);
+		return userInputSentence;
 	}
 
 	private static ArrayList<Integer> searchForPatternMatch(String userInputSentence, String regex) {
@@ -330,14 +343,14 @@ public class TextParser {
 			if(list.get(i) == KEYWORD_TYPE.MODIFIED_TASKNAME) {
 				userInput = extractModifiedTaskName(userInput,taskInformationTable);
 			}
+			if(list.get(i) == KEYWORD_TYPE.TASKID) {
+				userInput = extractTaskId(userInput,taskInformationTable);
+			}	
 			if(list.get(i) == KEYWORD_TYPE.TASKNAME) {
 				userInput = extractTaskName(userInput,taskInformationTable);
 			}
 			if(list.get(i) == KEYWORD_TYPE.VIEWTYPE) {
 				userInput = extractViewType(userInput,taskInformationTable);
-			}	
-			if(list.get(i) == KEYWORD_TYPE.TASKID) {
-				userInput = extractTaskId(userInput,taskInformationTable);
 			}	
 		}
 		
