@@ -35,7 +35,7 @@ public class CommandDelete extends Command {
 		assert taskListShop != null;
 
 		String taskName = taskInfo.getTaskName();
-		String commandFeedback;
+		String commandFeedback = "";
 
 		if (taskName.equals("")) {
 			commandFeedback = MESSAGE_COMMAND_DELETE_INVALID;
@@ -50,19 +50,23 @@ public class CommandDelete extends Command {
 			Command search = new CommandSearch();
 			search.storeTaskInfo(taskInfoTable);
 			return search.execute();
-		}
-		else if (isNumeric(taskName)) {
-			int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
-			prevTask = taskListShop.removeTaskByID(index);  //Set for undo
-			TaskView.getInstance().deleteInView(prevTask);
-			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
-		} else if (taskCount == 1){
+		} else if (taskCount == 1) {
 			prevTask = taskListShop.removeTaskByName(taskName);
-			TaskView.getInstance().deleteInView(prevTask);
+			taskView.deleteInView(prevTask);
 			assert prevTask != null;
+
 			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
-		} else {
-			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
+		} else if (isNumeric(taskName)) {
+
+			if (taskView.getCurrentViewID().size() >= Integer.parseInt(taskName)) {
+				int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
+				prevTask = taskListShop.removeTaskByID(index);  //Set for undo
+				TaskView.getInstance().deleteInView(prevTask);
+
+				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
+			} else {
+				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
+			}
 		}
 
 		return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
