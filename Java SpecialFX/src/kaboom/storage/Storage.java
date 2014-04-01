@@ -50,7 +50,7 @@ public class Storage {
 	 */
 	public boolean store() {
 		try {
-			logger.info("Trying to write current tasks text file: " + fileName);
+			logger.fine("Trying to write current tasks text file: " + fileName);
 			BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
 			Vector<TaskInfo> currentTaskList = TaskListShop.getInstance().getAllCurrentTasks();
 			assert(currentTaskList != null);
@@ -71,7 +71,7 @@ public class Storage {
 					output.append(startDate.get(Calendar.MINUTE) + delimiter);
 				}
 				else {
-					logger.info("startDate for task " + i + "is null");
+					logger.fine("startDate for task " + i + "is null");
 					output.append(" " + delimiter);
 					output.append(" " + delimiter);
 					output.append(" " + delimiter);
@@ -88,7 +88,7 @@ public class Storage {
 					output.append(endDate.get(Calendar.MINUTE) + delimiter);
 				}
 				else {
-					logger.info("endDate for task " + i + "is null");
+					logger.fine("endDate for task " + i + "is null");
 					output.append(" " + delimiter);
 					output.append(" " + delimiter);
 					output.append(" " + delimiter);
@@ -103,7 +103,7 @@ public class Storage {
 				writer.flush();
 			}
 
-			logger.info("Trying to write archived tasks text file: " + fileName);
+			logger.fine("Trying to write archived tasks text file: " + fileName);
 			currentTaskList = TaskListShop.getInstance().getAllArchivedTasks();
 			assert(currentTaskList != null);
 
@@ -123,7 +123,7 @@ public class Storage {
 					output.append(startDate.get(Calendar.MINUTE) + delimiter);
 				}
 				else {
-					logger.info("startDate for task " + i + "is null");
+					logger.fine("startDate for task " + i + "is null");
 					output.append(" " + delimiter);
 					output.append(" " + delimiter);
 					output.append(" " + delimiter);
@@ -140,7 +140,7 @@ public class Storage {
 					output.append(endDate.get(Calendar.MINUTE) + delimiter);
 				}
 				else {
-					logger.info("endDate for task " + i + "is null");
+					logger.fine("endDate for task " + i + "is null");
 					output.append(" " + delimiter);
 					output.append(" " + delimiter);
 					output.append(" " + delimiter);
@@ -155,7 +155,7 @@ public class Storage {
 				writer.flush();
 			}
 
-			logger.info("Written to text file: " + fileName);
+			logger.fine("Written to text file: " + fileName);
 			writer.close();
 			return true;
 		} catch (IOException e) {
@@ -171,7 +171,7 @@ public class Storage {
 	 */
 	public boolean load() {
 		try {
-			logger.info("Trying to read from text file: " + fileName);
+			logger.fine("Trying to read from text file: " + fileName);
 			File inFile = new File(fileName);
 			Scanner fileScanner = new Scanner(inFile);
 			TaskListShop currentTaskList = TaskListShop.getInstance();
@@ -187,7 +187,7 @@ public class Storage {
 
 				Calendar startDate = Calendar.getInstance();
 				if (inputSplit[INDEX_START_YEAR].equals(" ")) {
-					logger.info("startDate for task \"" + inputSplit[INDEX_TASK_NAME] + "\" is null");
+					logger.fine("startDate for task \"" + inputSplit[INDEX_TASK_NAME] + "\" is null");
 					startDate = null;
 				}
 				else {
@@ -201,7 +201,7 @@ public class Storage {
 
 				Calendar endDate = Calendar.getInstance();
 				if (inputSplit[INDEX_END_YEAR].equals(" ")) {
-					logger.info("endDate for task \"" + inputSplit[INDEX_TASK_NAME] + "\" is null");
+					logger.fine("endDate for task \"" + inputSplit[INDEX_TASK_NAME] + "\" is null");
 					endDate = null;
 				}
 				else {
@@ -233,7 +233,7 @@ public class Storage {
 				}
 			}
 
-			logger.info(fileName + " has been scanned and read");
+			logger.fine(fileName + " has been scanned and read");
 			fileScanner.close();
 			return true;
 
@@ -242,7 +242,7 @@ public class Storage {
 			File inFile = new File(fileName);
 
 			if (!inFile.exists()) {
-				logger.info(fileName + " does not exist. Skipping.");
+				logger.fine(fileName + " does not exist. Skipping.");
 				return true;  //Do nothing if the file does not exist because it will be created later
 			}
 			else {
