@@ -4,11 +4,6 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Queue;
-import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.TextParser;
 
@@ -49,7 +44,6 @@ public class TextParserTest {
 	public void testTimeAndDateExtraction () {
 		String command = "";
 		String timeKeyword = "at";
-		String dateKeyword = "on";
 		Hashtable<KEYWORD_TYPE, String> tempHashTable = new Hashtable<KEYWORD_TYPE, String>();
 		
 		// Full working syntax
@@ -76,7 +70,7 @@ public class TextParserTest {
 	public void checkTimeAndDateExtractionCondition () {
 		String command = "";
 		String timeKeyword = "at";
-		String dateKeyword = "on";
+
 		ArrayList<Integer> matchVector = new ArrayList<Integer>();
 		
 		// Full working syntax

@@ -7,7 +7,6 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
-import kaboom.logic.TextParser;
 
 public class CommandUndone extends Command{
 	private static final String MESSAGE_COMMAND_UNDONE_SUCCESS = "Set %1$s to incomplete";
