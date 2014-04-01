@@ -1,8 +1,5 @@
 package KaboomTest;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -10,9 +7,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ 
-		CommandTest.class, 
-		DateAndTimeFormatTest.class,
-		TextParserTest.class,
+		Stage1.class,
 		StorageTest.class,
 		HistoryTest.class,
 		TaskListShopTest.class,
