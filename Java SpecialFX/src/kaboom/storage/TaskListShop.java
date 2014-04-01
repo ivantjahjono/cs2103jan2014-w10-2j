@@ -182,9 +182,10 @@ public class TaskListShop {
 	}
 
 	public TaskInfo removeTaskByName (String taskName) {
+		//Assumes that there is only one task with the samen name
 		for (int i = 0; i < currentTaskList.size(); i++) {
 			TaskInfo singleTask = currentTaskList.get(i);
-			if (singleTask.getTaskName().equals(taskName)) {
+			if (singleTask.getTaskName().contains(taskName)) {
 				return currentTaskList.remove(currentTaskList.indexOf(singleTask));
 			}
 		}
