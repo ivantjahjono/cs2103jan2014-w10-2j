@@ -74,6 +74,13 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	@FXML 	private Label header_search;
 	@FXML 	private Label header_archive;
 	
+	@FXML 	private Label header_all_count;
+	@FXML 	private Label header_running_count;
+	@FXML 	private Label header_deadline_count;
+	@FXML 	private Label header_timed_count;
+	@FXML 	private Label header_search_count;
+	@FXML 	private Label header_archive_count;
+	
 	private final String HEADER_ALL_NAME 		= "header_all";
 	private final String HEADER_RUNNING_NAME 	= "header_running";
 	private final String HEADER_DEADLINE_NAME 	= "header_deadline";
@@ -281,8 +288,42 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		updateFeedbackMessage();
 		updatePagesTab();
 		updateHeader();
+		updateHeaderTaskCount();
 		
 		updateCommandFormat();
+	}
+
+	private void updateHeaderTaskCount() {
+		Vector<Integer> taskCountList = uiData.getTaskCountList();
+		for (int i = 0; i < taskCountList.size(); i++) {
+			String countString = "" + taskCountList.get(i);
+			
+			switch (i) {
+				case 0:
+					header_all_count.setText(countString);
+					break;
+					
+				case 1:
+					header_running_count.setText(countString);
+					break;
+					
+				case 2:
+					header_deadline_count.setText(countString);
+					break;
+					
+				case 3:
+					header_timed_count.setText(countString);
+					break;
+					
+				case 4:
+					header_search_count.setText(countString);
+					break;
+					
+				case 5:
+					header_archive_count.setText(countString);
+					break;
+			}
+		}
 	}
 
 	private void updateCommandFormat() {
