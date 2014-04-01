@@ -178,7 +178,7 @@ public class DisplayData extends Observable {
 	private void convertTasksIntoDisplayData(Vector<TaskInfo> taskList, Vector<TaskInfoDisplay> taskListToAddinto) {
 		for (int i = 0; i < taskList.size(); i++) {
 			TaskInfo currentTaskInfo = taskList.get(i);
-			TaskInfoDisplay infoToDisplay = convertTaskInfoIntoTaskInfoDisplay(currentTaskInfo, i%NUM_OF_TASK_PER_PAGE+1);
+			TaskInfoDisplay infoToDisplay = convertTaskInfoIntoTaskInfoDisplay(currentTaskInfo, i+1);
 			
 			taskListToAddinto.add(infoToDisplay);
 		}
