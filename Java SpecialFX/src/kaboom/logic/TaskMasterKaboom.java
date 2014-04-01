@@ -72,22 +72,22 @@ public class TaskMasterKaboom {
 	
 	public void updateTaskList () {
 		// TODO a hack around currently to update to current view mode
-		Result updateResult;
+		//Result updateResult;
 		
 		Command updateCommand = new CommandUpdate();
 		updateCommand.execute();
 		
 		// Get current display state
-		DISPLAY_STATE currentDisplayState = guiDisplayData.getCurrentDisplayState();
+		//DISPLAY_STATE currentDisplayState = guiDisplayData.getCurrentDisplayState();
 		
-		CommandView updateViewCommand = new CommandView();
-		updateViewCommand.setDisplayState(currentDisplayState);
-		updateResult = updateViewCommand.execute();
+		//CommandView updateViewCommand = new CommandView();
+		//updateViewCommand.setDisplayState(currentDisplayState);
+		//updateResult = updateViewCommand.execute();
 		
 		//4. Save data to file
 		fileStorage.store();
 		
-		updateUi(updateResult);
+		guiDisplayData.updateDisplayWithResult();
 	}
 	
 	/*
