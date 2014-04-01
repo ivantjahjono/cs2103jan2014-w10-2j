@@ -105,11 +105,6 @@ public class TaskListShopTest {
 	}
 
 	@Test
-	public void testRemoveTaskByName() {
-		assertTrue(allTasks.removeTaskByName("something"));
-	}
-
-	@Test
 	public void testClearAllTasks() {
 		assertTrue(allTasks.addTaskToList(oldTask));
 		assertNotEquals(0, allTasks.shopSize());

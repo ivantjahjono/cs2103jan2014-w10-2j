@@ -182,6 +182,8 @@ public class TaskMasterKaboom {
 			case ADD:
 			case DELETE:
 			case MODIFY:
+			case DONE:
+			case UNDONE:
 				commandHistory.addToRecentCommands(command);
 				break;
 				

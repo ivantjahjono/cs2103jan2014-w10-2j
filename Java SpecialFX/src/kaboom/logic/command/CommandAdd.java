@@ -53,9 +53,12 @@ public class CommandAdd extends Command {
 	public boolean undo () {
 		String taskName = taskInfo.getTaskName();
 		
-		boolean isRemoveSuccess = taskListShop.removeTaskByName(taskName);
+		TaskInfo task = taskListShop.removeTaskByName(taskName);
 		
-		return isRemoveSuccess;
+		if (task == null)
+			return false;
+		else
+			return true;
 	}
 	
 	private void initialiseKeywordList() {

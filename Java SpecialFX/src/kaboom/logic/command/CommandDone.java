@@ -16,6 +16,7 @@ public class CommandDone extends Command{
 
 	TaskInfo taskToBeModified;
 	Hashtable<KEYWORD_TYPE,String> taskInfoTable;
+	String commandFeedback;
 
 	public CommandDone() {
 		commandType = COMMAND_TYPE.DONE;
@@ -28,18 +29,23 @@ public class CommandDone extends Command{
 
 		String feedback = "";
 		String taskName = taskInfo.getTaskName();
-		if (isNumeric(taskName)) {
-			int index = History.getInstance().taskID.get(Integer.parseInt(taskName)-1);
-			taskToBeModified = taskListShop.getTaskByID(index);
-		} else if (taskListShop.numOfTasksWithSimilarNames(taskName) > 1) {
-			feedback = "OH YEA! CLASH.. BOO000000000M!";
+
+		int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
+
+		if (taskCount > 1) {
+			commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
 
 			Command search = new CommandSearch();
 			search.storeTaskInfo(taskInfoTable);
-			History.getInstance().addToRecentCommands(search);
 			return search.execute();
+		}
+		else if (isNumeric(taskName)) {
+			int index = History.getInstance().taskID.get(Integer.parseInt(taskName)-1);
+			taskToBeModified = taskListShop.getTaskByID(index);
+			taskListShop.setDoneByID(index);
 		} else {
 			taskToBeModified = taskListShop.getTaskByName(taskName);
+			taskListShop.setDoneByName(taskName);
 		}
 
 		if (taskToBeModified == null) {
@@ -54,16 +60,13 @@ public class CommandDone extends Command{
 			return createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
 
-		taskInfo = new TaskInfo(taskToBeModified);
-		taskInfo.setDone(true);
 		taskInfo.setRecent(true);
-		taskListShop.updateTask(taskInfo, taskToBeModified);
 		feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
 		return createResult(taskListShop.getAllCurrentTasks(), feedback);
 	}
 
 	public boolean undo() {
-		taskListShop.updateTask(taskToBeModified, taskInfo);
+		taskListShop.setLastToUndone();
 		return true;
 	}
 

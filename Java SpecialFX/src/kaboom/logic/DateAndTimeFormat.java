@@ -255,17 +255,99 @@ public class DateAndTimeFormat {
 		if(theTime == null) {
 			return false;
 		}
-		for(int i = 0; i < time12HrFormatList.length; i++) {
-			try {
-				
-				time12HrFormatList[i].setLenient(false);
-				Date date = time12HrFormatList[i].parse(theTime);
-				System.out.println(date);
+		theTime = theTime.toLowerCase();
+		if(theTime.contains("pm") || theTime.contains("am")) {
+			String indicator12HourFormat = "";
+			if(theTime.contains("pm")) {
+				indicator12HourFormat = "pm";
+				theTime = theTime.replace("pm", "").trim();
+			}
+			if(theTime.contains("am")) {
+				indicator12HourFormat = "am";
+				theTime = theTime.replace("am", "").trim();
+			}
+			
+			if(!theTime.contains(":")) {
+				theTime = String.format("%04d",Integer.parseInt(theTime));
+			}	
+			theTime = theTime + indicator12HourFormat;
+			int count = time12HrFormatList.length;
+			//12hr format check
+			for(int i = 0; i < time12HrFormatList.length; i++) {
+				try {
+					//validate time
+					time12HrFormatList[i].setLenient(false);
+					time12HrFormatList[i].parse(theTime);	
+				} catch (Exception e) {	
+					count--;
+				}
+			}
+			if(count > 0) return true;
+			else return false;   
+		}	
+		return false;
+	}
+	
+	public boolean isTimeValid (String theTime) {
+		if(theTime == null) {
+			return false;
+		}
+		theTime = theTime.toLowerCase();
+		if(theTime.contains("pm") || theTime.contains("am")) {
+			String indicator12HourFormat = "";
+			if(theTime.contains("pm")) {
+				indicator12HourFormat = "pm";
+				theTime = theTime.replace("pm", "").trim();
+			}
+			if(theTime.contains("am")) {
+				indicator12HourFormat = "am";
+				theTime = theTime.replace("am", "").trim();
+			}
+			
+			if(!theTime.contains(":")) {
+				theTime = String.format("%04d",Integer.parseInt(theTime));
+			}	
+			theTime = theTime + indicator12HourFormat;
+			int count = time12HrFormatList.length;
+			//12hr format check
+			for(int i = 0; i < time12HrFormatList.length; i++) {
+				try {
+					//validate time
+					time12HrFormatList[i].setLenient(false);
+					time12HrFormatList[i].parse(theTime);	
+				} catch (Exception e) {	
+					count--;
+				}
+			}
+			if(count > 0) { 
 				return true;
-			} catch (Exception e) {	
+			}
+			else {
+				return false;   
+			}
+		} else {
+			//24hr format
+			if(!theTime.contains(":")) {
+				theTime = String.format("%04d",Integer.parseInt(theTime));
+			}
+			//24hr format check
+			int count = time24HrFormatList.length;
+			for(int i = 0; i < time24HrFormatList.length; i++) {
+				try {
+					//validate time
+					time24HrFormatList[i].setLenient(false);
+					time24HrFormatList[i].parse(theTime);
+				} catch (Exception e) {	
+					count--;
+				}
+			}
+			if(count > 0) { 
+				return true;
+			}
+			else {
+				return false;   
 			}
 		}
-		return false;
 	}
 	//*************************** TEST METHODS **********************************
 }
