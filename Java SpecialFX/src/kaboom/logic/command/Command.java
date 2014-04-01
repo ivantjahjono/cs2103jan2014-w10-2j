@@ -1,6 +1,7 @@
 package kaboom.logic.command;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -8,6 +9,7 @@ import java.util.Vector;
 import kaboom.logic.DateAndTimeFormat;
 import kaboom.logic.DisplayData;
 import kaboom.logic.FormatIdentify;
+import kaboom.logic.FormatIdentifyComparator;
 import kaboom.logic.InvalidDateAndTimeException;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
@@ -136,6 +138,8 @@ public class Command {
 			
 			addThisStringToFormatList(taskInformationTable.get(currentKeyword), indexList, resultKeyword);
 		}
+		
+		Collections.sort(indexList, new FormatIdentifyComparator());
 	}
 	
 	protected void getCommandString(String info, Vector<FormatIdentify> indexList) {
@@ -148,7 +152,7 @@ public class Command {
 		
 		newIdentity.setCommandStringFormat(info);
 		newIdentity.setType(type);
-		
+
 		indexList.add(newIdentity);
 	}
 	
