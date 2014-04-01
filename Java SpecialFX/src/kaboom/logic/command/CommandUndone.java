@@ -7,6 +7,7 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
+import kaboom.ui.TaskView;
 
 public class CommandUndone extends Command{
 	private static final String MESSAGE_COMMAND_UNDONE_SUCCESS = "Set %1$s to incomplete";
@@ -15,11 +16,13 @@ public class CommandUndone extends Command{
 
 	TaskInfo taskToBeModified;
 	Hashtable<KEYWORD_TYPE,String> taskInfoTable;
+	TaskView taskView;
 
 	public CommandUndone() {
 		commandType = COMMAND_TYPE.UNDONE;
 		initialiseKeywordList();
 		taskInfoTable = null;
+		taskView = TaskView.getInstance();
 	}
 
 	public Result execute() {
@@ -28,22 +31,24 @@ public class CommandUndone extends Command{
 		String feedback = "";
 		String taskName = taskInfo.getTaskName();
 
-		int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
+		int taskCount = taskListShop.numOfArchivedTasksWithSimilarNames(taskName);
 
 		if (taskCount > 1) {
 			feedback = "OH YEA! CLASH.. BOO000000000M!";
 
 			Command search = new CommandSearch();
 			search.storeTaskInfo(taskInfoTable);
-			return search.execute();
+			return search.execute();  //No support for archive search yet
 		}
 		else if (isNumeric(taskName)) {
 			int index = Integer.parseInt(taskName)-1;
 			taskToBeModified = taskListShop.getArchivedTaskByID(index);
 			taskListShop.setUndoneByID(index);
+			taskView.deleteInView(taskToBeModified);
 		} else {
 			taskToBeModified = taskListShop.getTaskByName(taskName);
 			taskListShop.setUndoneByName(taskName);
+			taskView.deleteInView(taskToBeModified);
 		}
 
 		if (taskToBeModified == null) {
@@ -65,6 +70,8 @@ public class CommandUndone extends Command{
 
 	public boolean undo() {
 		taskListShop.setLastToDone();
+		taskView.addToView(taskToBeModified);
+		taskView.doneInView(taskToBeModified);
 		return true;
 	}
 
