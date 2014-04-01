@@ -13,6 +13,7 @@ public class History {
 
 	private Vector<Command> previousCommandList;
 	public Vector<TaskInfo> tasksToView;  //Tasks that are being viewed by the UI
+	private Vector<TaskInfo> taskSearchResult;
 	private Command currentCommandView;
 	public Vector<Integer> taskID;  //The corresponding position in the vector
 
@@ -25,8 +26,10 @@ public class History {
 
 	public History () {
 		previousCommandList = new Vector<Command>();
-		currentCommandView = null;
+		
 		tasksToView = new Vector<TaskInfo>();
+		taskSearchResult = new Vector<TaskInfo>();
+		currentCommandView = null;
 		taskID = new Vector<Integer>();
 	}
 
@@ -47,6 +50,14 @@ public class History {
 	public void setViewingTasks(Vector<TaskInfo> viewingTasks) {
 		tasksToView = viewingTasks;
 		taskID = TaskListShop.getInstance().getCorrespondingID(viewingTasks);
+	}
+	
+	public void setSearchTaskResult (Vector<TaskInfo> searchResultList) {
+		taskSearchResult = searchResultList;
+	}
+	
+	public Vector<TaskInfo> getSearchTaskResult () {
+		return taskSearchResult;
 	}
 
 	public int size() {
