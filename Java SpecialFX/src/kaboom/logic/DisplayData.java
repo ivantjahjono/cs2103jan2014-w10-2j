@@ -134,6 +134,19 @@ public class DisplayData extends Observable {
 		setChanged();
 		notifyObservers();
 	}
+	
+	public void updateDisplayWithResult () {
+		extractTasksBasedOnDisplayState(currentDisplayState);
+		updateTaskCountList ();
+		
+		int maxPages = getMaxTaskDisplayPages(tasksDataToDisplay)-1;
+		if (currentPage > maxPages) {
+			currentPage = maxPages;
+		}
+		
+		setChanged();
+		notifyObservers();
+	}
 
 	private void extractTasksBasedOnDisplayState(DISPLAY_STATE displayState) {
 		setTaskDisplayToThese(TaskView.getInstance().setAndGetView(displayState), tasksDataToDisplay);
