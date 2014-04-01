@@ -78,4 +78,8 @@ public class History {
 			previousCommandList.remove(firstObjectIndex);
 		}
 	}
+	
+	public Vector<TaskInfo> getTaskToView () {
+		return tasksToView;
+	}
 }
