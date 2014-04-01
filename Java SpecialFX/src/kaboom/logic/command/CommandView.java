@@ -1,6 +1,5 @@
 package kaboom.logic.command;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -8,7 +7,6 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
-import kaboom.logic.TextParser;
 import kaboom.storage.History;
 import kaboom.ui.DISPLAY_STATE;
 
@@ -66,6 +64,7 @@ public class CommandView extends Command{
 				feedback = MESSAGE_VIEW_ALL;
 				break;
 			case SEARCH:
+				taskList = new Vector<TaskInfo>();
 				feedback = MESSAGE_VIEW_SEARCH;
 				break;
 			case ARCHIVE:
@@ -73,6 +72,7 @@ public class CommandView extends Command{
 				feedback = MESSAGE_VIEW_ARCHIVE;
 				break;
 			default:
+				taskList = new Vector<TaskInfo>();
 				feedback = MESSAGE_VIEW_INVALID;
 		}
 		
