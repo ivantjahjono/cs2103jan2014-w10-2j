@@ -3,6 +3,8 @@ package kaboom.logic;
 import java.util.Observable;
 import java.util.Vector;
 
+import kaboom.storage.History;
+import kaboom.storage.TaskListShop;
 import kaboom.ui.DISPLAY_STATE;
 
 /**
@@ -20,11 +22,13 @@ public class DisplayData extends Observable {
 	
 	static DisplayData instance;
 	
+	TaskListShop 	taskListShop;
+	History 		history;
+	
 	Vector<TaskInfoDisplay> tasksDataToDisplay;
 	Vector<TaskInfoDisplay> searchResultDataToDisplay;
 	
 	Vector<FormatIdentify> formattingCommand;
-	String formatText;
 	
 	String 	userFeedbackMessage;
 	int 	currentPage;
@@ -47,6 +51,9 @@ public class DisplayData extends Observable {
 	}
 	
 	private DisplayData () {
+		taskListShop = TaskListShop.getInstance();
+		history = History.getInstance();
+		
 		tasksDataToDisplay = new Vector<TaskInfoDisplay>();
 		searchResultDataToDisplay = new Vector<TaskInfoDisplay>();
 		userFeedbackMessage = "";
@@ -54,7 +61,6 @@ public class DisplayData extends Observable {
 		currentDisplayState = DISPLAY_STATE.ALL;
 		
 		formattingCommand = new Vector<FormatIdentify>();
-		formatText = "";
 	}
 	
 	/**
@@ -72,14 +78,7 @@ public class DisplayData extends Observable {
 			currentDisplayState = stateChange; 
 		}
 		
-		if (commandResult.getTasksToDisplay() != null) {
-			if (stateChange == DISPLAY_STATE.SEARCH) {
-				setTaskDisplayToThese(commandResult.getTasksToDisplay(), searchResultDataToDisplay);
-			} else {
-				setTaskDisplayToThese(commandResult.getTasksToDisplay(), tasksDataToDisplay);
-			}
-		}
-		
+		extractTasksBasedOnDisplayState(currentDisplayState);
 		setFeedbackMessage(commandResult.getFeedback());
 		
 		if (commandResult.getGoToNextPage()) {
@@ -98,6 +97,39 @@ public class DisplayData extends Observable {
 		notifyObservers();
 	}
 	
+	private void extractTasksBasedOnDisplayState(DISPLAY_STATE displayState) {
+		switch (displayState) {
+			case ALL:
+				setTaskDisplayToThese(taskListShop.getAllCurrentTasks(), tasksDataToDisplay);
+				break;
+				
+			case RUNNING:
+				setTaskDisplayToThese(taskListShop.getFloatingTasks(), tasksDataToDisplay);
+				break;
+				
+			case DEADLINE:
+				setTaskDisplayToThese(taskListShop.getDeadlineTasks(), tasksDataToDisplay);
+				break;
+				
+			case TIMED:
+				setTaskDisplayToThese(taskListShop.getTimedTasks(), tasksDataToDisplay);
+				break;
+				
+			case SEARCH:
+				setTaskDisplayToThese(history.getTaskToView(), tasksDataToDisplay);
+				break;
+				
+			case ARCHIVE:
+				setTaskDisplayToThese(taskListShop.getAllArchivedTasks(), tasksDataToDisplay);
+				break;
+				
+			default:
+				setTaskDisplayToThese(taskListShop.getAllCurrentTasks(), tasksDataToDisplay);
+				System.out.println("Encountered an invalid view!");
+				break;
+		}
+	}
+
 	/**
 	 * Returns a vector of TaskInfoDisplay which contains all the 
 	 * tasks that is displayed.
@@ -235,13 +267,5 @@ public class DisplayData extends Observable {
 	
 	public Vector<FormatIdentify> getFormatDisplay () {
 		return formattingCommand;
-	}
-	
-	public void setFormatText (String text) {
-		formatText = text;
-	}
-	
-	public String getFormatText () {
-		return formatText;
 	}
 }
