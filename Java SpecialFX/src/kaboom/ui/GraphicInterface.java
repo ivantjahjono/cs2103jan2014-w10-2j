@@ -4,6 +4,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +27,9 @@ public class GraphicInterface extends Application {
 	
 	UpdateService myService;
 	Timeline updateTimeline;
+	
+	private static TaskMasterKaboom controllerInstance;
+	static int counter = 0;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -66,8 +70,9 @@ public class GraphicInterface extends Application {
 	    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(UPDATE_INTERVAL), new EventHandler<ActionEvent>() {
 	    	@Override
 			public void handle(ActionEvent event) {
-	    		myService.restart();
-	    		mainWindow.updateCounter(myService.counter);
+	    		counter++;
+	    		controllerInstance.updateTaskList();
+	    		mainWindow.updateCounter(counter);
 	    	}
 	    }));
 		return timeline;
@@ -78,7 +83,8 @@ public class GraphicInterface extends Application {
 	}
 	
 	public static void main (String[] args) {
-		TaskMasterKaboom.getInstance().initialiseKaboom(); 
+		controllerInstance = TaskMasterKaboom.getInstance();
+		controllerInstance.initialiseKaboom(); 
 		run(args);
 	}
 }
