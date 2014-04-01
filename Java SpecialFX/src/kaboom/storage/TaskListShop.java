@@ -182,9 +182,10 @@ public class TaskListShop {
 	}
 
 	public TaskInfo removeTaskByName (String taskName) {
+		//Assumes that there is only one task with the samen name
 		for (int i = 0; i < currentTaskList.size(); i++) {
 			TaskInfo singleTask = currentTaskList.get(i);
-			if (singleTask.getTaskName().equals(taskName)) {
+			if (singleTask.getTaskName().contains(taskName)) {
 				return currentTaskList.remove(currentTaskList.indexOf(singleTask));
 			}
 		}
@@ -238,6 +239,39 @@ public class TaskListShop {
 		}
 
 		History.getInstance().setViewingTasks(currentTaskList);
+	}
+	
+	public void refreshTasks(Vector<TaskInfo> viewingTasks) {
+		for (int i = 0; i < archivedTaskList.size(); i++) {
+			TaskInfo singleTask = archivedTaskList.get(i);
+
+			if (!singleTask.getDone()) {
+				currentTaskList.add(singleTask);
+				archivedTaskList.remove(singleTask);
+			}
+		}
+
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
+			Calendar now = Calendar.getInstance();
+			if (now.after(singleTask.getEndDate())) {
+				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
+					singleTask.setExpiryFlag(true);  //Floating tasks cannot expire
+				}
+			}
+			else {
+				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
+					singleTask.setExpiryFlag(false);
+				}
+			}
+
+			if (singleTask.getDone()) {
+				archivedTaskList.add(singleTask);
+				currentTaskList.remove(singleTask);
+			}
+		}
+
+		History.getInstance().setViewingTasks(viewingTasks);
 	}
 
 	public Vector<TaskInfo> clearAllTasks () {
