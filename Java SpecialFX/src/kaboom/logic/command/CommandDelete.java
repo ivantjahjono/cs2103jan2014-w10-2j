@@ -16,6 +16,7 @@ public class CommandDelete extends Command {
 	private static final String MESSAGE_COMMAND_DELETE_FAIL = "Aww... fail to delete <%1$s>.";
 	private static final String MESSAGE_COMMAND_DELETE_INVALID = "Enter a taskname or task id, please ?";
 	private static final String MESSAGE_COMMAND_DELETE_NO_SUCH_TASK = "<%1$s> does not exist...";
+	private static final String MESSAGE_COMMAND_DELETE_NO_SUCH_INDEX = "<%1$s> is such a big number...";
 
 	Hashtable<KEYWORD_TYPE,String> taskInfoTable;
 	TaskInfo prevTask;
@@ -36,42 +37,74 @@ public class CommandDelete extends Command {
 
 		String taskName = taskInfo.getTaskName();
 		String commandFeedback = "";
-		System.out.println("TaskId = "+taskId);
-		if (taskName.equals("")) {
-			commandFeedback = MESSAGE_COMMAND_DELETE_INVALID;
-			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
-		}
 
-		int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
-
-		if (taskCount > 1) {
-			commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
-
-			Command search = new CommandSearch();
-			search.storeTaskInfo(taskInfoTable);
-			return search.execute();
-		} else if (taskCount == 1){
-			prevTask = taskListShop.removeTaskByName(taskName);
-			taskView.deleteInView(prevTask);
-			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
-		} else if (isNumeric(taskName)) {
-
-			if (taskView.getCurrentViewID().size() >= Integer.parseInt(taskName)) {
-				int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
+		if(taskId != null) {
+			if (taskView.getCurrentViewID().size() >= taskId) {
+				int index = taskView.getIndexFromView(taskId-1);
 				prevTask = taskListShop.removeTaskByID(index);  //Set for undo
 
 				if (prevTask != null) {
 					TaskView.getInstance().deleteInView(prevTask);
-					commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
+					commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, prevTask.getTaskName());
 				} else {
-					commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
+					commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskId);
 				}
 			} else {
-				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
+				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_NO_SUCH_INDEX, taskId);
+			}
+		} else if(!taskName.isEmpty()) {
+			int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
+			if (taskCount > 1) {
+				commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
+	
+				Command search = new CommandSearch();
+				search.storeTaskInfo(taskInfoTable);
+				return search.execute();
+			} else if (taskCount == 1){
+				prevTask = taskListShop.removeTaskByName(taskName);
+				taskView.deleteInView(prevTask);
+				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
+			} else {
+				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_NO_SUCH_TASK, taskName);
 			}
 		} else {
-			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_NO_SUCH_TASK, taskName);
-		}	
+			commandFeedback = MESSAGE_COMMAND_DELETE_INVALID;
+		}
+//		if (taskName.equals("") && taskId == null) {
+//			commandFeedback = MESSAGE_COMMAND_DELETE_INVALID;
+//			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+//		}
+//
+//		int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
+//
+//		if (taskCount > 1) {
+//			commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
+//
+//			Command search = new CommandSearch();
+//			search.storeTaskInfo(taskInfoTable);
+//			return search.execute();
+//		} else if (taskCount == 1){
+//			prevTask = taskListShop.removeTaskByName(taskName);
+//			taskView.deleteInView(prevTask);
+//			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
+//		} else if (taskId != null) {
+//
+//			if (taskView.getCurrentViewID().size() >= taskId) {
+//				int index = taskView.getIndexFromView(taskId-1);
+//				prevTask = taskListShop.removeTaskByID(index);  //Set for undo
+//
+//				if (prevTask != null) {
+//					TaskView.getInstance().deleteInView(prevTask);
+//					commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
+//				} else {
+//					commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
+//				}
+//			} else {
+//				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
+//			}
+//		} else {
+//			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_NO_SUCH_TASK, taskName);
+//		}	
 		return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
 	}
 
