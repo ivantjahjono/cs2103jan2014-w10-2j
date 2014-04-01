@@ -344,6 +344,10 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		for (int i = 0; i < list.size(); i++) {
 			FormatIdentify currentInfo = list.get(i);
 			
+			if (currentInfo.getCommandStringFormat().equals("")) {
+				continue;
+			}
+			
 			textToFormat = currentInfo.getCommandStringFormat() + " ";	// Extra space is needed to separate each parsing info
 			newLabel = new Label();
 			newLabel.setText(textToFormat);
