@@ -23,7 +23,7 @@ public class TaskMasterKaboom {
 	
 	private static final String MESSAGE_WELCOME = "Welcome back, Commander";
 	
-	private static final String FILENAME = "KABOOM_FILE.dat";
+	private static String FILENAME = "KABOOM_FILE.dat";
 	
 	private static DisplayData guiDisplayData;
 	private static Storage fileStorage;
@@ -43,25 +43,16 @@ public class TaskMasterKaboom {
 	}
 	
 	public void initialiseKaboom() {
-		// Setup application
-			// Setup Memory
-			//addTemporaryTaskForTesting();
-		
-			// Setup Storage
-			initialiseStorage();
-		
-			// Setup UI
-			guiDisplayData = DisplayData.getInstance();
-			updateUiWithFirstLoadedMemory();
-			//setupUi();
-			
-			
-			// Setup Logic
-		
-		// Run the UI
-		//activateUi();
-		
-		// Start processing user commands
+		// Setup Storage
+		initialiseStorage();
+	
+		// Setup UI
+		guiDisplayData = DisplayData.getInstance();
+		updateUiWithFirstLoadedMemory();
+	}
+	
+	public void setFilename (String newFilename) {
+		FILENAME = newFilename;
 	}
 
 	private void updateUiWithFirstLoadedMemory() {
@@ -182,6 +173,8 @@ public class TaskMasterKaboom {
 			case ADD:
 			case DELETE:
 			case MODIFY:
+			case DONE:
+			case UNDONE:
 				commandHistory.addToRecentCommands(command);
 				break;
 				
