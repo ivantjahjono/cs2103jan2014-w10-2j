@@ -1,6 +1,7 @@
 package kaboom.logic.command;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -8,6 +9,8 @@ import java.util.Vector;
 import kaboom.logic.DateAndTimeFormat;
 import kaboom.logic.DisplayData;
 import kaboom.logic.FormatIdentify;
+import kaboom.logic.FormatIdentifyComparator;
+import kaboom.logic.InvalidDateAndTimeException;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TASK_TYPE;
@@ -28,6 +31,7 @@ public class Command {
 	protected TaskListShop taskListShop;
 	protected DisplayData displayData;
 	protected Vector<KEYWORD_TYPE> keywordList;  //Initialized in the individual command constructor
+	Hashtable<KEYWORD_TYPE, Object> commandObjectTable;
 
 	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
@@ -35,6 +39,8 @@ public class Command {
 		taskListShop = TaskListShop.getInstance();
 		displayData = DisplayData.getInstance();
 		keywordList = new Vector<KEYWORD_TYPE>();
+		
+		commandObjectTable = new Hashtable<KEYWORD_TYPE, Object>();
 	}
 
 	public void setCommandType (COMMAND_TYPE type) {
@@ -91,12 +97,49 @@ public class Command {
 	}
 	
 	protected void updateFormatListBasedOnHashtable(Vector<FormatIdentify> indexList, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+		String stringDate;
+		String stringTime;
+		
 		Enumeration<KEYWORD_TYPE> elementItr =  taskInformationTable.keys();
+		
 		
 		while (elementItr.hasMoreElements()) {
 			KEYWORD_TYPE currentKeyword = elementItr.nextElement();
-			addThisStringToFormatList(taskInformationTable.get(currentKeyword), indexList, currentKeyword);
+			KEYWORD_TYPE resultKeyword = currentKeyword;
+			
+			// Check current type
+			switch (currentKeyword) {
+				case START_TIME:
+				case END_TIME:
+					stringTime = taskInformationTable.get(currentKeyword);
+					
+					// Check if time is valid
+					if (!DateAndTimeFormat.getInstance().is12hrTimeValid(stringTime) &&
+						!DateAndTimeFormat.getInstance().is24hrTimeValid(stringTime)) {
+						//taskInformationTable.remove(currentKeyword);
+						resultKeyword = KEYWORD_TYPE.INVALID;
+					}
+					break;
+					
+				case START_DATE:
+				case END_DATE:
+					stringDate = taskInformationTable.get(currentKeyword);
+					
+					// Check if time is valid
+					if (!DateAndTimeFormat.getInstance().isDateValid(stringDate)) {
+						//taskInformationTable.remove(currentKeyword);
+						resultKeyword = KEYWORD_TYPE.INVALID;
+					}
+					break;
+					
+				default:
+					break;
+			}
+			
+			addThisStringToFormatList(taskInformationTable.get(currentKeyword), indexList, resultKeyword);
 		}
+		
+		Collections.sort(indexList, new FormatIdentifyComparator());
 	}
 	
 	protected void getCommandString(String info, Vector<FormatIdentify> indexList) {
@@ -109,7 +152,7 @@ public class Command {
 		
 		newIdentity.setCommandStringFormat(info);
 		newIdentity.setType(type);
-		
+
 		indexList.add(newIdentity);
 	}
 	
@@ -119,6 +162,80 @@ public class Command {
 
 	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
 		taskInfo = new TaskInfo();
+		
+		
+		// In progress
+//		String stringDate;
+//		String stringTime;
+//		Calendar dateAndTime = null;
+//		
+//		// Loop through the list and update to our list
+//		Enumeration<KEYWORD_TYPE> elementItr =  infoHashes.keys();
+//		
+//		while (elementItr.hasMoreElements()) {
+//			KEYWORD_TYPE currentKeyword = elementItr.nextElement();
+//			
+//			switch (currentKeyword) {
+//				case TASKNAME:
+//					commandObjectTable.put(currentKeyword, infoHashes.get(currentKeyword));
+//					break;
+//					
+//				case START_TIME:
+//				case END_TIME:
+//					stringTime = infoHashes.get(currentKeyword);
+//					
+//					// Check if time is valid
+//					if (DateAndTimeFormat.getInstance().is12hrTimeValid(stringTime) ||
+//						DateAndTimeFormat.getInstance().is24hrTimeValid(stringTime)) {
+//						commandObjectTable.put(currentKeyword, infoHashes.get(currentKeyword));
+//					}
+//					break;
+//					
+//				case START_DATE:
+//				case END_DATE:
+//					stringDate = infoHashes.get(currentKeyword);
+//					stringTime = "";
+//					// Check if time is valid
+//					if (DateAndTimeFormat.getInstance().isDateValid(stringDate)) {
+//						// Check if start or end time is valid
+//						if (currentKeyword == KEYWORD_TYPE.START_DATE && commandObjectTable.containsKey(KEYWORD_TYPE.START_TIME)) {
+//							stringTime = (String) commandObjectTable.get(KEYWORD_TYPE.START_TIME);
+//						} else if (currentKeyword == KEYWORD_TYPE.START_DATE && commandObjectTable.containsKey(KEYWORD_TYPE.END_TIME)) {
+//							stringTime = (String) commandObjectTable.get(KEYWORD_TYPE.END_TIME);
+//						}
+//						
+//						if (!stringTime.equals("")) {
+//							try {
+//								dateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(stringDate, stringTime);
+//							} catch (InvalidDateAndTimeException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+//						}
+//						
+//					} else {
+//						
+//					}
+//					break;
+//					
+//				case PRIORITY:
+//					commandObjectTable.put(currentKeyword, infoHashes.get(currentKeyword));
+//					break;
+//					
+//				case VIEWTYPE:
+//					commandObjectTable.put(currentKeyword, infoHashes.get(currentKeyword));
+//					break;
+//					
+//				case SORT:
+//					commandObjectTable.put(currentKeyword, infoHashes.get(currentKeyword));
+//					break;
+//					
+//				default:
+//					commandObjectTable.put(currentKeyword, infoHashes.get(currentKeyword));
+//					break;
+//			}
+//			
+//		}
 	}
 	
 	//This function takes in the hash table that is returned from the controller

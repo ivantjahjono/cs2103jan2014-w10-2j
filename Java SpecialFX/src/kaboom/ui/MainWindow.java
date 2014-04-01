@@ -10,8 +10,6 @@ import java.util.ResourceBundle;
 import java.util.Vector;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -19,11 +17,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
@@ -77,6 +73,13 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	@FXML 	private Label header_timed;
 	@FXML 	private Label header_search;
 	@FXML 	private Label header_archive;
+	
+	private final String HEADER_ALL_NAME 		= "header_all";
+	private final String HEADER_RUNNING_NAME 	= "header_running";
+	private final String HEADER_DEADLINE_NAME 	= "header_deadline";
+	private final String HEADER_TIMED_NAME 		= "header_timed";
+	private final String HEADER_SEARCH_NAME 	= "header_search";
+	private final String HEADER_ARCHIVE_NAME 	= "header_archive";
 	
 	// List and tracks of previously activated headers
 	private Vector<Label>	labelList;
@@ -190,6 +193,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	                    getStyleClass().removeAll(Collections.singleton("isExpired"));
 	                    getStyleClass().removeAll(Collections.singleton("isComplete"));
 	                    getStyleClass().removeAll(Collections.singleton("isEmpty"));
+	                    getStyleClass().removeAll(Collections.singleton("isRecent"));
 	                    
 	                    if (person == null) {
 	                    	 getStyleClass().add("isEmpty");
@@ -199,7 +203,9 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	                    if (person.isDone()) {
 	                    	getStyleClass().add("isComplete");
 	                    } else if (person.isExpired()) {
-	                            getStyleClass().add("isExpired");
+	                    	getStyleClass().add("isExpired");
+	                    } else if (person.isRecent()) {
+	                    	getStyleClass().add("isRecent");
 	                    } else {   
 	                        getStyleClass().add("isNotExpired");
 	                    }
@@ -210,18 +216,18 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	    });
 	}
 
-	private void disableTableColumnReordering() {
-		taskDisplayTable.getColumns().addListener(new ListChangeListener() {
-	        @Override
-	        public void onChanged(Change change) {
-	          change.next();
-	          if(change.wasReplaced()) {
-	        	  taskDisplayTable.getColumns().clear();
-	        	  taskDisplayTable.getColumns().addAll(columnTaskId, columnTaskName, columnStartTime, columnEndTime, columnPriority);
-	          }
-	        }
-	    });
-	}
+//	private void disableTableColumnReordering() {
+//		taskDisplayTable.getColumns().addListener(new ListChangeListener() {
+//	        @Override
+//	        public void onChanged(Change change) {
+//	          change.next();
+//	          if(change.wasReplaced()) {
+//	        	  taskDisplayTable.getColumns().clear();
+//	        	  taskDisplayTable.getColumns().addAll(columnTaskId, columnTaskName, columnStartTime, columnEndTime, columnPriority);
+//	          }
+//	        }
+//	    });
+//	}
 	
 	public void setStage (Stage currentStage) {
 		windowStage = currentStage;
@@ -237,7 +243,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		
 		loggerUnit.log(Level.INFO, command);
 		
-		if (command.equals("exit")) {
+		if (isExitCommand(command)) {
 			Platform.exit();
 			return;
 		}
@@ -253,6 +259,10 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		currentCommand = "";
 		
 		commandTextInput.setText("");
+	}
+
+	private boolean isExitCommand(String command) {
+		return command.equals("exit");
 	}
 
 	private void switchToNewHeader(int switchIndexResult) {
@@ -293,7 +303,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		for (int i = 0; i < list.size(); i++) {
 			FormatIdentify currentInfo = list.get(i);
 			
-			textToFormat += currentInfo.getCommandStringFormat();
+			textToFormat = currentInfo.getCommandStringFormat() + " ";	// Extra space is needed to separate each parsing info
 			newLabel = new Label();
 			newLabel.setText(textToFormat);
 			
@@ -327,8 +337,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			}
 			
 			commandFormatFeedback.getChildren().add(newLabel);
-			
-			textToFormat = " ";
 		}
 	}
 
@@ -429,7 +437,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	@FXML
 	private void onTextfieldKeyReleased (KeyEvent keyEvent) {
 		//System.out.println("Key pressed: " + keyEvent.getText());
-		
+		boolean processResult = false;
 		switch(keyEvent.getCode()) {
 			case UP:
 				loggerUnit.log(Level.FINE, "Recalling previous command.");
@@ -447,32 +455,37 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				break;
 				
 			case F1:
-				switchToNewHeader(0);
+				activateHeaderBasedOnName(HEADER_ALL_NAME);
 				break;
 				
 			case F2:
-				switchToNewHeader(1);
+				activateHeaderBasedOnName(HEADER_RUNNING_NAME);
 				break;
 				
 			case F3:
-				switchToNewHeader(2);
+				activateHeaderBasedOnName(HEADER_DEADLINE_NAME);
 				break;
 				
 			case F4:
-				switchToNewHeader(3);
+				activateHeaderBasedOnName(HEADER_TIMED_NAME);
 				break;
 				
 			case F5:
-				switchToNewHeader(4);
+				activateHeaderBasedOnName(HEADER_SEARCH_NAME);
 				break;
 				
 			case F6:
-				switchToNewHeader(5);
+				activateHeaderBasedOnName(HEADER_ARCHIVE_NAME);
 				break;	
 				
 			default:
 				String command = commandTextInput.getText();
-				boolean processResult = applicationController.processSyntax(command);
+				if (isPageToggle(command) || isExitCommand(command)) {
+					processResult = true;
+				} else {
+					processResult = applicationController.processSyntax(command);
+				}
+				
 				updateCommandStatusIndicator(processResult);
 				break;
 		}
@@ -529,73 +542,38 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		setHeaderLabelToSelected(labelList.get(currentLabelIndex));
 	}
 	
-	private int getSwitchIndexFromCommand(String command) {
-		int selected = -1;
-		
-		switch (command) {
-			case "view all":
-				selected = 0;
-				break;
-				
-			case "view running":
-				selected = 1;
-				break;
-				
-			case "view deadline":
-				selected = 2;
-				break;
-				
-			case "view timed":
-				selected = 3;
-				break;
-				
-			case "view search":
-				selected = 4;
-				break;
-				
-			default:
-				break;
-		}
-		
-		return selected;
-	}
-	
 	@FXML
 	private void onHeaderMouseClicked (MouseEvent mouseEvent) {
 		Node nodePressed = (Node)mouseEvent.getSource();
 		
 		loggerUnit.log(Level.FINE, nodePressed.getId()+" header clicked.");
 		// TODO need to activate the view command without creating string.
-		DISPLAY_STATE headerTypeClicked = null;
-		String command = "";
-		switch (nodePressed.getId()) {
-			case "header_all":
-				headerTypeClicked = DISPLAY_STATE.ALL;
+		activateHeaderBasedOnName(nodePressed.getId());
+	}
+
+	private void activateHeaderBasedOnName(String command) {
+		switch (command) {
+			case HEADER_ALL_NAME:
 				command = "view all";
 				break;
 				
-			case "header_running":
-				headerTypeClicked = DISPLAY_STATE.RUNNING;
+			case HEADER_RUNNING_NAME:
 				command = "view running";
 				break;
 				
-			case "header_deadline":
-				headerTypeClicked = DISPLAY_STATE.DEADLINE;
+			case HEADER_DEADLINE_NAME:
 				command = "view deadline";
 				break;
 				
-			case "header_timed":
-				headerTypeClicked = DISPLAY_STATE.TIMED;
+			case HEADER_TIMED_NAME:
 				command = "view timed";
 				break;
 				
-			case "header_search":
-				headerTypeClicked = DISPLAY_STATE.SEARCH;
+			case HEADER_SEARCH_NAME:
 				command = "view search";
 				break;
 				
-			case "header_archive":
-				headerTypeClicked = DISPLAY_STATE.ARCHIVE;
+			case HEADER_ARCHIVE_NAME:
 				command = "view archive";
 				break;
 				
@@ -674,7 +652,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 
 	private void updatePageTabStyles() {
 		int currentTabPage = uiData.getCurrentPage()%MAX_TABS;
-		
 		for (int i = 0; i < pagesTab.size(); i++) {
 			
 			Rectangle currentTab = pagesTab.get(i);
