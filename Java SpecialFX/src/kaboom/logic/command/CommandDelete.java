@@ -14,6 +14,7 @@ public class CommandDelete extends Command {
 
 	private static final String MESSAGE_COMMAND_DELETE_SUCCESS = "<%1$s> deleted. 1 less work to do :D";
 	private static final String MESSAGE_COMMAND_DELETE_FAIL = "Aww... fail to delete <%1$s>.";
+	private static final String MESSAGE_COMMAND_DELETE_INVALID = "Enter a taskname or task id, please ?";
 
 	String taskId;
 	Hashtable<KEYWORD_TYPE,String> taskInfoTable;
@@ -33,6 +34,11 @@ public class CommandDelete extends Command {
 
 		String taskName = taskInfo.getTaskName();
 		String commandFeedback;
+
+                if (taskName.equals("")) {
+			commandFeedback = MESSAGE_COMMAND_DELETE_INVALID;
+			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+		}
 
 		History history = History.getInstance();
 		int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
