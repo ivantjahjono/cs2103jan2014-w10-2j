@@ -245,7 +245,6 @@ public class TextParser {
 		userInputSentence = userInputSentence.replace(taskId, "");
 		taskId = taskId.replace(KEYWORD_TASKID, "").trim();
 		keywordTable.put(KEYWORD_TYPE.TASKID, taskId);
-		System.out.println(taskId);
 		return userInputSentence;
 	}
 

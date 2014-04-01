@@ -63,6 +63,7 @@ public class CommandAdd extends Command {
 	
 	private void initialiseKeywordList() {
 		keywordList.clear();
+		keywordList.add(KEYWORD_TYPE.TASKID);
 		keywordList.add(KEYWORD_TYPE.PRIORITY);
 		keywordList.add(KEYWORD_TYPE.END_TIME);
 		keywordList.add(KEYWORD_TYPE.END_DATE);
