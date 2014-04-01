@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" fx:id="mainPane" blendMode="SRC_OVER" focusTraversable="true" layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="484.00006103515625" prefWidth="600.0" snapToPixel="true" styleClass="root" translateX="0.0" translateY="0.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboom.ui.MainWindow">
+<AnchorPane id="AnchorPane" fx:id="mainPane" blendMode="SRC_OVER" focusTraversable="true" layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="485.0" prefWidth="600.0" snapToPixel="true" styleClass="root" translateX="0.0" translateY="0.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboom.ui.MainWindow">
   <children>
     <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="WHITE" height="484.00006948241935" layoutX="0.0" layoutY="0.0" opacity="1.0" smooth="true" strokeType="INSIDE" strokeWidth="1.0" styleClass="column-header" width="600.0">
       <stroke>
@@ -35,9 +35,9 @@
       </stylesheets>
     </Pane>
     <fx:reference source="commandTextInput" />
-    <TableView fx:id="taskDisplayTable" editable="false" focusTraversable="false" layoutX="14.0" layoutY="74.0" prefHeight="309.0" prefWidth="571.0" tableMenuButtonVisible="false" visible="true">
+    <TableView fx:id="taskDisplayTable" editable="false" focusTraversable="false" layoutX="10.0" layoutY="75.0" prefHeight="309.0" prefWidth="580.0" tableMenuButtonVisible="false" visible="true">
       <columns>
-        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="30.0" resizable="false" sortable="false" style="" text="ID" fx:id="columnTaskId" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="39.0" resizable="false" sortable="false" style="" text="ID" fx:id="columnTaskId" />
         <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="230.0" resizable="false" sortable="false" text="TASK NAME" fx:id="columnTaskName" />
         <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="122.0" resizable="false" sortable="false" text="START DATE" fx:id="columnStartTime" />
         <TableColumn editable="false" id="columnEndTime" maxWidth="5000.0" minWidth="10.0" prefWidth="122.0" resizable="false" sortable="false" text="END DATE" fx:id="columnEndTime" />
