@@ -35,7 +35,7 @@ public class CommandDelete extends Command {
 		String taskName = taskInfo.getTaskName();
 		String commandFeedback;
 
-                if (taskName.equals("")) {
+		if (taskName.equals("")) {
 			commandFeedback = MESSAGE_COMMAND_DELETE_INVALID;
 			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
 		}
