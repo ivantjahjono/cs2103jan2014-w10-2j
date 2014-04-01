@@ -52,12 +52,14 @@
         <Font name="Segoe UI" size="12.0" />
       </font>
     </Label>
-    <ImageView fx:id="exitButton" fitHeight="18.0" fitWidth="18.0" layoutX="578.0" layoutY="4.0" onMousePressed="#onExitButtonPressed" pickOnBounds="true" preserveRatio="true">
-      <effect>
-        <InnerShadow color="WHITE" height="255.0" radius="68.5" />
-      </effect>
+    <ImageView fx:id="exitButton" blendMode="SRC_OVER" fitHeight="27.0" fitWidth="27.0" layoutX="572.0" layoutY="0.0" onMousePressed="#onExitButtonPressed" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="close-button">
       <image>
-        <Image url="@img/gridX.png" />
+        <Image url="@img/MarkX.png" />
+      </image>
+    </ImageView>
+    <ImageView id="exitButton" fx:id="minimiseButton" blendMode="SRC_OVER" fitHeight="27.0" fitWidth="27.0" layoutX="545.0" layoutY="0.0" onMousePressed="#onMinimiseMousePressed" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="minimise-button">
+      <image>
+        <Image url="@img/MarkX.png" />
       </image>
     </ImageView>
     <HBox alignment="BOTTOM_CENTER" fillHeight="true" layoutX="3.0" layoutY="22.0" prefHeight="36.0" prefWidth="567.0" rotate="0.0">
@@ -103,11 +105,6 @@
         </Label>
       </children>
     </HBox>
-    <Label fx:id="minimiseLabel" alignment="TOP_LEFT" contentDisplay="TOP" layoutX="559.0" layoutY="-8.0" minHeight="18.0" onMousePressed="#onMinimiseMousePressed" pickOnBounds="true" prefHeight="36.0" prefWidth="18.0" text="-" textFill="WHITE" underline="false">
-      <font>
-        <Font size="35.0" />
-      </font>
-    </Label>
     <Label fx:id="counter" layoutX="257.0" layoutY="6.0" mouseTransparent="true" text="Test Counter: 0" textFill="WHITE">
       <font>
         <Font name="Segoe UI Semibold" size="12.0" />
