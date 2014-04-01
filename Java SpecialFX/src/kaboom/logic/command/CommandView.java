@@ -108,6 +108,11 @@ public class CommandView extends Command{
 	
 	public void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
 		viewType = infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
+		
+		if (infoHashes.containsKey(KEYWORD_TYPE.INVALID)) {
+			viewType += infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
+		}
+
 		stateToSet = determineDisplayState(viewType);
 	}
 	
