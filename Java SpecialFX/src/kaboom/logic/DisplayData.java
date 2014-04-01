@@ -60,8 +60,6 @@ public class DisplayData extends Observable {
 		userFeedbackMessage = "";
 		currentPage = 0;
 		currentDisplayState = DISPLAY_STATE.ALL;
-		
-		updateTaskCountList ();
 	}
 	
 	private void updateTaskCountList() {
@@ -89,7 +87,7 @@ public class DisplayData extends Observable {
 					break;
 					
 				case 4:
-					currentCount = history.getTaskToView().size();
+					currentCount = history.getSearchTaskResult().size();
 					break;
 					
 				case 5:
@@ -118,6 +116,8 @@ public class DisplayData extends Observable {
 		
 		extractTasksBasedOnDisplayState(currentDisplayState);
 		setFeedbackMessage(commandResult.getFeedback());
+		
+		updateTaskCountList ();
 		
 		if (commandResult.getGoToNextPage()) {
 			goToNextPage();
@@ -153,7 +153,7 @@ public class DisplayData extends Observable {
 				break;
 				
 			case SEARCH:
-				setTaskDisplayToThese(history.getTaskToView(), tasksDataToDisplay);
+				setTaskDisplayToThese(history.getSearchTaskResult(), tasksDataToDisplay);
 				break;
 				
 			case ARCHIVE:
