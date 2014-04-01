@@ -52,23 +52,22 @@ public class CommandDelete extends Command {
 			search.storeTaskInfo(taskInfoTable);
 			return search.execute();
 		} else if (taskCount == 1){
-			
 			prevTask = taskListShop.removeTaskByName(taskName);
 			taskView.deleteInView(prevTask);
-			if (prevTask != null) {
-
 			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
 		} else if (isNumeric(taskName)) {
 
 			if (taskView.getCurrentViewID().size() >= Integer.parseInt(taskName)) {
 				int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
 				prevTask = taskListShop.removeTaskByID(index);  //Set for undo
-				TaskView.getInstance().deleteInView(prevTask);
 
-				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
-			} else {
-				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
-			} 
+				if (prevTask != null) {
+					TaskView.getInstance().deleteInView(prevTask);
+					commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
+				} else {
+					commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
+				}
+			}
 		} else {
 			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_NO_SUCH_TASK, taskName);
 		}	
