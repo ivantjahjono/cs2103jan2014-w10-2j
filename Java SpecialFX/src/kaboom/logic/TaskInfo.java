@@ -7,21 +7,23 @@ public class TaskInfo {
 	String taskname;
 	TASK_TYPE taskType;
 	
-	Calendar startDate;		// This includes the time as well
-	Calendar endDate;		// This includes the time as well
+	Calendar startDate;
+	Calendar endDate;
 	
 	int importanceLevel;
 	
 	boolean isExpired;
 	boolean isDone;
+	boolean isRecent;
 	
 	public TaskInfo () {
 		taskname = "";
 		startDate = null;
 		endDate = null;
-		importanceLevel = 0;
+		importanceLevel = 1;
 		isExpired = false;
 		isDone = false;
+		isRecent = false;
 	}
 	
 	public TaskInfo (TaskInfo info) {
@@ -65,6 +67,10 @@ public class TaskInfo {
 		isDone = flag;
 	}
 	
+	public void setRecent (boolean flag) {
+		isRecent = flag;
+	}
+	
 	public String getTaskName () { 
 		return taskname;
 	}
@@ -100,6 +106,10 @@ public class TaskInfo {
 		}		
 		
 		return false;
+	}
+	
+	public boolean isRecent () {
+		return isRecent;
 	}
 	
 	public static TASK_TYPE getTaskType(String taskType) {

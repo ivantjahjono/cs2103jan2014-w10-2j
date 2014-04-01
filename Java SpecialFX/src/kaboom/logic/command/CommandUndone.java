@@ -46,6 +46,7 @@ public class CommandUndone extends Command{
 
 		taskInfo = new TaskInfo(taskToBeModified);
 		taskInfo.setDone(false);
+		taskInfo.setRecent(true);
 		taskListShop.updateArchivedTask(taskInfo, taskToBeModified);
 		feedback = String.format(MESSAGE_COMMAND_UNDONE_SUCCESS, taskName);
 		return createResult(taskListShop.getAllCurrentTasks(), feedback);

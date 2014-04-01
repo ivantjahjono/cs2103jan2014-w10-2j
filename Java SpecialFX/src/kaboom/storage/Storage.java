@@ -34,7 +34,6 @@ public class Storage {
 	private static final int INDEX_IS_DONE = 14;
 
 	private String fileName;
-	private BufferedWriter writer;
 
 	private static final Logger logger = Logger.getLogger("StorageLogger");
 
@@ -51,73 +50,117 @@ public class Storage {
 	 */
 	public boolean store() {
 		try {
-			writer = new BufferedWriter(new FileWriter(fileName));
-			logger.fine("Trying to write current tasks text file: " + fileName);
+			logger.info("Trying to write current tasks text file: " + fileName);
+			BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
 			Vector<TaskInfo> currentTaskList = TaskListShop.getInstance().getAllCurrentTasks();
 			assert(currentTaskList != null);
-			writeToFile(currentTaskList);
 
-			logger.fine("Trying to write archived tasks text file: " + fileName);
+			for (int i = 0; i < currentTaskList.size(); i++) {
+				StringBuilder output = new StringBuilder();
+				TaskInfo task = currentTaskList.get(i);
+
+				output.append(task.getTaskName() + delimiter);
+				output.append((TaskInfo.taskTypeToString(task.getTaskType()) + delimiter));
+
+				Calendar startDate = task.getStartDate();
+				if (startDate != null) {
+					output.append(startDate.get(Calendar.YEAR) + delimiter);
+					output.append(startDate.get(Calendar.MONTH) + delimiter);
+					output.append(startDate.get(Calendar.DAY_OF_MONTH) + delimiter);
+					output.append(startDate.get(Calendar.HOUR_OF_DAY) + delimiter);
+					output.append(startDate.get(Calendar.MINUTE) + delimiter);
+				}
+				else {
+					logger.info("startDate for task " + i + "is null");
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+				}
+
+				Calendar endDate = task.getEndDate();
+				if (endDate != null) {
+					output.append(endDate.get(Calendar.YEAR) + delimiter);
+					output.append(endDate.get(Calendar.MONTH) + delimiter);
+					output.append(endDate.get(Calendar.DAY_OF_MONTH) + delimiter);
+					output.append(endDate.get(Calendar.HOUR_OF_DAY) + delimiter);
+					output.append(endDate.get(Calendar.MINUTE) + delimiter);
+				}
+				else {
+					logger.info("endDate for task " + i + "is null");
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+				}
+				output.append(task.getImportanceLevel() + delimiter);
+				output.append(task.getExpiryFlag() + delimiter);
+				output.append(task.getDone() + delimiter);
+				writer.write(output.toString());
+				writer.newLine();
+				writer.flush();
+			}
+
+			logger.info("Trying to write archived tasks text file: " + fileName);
 			currentTaskList = TaskListShop.getInstance().getAllArchivedTasks();
 			assert(currentTaskList != null);
-			writeToFile(currentTaskList);
-			
+
+			for (int i = 0; i < currentTaskList.size(); i++) {
+				StringBuilder output = new StringBuilder();
+				TaskInfo task = currentTaskList.get(i);
+
+				output.append(task.getTaskName() + delimiter);
+				output.append((TaskInfo.taskTypeToString(task.getTaskType()) + delimiter));
+
+				Calendar startDate = task.getStartDate();
+				if (startDate != null) {
+					output.append(startDate.get(Calendar.YEAR) + delimiter);
+					output.append(startDate.get(Calendar.MONTH) + delimiter);
+					output.append(startDate.get(Calendar.DAY_OF_MONTH) + delimiter);
+					output.append(startDate.get(Calendar.HOUR_OF_DAY) + delimiter);
+					output.append(startDate.get(Calendar.MINUTE) + delimiter);
+				}
+				else {
+					logger.info("startDate for task " + i + "is null");
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+				}
+
+				Calendar endDate = task.getEndDate();
+				if (endDate != null) {
+					output.append(endDate.get(Calendar.YEAR) + delimiter);
+					output.append(endDate.get(Calendar.MONTH) + delimiter);
+					output.append(endDate.get(Calendar.DAY_OF_MONTH) + delimiter);
+					output.append(endDate.get(Calendar.HOUR_OF_DAY) + delimiter);
+					output.append(endDate.get(Calendar.MINUTE) + delimiter);
+				}
+				else {
+					logger.info("endDate for task " + i + "is null");
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+					output.append(" " + delimiter);
+				}
+				output.append(task.getImportanceLevel() + delimiter);
+				output.append(task.getExpiryFlag() + delimiter);
+				output.append(task.getDone() + delimiter);
+				writer.write(output.toString());
+				writer.newLine();
+				writer.flush();
+			}
+
+			logger.info("Written to text file: " + fileName);
 			writer.close();
 			return true;
 		} catch (IOException e) {
 			logger.warning("Cannot write to text file: " + fileName);
 			return false;
-		}
-	}
-
-	private void writeToFile(Vector<TaskInfo> taskList) throws IOException {
-		
-		for (int i = 0; i < taskList.size(); i++) {
-			StringBuilder output = new StringBuilder();
-			TaskInfo task = taskList.get(i);
-
-			output.append(task.getTaskName() + delimiter);
-			output.append((TaskInfo.taskTypeToString(task.getTaskType()) + delimiter));
-
-			Calendar startDate = task.getStartDate();
-			if (startDate != null) {
-				output.append(startDate.get(Calendar.YEAR) + delimiter);
-				output.append(startDate.get(Calendar.MONTH) + delimiter);
-				output.append(startDate.get(Calendar.DAY_OF_MONTH) + delimiter);
-				output.append(startDate.get(Calendar.HOUR_OF_DAY) + delimiter);
-				output.append(startDate.get(Calendar.MINUTE) + delimiter);
-			}
-			else {
-				logger.fine("startDate for task " + i + "is null");
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-			}
-
-			Calendar endDate = task.getEndDate();
-			if (endDate != null) {
-				output.append(endDate.get(Calendar.YEAR) + delimiter);
-				output.append(endDate.get(Calendar.MONTH) + delimiter);
-				output.append(endDate.get(Calendar.DAY_OF_MONTH) + delimiter);
-				output.append(endDate.get(Calendar.HOUR_OF_DAY) + delimiter);
-				output.append(endDate.get(Calendar.MINUTE) + delimiter);
-			}
-			else {
-				logger.fine("endDate for task " + i + "is null");
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-			}
-			output.append(task.getImportanceLevel() + delimiter);
-			output.append(task.getExpiryFlag() + delimiter);
-			output.append(task.getDone() + delimiter);
-			writer.write(output.toString());
-			writer.newLine();
-			writer.flush();
 		}
 	}
 
@@ -128,7 +171,7 @@ public class Storage {
 	 */
 	public boolean load() {
 		try {
-			logger.fine("Trying to read from text file: " + fileName);
+			logger.info("Trying to read from text file: " + fileName);
 			File inFile = new File(fileName);
 			Scanner fileScanner = new Scanner(inFile);
 			TaskListShop currentTaskList = TaskListShop.getInstance();
@@ -144,7 +187,7 @@ public class Storage {
 
 				Calendar startDate = Calendar.getInstance();
 				if (inputSplit[INDEX_START_YEAR].equals(" ")) {
-					logger.fine("startDate for task \"" + inputSplit[INDEX_TASK_NAME] + "\" is null");
+					logger.info("startDate for task \"" + inputSplit[INDEX_TASK_NAME] + "\" is null");
 					startDate = null;
 				}
 				else {
@@ -158,7 +201,7 @@ public class Storage {
 
 				Calendar endDate = Calendar.getInstance();
 				if (inputSplit[INDEX_END_YEAR].equals(" ")) {
-					logger.fine("endDate for task \"" + inputSplit[INDEX_TASK_NAME] + "\" is null");
+					logger.info("endDate for task \"" + inputSplit[INDEX_TASK_NAME] + "\" is null");
 					endDate = null;
 				}
 				else {
@@ -190,7 +233,7 @@ public class Storage {
 				}
 			}
 
-			logger.fine(fileName + " has been scanned and read");
+			logger.info(fileName + " has been scanned and read");
 			fileScanner.close();
 			return true;
 
@@ -199,15 +242,13 @@ public class Storage {
 			File inFile = new File(fileName);
 
 			if (!inFile.exists()) {
-				logger.fine(fileName + " does not exist. Skipping.");
+				logger.info(fileName + " does not exist. Skipping.");
 				return true;  //Do nothing if the file does not exist because it will be created later
 			}
 			else {
 				logger.warning("Cannot read from text file: " + fileName);
 				return false;
 			}
-		} catch (Exception e) {
-			return store();  //Try to recover the properly loaded data
 		}
 	}
 }
