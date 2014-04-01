@@ -7,7 +7,6 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
-import kaboom.logic.TaskMasterKaboom;
 import kaboom.storage.History;
 
 

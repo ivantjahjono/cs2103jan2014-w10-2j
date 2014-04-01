@@ -10,7 +10,6 @@ import kaboom.logic.DateAndTimeFormat;
 import kaboom.logic.DisplayData;
 import kaboom.logic.FormatIdentify;
 import kaboom.logic.FormatIdentifyComparator;
-import kaboom.logic.InvalidDateAndTimeException;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TASK_TYPE;

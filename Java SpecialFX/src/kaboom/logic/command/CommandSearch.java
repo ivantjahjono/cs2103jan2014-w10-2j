@@ -10,7 +10,6 @@ import kaboom.logic.TaskInfo;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.TASK_TYPE;
 import kaboom.storage.History;
-import kaboom.storage.TaskListShop;
 import kaboom.ui.DISPLAY_STATE;
 
 public class CommandSearch extends Command {

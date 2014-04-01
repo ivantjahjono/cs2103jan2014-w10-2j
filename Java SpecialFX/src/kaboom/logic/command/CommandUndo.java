@@ -6,7 +6,6 @@ import java.util.Vector;
 import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
-import kaboom.logic.TextParser;
 import kaboom.storage.History;
 
 public class CommandUndo extends Command{
