@@ -11,7 +11,6 @@ import java.util.Vector;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -63,7 +62,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	
 	// Top window toolbar buttons
 	@FXML 	private ImageView 	exitButton;
-	@FXML 	private Label 		minimiseLabel;
+	@FXML 	private ImageView 	minimiseButton;
 	@FXML 	private Label 		counter;
 	
 	// Task header to show the current type of tasks displayed
@@ -286,9 +285,11 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	private void updateDisplay() {
 		updateTaskTable();
 		updateFeedbackMessage();
-		updatePagesTab();
+		
 		updateHeader();
 		updateHeaderTaskCount();
+		
+		updatePagesTab();
 		
 		updateCommandFormat();
 	}
