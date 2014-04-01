@@ -18,41 +18,7 @@
         <Color blue="0.937" green="0.537" red="0.176" fx:id="x4" />
       </stroke>
     </Rectangle>
-    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_ATOP" fill="#2d89ef" height="27.0" layoutX="0.0" layoutY="0.0" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0" />
-    <ImageView fx:id="exitButton" blendMode="SRC_OVER" fitHeight="27.0" fitWidth="27.0" layoutX="569.0" layoutY="0.0" onMousePressed="#onExitButtonPressed" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="close-button">
-      <image>
-        <Image url="@img/MarkX.png" />
-      </image>
-    </ImageView>
-    <ImageView id="exitButton" fx:id="minimiseButton" blendMode="SRC_OVER" fitHeight="27.0" fitWidth="27.0" layoutX="542.0" layoutY="0.0" onMousePressed="#onMinimiseMousePressed" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="minimise-button">
-      <image>
-        <Image url="@img/MarkX.png" />
-      </image>
-    </ImageView>
-    <Label layoutX="14.0" layoutY="5.0" mouseTransparent="true" text="| TASK MASTER KABOOM" textFill="WHITE">
-      <font>
-        <Font name="Segoe UI" size="12.0" />
-      </font>
-    </Label>
-    <Label fx:id="counter" layoutX="254.0" layoutY="5.0" mouseTransparent="true" text="Test Counter: 0" textFill="WHITE">
-      <font>
-        <Font name="Segoe UI Semibold" size="12.0" fx:id="x10" />
-      </font>
-    </Label>
-    <TextField fx:id="commandTextInput" disable="false" layoutX="11.0" layoutY="434.0" onAction="#onTextfieldAction" onKeyReleased="#onTextfieldKeyReleased" prefWidth="572.0" promptText="Please enter a command" styleClass="text-field-correct" text="" />
-    <Pane fx:id="feedbackBox" blendMode="SRC_OVER" layoutX="10.0" layoutY="410.0" prefHeight="22.0" prefWidth="572.0" styleClass="feedback-pane">
-      <children>
-        <Label id="" fx:id="feedbackText" labelFor="$commandTextInput" layoutX="0.0" layoutY="0.0" minHeight="22.0" prefHeight="22.0" prefWidth="567.0" text="Feedback" textFill="$x4" translateX="5.0" underline="false">
-          <font>
-            <Font name="Segoe UI Semilight" size="16.0" />
-          </font>
-        </Label>
-      </children>
-      <stylesheets>
-        <URL value="@application.css" />
-      </stylesheets>
-    </Pane>
-    <AnchorPane id="AnchorPane" layoutX="3.0" layoutY="0.0" prefWidth="600.0" visible="true">
+    <AnchorPane id="AnchorPane" layoutX="3.0" layoutY="0.0" mouseTransparent="false" pickOnBounds="true" prefWidth="600.0" visible="true">
       <children>
         <TableView fx:id="taskDisplayTable" editable="false" focusTraversable="false" layoutX="7.0" layoutY="75.0" prefHeight="309.0" prefWidth="580.0" tableMenuButtonVisible="false" visible="true">
           <columns>
@@ -183,7 +149,41 @@
         </HBox>
       </children>
     </AnchorPane>
-    <AnchorPane layoutX="3.0" layoutY="0.0" prefHeight="485.0" prefWidth="600.0" visible="false">
+    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_ATOP" fill="#2d89ef" height="27.0" layoutX="0.0" layoutY="0.0" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0" />
+    <ImageView fx:id="exitButton" blendMode="SRC_OVER" fitHeight="27.0" fitWidth="27.0" layoutX="569.0" layoutY="0.0" onMousePressed="#onExitButtonPressed" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="close-button">
+      <image>
+        <Image url="@img/MarkX.png" />
+      </image>
+    </ImageView>
+    <ImageView id="exitButton" fx:id="minimiseButton" blendMode="SRC_OVER" fitHeight="27.0" fitWidth="27.0" layoutX="542.0" layoutY="0.0" onMousePressed="#onMinimiseMousePressed" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="minimise-button">
+      <image>
+        <Image url="@img/MarkX.png" />
+      </image>
+    </ImageView>
+    <Label layoutX="14.0" layoutY="5.0" mouseTransparent="true" text="| TASK MASTER KABOOM" textFill="WHITE">
+      <font>
+        <Font name="Segoe UI" size="12.0" />
+      </font>
+    </Label>
+    <Label fx:id="counter" layoutX="254.0" layoutY="5.0" mouseTransparent="true" text="Test Counter: 0" textFill="WHITE">
+      <font>
+        <Font name="Segoe UI Semibold" size="12.0" fx:id="x10" />
+      </font>
+    </Label>
+    <TextField fx:id="commandTextInput" disable="false" layoutX="11.0" layoutY="434.0" onAction="#onTextfieldAction" onKeyReleased="#onTextfieldKeyReleased" prefWidth="572.0" promptText="Please enter a command" styleClass="text-field-correct" text="" />
+    <Pane fx:id="feedbackBox" blendMode="SRC_OVER" layoutX="10.0" layoutY="410.0" prefHeight="22.0" prefWidth="572.0" styleClass="feedback-pane">
+      <children>
+        <Label id="" fx:id="feedbackText" labelFor="$commandTextInput" layoutX="0.0" layoutY="0.0" minHeight="22.0" prefHeight="22.0" prefWidth="567.0" text="Feedback" textFill="$x4" translateX="5.0" underline="false">
+          <font>
+            <Font name="Segoe UI Semilight" size="16.0" />
+          </font>
+        </Label>
+      </children>
+      <stylesheets>
+        <URL value="@application.css" />
+      </stylesheets>
+    </Pane>
+    <AnchorPane layoutX="3.0" layoutY="0.0" mouseTransparent="true" pickOnBounds="false" prefHeight="485.0" prefWidth="600.0" visible="false">
       <children>
         <Label alignment="CENTER_RIGHT" layoutX="17.0" layoutY="32.0" text="SAT">
           <font>
@@ -205,7 +205,7 @@
               </font>
             </Label>
             <Rectangle arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
-            <Label alignment="CENTER_RIGHT" font="$x10" layoutX="21.0" layoutY="19.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="#808080" />
+            <Label alignment="CENTER_RIGHT" font="$x10" layoutX="21.0" layoutY="19.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY" />
           </children>
         </Pane>
         <Pane layoutX="30.0" layoutY="201.0" prefHeight="40.0" prefWidth="499.9999000000025">
