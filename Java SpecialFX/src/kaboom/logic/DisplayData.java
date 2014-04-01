@@ -27,6 +27,7 @@ public class DisplayData extends Observable {
 	
 	Vector<TaskInfoDisplay> tasksDataToDisplay;
 	Vector<FormatIdentify> formattingCommand;
+	Vector<Integer> taskCountList;
 	
 	String 	userFeedbackMessage;
 	int 	currentPage;
@@ -53,13 +54,53 @@ public class DisplayData extends Observable {
 		history = History.getInstance();
 		
 		tasksDataToDisplay = new Vector<TaskInfoDisplay>();
+		formattingCommand = new Vector<FormatIdentify>();
+		taskCountList = new Vector<Integer>();
+		
 		userFeedbackMessage = "";
 		currentPage = 0;
 		currentDisplayState = DISPLAY_STATE.ALL;
 		
-		formattingCommand = new Vector<FormatIdentify>();
+		updateTaskCountList ();
 	}
 	
+	private void updateTaskCountList() {
+		taskCountList.clear();
+		
+		// TODO Hardcoded to get each task !!!!
+		for (int i = 0; i < 6; i++) {
+			int currentCount = 0;
+			
+			switch (i) {
+				case 0:
+					currentCount = taskListShop.getAllCurrentTasks().size();
+					break;
+					
+				case 1:
+					currentCount = taskListShop.getFloatingTasks().size();
+					break;
+					
+				case 2:
+					currentCount = taskListShop.getDeadlineTasks().size();
+					break;
+					
+				case 3:
+					currentCount = taskListShop.getTimedTasks().size();
+					break;
+					
+				case 4:
+					currentCount = history.getTaskToView().size();
+					break;
+					
+				case 5:
+					currentCount = taskListShop.getAllArchivedTasks().size();
+					break;
+			
+			}
+			taskCountList.add(currentCount);
+		}
+	}
+
 	/**
 	 * Updates the information with the Result object that is
 	 * passed by parameter. 
@@ -252,5 +293,9 @@ public class DisplayData extends Observable {
 	
 	public Vector<FormatIdentify> getFormatDisplay () {
 		return formattingCommand;
+	}
+	
+	public Vector<Integer> getTaskCountList () {
+		return taskCountList;
 	}
 }
