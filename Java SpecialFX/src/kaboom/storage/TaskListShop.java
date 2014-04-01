@@ -226,6 +226,10 @@ public class TaskListShop {
 					singleTask.setExpiryFlag(false);
 				}
 			}
+			
+			if (singleTask.isRecent()) {
+				singleTask.setRecent(false);
+			}
 
 			if (singleTask.getDone()) {
 				archivedTaskList.add(singleTask);
