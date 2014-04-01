@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" fx:id="mainPane" blendMode="SRC_OVER" focusTraversable="true" layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="485.0" prefWidth="600.0" snapToPixel="true" styleClass="root" translateX="0.0" translateY="0.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboom.ui.MainWindow">
+  <children>
+    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="WHITE" height="484.00006948241935" layoutX="0.0" layoutY="0.0" opacity="1.0" smooth="true" strokeType="INSIDE" strokeWidth="1.0" styleClass="column-header" width="600.0">
+      <stroke>
+        <Color blue="0.937" green="0.537" red="0.176" fx:id="x4" />
+      </stroke>
+    </Rectangle>
+    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_ATOP" fill="#2d89ef" height="27.0" layoutX="0.0" layoutY="0.0" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0" />
+    <Pane fx:id="feedbackBox" blendMode="SRC_OVER" layoutX="13.0" layoutY="410.0" prefHeight="22.0" prefWidth="572.0" styleClass="feedback-pane">
+      <children>
+        <Label id="" fx:id="feedbackText" layoutX="0.0" layoutY="0.0" minHeight="22.0" prefHeight="22.0" prefWidth="567.0" text="Feedback" textFill="$x4" translateX="5.0" underline="false">
+          <font>
+            <Font name="Segoe UI Semilight" size="16.0" />
+          </font>
+          <labelFor>
+            <TextField fx:id="commandTextInput" disable="false" layoutX="14.0" layoutY="434.0" onAction="#onTextfieldAction" onKeyReleased="#onTextfieldKeyReleased" prefWidth="572.0" promptText="Please enter a command" styleClass="text-field-correct" text="" />
+          </labelFor>
+        </Label>
+      </children>
+      <stylesheets>
+        <URL value="@application.css" />
+      </stylesheets>
+    </Pane>
+    <fx:reference source="commandTextInput" />
+    <TableView fx:id="taskDisplayTable" editable="false" focusTraversable="false" layoutX="10.0" layoutY="75.0" prefHeight="309.0" prefWidth="580.0" tableMenuButtonVisible="false" visible="true">
+      <columns>
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="39.0" resizable="false" sortable="false" style="" text="ID" fx:id="columnTaskId" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="230.0" resizable="false" sortable="false" text="TASK NAME" fx:id="columnTaskName" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="122.0" resizable="false" sortable="false" text="START DATE" fx:id="columnStartTime" />
+        <TableColumn editable="false" id="columnEndTime" maxWidth="5000.0" minWidth="10.0" prefWidth="122.0" resizable="false" sortable="false" text="END DATE" fx:id="columnEndTime" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="65.0" resizable="false" sortable="false" text="PRIORITY" visible="true" fx:id="columnPriority" />
+      </columns>
+      <stylesheets>
+        <URL value="@application.css" />
+      </stylesheets>
+    </TableView>
+    <Label layoutX="17.0" layoutY="5.0" mouseTransparent="true" text="| TASK MASTER KABOOM" textFill="WHITE">
+      <font>
+        <Font name="Segoe UI" size="12.0" />
+      </font>
+    </Label>
+    <ImageView fx:id="exitButton" fitHeight="18.0" fitWidth="18.0" layoutX="578.0" layoutY="4.0" onMousePressed="#onExitButtonPressed" pickOnBounds="true" preserveRatio="true">
+      <effect>
+        <InnerShadow color="WHITE" height="255.0" radius="68.5" />
+      </effect>
+      <image>
+        <Image url="@img/gridX.png" />
+      </image>
+    </ImageView>
+    <HBox alignment="BOTTOM_CENTER" fillHeight="true" layoutX="3.0" layoutY="22.0" prefHeight="36.0" prefWidth="567.0" rotate="0.0">
+      <children>
+        <Label fx:id="header_all" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="4.0" onMouseClicked="#onHeaderMouseClicked" prefWidth="50.0" styleClass="header-label-normal" text="ALL" textAlignment="LEFT" underline="false">
+          <font>
+            <Font name="Segoe UI" size="20.0" fx:id="x1" />
+          </font>
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+          <textFill>
+            <Color blue="0.625" green="0.625" red="0.625" fx:id="x2" />
+          </textFill>
+        </Label>
+        <Label fx:id="header_running" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x1" onMouseClicked="#onHeaderMouseClicked" prefWidth="90.0" styleClass="header-label-normal" text="RUNNING" textAlignment="LEFT" textFill="$x2" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label fx:id="header_deadline" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x1" onMouseClicked="#onHeaderMouseClicked" prefWidth="100.0" styleClass="header-label-normal" text="DEADLINE" textAlignment="LEFT" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+          <textFill>
+            <Color blue="0.624" green="0.624" red="0.624" fx:id="x3" />
+          </textFill>
+        </Label>
+        <Label fx:id="header_timed" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x1" onMouseClicked="#onHeaderMouseClicked" prefWidth="70.0" styleClass="header-label-normal" text="TIMED" textAlignment="LEFT" textFill="$x3" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label fx:id="header_search" alignment="CENTER" contentDisplay="TEXT_ONLY" disable="false" focusTraversable="false" font="$x1" onMouseClicked="#onHeaderMouseClicked" prefWidth="80.0" styleClass="header-label-normal" text="SEARCH" textAlignment="LEFT" textFill="$x3" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label fx:id="header_archive" alignment="CENTER" contentDisplay="TEXT_ONLY" disable="false" focusTraversable="false" font="$x1" graphicTextGap="1.0" onMouseClicked="#onHeaderMouseClicked" prefWidth="90.0" styleClass="header-label-normal" text="ARCHIVE" textAlignment="LEFT" textFill="$x3" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+      </children>
+    </HBox>
+    <Label fx:id="minimiseLabel" alignment="TOP_LEFT" contentDisplay="TOP" layoutX="559.0" layoutY="-8.0" minHeight="18.0" onMousePressed="#onMinimiseMousePressed" pickOnBounds="true" prefHeight="36.0" prefWidth="18.0" text="-" textFill="WHITE" underline="false">
+      <font>
+        <Font size="35.0" />
+      </font>
+    </Label>
+    <Label fx:id="counter" layoutX="257.0" layoutY="6.0" mouseTransparent="true" text="Test Counter: 0" textFill="WHITE">
+      <font>
+        <Font name="Segoe UI Semibold" size="12.0" />
+      </font>
+    </Label>
+    <HBox fx:id="pageTabContainer" alignment="CENTER" layoutX="199.0" layoutY="383.0" prefHeight="22.0" prefWidth="200.0" styleClass="pages-tab-hbox">
+      <stylesheets>
+        <URL value="@application.css" />
+      </stylesheets>
+    </HBox>
+    <Pane disable="false" focusTraversable="false" layoutX="13.0" layoutY="378.0" prefHeight="22.0" prefWidth="572.0" visible="true">
+      <children>
+        <Text fx:id="nextArrow" layoutX="405.0" layoutY="22.0" onMouseClicked="#onPagesArrowMouseClicked" opacity="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&gt;">
+          <fill>
+            <Color blue="1.000" green="0.784" red="0.400" fx:id="x5" />
+          </fill>
+          <font>
+            <Font name="Segoe UI" size="24.0" fx:id="x6" />
+          </font>
+        </Text>
+        <Text fx:id="prevArrow" fill="$x5" font="$x6" layoutX="150.0" layoutY="22.0" onMouseClicked="#onPagesArrowMouseClicked" opacity="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;" />
+      </children>
+    </Pane>
+    <HBox id="HBox" fx:id="commandFormatFeedback" alignment="CENTER_LEFT" layoutX="19.0" layoutY="460.0" maxWidth="540.0" prefWidth="540.0" spacing="0.0">
+      <children>
+        <Label mnemonicParsing="false" mouseTransparent="true" styleClass="parseCommandTypeName" text="command">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label styleClass="parseCommandName" text="taskname" />
+        <Label styleClass="parseCommandStartDate" text="startdate" />
+        <Label styleClass="parseCommandEndDate" text="enddate" />
+        <Label styleClass="parseCommandPriority" text="priority" />
+        <Label styleClass="parseCommandInvalid" text="invalid" />
+      </children>
+    </HBox>
+    <HBox alignment="BOTTOM_CENTER" fillHeight="true" layoutX="3.0" layoutY="36.0" mouseTransparent="true" pickOnBounds="false" prefHeight="36.0" prefWidth="567.0" rotate="0.0">
+      <children>
+        <Label id="header_all" fx:id="header_all_count" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="4.0" mouseTransparent="true" prefWidth="50.0" text="128" textAlignment="LEFT" underline="false">
+          <font>
+            <Font name="Segoe UI Light" size="14.0" fx:id="x7" />
+          </font>
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+          <textFill>
+            <Color blue="0.375" green="0.375" red="0.375" fx:id="x8" />
+          </textFill>
+        </Label>
+        <Label id="header_running" fx:id="header_running_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="90.0" text="10" textAlignment="LEFT" textFill="$x8" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label id="header_deadline" fx:id="header_deadline_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="100.0" text="30" textAlignment="LEFT" textFill="$x8" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label id="header_timed" fx:id="header_timed_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="70.0" text="80" textAlignment="LEFT" textFill="$x8" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label id="header_search" fx:id="header_search_count" alignment="CENTER" contentDisplay="TEXT_ONLY" disable="false" focusTraversable="false" font="$x7" mouseTransparent="true" prefWidth="80.0" text="127" textAlignment="LEFT" textFill="$x8" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label id="header_archive" fx:id="header_archive_count" alignment="CENTER" contentDisplay="TEXT_ONLY" disable="false" focusTraversable="false" font="$x7" graphicTextGap="1.0" mouseTransparent="true" prefWidth="90.0" text="512" textAlignment="LEFT" textFill="$x8" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+      </children>
+    </HBox>
+  </children>
+  <stylesheets>
+    <URL value="@application.css" />
+  </stylesheets>
+</AnchorPane>
