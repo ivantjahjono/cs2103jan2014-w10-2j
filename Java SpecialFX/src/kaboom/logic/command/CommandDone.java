@@ -7,7 +7,7 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
-import kaboom.storage.History;
+import kaboom.ui.TaskView;
 
 public class CommandDone extends Command{
 	private static final String MESSAGE_COMMAND_DONE_SUCCESS = "Set %1$s to complete";
@@ -17,11 +17,13 @@ public class CommandDone extends Command{
 	TaskInfo taskToBeModified;
 	Hashtable<KEYWORD_TYPE,String> taskInfoTable;
 	String commandFeedback;
+	TaskView taskView;
 
 	public CommandDone() {
 		commandType = COMMAND_TYPE.DONE;
 		initialiseKeywordList();
-		taskInfoTable = null; 
+		taskInfoTable = null;
+		taskView = TaskView.getInstance();
 	}
 
 	public Result execute() {
@@ -40,12 +42,14 @@ public class CommandDone extends Command{
 			return search.execute();
 		}
 		else if (isNumeric(taskName)) {
-			int index = History.getInstance().taskID.get(Integer.parseInt(taskName)-1);
+			int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
 			taskToBeModified = taskListShop.getTaskByID(index);
 			taskListShop.setDoneByID(index);
+			taskView.deleteInView(taskToBeModified);
 		} else {
 			taskToBeModified = taskListShop.getTaskByName(taskName);
 			taskListShop.setDoneByName(taskName);
+			taskView.deleteInView(taskToBeModified);
 		}
 
 		if (taskToBeModified == null) {
@@ -67,6 +71,8 @@ public class CommandDone extends Command{
 
 	public boolean undo() {
 		taskListShop.setLastToUndone();
+		taskView.addToView(taskToBeModified);
+		taskView.undoneInView(taskToBeModified);
 		return true;
 	}
 

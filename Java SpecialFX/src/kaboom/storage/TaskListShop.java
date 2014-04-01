@@ -326,10 +326,12 @@ public class TaskListShop {
 	
 	public void setLastToDone() {
 		currentTaskList.lastElement().setDone(true);
+		refreshTasks();
 	}
 	
 	public void setLastToUndone() {
 		archivedTaskList.lastElement().setDone(false);
+		refreshTasks();
 	}
 
 	public boolean setDoneByName(String name) {
@@ -338,6 +340,7 @@ public class TaskListShop {
 			TaskInfo singleTask = currentTaskList.get(i);
 			if (singleTask.getTaskName().equals(name)) {
 				singleTask.setDone(true);
+				refreshTasks();
 				return true;
 			}
 		}
@@ -350,6 +353,7 @@ public class TaskListShop {
 			TaskInfo singleTask = archivedTaskList.get(i);
 			if (singleTask.getTaskName().equals(name)) {
 				singleTask.setDone(false);
+				refreshTasks();
 				return true;
 			}
 		}
@@ -361,6 +365,7 @@ public class TaskListShop {
 		try {
 			TaskInfo singleTask = currentTaskList.get(index);
 			singleTask.setDone(true);
+			refreshTasks();
 			return true;
 		}
 		catch (Exception e) {
@@ -373,6 +378,7 @@ public class TaskListShop {
 		try {
 			TaskInfo singleTask = archivedTaskList.get(index);
 			singleTask.setDone(false);
+			refreshTasks();
 			return true;
 		}
 		catch (Exception e) {

@@ -14,12 +14,14 @@ public class TaskView {
 	private Vector<TaskInfo> searchView;  //Vector for searches
 	private Vector<Integer> currentViewID;  //Vector for position of viewing tasks in actual vector
 	private TaskListShop taskListShop;
+	private DisplayData displayData;
 
 	public TaskView() {
 		taskListShop = TaskListShop.getInstance();
 		currentView = taskListShop.getAllCurrentTasks();
 		currentViewID = taskListShop.getCorrespondingID(currentView);
 		searchView = new Vector<TaskInfo>();
+		displayData = DisplayData.getInstance();
 	}
 
 	public static TaskView getInstance () {
@@ -62,7 +64,7 @@ public class TaskView {
 		}
 		return currentView;
 	}
-	
+
 	public Vector<TaskInfo> getView(DISPLAY_STATE displayState) {
 		switch (displayState) {
 		case ALL:
@@ -88,7 +90,7 @@ public class TaskView {
 			return taskListShop.getAllCurrentTasks();
 		}
 	}
-	
+
 	public Vector<Integer> getCurrentViewID() {
 		return currentViewID;
 	}
@@ -97,63 +99,67 @@ public class TaskView {
 		searchView = taskList;
 		setCurrentView(taskList);
 	}
-	
+
 	public Vector<TaskInfo> getSearchView() {
 		return searchView;
 	}
-	
+
 	public int getIndexFromView(int index) {
 		return currentViewID.get(index);
 	}
-	
+
 	public void deleteInView(TaskInfo task) {
 		for (int i = 0; i < currentView.size(); i++) {
 			if (currentView.get(i).equals(task)) {
 				currentView.remove(i);
 			}
 		}
-		
+
 		for (int i = 0; i < searchView.size(); i++) {
 			if (searchView.get(i).equals(task)) {
 				searchView.remove(i);
 			}
 		}
 	}
-	
+
 	public void doneInView(TaskInfo task) {
 		for (int i = 0; i < currentView.size(); i++) {
-			if (currentView.get(i).equals(task)) {
+			if (currentView.get(i).equals(task) && 
+					displayData.getCurrentDisplayState() != DISPLAY_STATE.ARCHIVE) {
 				currentView.remove(i);
 			}
 		}
-		
+
 		for (int i = 0; i < searchView.size(); i++) {
 			if (searchView.get(i).equals(task)) {
 				searchView.remove(i);
 			}
 		}
 	}
-	
+
 	public void undoneInView(TaskInfo task) {
 		for (int i = 0; i < currentView.size(); i++) {
-			if (currentView.get(i).equals(task)) {
+			if (currentView.get(i).equals(task) && 
+					displayData.getCurrentDisplayState() == DISPLAY_STATE.ARCHIVE) {
 				currentView.remove(i);
 			}
 		}
-		
+
+		//no support for undone tasks in search yet
+		/*
 		for (int i = 0; i < searchView.size(); i++) {
 			if (searchView.get(i).equals(task)) {
 				searchView.remove(i);
 			}
-		}
+		}*/
 	}
-	
+
 	public void addToView(TaskInfo task) {
-		if (DisplayData.getInstance().getCurrentDisplayState() == DISPLAY_STATE.SEARCH) {
+		if (displayData.getCurrentDisplayState() == DISPLAY_STATE.SEARCH) {
 			searchView.add(task);
 		}
 	}
-	
+
 	public void setCurrentView(Vector<TaskInfo> taskList) {
 		currentView = taskList;
 		currentViewID = taskListShop.getCorrespondingID(taskList);
