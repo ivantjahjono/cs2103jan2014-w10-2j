@@ -3,6 +3,7 @@ package KaboomTest;
 import static org.junit.Assert.*;
 import kaboom.logic.TaskMasterKaboom;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,6 +14,7 @@ public class SystemTest {
 	@Before
 	public void init () {
 		controller = TaskMasterKaboom.getInstance();
+		controller.setFilename("TESTFILE.dat");
 		controller.initialiseKaboom();
 	}
 	
@@ -45,11 +47,11 @@ public class SystemTest {
 		
 		// Delete only command
 		command = "delete";
-		assertEquals("Aww... fail to delete <>.", controller.processCommand(command));
+		assertEquals("Enter a taskname or task id, please ?", controller.processCommand(command));
 		
 		// Delete whitespaces command
 		command = "delete ";
-		assertEquals("Aww... fail to delete <>.", controller.processCommand(command));
+		assertEquals("Enter a taskname or task id, please ?", controller.processCommand(command));
 		
 		// Delete whitespaces command
 		command = "delete hello";
@@ -90,4 +92,8 @@ public class SystemTest {
 		assertEquals("Search Result Mode", controller.processCommand(command));
 	}
 
+	@After
+	public void deinit () {
+		controller.processCommand("clear");
+	}
 }

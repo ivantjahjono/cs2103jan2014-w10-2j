@@ -14,9 +14,11 @@ public class CommandDelete extends Command {
 
 	private static final String MESSAGE_COMMAND_DELETE_SUCCESS = "<%1$s> deleted. 1 less work to do :D";
 	private static final String MESSAGE_COMMAND_DELETE_FAIL = "Aww... fail to delete <%1$s>.";
+	private static final String MESSAGE_COMMAND_DELETE_INVALID = "Enter a taskname or task id, please ?";
 
 	String taskId;
 	Hashtable<KEYWORD_TYPE,String> taskInfoTable;
+	TaskInfo prevTask;
 
 	public CommandDelete () {
 		commandType = COMMAND_TYPE.DELETE;
@@ -31,26 +33,30 @@ public class CommandDelete extends Command {
 		assert taskListShop != null;
 
 		String taskName = taskInfo.getTaskName();
-		String commandFeedback = "";
+		String commandFeedback;
+
+                if (taskName.equals("")) {
+			commandFeedback = MESSAGE_COMMAND_DELETE_INVALID;
+			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+		}
 
 		History history = History.getInstance();
+		int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
 
-		if (taskListShop.numOfTasksWithSimilarNames(taskName) > 1) {
+		if (taskCount > 1) {
 			commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
 
 			Command search = new CommandSearch();
 			search.storeTaskInfo(taskInfoTable);
-			history.addToRecentCommands(search);
 			return search.execute();
 		}
-
-		if (isNumeric(taskName)) {
+		else if (isNumeric(taskName)) {
 			int index = history.taskID.get(Integer.parseInt(taskName)-1);
-			taskListShop.removeTaskByID(index);
+			prevTask = taskListShop.removeTaskByID(index);  //Set for undo
 			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
-		}
-
-		else if (taskListShop.removeTaskByName(taskName)) {
+		} else if (taskCount == 1){
+			prevTask = taskListShop.removeTaskByName(taskName);
+			assert prevTask != null;
 			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
 		} else {
 			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
@@ -64,7 +70,7 @@ public class CommandDelete extends Command {
 	}
 
 	public boolean undo () {
-		if (taskListShop.addTaskToList(taskInfo)) {
+		if (taskListShop.addTaskToList(prevTask)) {
 			return true;
 		}
 		return false;
