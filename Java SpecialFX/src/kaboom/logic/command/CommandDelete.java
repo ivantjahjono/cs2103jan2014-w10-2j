@@ -67,6 +67,8 @@ public class CommandDelete extends Command {
 				} else {
 					commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
 				}
+			} else {
+				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
 			}
 		} else {
 			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_NO_SUCH_TASK, taskName);
