@@ -7,8 +7,8 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
-import kaboom.storage.History;
 import kaboom.ui.DISPLAY_STATE;
+import kaboom.ui.TaskView;
 
 public class CommandView extends Command{
 	private static final String KEYWORD_RUNNING = "running";
@@ -76,7 +76,7 @@ public class CommandView extends Command{
 				feedback = MESSAGE_VIEW_INVALID;
 		}
 		
-		History.getInstance().setViewingTasks(taskList);
+		TaskView.getInstance().setCurrentView(taskList);
 		commandResult.setDisplayState(stateToSet);
 		commandResult.setTasksToDisplay(taskList);
 		commandResult.setFeedback(feedback);
