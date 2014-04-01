@@ -60,7 +60,7 @@
         <Image url="@img/gridX.png" />
       </image>
     </ImageView>
-    <HBox alignment="CENTER" fillHeight="true" layoutX="3.0" layoutY="35.0" prefHeight="36.0" prefWidth="567.0" rotate="0.0">
+    <HBox alignment="BOTTOM_CENTER" fillHeight="true" layoutX="3.0" layoutY="22.0" prefHeight="36.0" prefWidth="567.0" rotate="0.0">
       <children>
         <Label fx:id="header_all" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="4.0" onMouseClicked="#onHeaderMouseClicked" prefWidth="50.0" styleClass="header-label-normal" text="ALL" textAlignment="LEFT" underline="false">
           <font>
@@ -143,6 +143,46 @@
         <Label styleClass="parseCommandEndDate" text="enddate" />
         <Label styleClass="parseCommandPriority" text="priority" />
         <Label styleClass="parseCommandInvalid" text="invalid" />
+      </children>
+    </HBox>
+    <HBox alignment="BOTTOM_CENTER" fillHeight="true" layoutX="3.0" layoutY="36.0" prefHeight="36.0" prefWidth="567.0" rotate="0.0">
+      <children>
+        <Label id="header_all" fx:id="header_all_count" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="4.0" onMouseClicked="#onHeaderMouseClicked" prefWidth="50.0" text="128" textAlignment="LEFT" underline="false">
+          <font>
+            <Font name="Segoe UI Light" size="14.0" fx:id="x7" />
+          </font>
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+          <textFill>
+            <Color blue="0.375" green="0.375" red="0.375" fx:id="x8" />
+          </textFill>
+        </Label>
+        <Label id="header_running" fx:id="header_running_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" onMouseClicked="#onHeaderMouseClicked" prefWidth="90.0" text="10" textAlignment="LEFT" textFill="$x8" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label id="header_deadline" fx:id="header_deadline_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" onMouseClicked="#onHeaderMouseClicked" prefWidth="100.0" text="30" textAlignment="LEFT" textFill="$x8" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label id="header_timed" fx:id="header_timed_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" onMouseClicked="#onHeaderMouseClicked" prefWidth="70.0" text="80" textAlignment="LEFT" textFill="$x8" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label id="header_search" fx:id="header_search_count" alignment="CENTER" contentDisplay="TEXT_ONLY" disable="false" focusTraversable="false" font="$x7" onMouseClicked="#onHeaderMouseClicked" prefWidth="80.0" text="127" textAlignment="LEFT" textFill="$x8" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label id="header_archive" fx:id="header_archive_count" alignment="CENTER" contentDisplay="TEXT_ONLY" disable="false" focusTraversable="false" font="$x7" graphicTextGap="1.0" onMouseClicked="#onHeaderMouseClicked" prefWidth="90.0" text="512" textAlignment="LEFT" textFill="$x8" underline="false">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
       </children>
     </HBox>
   </children>
