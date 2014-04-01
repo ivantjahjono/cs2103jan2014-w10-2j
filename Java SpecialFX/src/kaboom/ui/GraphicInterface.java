@@ -17,7 +17,9 @@ import kaboom.logic.TaskMasterKaboom;
 
 public class GraphicInterface extends Application {
 	
-	private final int UPDATE_INTERVAL = 10;
+	private final int UPDATE_INTERVAL = 30;
+	private final int WINDOW_WIDTH = 700;
+	private final int WINDOW_HEIGHT = 550;
 	
 	Parent root;
 	MainWindow mainWindow;
@@ -43,8 +45,8 @@ public class GraphicInterface extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.initStyle(StageStyle.TRANSPARENT);
-		primaryStage.setWidth(700);
-		primaryStage.setHeight(550);
+		primaryStage.setWidth(WINDOW_WIDTH);
+		primaryStage.setHeight(WINDOW_HEIGHT);
 		primaryStage.show();
 		
 		mainWindow.prepareTextfieldFocus();
