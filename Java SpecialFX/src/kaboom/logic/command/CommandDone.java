@@ -34,18 +34,18 @@ public class CommandDone extends Command{
 
 		int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
 
-		if (taskCount > 1) {
+		if (isNumeric(taskName)) {
+			int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
+			taskToBeModified = taskListShop.getTaskByID(index);
+			taskListShop.setDoneByID(index);
+			taskView.deleteInView(taskToBeModified);
+		}
+		else if (taskCount > 1) {
 			commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
 
 			Command search = new CommandSearch();
 			search.storeTaskInfo(taskInfoTable);
 			return search.execute();
-		}
-		else if (isNumeric(taskName)) {
-			int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
-			taskToBeModified = taskListShop.getTaskByID(index);
-			taskListShop.setDoneByID(index);
-			taskView.deleteInView(taskToBeModified);
 		} else {
 			taskToBeModified = taskListShop.getTaskByName(taskName);
 			taskListShop.setDoneByName(taskName);

@@ -33,18 +33,19 @@ public class CommandUndone extends Command{
 
 		int taskCount = taskListShop.numOfArchivedTasksWithSimilarNames(taskName);
 
-		if (taskCount > 1) {
+		if (isNumeric(taskName)) {
+			int index = Integer.parseInt(taskName)-1;
+			taskToBeModified = taskListShop.getArchivedTaskByID(index);
+			taskListShop.setUndoneByID(index);
+			taskView.deleteInView(taskToBeModified);
+		}
+
+		else if (taskCount > 1) {
 			feedback = "OH YEA! CLASH.. BOO000000000M!";
 
 			Command search = new CommandSearch();
 			search.storeTaskInfo(taskInfoTable);
 			return search.execute();  //No support for archive search yet
-		}
-		else if (isNumeric(taskName)) {
-			int index = Integer.parseInt(taskName)-1;
-			taskToBeModified = taskListShop.getArchivedTaskByID(index);
-			taskListShop.setUndoneByID(index);
-			taskView.deleteInView(taskToBeModified);
 		} else {
 			taskToBeModified = taskListShop.getTaskByName(taskName);
 			taskListShop.setUndoneByName(taskName);
