@@ -159,6 +159,15 @@ public class TaskView {
 			searchView.add(task);
 		}
 	}
+	
+	public void swapView(TaskInfo newTask, TaskInfo oldTask) {
+		for (int i = 0; i < searchView.size(); i++) {
+			if (searchView.get(i).equals(oldTask) 
+					&& displayData.getCurrentDisplayState() == DISPLAY_STATE.SEARCH) {
+				searchView.set(i, newTask);
+			}
+		}
+	}
 
 	public void setCurrentView(Vector<TaskInfo> taskList) {
 		currentView = taskList;
