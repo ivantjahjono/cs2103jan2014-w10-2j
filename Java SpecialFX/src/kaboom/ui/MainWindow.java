@@ -360,6 +360,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 					
 				case TASKNAME:
 				case VIEWTYPE:
+				case MODIFIED_TASKNAME:
 					newLabel.getStyleClass().add("parseCommandName");
 					break;
 					
