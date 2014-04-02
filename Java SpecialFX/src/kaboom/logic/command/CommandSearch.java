@@ -67,8 +67,8 @@ public class CommandSearch extends Command {
 						//For deadline tasks
 						tasksFound.add(singleTask);
 					}
-					if ((singleTask.getStartDate() != null && singleTask.getStartDate().before(targetDate)) || 
-							singleTask.getEndDate().after(targetDate)) {
+					if (singleTask.getStartDate() != null && (singleTask.getStartDate().before(targetDate) && 
+							singleTask.getEndDate().after(targetDate))) {
 						//For timed tasks
 						if (!tasksFound.contains(singleTask)) {
 							tasksFound.add(singleTask);  //Expired tasks are considered too
@@ -79,7 +79,6 @@ public class CommandSearch extends Command {
 		}
 
 		taskView.setSearchView(tasksFound);
-		//History.getInstance().setSearchTaskResult(tasksFound);
 		commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
 
 		Result commandResult = createResult(tasksFound, commandFeedback);
@@ -108,9 +107,9 @@ public class CommandSearch extends Command {
 
 	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
 		taskInfo = new TaskInfo();
-		saveTaskName(infoHashes,taskInfo);
 		saveTaskPriority(infoHashes,taskInfo);
 		saveTaskStartDateAndTime(infoHashes,taskInfo);
 		saveTaskEndDateAndTime(infoHashes,taskInfo);
+		saveTaskName(infoHashes,taskInfo);
 	}
 }
