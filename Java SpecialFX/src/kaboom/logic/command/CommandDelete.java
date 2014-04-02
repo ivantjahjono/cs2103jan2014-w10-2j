@@ -45,17 +45,7 @@ public class CommandDelete extends Command {
 
 		int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
 
-		if (taskCount > 1) {
-			commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
-
-			Command search = new CommandSearch();
-			search.storeTaskInfo(taskInfoTable);
-			return search.execute();
-		} else if (taskCount == 1){
-			prevTask = taskListShop.removeTaskByName(taskName);
-			taskView.deleteInView(prevTask);
-			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
-		} else if (isNumeric(taskName)) {
+		if (isNumeric(taskName)) {
 
 			if (taskView.getCurrentViewID().size() >= Integer.parseInt(taskName)) {
 				int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
@@ -70,6 +60,16 @@ public class CommandDelete extends Command {
 			} else {
 				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
 			}
+		} else if (taskCount > 1) {
+			commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
+
+			Command search = new CommandSearch();
+			search.storeTaskInfo(taskInfoTable);
+			return search.execute();
+		} else if (taskCount == 1){
+			prevTask = taskListShop.removeTaskByName(taskName);
+			taskView.deleteInView(prevTask);
+			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
 		} else {
 			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_NO_SUCH_TASK, taskName);
 		}	
