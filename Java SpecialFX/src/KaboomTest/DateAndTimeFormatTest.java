@@ -162,6 +162,7 @@ public class DateAndTimeFormatTest {
 //		assertFalse ("Invalid: month",datFormat.isDateValid("21.00.34"));
 //		assertFalse ("Invalid: format",datFormat.isDateValid("21/00/34"));
 //		assertFalse ("Invalid: format",datFormat.isDateValid("21-00-34"));
+//		assertFalse ("Invalid: format",datFormat.isDateValid("01/04/14"));
 //	}
 //	
 //	@Test
