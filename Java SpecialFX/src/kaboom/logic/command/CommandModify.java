@@ -9,8 +9,8 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
-import kaboom.storage.History;
 import kaboom.storage.TaskListShop;
+import kaboom.ui.TaskView;
 
 
 public class CommandModify extends Command {
@@ -35,6 +35,7 @@ public class CommandModify extends Command {
 	boolean hasNameChanged;
 	boolean hasTimeChanged;
 	boolean hasPriorityChanged;
+	TaskView taskView;
 
 	public CommandModify () {
 		commandType = COMMAND_TYPE.MODIFY;
@@ -42,6 +43,7 @@ public class CommandModify extends Command {
 		hasNameChanged = false;
 		hasTimeChanged = false;
 		hasPriorityChanged = false;
+		taskView = TaskView.getInstance();
 	}
 
 	/*
@@ -63,7 +65,7 @@ public class CommandModify extends Command {
 			taskName = taskInfoTable.get(KEYWORD_TYPE.TASKNAME);
 
 			if (isNumeric(taskName)) {
-				int index = History.getInstance().taskID.get(Integer.parseInt(taskName)-1);
+				int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
 				preModifiedTaskInfo = taskListShop.getTaskByID(index);
 			} else {
 				int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
@@ -168,6 +170,7 @@ public class CommandModify extends Command {
 			taskInfo = temp;
 			taskInfo.setRecent(true);
 			taskListShop.updateTask(taskInfo, preModifiedTaskInfo);
+			taskView.swapView(taskInfo, preModifiedTaskInfo);
 		} else {
 			feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_TO_MODIFY,taskName);
 			return createResult(taskListShop.getAllCurrentTasks(), feedback);
@@ -238,6 +241,7 @@ public class CommandModify extends Command {
 	public boolean undo () {
 		System.out.println(preModifiedTaskInfo.getTaskName()+" > "+taskInfo.getTaskName());
 		TaskListShop.getInstance().updateTask(preModifiedTaskInfo, taskInfo);
+		taskView.swapView(preModifiedTaskInfo, taskInfo);
 		return true;
 	}
 
