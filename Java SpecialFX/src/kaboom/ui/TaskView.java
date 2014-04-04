@@ -2,7 +2,6 @@ package kaboom.ui;
 
 import java.util.Vector;
 
-import kaboom.logic.DisplayData;
 import kaboom.logic.TaskInfo;
 import kaboom.storage.TaskListShop;
 

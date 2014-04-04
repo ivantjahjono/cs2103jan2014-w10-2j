@@ -7,7 +7,6 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import kaboom.logic.DateAndTimeFormat;
-import kaboom.logic.DisplayData;
 import kaboom.logic.FormatIdentify;
 import kaboom.logic.FormatIdentifyComparator;
 import kaboom.logic.KEYWORD_TYPE;
@@ -16,6 +15,7 @@ import kaboom.logic.TASK_TYPE;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.TextParser;
 import kaboom.storage.TaskListShop;
+import kaboom.ui.DisplayData;
 
 /* 
  ** Purpose: 
