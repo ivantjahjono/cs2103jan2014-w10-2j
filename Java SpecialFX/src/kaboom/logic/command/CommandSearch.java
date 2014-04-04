@@ -14,7 +14,7 @@ import kaboom.ui.TaskView;
 
 public class CommandSearch extends Command {
 
-	private static final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done. %d item(s) found.";
+	private final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done. %d item(s) found.";
 
 	public CommandSearch () {
 		commandType = COMMAND_TYPE.SEARCH;

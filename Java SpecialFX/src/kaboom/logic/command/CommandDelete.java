@@ -12,10 +12,10 @@ import kaboom.ui.TaskView;
 
 public class CommandDelete extends Command {
 
-	private static final String MESSAGE_COMMAND_DELETE_SUCCESS = "<%1$s> deleted. 1 less work to do :D";
-	private static final String MESSAGE_COMMAND_DELETE_FAIL = "Aww... fail to delete <%1$s>.";
-	private static final String MESSAGE_COMMAND_DELETE_INVALID = "Enter a taskname or task id, please ?";
-	private static final String MESSAGE_COMMAND_DELETE_NO_SUCH_TASK = "<%1$s> does not exist...";
+	private final String MESSAGE_COMMAND_DELETE_SUCCESS = "<%1$s> deleted. 1 less work to do :D";
+	private final String MESSAGE_COMMAND_DELETE_FAIL = "Aww... fail to delete <%1$s>.";
+	private final String MESSAGE_COMMAND_DELETE_INVALID = "Enter a taskname or task id, please ?";
+	private final String MESSAGE_COMMAND_DELETE_NO_SUCH_TASK = "<%1$s> does not exist...";
 
 	String taskId;
 	Hashtable<KEYWORD_TYPE,String> taskInfoTable;
