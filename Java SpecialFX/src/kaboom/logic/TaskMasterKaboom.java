@@ -58,7 +58,6 @@ public class TaskMasterKaboom {
 	private void updateUiWithFirstLoadedMemory() {
 		Result introResult = new Result();
 		
-		commandHistory.setViewingTasks(TaskListShop.getInstance().getAllCurrentTasks());
 		introResult.setFeedback(MESSAGE_WELCOME);
 		updateUi(introResult);
 	}
