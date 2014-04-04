@@ -18,8 +18,10 @@ public class TaskInfo {
 	
 	public TaskInfo () {
 		taskname = "";
+		
 		startDate = null;
 		endDate = null;
+		
 		importanceLevel = 1;
 		isExpired = false;
 		isDone = false;

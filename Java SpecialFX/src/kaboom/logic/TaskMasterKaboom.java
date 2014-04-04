@@ -6,11 +6,9 @@ import kaboom.logic.command.COMMAND_TYPE;
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandFactory;
 import kaboom.logic.command.CommandUpdate;
-import kaboom.logic.command.CommandView;
 import kaboom.storage.History;
 import kaboom.storage.Storage;
 import kaboom.storage.TaskListShop;
-import kaboom.ui.DISPLAY_STATE;
 import kaboom.ui.DisplayData;
 
 
@@ -21,14 +19,13 @@ import kaboom.ui.DisplayData;
 **/
 
 public class TaskMasterKaboom {
+	private final String MESSAGE_WELCOME = "Welcome back, Commander";
 	
-	private static final String MESSAGE_WELCOME = "Welcome back, Commander";
+	private String FILENAME = "KABOOM_FILE.dat";
 	
-	private static String FILENAME = "KABOOM_FILE.dat";
-	
-	private static DisplayData guiDisplayData;
-	private static Storage fileStorage;
-	private History commandHistory;
+	private DisplayData 	guiDisplayData;
+	private Storage 		fileStorage;
+	private History 		commandHistory;
 	
 	static TaskMasterKaboom instance;
 	
@@ -72,18 +69,8 @@ public class TaskMasterKaboom {
 	}
 	
 	public void updateTaskList () {
-		// TODO a hack around currently to update to current view mode
-		//Result updateResult;
-		
 		Command updateCommand = new CommandUpdate();
 		updateCommand.execute();
-		
-		// Get current display state
-		//DISPLAY_STATE currentDisplayState = guiDisplayData.getCurrentDisplayState();
-		
-		//CommandView updateViewCommand = new CommandView();
-		//updateViewCommand.setDisplayState(currentDisplayState);
-		//updateResult = updateViewCommand.execute();
 		
 		//4. Save data to file
 		fileStorage.store();
@@ -140,7 +127,7 @@ public class TaskMasterKaboom {
 		//System.out.println("Processing:" + usercommand);
 		
 		//1. Get Command 
-		String commandKeyword = TextParser.getCommandKeyWord(usercommand);
+		String commandKeyword = TextParser.getInstance().getCommandKeyWord(usercommand);
 		
 		//2. Create Command
 		commandToExecute = CommandFactory.createCommand(commandKeyword);

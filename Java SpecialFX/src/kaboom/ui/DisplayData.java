@@ -117,9 +117,11 @@ public class DisplayData extends Observable {
 			currentDisplayState = stateChange; 
 		}
 
+		// Pull data from task view class
 		extractTasksBasedOnDisplayState(currentDisplayState);
 		setFeedbackMessage(commandResult.getFeedback());
 
+		// Update header counters
 		updateTaskCountList ();
 
 		if (commandResult.getGoToNextPage()) {
