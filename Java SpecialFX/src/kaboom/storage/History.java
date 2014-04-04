@@ -2,7 +2,6 @@ package kaboom.storage;
 
 import java.util.Vector;
 
-import kaboom.logic.TaskInfo;
 import kaboom.logic.command.Command;
 
 public class History {
@@ -12,10 +11,7 @@ public class History {
 	private static History historyInstance = null;
 
 	private Vector<Command> previousCommandList;
-	public Vector<TaskInfo> tasksToView;  //Tasks that are being viewed by the UI
-	private Vector<TaskInfo> taskSearchResult;
 	private Command currentCommandView;
-	public Vector<Integer> taskID;  //The corresponding position in the vector
 
 	public static History getInstance () {
 		if (historyInstance == null) {
@@ -26,11 +22,7 @@ public class History {
 
 	public History () {
 		previousCommandList = new Vector<Command>();
-		
-		tasksToView = new Vector<TaskInfo>();
-		taskSearchResult = new Vector<TaskInfo>();
 		currentCommandView = null;
-		taskID = new Vector<Integer>();
 	}
 
 	public Command getMostRecentCommand () {
@@ -45,19 +37,6 @@ public class History {
 
 	public Command getMostRecentCommandView () {            
 		return currentCommandView;
-	}
-
-	public void setViewingTasks(Vector<TaskInfo> viewingTasks) {
-		tasksToView = viewingTasks;
-		taskID = TaskListShop.getInstance().getCorrespondingID(viewingTasks);
-	}
-	
-	public void setSearchTaskResult (Vector<TaskInfo> searchResultList) {
-		taskSearchResult = searchResultList;
-	}
-	
-	public Vector<TaskInfo> getSearchTaskResult () {
-		return taskSearchResult;
 	}
 
 	public int size() {
@@ -88,9 +67,5 @@ public class History {
 		while (previousCommandList.size() > MAX_COMMAND_TO_STORE) {
 			previousCommandList.remove(firstObjectIndex);
 		}
-	}
-	
-	public Vector<TaskInfo> getTaskToView () {
-		return tasksToView;
 	}
 }
