@@ -9,7 +9,7 @@ import kaboom.logic.Result;
 
 public class CommandSort extends Command {
 
-	private static final String MESSAGE_COMMAND_SORT_SUCCESS = "Sort done. %d item(s) sorted.";
+	private final String MESSAGE_COMMAND_SORT_SUCCESS = "Sort done. %d item(s) sorted.";
 
 	public CommandSort() {
 		commandType = COMMAND_TYPE.SORT;

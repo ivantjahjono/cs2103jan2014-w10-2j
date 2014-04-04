@@ -11,20 +11,20 @@ import kaboom.ui.DISPLAY_STATE;
 import kaboom.ui.TaskView;
 
 public class CommandView extends Command{
-	private static final String KEYWORD_RUNNING = "running";
-	private static final String KEYWORD_DEADLINE = "deadline";
-	private static final String KEYWORD_TIMED = "timed";
-	private static final String KEYWORD_SEARCH = "search";
-	private static final String KEYWORD_ARCHIVE = "archive";
-	private static final String KEYWORD_ALL = "all";
+	private final String KEYWORD_RUNNING = "running";
+	private final String KEYWORD_DEADLINE = "deadline";
+	private final String KEYWORD_TIMED = "timed";
+	private final String KEYWORD_SEARCH = "search";
+	private final String KEYWORD_ARCHIVE = "archive";
+	private final String KEYWORD_ALL = "all";
 	
-	private static final String MESSAGE_VIEW_RUNNING = "Running Task Mode";
-	private static final String MESSAGE_VIEW_DEADLINE = "Deadline Task Mode";
-	private static final String MESSAGE_VIEW_TIMED = "Timed Task Mode";
-	private static final String MESSAGE_VIEW_ALL = "All Task Mode";
-	private static final String MESSAGE_VIEW_SEARCH = "Search Result Mode";
-	private static final String MESSAGE_VIEW_ARCHIVE = "Archive View Mode";
-	private static final String MESSAGE_VIEW_INVALID = "Invalid View Mode";
+	private final String MESSAGE_VIEW_RUNNING = "Running Task Mode";
+	private final String MESSAGE_VIEW_DEADLINE = "Deadline Task Mode";
+	private final String MESSAGE_VIEW_TIMED = "Timed Task Mode";
+	private final String MESSAGE_VIEW_ALL = "All Task Mode";
+	private final String MESSAGE_VIEW_SEARCH = "Search Result Mode";
+	private final String MESSAGE_VIEW_ARCHIVE = "Archive View Mode";
+	private final String MESSAGE_VIEW_INVALID = "Invalid View Mode";
 	
 	String viewType;
 	DISPLAY_STATE stateToSet;

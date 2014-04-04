@@ -11,7 +11,7 @@ import kaboom.logic.TaskInfo;
 
 public class CommandClear extends Command {
 	
-	private static final String MESSAGE_COMMAND_CLEAR_SUCCESS = "Cleared memory";
+	private final String MESSAGE_COMMAND_CLEAR_SUCCESS = "Cleared memory";
 	
 	Vector<TaskInfo> tasksCleared;
 		

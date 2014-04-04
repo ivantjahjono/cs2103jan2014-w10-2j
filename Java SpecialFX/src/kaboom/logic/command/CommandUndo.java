@@ -9,12 +9,9 @@ import kaboom.logic.Result;
 import kaboom.storage.History;
 
 public class CommandUndo extends Command{
-	
-
-	private static final String MESSAGE_COMMAND_UNDO_SUCCESS = "Command undone!";
-	private static final String MESSAGE_COMMAND_UNDO_FAIL = "Fail to undo.";
-	private static final String MESSAGE_COMMAND_NOTHING_TO_UNDO = "Bo task to undo";
-	
+	private final String MESSAGE_COMMAND_UNDO_SUCCESS = "Command undone!";
+	private final String MESSAGE_COMMAND_UNDO_FAIL = "Fail to undo.";
+	private final String MESSAGE_COMMAND_NOTHING_TO_UNDO = "Bo task to undo";
 	
 	public CommandUndo() {
 		commandType = COMMAND_TYPE.UNDO;

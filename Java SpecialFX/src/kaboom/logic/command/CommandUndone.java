@@ -10,9 +10,9 @@ import kaboom.logic.TaskInfo;
 import kaboom.ui.TaskView;
 
 public class CommandUndone extends Command{
-	private static final String MESSAGE_COMMAND_UNDONE_SUCCESS = "Set %1$s to incomplete";
-	private static final String MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE = "%1$s was incomplete";
-	private static final String MESSAGE_COMMAND_UNDONE_FAIL = "%1$s does not exist";
+	private final String MESSAGE_COMMAND_UNDONE_SUCCESS = "Set %1$s to incomplete";
+	private final String MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE = "%1$s was incomplete";
+	private final String MESSAGE_COMMAND_UNDONE_FAIL = "%1$s does not exist";
 
 	TaskInfo taskToBeModified;
 	Hashtable<KEYWORD_TYPE,String> taskInfoTable;

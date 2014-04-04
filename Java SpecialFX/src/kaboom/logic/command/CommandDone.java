@@ -10,9 +10,9 @@ import kaboom.logic.TaskInfo;
 import kaboom.ui.TaskView;
 
 public class CommandDone extends Command{
-	private static final String MESSAGE_COMMAND_DONE_SUCCESS = "Set %1$s to complete";
-	private static final String MESSAGE_COMMAND_DONE_AlEADY_COMPLETED = "%1$s was completed";
-	private static final String MESSAGE_COMMAND_DONE_FAIL = "%1$s does not exist";
+	private final String MESSAGE_COMMAND_DONE_SUCCESS = "Set %1$s to complete";
+	private final String MESSAGE_COMMAND_DONE_AlEADY_COMPLETED = "%1$s was completed";
+	private final String MESSAGE_COMMAND_DONE_FAIL = "%1$s does not exist";
 
 	TaskInfo taskToBeModified;
 	Hashtable<KEYWORD_TYPE,String> taskInfoTable;
