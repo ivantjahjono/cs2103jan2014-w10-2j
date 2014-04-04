@@ -37,7 +37,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import kaboom.logic.DisplayData;
 import kaboom.logic.FormatIdentify;
 import kaboom.logic.TaskInfoDisplay;
 import kaboom.logic.TaskMasterKaboom;

@@ -1,12 +1,14 @@
-package kaboom.logic;
+package kaboom.ui;
 
 import java.util.Observable;
 import java.util.Vector;
 
+import kaboom.logic.FormatIdentify;
+import kaboom.logic.Result;
+import kaboom.logic.TaskInfo;
+import kaboom.logic.TaskInfoDisplay;
 import kaboom.storage.History;
 import kaboom.storage.TaskListShop;
-import kaboom.ui.DISPLAY_STATE;
-import kaboom.ui.TaskView;
 
 /**
  * Returns a vector of TaskInfoDisplay which contains all the 

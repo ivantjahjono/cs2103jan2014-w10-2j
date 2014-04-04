@@ -12,7 +12,6 @@ import kaboom.logic.TaskInfo;
 
 
 public class CommandAdd extends Command {
-	
 	private static final String MESSAGE_COMMAND_ADD_SUCCESS = "WOOT! <%1$s> ADDED. MORE STUFF TO DO!";
 	private static final String MESSAGE_COMMAND_ADD_FAIL = "Fail to add <%1$s>... Error somewhere...";
 	private static final String MESSAGE_COMMAND_ADD_FAIL_NO_NAME = "Enter a task name please :'(";
@@ -41,7 +40,6 @@ public class CommandAdd extends Command {
 			} else {
 				commandFeedback = MESSAGE_COMMAND_ADD_FAIL_STARTDATE_OVER_ENDDATE;
 			}
-			
 		}
 		else {
 			commandFeedback = MESSAGE_COMMAND_ADD_FAIL_NO_NAME;
