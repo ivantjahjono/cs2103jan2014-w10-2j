@@ -237,8 +237,6 @@ public class TaskListShop {
 				currentTaskList.remove(singleTask);
 			}
 		}
-
-		History.getInstance().setViewingTasks(currentTaskList);
 	}
 	
 	public void refreshTasks(Vector<TaskInfo> viewingTasks) {
@@ -270,8 +268,6 @@ public class TaskListShop {
 				currentTaskList.remove(singleTask);
 			}
 		}
-
-		History.getInstance().setViewingTasks(viewingTasks);
 	}
 
 	public Vector<TaskInfo> clearAllTasks () {
