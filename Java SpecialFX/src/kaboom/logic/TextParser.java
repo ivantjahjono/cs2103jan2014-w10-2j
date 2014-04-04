@@ -10,27 +10,40 @@ import java.util.regex.Pattern;
 
 public class TextParser {
 	
-	private static final String KEYWORD_STARTTIME = "at";
-	private static final String KEYWORD_ENDTIME = "by";
-	private static final String KEYWORD_DATE = "on";
-	private static final String KEYWORD_MODIFY = ">";
+	private final String KEYWORD_STARTTIME = "at";
+	private final String KEYWORD_ENDTIME = "by";
+	private final String KEYWORD_DATE = "on";
+	private final String KEYWORD_MODIFY = ">";
 	
-	private static final String TIME_REGEX = "\\s+\\d{1,2}[:]?\\d{2}\\s*(am|pm)?(\\s|$)";
-	private static final String DATE_REGEX = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";
-	private static final String PRIORITY_REGEX = "[\\s+]\\*{1,3}[\\s\\W]*";
+	private final String TIME_REGEX = "\\s+\\d{1,2}[:]?\\d{2}\\s*(am|pm)?(\\s|$)";
+	private final String DATE_REGEX = "\\s+\\d{1,2}[\\/\\.]?\\d{1,2}[\\/\\.]?\\d{2}(\\s|$)";
+	private final String PRIORITY_REGEX = "[\\s+]\\*{1,3}[\\s\\W]*";
+	
+	static TextParser instance;
+	
+	private TextParser () {
+	}
+	
+	public static TextParser getInstance () {
+		if (instance == null) {
+			instance = new TextParser();
+		}
+		
+		return instance;
+	}
 	
 	//******************** Method Calls By Controller ******************************************
-	public static String getCommandKeyWord (String userInput) {
+	public String getCommandKeyWord (String userInput) {
 		return getFirstWord(userInput);
 	}
 	
 	
-	public static Hashtable<KEYWORD_TYPE, String> extractTaskInformation (String userInput) {
+	public Hashtable<KEYWORD_TYPE, String> extractTaskInformation (String userInput) {
 		String taskInformation = removeFirstWord(userInput);
 		
 		// Cut the command into their respective syntax. Will return hash table of data strings
 		Hashtable<KEYWORD_TYPE, String> keywordHashTable = new Hashtable<KEYWORD_TYPE, String>();
-		TextParser.parser(taskInformation, keywordHashTable);
+		parser(taskInformation, keywordHashTable);
 
 		System.out.println(keywordHashTable);
 		
@@ -39,24 +52,24 @@ public class TextParser {
 
 	//******************** Method Calls By Controller ******************************************
 	
-	public static String removeFirstWord(String userInputSentence) {
+	public String removeFirstWord(String userInputSentence) {
 		String wordRemoved = userInputSentence.replace(getFirstWord(userInputSentence), "").trim();
 		return wordRemoved;
 	}
 
-	public static String getFirstWord(String userInputSentence) {
+	public String getFirstWord(String userInputSentence) {
 		String[] elements = textProcess(userInputSentence);
 		String firstWord = elements[0].toLowerCase();
 		return firstWord;
 	}
 	
-	private static String[] textProcess(String userInputSentence){
+	private String[] textProcess(String userInputSentence){
 		String[] commandAndData = userInputSentence.trim().split("\\s+");
 		return commandAndData;
 	}
 	
 	
-	public static String parser(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+	public String parser(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
 		String userInputWithPriorityExtracted = extractPriority(userInputSentence,keywordTable);
 		String userInputWithEndDateAndTimeExtracted = extractDateAndTime(KEYWORD_ENDTIME,userInputWithPriorityExtracted,keywordTable);
 		String userInputWithStartDateAndTimeExtracted = extractDateAndTime(KEYWORD_STARTTIME,userInputWithEndDateAndTimeExtracted,keywordTable);
@@ -66,7 +79,7 @@ public class TextParser {
 		return taskName;
 	}
 	
-	public static String extractPriority(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+	public String extractPriority(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
 	    int startIndex = 0;
 	    int endIndex = 0;
 	    int priorityLevel = 0;
@@ -90,7 +103,7 @@ public class TextParser {
 	    return userInputSentence;
 	}
 	
-	public static String extractTimeOnly(String KEYWORD_TIME, String userInputSentence ,Hashtable<KEYWORD_TYPE, String> keywordTable){
+	public String extractTimeOnly(String KEYWORD_TIME, String userInputSentence ,Hashtable<KEYWORD_TYPE, String> keywordTable){
 																	
 		int startIndex = 0;
 		int endIndex = 0;
@@ -122,7 +135,7 @@ public class TextParser {
 		return userInputSentence;
 	}
 	
-	public static String extractDateOnly(String KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+	public String extractDateOnly(String KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
 		int startIndex = 0;
 		int endIndex = 0;
 		
@@ -153,7 +166,7 @@ public class TextParser {
 		return userInputSentence;
 	}
 	
-	public static String extractDateAndTime(String KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+	public String extractDateAndTime(String KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
 		String timeAndDateRegex = KEYWORD_TIME+TIME_REGEX+"\\s*"+KEYWORD_DATE+DATE_REGEX;
 		
 		int startIndex = 0;
@@ -207,7 +220,7 @@ public class TextParser {
 	/*
 	 * Extracts the last instance of the task name to modify
 	 */
-	public static String extractModifiedTaskName (String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {		
+	public String extractModifiedTaskName (String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {		
 		int startIndex = 0;
 		int endIndex = 0;
 		if(userInputSentence.contains(KEYWORD_MODIFY)) {
@@ -222,7 +235,7 @@ public class TextParser {
 		return userInputSentence;
 	}
 	
-	public static String extractTaskName(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+	public String extractTaskName(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
 		String taskName = userInputSentence.trim();
 		keywordTable.put(KEYWORD_TYPE.TASKNAME, taskName);
 		userInputSentence  = userInputSentence.replace(userInputSentence, "");
@@ -230,13 +243,13 @@ public class TextParser {
 		return userInputSentence;
 	}
 	
-	public static String extractTaskId(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+	public String extractTaskId(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
 		String taskId = userInputSentence.trim();
 		keywordTable.put(KEYWORD_TYPE.TASKID, taskId);
 		return taskId;
 	}
 
-	private static ArrayList<Integer> searchForPatternMatch(String userInputSentence, String regex) {
+	private ArrayList<Integer> searchForPatternMatch(String userInputSentence, String regex) {
 		int startIndex = 0;
 	    int endIndex = 0;
 	    
@@ -258,7 +271,7 @@ public class TextParser {
 	    return matchList;
 	}
 	
-	public static Queue<KeytypeIndexPair> getKeywordsInAscendingOrder(String[] tokenisedString) {
+	public Queue<KeytypeIndexPair> getKeywordsInAscendingOrder(String[] tokenisedString) {
 		Queue<KeytypeIndexPair> queue = new LinkedList<KeytypeIndexPair>();
 		
 		for (int i = 0; i < tokenisedString.length; i++) {
@@ -290,12 +303,12 @@ public class TextParser {
 		return queue;
 	}
 	
-	public static Hashtable<KEYWORD_TYPE, String> testExtractList(String userInput, Vector<KEYWORD_TYPE> list) {
+	public Hashtable<KEYWORD_TYPE, String> testExtractList(String userInput, Vector<KEYWORD_TYPE> list) {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = getInfoFromList(userInput,list);
 		return taskInformationTable;
 	}
 	
-	private static Hashtable<KEYWORD_TYPE, String> getInfoFromList(String userInput, Vector<KEYWORD_TYPE> list) {
+	private Hashtable<KEYWORD_TYPE, String> getInfoFromList(String userInput, Vector<KEYWORD_TYPE> list) {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = new Hashtable<KEYWORD_TYPE, String>();
 		for(int i=0; i<list.size(); i++) {
 			if(list.get(i) == KEYWORD_TYPE.PRIORITY) {
@@ -350,7 +363,7 @@ public class TextParser {
 	}
 
 
-	private static String extractUnknownCommandString(String userInput, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+	private String extractUnknownCommandString(String userInput, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
 		String unknownCommandString = userInput.substring(0);
 		taskInformationTable.put(KEYWORD_TYPE.INVALID, unknownCommandString);
 		userInput  = userInput.replace(unknownCommandString, "").trim();
@@ -358,7 +371,7 @@ public class TextParser {
 		return userInput;
 	}
 	
-	private static boolean checkDateOnlyInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){
+	private boolean checkDateOnlyInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){
 		matchVector = searchForPatternMatch(userInputSentence, KEYWORD_TIME+DATE_REGEX);
 		
 		//IF NOTHING RETURN
@@ -370,7 +383,7 @@ public class TextParser {
 		}
 	}
 	
-	private static boolean checkTimeOnlyInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){		
+	private boolean checkTimeOnlyInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){		
 		//GET PATTERN FOR WHOLE START/END DATE AND TIME
 		matchVector = searchForPatternMatch(userInputSentence, KEYWORD_TIME+TIME_REGEX);
 		
@@ -383,7 +396,7 @@ public class TextParser {
 		}
 	}
 	
-	public static boolean checkTimeAndDateInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){	
+	public boolean checkTimeAndDateInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){	
 		String timeAndDateRegex = KEYWORD_TIME+TIME_REGEX+"\\s*"+KEYWORD_DATE+DATE_REGEX;
 		
 		//GET PATTERN FOR WHOLE START/END DATE AND TIME
@@ -398,7 +411,7 @@ public class TextParser {
 		}
 	}
 	
-	private static String extractViewType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
+	private String extractViewType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
 		String viewType = getFirstWord(userInput);
 		taskInformationTable.put(KEYWORD_TYPE.VIEWTYPE, viewType);
 		

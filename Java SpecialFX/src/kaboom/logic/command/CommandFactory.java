@@ -17,10 +17,12 @@ public class CommandFactory {
 	private static final String KEYWORD_COMMAND_DONE = "boom";
 	private static final String KEYWORD_COMMAND_UNDONE = "unboom";
 	
+	private static TextParser textParser = TextParser.getInstance();
+	
 	public static Command createCommand(String userInputSentence) {
 		
 		//1. Get Command 
-		String commandKeyword = TextParser.getCommandKeyWord(userInputSentence);
+		String commandKeyword = textParser.getCommandKeyWord(userInputSentence);
 		
 		//2. Get Command keyword
 		COMMAND_TYPE commandType = determineCommandType(commandKeyword);
@@ -29,13 +31,13 @@ public class CommandFactory {
 		Command commandToExecute = createCommandBasedOnCommandType(commandType);	
 		
 		//3. Remove Command Word From UserInput
-		userInputSentence = TextParser.removeFirstWord(userInputSentence);
+		userInputSentence = textParser.removeFirstWord(userInputSentence);
 		
 		//4. Get CommandKeywordList
 		Vector<KEYWORD_TYPE> commandKeywordList = commandToExecute.getKeywordList();
 		
 		//5. Extract Task Info Base on Keywords
-		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.testExtractList(userInputSentence, commandKeywordList);
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = textParser.testExtractList(userInputSentence, commandKeywordList);
 		
 		//6. Command stores TaskInfo
 		commandToExecute.extractAndStoreTaskInfo(taskInformationTable);

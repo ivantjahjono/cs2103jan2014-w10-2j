@@ -6,29 +6,29 @@ import java.util.Date;
 
 public class DateAndTimeFormat {
 	
-	private static final String dateFormat1 = "ddMMyy";		// 12/06/12 or 12.01.06 or 120106
-	private static final String dateFormat2 = "dd'/'MM'/'yy";
-	private static final String dateFormat3 = "dd'.'MM'.'yy";
+	private final String dateFormat1 = "ddMMyy";		// 12/06/12 or 12.01.06 or 120106
+	private final String dateFormat2 = "dd'/'MM'/'yy";
+	private final String dateFormat3 = "dd'.'MM'.'yy";
 	
-	private static final String time24hrFormat1 = "HHmm"; 
-	private static final String time24hrFormat2 = "HH':'mm";
-	private static final String time12hrFormat1 = "hhmma";
-	private static final String time12hrFormat2 = "hhmm a";
-	private static final String time12hrFormat3 = "h':'mma";
-	private static final String time12hrFormat4 = "h':'mm a";
+	private final String time24hrFormat1 = "HHmm"; 
+	private final String time24hrFormat2 = "HH':'mm";
+	private final String time12hrFormat1 = "hhmma";
+	private final String time12hrFormat2 = "hhmm a";
+	private final String time12hrFormat3 = "h':'mma";
+	private final String time12hrFormat4 = "h':'mm a";
 	
-	private static final SimpleDateFormat[] dateFormatList = { 
+	private final SimpleDateFormat[] dateFormatList = { 
 		new SimpleDateFormat(dateFormat1),
 		new SimpleDateFormat(dateFormat2),
 		new SimpleDateFormat(dateFormat3)
 	};
 	
-	private static final SimpleDateFormat[] time24HrFormatList = {
+	private final SimpleDateFormat[] time24HrFormatList = {
 		new SimpleDateFormat(time24hrFormat1),
 		new SimpleDateFormat(time24hrFormat2)
 	};
 	
-	private static final SimpleDateFormat[] time12HrFormatList = {
+	private final SimpleDateFormat[] time12HrFormatList = {
 		new SimpleDateFormat(time12hrFormat1),
 		new SimpleDateFormat(time12hrFormat2),
 		new SimpleDateFormat(time12hrFormat3),

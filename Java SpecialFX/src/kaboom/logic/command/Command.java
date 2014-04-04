@@ -23,10 +23,11 @@ import kaboom.ui.DisplayData;
 
 public class Command {
 
-	private static final String MESSAGE_COMMAND_INVALID = "Invalid command!";
+	private final String MESSAGE_COMMAND_INVALID = "Invalid command!";
 
 	protected COMMAND_TYPE commandType;
 	protected TaskInfo taskInfo;
+	protected TextParser textParser;
 	protected TaskListShop taskListShop;
 	protected DisplayData displayData;
 	protected Vector<KEYWORD_TYPE> keywordList;  //Initialized in the individual command constructor
@@ -35,6 +36,7 @@ public class Command {
 	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
 		taskInfo = null;
+		textParser = TextParser.getInstance();
 		taskListShop = TaskListShop.getInstance();
 		displayData = DisplayData.getInstance();
 		keywordList = new Vector<KEYWORD_TYPE>();
@@ -87,10 +89,10 @@ public class Command {
 	
 	protected Hashtable<KEYWORD_TYPE, String> updateFormatList (String info, Vector<FormatIdentify> indexList) {
 		getCommandString(info, indexList);
-		info = TextParser.removeFirstWord(info);
+		info = textParser.removeFirstWord(info);
 		
 		//5. Extract Task Info Base on Keywords
-		Hashtable<KEYWORD_TYPE, String> taskInformationTable = TextParser.testExtractList(info, keywordList);
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = textParser.testExtractList(info, keywordList);
 		
 		return taskInformationTable;
 	}
@@ -142,7 +144,7 @@ public class Command {
 	}
 	
 	protected void getCommandString(String info, Vector<FormatIdentify> indexList) {
-		String commandString = TextParser.getFirstWord(info);
+		String commandString = textParser.getFirstWord(info);
 		addThisStringToFormatList(commandString, indexList, KEYWORD_TYPE.COMMAND);
 	}
 	
