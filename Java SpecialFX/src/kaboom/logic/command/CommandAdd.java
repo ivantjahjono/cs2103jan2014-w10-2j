@@ -85,13 +85,13 @@ public class CommandAdd extends Command {
 			if(!hasStartTime) {
 				startTime = "0000";
 			}
+			startTime = datFormat.convertStringTimeTo24HourString(startTime);
 			
 			if(hasStartDate) {
 				if(!datFormat.isDateValid(startDate)) {
 					commandFeedback = MESSAGE_COMMAND_ADD_FAIL_INVALID_DATE;
 					return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
 				} else {
-					startTime = datFormat.convertStringTimeTo24HourString(startTime);
 					taskInfo.setStartDate(datFormat.formatStringToCalendar(startDate, startTime));
 				}
 			} else {
