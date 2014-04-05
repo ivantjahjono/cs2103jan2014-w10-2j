@@ -251,6 +251,7 @@ public class DateAndTimeFormat {
 		}
 		return false;
 	}
+	
 	public boolean is12hrTimeValid (String theTime) {
 		if(theTime == null) {
 			return false;
@@ -350,4 +351,49 @@ public class DateAndTimeFormat {
 		}
 	}
 	//*************************** TEST METHODS **********************************
+	
+	
+	public boolean isToday (Calendar dateTime) {
+		Calendar todayDateTime = Calendar.getInstance();
+		if (isThisYear(dateTime) && todayDateTime.get(Calendar.DAY_OF_YEAR) == dateTime.get(Calendar.DAY_OF_YEAR)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isThisWeek (Calendar dateTime) {
+		Calendar todayDateTime = Calendar.getInstance();
+		if (isThisYear(dateTime) && todayDateTime.get(Calendar.WEEK_OF_YEAR) == dateTime.get(Calendar.WEEK_OF_YEAR)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isNextWeek (Calendar dateTime) {
+		Calendar todayDateTime = Calendar.getInstance();
+		
+		int thisWeek = todayDateTime.get(Calendar.WEEK_OF_YEAR);
+		int dateWeek = dateTime.get(Calendar.WEEK_OF_YEAR);
+		if (isThisYear(dateTime) &&  (dateWeek-thisWeek == 1) ||  (thisWeek-dateWeek == 51)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isThisYear (Calendar dateTime) {
+		Calendar todayDateTime = Calendar.getInstance();
+		if (todayDateTime.get(Calendar.YEAR) == dateTime.get(Calendar.YEAR)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isSameDay (Calendar firstDateTime, Calendar secondDateTime) {
+		if (firstDateTime.get(Calendar.YEAR) == secondDateTime.get(Calendar.YEAR) && 
+			firstDateTime.get(Calendar.DAY_OF_YEAR) == secondDateTime.get(Calendar.DAY_OF_YEAR)) {
+			return true;
+		}
+		
+		return false;
+	}
 }
