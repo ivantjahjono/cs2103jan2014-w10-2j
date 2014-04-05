@@ -68,21 +68,18 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	@FXML 	private Label header_all;
 	@FXML 	private Label header_running;
 	@FXML 	private Label header_deadline;
-	@FXML 	private Label header_timed;
 	@FXML 	private Label header_search;
 	@FXML 	private Label header_archive;
 	
 	@FXML 	private Label header_all_count;
 	@FXML 	private Label header_running_count;
 	@FXML 	private Label header_deadline_count;
-	@FXML 	private Label header_timed_count;
 	@FXML 	private Label header_search_count;
 	@FXML 	private Label header_archive_count;
 	
 	private final String HEADER_ALL_NAME 		= "header_all";
 	private final String HEADER_RUNNING_NAME 	= "header_running";
 	private final String HEADER_DEADLINE_NAME 	= "header_deadline";
-	private final String HEADER_TIMED_NAME 		= "header_timed";
 	private final String HEADER_SEARCH_NAME 	= "header_search";
 	private final String HEADER_ARCHIVE_NAME 	= "header_archive";
 	
@@ -155,7 +152,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		labelList.add(header_all);
 		labelList.add(header_running);
 		labelList.add(header_deadline);
-		labelList.add(header_timed);
 		labelList.add(header_search);
 		labelList.add(header_archive);
 		currentLabelIndex = 0;
@@ -312,14 +308,10 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 					break;
 					
 				case 3:
-					header_timed_count.setText(countString);
-					break;
-					
-				case 4:
 					header_search_count.setText(countString);
 					break;
 					
-				case 5:
+				case 4:
 					header_archive_count.setText(countString);
 					break;
 			}
@@ -329,7 +321,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	private void updateCommandFormat() {
 		Label newLabel;
 		
-		// TODO Auto-generated method stub
+		// TODO
 		if (commandFormatFeedback.getChildren() != null) {
 			commandFormatFeedback.getChildren().clear();
 		}
@@ -403,16 +395,12 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				newHeaderIndex = 2;
 				break;
 				
-			case TIMED:
+			case SEARCH:
 				newHeaderIndex = 3;
 				break;
 				
-			case SEARCH:
-				newHeaderIndex = 4;
-				break;
-				
 			case ARCHIVE:
-				newHeaderIndex = 5;
+				newHeaderIndex = 4;
 				break;
 				
 			default:
@@ -513,14 +501,10 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				break;
 				
 			case F4:
-				activateHeaderBasedOnName(HEADER_TIMED_NAME);
-				break;
-				
-			case F5:
 				activateHeaderBasedOnName(HEADER_SEARCH_NAME);
 				break;
 				
-			case F6:
+			case F5:
 				activateHeaderBasedOnName(HEADER_ARCHIVE_NAME);
 				break;	
 				
@@ -609,10 +593,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				
 			case HEADER_DEADLINE_NAME:
 				command = "view deadline";
-				break;
-				
-			case HEADER_TIMED_NAME:
-				command = "view timed";
 				break;
 				
 			case HEADER_SEARCH_NAME:
