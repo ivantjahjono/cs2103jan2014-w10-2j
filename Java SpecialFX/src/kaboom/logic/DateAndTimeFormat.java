@@ -159,7 +159,7 @@ public class DateAndTimeFormat {
 		return dateAndTime;
 	}
 
-	public String convertStringTimeToCalendar(String date) {
+	public String convertStringTimeTo24HourString(String date) {
 		// Convert time to 2400hr format
 		int hour = 0;
 		int addedHour = 0;
