@@ -102,32 +102,32 @@ public class CommandTest {
 		//Valid ViewTypes
 		com.setDisplayState(DISPLAY_STATE.TODAY);
 		com.setTaskInfo(task);
-		assertEquals("All Task Mode", com.execute().getFeedback());
+		assertEquals("Viewing all the tasks for today", com.execute().getFeedback());
 		
 		com.setDisplayState(DISPLAY_STATE.TIMELESS);
 		com.setTaskInfo(task);
-		assertEquals("Deadline Task Mode", com.execute().getFeedback());
+		assertEquals("Viewing timeless tasks", com.execute().getFeedback());
 		
 		com.setDisplayState(DISPLAY_STATE.EXPIRED);
 		com.setTaskInfo(task);
-		assertEquals("Running Task Mode", com.execute().getFeedback());
+		assertEquals("Viewing expired tasks", com.execute().getFeedback());
 		
 		//Boundary 
 		//To be discussed whether to accept or no
-		currentCommand = CommandFactory.createCommand(viewString+" all ");
+		currentCommand = CommandFactory.createCommand(viewString+" today ");
 		com.setTaskInfo(task);
-		assertEquals("All Task Mode", currentCommand.execute().getFeedback());
+		assertEquals("Viewing all the tasks for today", currentCommand.execute().getFeedback());
 		
-		currentCommand = CommandFactory.createCommand(viewString+" all");
+		currentCommand = CommandFactory.createCommand(viewString+" today");
 		com.setTaskInfo(task);
-		assertEquals("All Task Mode", currentCommand.execute().getFeedback());
+		assertEquals("Viewing all the tasks for today", currentCommand.execute().getFeedback());
 		
-		currentCommand = CommandFactory.createCommand(viewString+" all 123");
+		currentCommand = CommandFactory.createCommand(viewString+" today 123");
 		com.setTaskInfo(task);
 		assertEquals("Invalid View Mode", currentCommand.execute().getFeedback());
 		
 		//Invalid Types
-		currentCommand = CommandFactory.createCommand(viewString+" alls");
+		currentCommand = CommandFactory.createCommand(viewString+" todays");
 		com.setTaskInfo(task);
 		assertEquals("Invalid View Mode", currentCommand.execute().getFeedback());
 		}
