@@ -59,6 +59,10 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	// Data for the task table
 			private ObservableList<TaskInfoDisplay> data;
 			
+	@FXML 	private Label		todayWeekDay;
+	@FXML 	private Label		todayDate;
+	@FXML 	private Label		todayTime;
+			
 	// Individual tasks
 	Vector<TaskUiContainer> taskUiList;
 	@FXML 	private Pane 		task1;
@@ -336,6 +340,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	}
 
 	private void updateDisplay() {
+		updateHeaderDateTime();
 		updateTaskTable();
 		updateFeedbackMessage();
 		
@@ -345,6 +350,13 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		updatePagesTab();
 		
 		updateCommandFormat();
+	}
+
+	private void updateHeaderDateTime() {
+		// TODO Auto-generated method stub
+		todayWeekDay.setText(uiData.getCurrentWeekDay());
+		todayDate.setText(uiData.getCurrentDate());
+		todayTime.setText(uiData.getCurrentTime());
 	}
 
 	private void updateHeaderTaskCount() {
