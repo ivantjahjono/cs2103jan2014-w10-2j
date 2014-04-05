@@ -82,7 +82,7 @@
                 <Image url="@img/CaretLeft.png" />
               </image>
             </ImageView>
-            <ImageView id="exitButton" fx:id="nextArrow" blendMode="SRC_OVER" fitHeight="36.0" fitWidth="36.0" layoutX="400.0" layoutY="1.0" onMouseClicked="#onPagesArrowMouseClicked" onMousePressed="#onExitButtonPressed" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="nextpage-button">
+            <ImageView id="exitButton" fx:id="nextArrow" blendMode="SRC_OVER" fitHeight="36.0" fitWidth="36.0" layoutX="400.0" layoutY="1.0" onMouseClicked="#onPagesArrowMouseClicked" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="nextpage-button">
               <image>
                 <Image url="@img/CaretRight.png" />
               </image>
