@@ -30,8 +30,9 @@ public class Command {
 	protected TextParser textParser;
 	protected TaskListShop taskListShop;
 	protected DisplayData displayData;
-	protected KEYWORD_TYPE[] keywordList;  //Initialized in the individual command constructor
+	protected KEYWORD_TYPE[] keywordList;
 	Hashtable<KEYWORD_TYPE, Object> commandObjectTable;
+	Hashtable<KEYWORD_TYPE, String> infoTable; //TEMP
 
 	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
@@ -98,7 +99,6 @@ public class Command {
 	
 	protected void updateFormatListBasedOnHashtable(Vector<FormatIdentify> indexList, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
 		String stringDate;
-		String stringTime;
 		
 		Enumeration<KEYWORD_TYPE> elementItr =  taskInformationTable.keys();
 		
@@ -108,19 +108,7 @@ public class Command {
 			KEYWORD_TYPE resultKeyword = currentKeyword;
 			
 			// Check current type
-			switch (currentKeyword) {
-				case START_TIME:
-				case END_TIME:
-					stringTime = taskInformationTable.get(currentKeyword);
-					
-					// Check if time is valid
-					if (!DateAndTimeFormat.getInstance().is12hrTimeValid(stringTime) &&
-						!DateAndTimeFormat.getInstance().is24hrTimeValid(stringTime)) {
-						//taskInformationTable.remove(currentKeyword);
-						resultKeyword = KEYWORD_TYPE.INVALID;
-					}
-					break;
-					
+			switch (currentKeyword) {					
 				case START_DATE:
 				case END_DATE:
 					stringDate = taskInformationTable.get(currentKeyword);
@@ -242,6 +230,7 @@ public class Command {
 	//extracts from the hash table and stores the information in the taskInfo variable
 	public void extractAndStoreTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
 		storeTaskInfo(infoHashes);
+		infoTable = infoHashes; //temp
 	}
 	
 	
