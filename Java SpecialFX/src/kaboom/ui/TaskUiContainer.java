@@ -1,5 +1,7 @@
 package kaboom.ui;
 
+import java.util.Collections;
+
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
@@ -35,5 +37,21 @@ public class TaskUiContainer {
  		taskname.setText(info.getTaskName());
  		datetime.setText(info.getStartDate());
  		priority.setText(info.getImportanceLevel());
+ 		
+ 		statusbar.getStyleClass().removeAll(Collections.singleton("isNotExpired"));
+ 		statusbar.getStyleClass().removeAll(Collections.singleton("isExpired"));
+ 		statusbar.getStyleClass().removeAll(Collections.singleton("isComplete"));
+ 		statusbar.getStyleClass().removeAll(Collections.singleton("isEmpty"));
+ 		statusbar.getStyleClass().removeAll(Collections.singleton("isRecent"));
+ 		
+ 		if (info.isExpired()) {
+ 			statusbar.getStyleClass().add("isExpired");
+ 		} else if (info.isRecent()) {
+ 			statusbar.getStyleClass().add("isRecent");
+ 		} else if (info.isDone()) {
+ 			statusbar.getStyleClass().add("isComplete");
+ 		} else {
+ 			statusbar.getStyleClass().add("isNotExpired");
+ 		}
  	}
 }
