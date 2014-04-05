@@ -11,20 +11,18 @@ import kaboom.ui.DISPLAY_STATE;
 import kaboom.ui.TaskView;
 
 public class CommandView extends Command{
-	private final String KEYWORD_RUNNING = "running";
-	private final String KEYWORD_DEADLINE = "deadline";
-	private final String KEYWORD_TIMED = "timed";
+	private final String KEYWORD_TIMELESS = "timeless";
+	private final String KEYWORD_EXPIRED = "expired";
 	private final String KEYWORD_SEARCH = "search";
 	private final String KEYWORD_ARCHIVE = "archive";
-	private final String KEYWORD_ALL = "all";
+	private final String KEYWORD_TODAY = "today";
 	
-	private final String MESSAGE_VIEW_RUNNING = "Running Task Mode";
-	private final String MESSAGE_VIEW_DEADLINE = "Deadline Task Mode";
-	private final String MESSAGE_VIEW_TIMED = "Timed Task Mode";
-	private final String MESSAGE_VIEW_ALL = "All Task Mode";
-	private final String MESSAGE_VIEW_SEARCH = "Search Result Mode";
-	private final String MESSAGE_VIEW_ARCHIVE = "Archive View Mode";
-	private final String MESSAGE_VIEW_INVALID = "Invalid View Mode";
+	private final String MESSAGE_VIEW_TODAY 	= "Viewing all the tasks for today";
+	private final String MESSAGE_VIEW_TIMELESS 	= "Viewing timeless tasks";
+	private final String MESSAGE_VIEW_EXPIRED 	= "Viewing expired tasks";
+	private final String MESSAGE_VIEW_SEARCH 	= "Viewing search result";
+	private final String MESSAGE_VIEW_ARCHIVE 	= "Viewing completed tasks";
+	private final String MESSAGE_VIEW_INVALID 	= "Invalid View Mode";
 	
 	String viewType;
 	DISPLAY_STATE stateToSet;
@@ -47,21 +45,17 @@ public class CommandView extends Command{
 		}
 		
 		switch(stateToSet) {
-			case RUNNING:
-				taskList = taskListShop.getFloatingTasks();
-				feedback = MESSAGE_VIEW_RUNNING;
-				break;
-			case DEADLINE:
-				taskList = taskListShop.getDeadlineTasks();
-				feedback = MESSAGE_VIEW_DEADLINE;
-				break;
-			case TIMED:
-				taskList = taskListShop.getTimedTasks();
-				feedback = MESSAGE_VIEW_TIMED;
-				break;
-			case ALL:
+			case TODAY:
 				taskList = taskListShop.getAllCurrentTasks();
-				feedback = MESSAGE_VIEW_ALL;
+				feedback = MESSAGE_VIEW_TODAY;
+				break;
+			case TIMELESS:
+				taskList = taskListShop.getFloatingTasks();
+				feedback = MESSAGE_VIEW_TIMELESS;
+				break;
+			case EXPIRED:
+				taskList = taskListShop.getDeadlineTasks();
+				feedback = MESSAGE_VIEW_EXPIRED;
 				break;
 			case SEARCH:
 				taskList = new Vector<TaskInfo>();
@@ -85,14 +79,12 @@ public class CommandView extends Command{
 
 	private DISPLAY_STATE determineDisplayState(String viewType2) {
 		switch(viewType) {
-			case KEYWORD_RUNNING:
-				return DISPLAY_STATE.RUNNING;
-			case KEYWORD_DEADLINE:
-				return DISPLAY_STATE.DEADLINE;
-			case KEYWORD_TIMED:
-				return DISPLAY_STATE.TIMED;
-			case KEYWORD_ALL:
-				return DISPLAY_STATE.ALL;
+			case KEYWORD_TODAY:
+				return DISPLAY_STATE.TODAY;
+			case KEYWORD_TIMELESS:
+				return DISPLAY_STATE.TIMELESS;
+			case KEYWORD_EXPIRED:
+				return DISPLAY_STATE.EXPIRED;
 			case KEYWORD_SEARCH:
 				return DISPLAY_STATE.SEARCH;
 			case KEYWORD_ARCHIVE:

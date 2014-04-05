@@ -32,20 +32,16 @@ public class TaskView {
 
 	public Vector<TaskInfo> setAndGetView(DISPLAY_STATE displayState) {
 		switch (displayState) {
-		case ALL:
+		case TODAY:
 			setCurrentView(taskListShop.getAllCurrentTasks());
 			break;
 
-		case RUNNING:
+		case TIMELESS:
 			setCurrentView(taskListShop.getFloatingTasks());
 			break;
 
-		case DEADLINE:
+		case EXPIRED:
 			setCurrentView(taskListShop.getDeadlineTasks());
-			break;
-
-		case TIMED:
-			setCurrentView(taskListShop.getTimedTasks());
 			break;
 
 		case SEARCH:
@@ -66,17 +62,14 @@ public class TaskView {
 
 	public Vector<TaskInfo> getView(DISPLAY_STATE displayState) {
 		switch (displayState) {
-		case ALL:
+		case TODAY:
 			return taskListShop.getAllCurrentTasks();
 
-		case RUNNING:
+		case TIMELESS:
 			return taskListShop.getFloatingTasks();
 
-		case DEADLINE:
+		case EXPIRED:
 			return taskListShop.getDeadlineTasks();
-
-		case TIMED:
-			return taskListShop.getTimedTasks();
 
 		case SEARCH:
 			return searchView;

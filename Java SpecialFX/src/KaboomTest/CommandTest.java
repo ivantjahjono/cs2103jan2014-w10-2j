@@ -100,15 +100,15 @@ public class CommandTest {
 		assertEquals("Invalid View Mode", com.execute().getFeedback());
 		
 		//Valid ViewTypes
-		com.setDisplayState(DISPLAY_STATE.ALL);
+		com.setDisplayState(DISPLAY_STATE.TODAY);
 		com.setTaskInfo(task);
 		assertEquals("All Task Mode", com.execute().getFeedback());
 		
-		com.setDisplayState(DISPLAY_STATE.DEADLINE);
+		com.setDisplayState(DISPLAY_STATE.TIMELESS);
 		com.setTaskInfo(task);
 		assertEquals("Deadline Task Mode", com.execute().getFeedback());
 		
-		com.setDisplayState(DISPLAY_STATE.RUNNING);
+		com.setDisplayState(DISPLAY_STATE.EXPIRED);
 		com.setTaskInfo(task);
 		assertEquals("Running Task Mode", com.execute().getFeedback());
 		
