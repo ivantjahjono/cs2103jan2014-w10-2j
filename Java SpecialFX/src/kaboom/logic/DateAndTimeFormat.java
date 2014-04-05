@@ -136,7 +136,7 @@ public class DateAndTimeFormat {
 			return null;
 		}
 		Calendar dateAndTime = Calendar.getInstance();
-	
+		
 		boolean isDateValid = isDateValid(date);
 		boolean isTimeValid = isTimeValid(time);
 		
@@ -157,6 +157,48 @@ public class DateAndTimeFormat {
 		} 
 	
 		return dateAndTime;
+	}
+
+	public String convertStringTimeToCalendar(String date) {
+		// Convert time to 2400hr format
+		int hour = 0;
+		int addedHour = 0;
+		int minutes = 0;
+		boolean ampmTiming = false;
+		
+		// Check if it contains am or pm
+		if (date.contains("pm")) {
+			hour += 12;
+			ampmTiming = true;
+		} else if (date.contains("am")) {
+			ampmTiming = true;
+		}
+		
+		// Remove all instance of am and pm and colon if possible
+		date = date.replaceAll(":?(am|pm)?", "");
+		
+		// Extract time into hours and minutes
+		if (date.length() > 2) {
+			String minuteString = date.substring(date.length()-2, date.length());
+			minutes += Integer.parseInt(minuteString);
+			date =  date.replaceAll(minuteString, "");
+			
+			if (!date.equals("")) {
+				addedHour = Integer.parseInt(date);
+				
+				// Checks for 12am and 12pm
+				if (addedHour == 12 && ampmTiming) {
+					hour -= 12;
+				}
+				hour += addedHour;
+			}
+		} else {
+			hour += Integer.parseInt(date);
+		}
+		
+		System.out.printf("Hour: %d:%02d\n", hour, minutes);
+		
+		return String.format("%02d%02d", hour, minutes);
 	}
 	
 	public String dateFromCalendarToString (Calendar cal) {
