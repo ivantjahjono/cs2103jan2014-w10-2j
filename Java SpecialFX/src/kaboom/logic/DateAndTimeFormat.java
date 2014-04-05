@@ -61,7 +61,7 @@ public class DateAndTimeFormat {
 		return dateAndTime;
 	}
 	
-	private void convertStringDateToCalendar(Calendar cal, String date) {		
+	public void convertStringDateToCalendar(Calendar cal, String date) {		
 		for(int i = 0; i < dateFormatList.length; i++) {
 			try {
 				//validate date
@@ -78,7 +78,7 @@ public class DateAndTimeFormat {
 		}
 	}
 	
-	private void convertStringTimeToCalendar(Calendar cal, String time) {	
+	public void convertStringTimeToCalendar(Calendar cal, String time) {	
 		String minutesString = time.substring(time.length()-2, time.length());
 		String hourString = time.replaceFirst(minutesString, "");
 		int minutes = Integer.parseInt(minutesString);
@@ -145,7 +145,7 @@ public class DateAndTimeFormat {
 	public String dateFromCalendarToString (Calendar cal) {
 		String day = String.format("%02d", cal.get(Calendar.DATE));
 		String month = String.format("%02d", cal.get(Calendar.MONTH)+1);
-		String year = String.format("%02d", cal.get(Calendar.YEAR)%100);
+		String year = String.format("%02d", cal.get(Calendar.YEAR));
 		String date = day+month+year;
 		return date;
 	}
@@ -164,6 +164,18 @@ public class DateAndTimeFormat {
 		return dateAndTimeToAdd;
 	}
 	
+	public Calendar addDayToCalendar (Calendar dateAndTime, int day) {
+		Calendar dateAndTimeToAdd = (Calendar) dateAndTime.clone();
+		dateAndTimeToAdd.add(Calendar.DATE, day);
+		return dateAndTimeToAdd;
+	}
+	
+	public Calendar addMonthToCalendar (Calendar dateAndTime, int month) {
+		Calendar dateAndTimeToAdd = (Calendar) dateAndTime.clone();
+		dateAndTimeToAdd.add(Calendar.MONTH, month);
+		return dateAndTimeToAdd;
+	}
+	
 	public boolean dateValidityForStartAndEndDate (Calendar startDate, Calendar endDate) {
 		if (startDate == null || endDate == null) {
 			return true;
@@ -176,6 +188,16 @@ public class DateAndTimeFormat {
 	
 
 	public String getTodayDate () {
+		Calendar todayCal = Calendar.getInstance();
+		String todayString = "";
+		String day = String.format("%02d",todayCal.get(Calendar.DATE));
+		String month = String.format("%02d",todayCal.get(Calendar.MONTH) + 1);
+		String year = Integer.toString(todayCal.get(Calendar.YEAR));
+		todayString = day + month + year;
+		return todayString;
+	}
+	
+	public String getNextDate (Calendar cal) {
 		Calendar todayCal = Calendar.getInstance();
 		String todayString = "";
 		String day = String.format("%02d",todayCal.get(Calendar.DATE));

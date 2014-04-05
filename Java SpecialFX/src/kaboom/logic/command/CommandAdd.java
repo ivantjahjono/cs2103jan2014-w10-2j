@@ -1,5 +1,6 @@
 package kaboom.logic.command;
 
+import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -115,18 +116,31 @@ public class CommandAdd extends Command {
 			if(!hasEndTime) {
 				endTime = "0000";
 			}
+			endTime = datFormat.convertStringTimeTo24HourString(endTime);
 			
 			if(hasEndDate) {
 				if(!datFormat.isDateValid(endDate)) {
 					commandFeedback = MESSAGE_COMMAND_ADD_FAIL_INVALID_DATE;
 					return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
 				} else {
-					endTime = datFormat.convertStringTimeTo24HourString(endTime);
-					taskInfo.setStartDate(datFormat.formatStringToCalendar(endDate, endTime));
+					//hasEndDate noEndTime hasStartDate -> Append same time(startTime)
+					if(taskInfo.getStartDate() != null && !hasEndTime) {
+						endTime = startTime;
+					}
+					taskInfo.setEndDate(datFormat.formatStringToCalendar(endDate, endTime));
 				}
 			} else {
-				endDate = datFormat.getTodayDate();
-				taskInfo.setStartDate(datFormat.formatStringToCalendar(endDate, endTime));
+				//hasEndTime noEndDate hasStartDate -> check if time is before start time set 1 day later else set same day				
+				if(taskInfo.getStartDate() != null) {
+					if(Integer.parseInt(endTime) < Integer.parseInt(startTime)) {
+						Calendar endDateCal = datFormat.addDayToCalendar(taskInfo.getStartDate(), 1);
+						datFormat.convertStringTimeToCalendar(endDateCal, endTime);
+						taskInfo.setEndDate(endDateCal);
+					}
+				} else {
+					endDate = datFormat.getTodayDate();
+					taskInfo.setEndDate(datFormat.formatStringToCalendar(endDate, endTime));
+				}
 			}
 		}
 		
