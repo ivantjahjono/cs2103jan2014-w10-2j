@@ -24,8 +24,7 @@
           <columns>
             <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="39.0" resizable="false" sortable="false" style="" text="ID" fx:id="columnTaskId" />
             <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="230.0" resizable="false" sortable="false" text="TASK NAME" fx:id="columnTaskName" />
-            <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="122.0" resizable="false" sortable="false" text="START DATE" fx:id="columnStartTime" />
-            <TableColumn editable="false" id="columnEndTime" maxWidth="5000.0" minWidth="10.0" prefWidth="122.0" resizable="false" sortable="false" text="END DATE" fx:id="columnEndTime" />
+            <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="244.0" resizable="false" sortable="false" text="DATE" fx:id="columnStartTime" />
             <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="65.0" resizable="false" sortable="false" text="PRIORITY" visible="true" fx:id="columnPriority" />
           </columns>
           <stylesheets>
@@ -77,12 +76,12 @@
         </HBox>
         <Pane disable="false" focusTraversable="false" layoutX="10.0" layoutY="374.0" prefHeight="32.0" prefWidth="572.0" visible="true">
           <children>
-            <ImageView id="exitButton" fx:id="prevArrow" blendMode="SRC_OVER" fitHeight="36.0" fitWidth="36.0" layoutX="145.0" layoutY="1.0" onMouseClicked="#onPagesArrowMouseClicked" onMousePressed="#onExitButtonPressed" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="prevpage-button">
+            <ImageView fx:id="prevArrow" blendMode="SRC_OVER" fitHeight="36.0" fitWidth="36.0" layoutX="145.0" layoutY="1.0" onMouseClicked="#onPagesArrowMouseClicked" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="prevpage-button">
               <image>
                 <Image url="@img/CaretLeft.png" />
               </image>
             </ImageView>
-            <ImageView id="exitButton" fx:id="nextArrow" blendMode="SRC_OVER" fitHeight="36.0" fitWidth="36.0" layoutX="400.0" layoutY="1.0" onMouseClicked="#onPagesArrowMouseClicked" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="nextpage-button">
+            <ImageView fx:id="nextArrow" blendMode="SRC_OVER" fitHeight="36.0" fitWidth="36.0" layoutX="400.0" layoutY="1.0" onMouseClicked="#onPagesArrowMouseClicked" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="nextpage-button">
               <image>
                 <Image url="@img/CaretRight.png" />
               </image>
