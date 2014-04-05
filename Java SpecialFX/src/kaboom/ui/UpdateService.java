@@ -1,5 +1,6 @@
 package kaboom.ui;
 
+import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import kaboom.logic.TaskMasterKaboom;
@@ -22,6 +23,11 @@ class UpdateService extends Service<Void> {
     		@Override
     		protected Void call() throws Exception {
     			//System.out.println("Begin task");
+    			if (Platform.isFxApplicationThread()) {
+    				System.out.println("Running on FX thread!");
+    			} else {
+    				System.out.println("Running on background thread!");
+    			}
     			++counter;
     			controllerInstance.updateTaskList();
     			return null;
