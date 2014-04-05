@@ -449,4 +449,35 @@ public class DateAndTimeFormat {
 		
 		return false;
 	}
+	
+	public Calendar getCurrentDateAndTime () {
+		return Calendar.getInstance();
+	}
+	
+	public String getCurrentWeekday () {
+		Calendar dateTime = Calendar.getInstance();
+		
+		String weekFormatString = "EEE";
+		SimpleDateFormat weekFormat = new SimpleDateFormat(weekFormatString);
+		
+		return weekFormat.format(dateTime.getTime());
+	}
+	
+	public String getDateToday () {
+		Calendar dateTime = Calendar.getInstance();
+		
+		String dayFormatString = "dd MMM yy";
+		SimpleDateFormat dayFormat = new SimpleDateFormat(dayFormatString);
+		
+		return dayFormat.format(dateTime.getTime());
+	}
+	
+	public String getTimeNow () {
+		Calendar dateTime = Calendar.getInstance();
+		
+		String timeFormatString = "hh:mm a";
+		SimpleDateFormat timeFormat = new SimpleDateFormat(timeFormatString);
+		
+		return timeFormat.format(dateTime.getTime());
+	}
 }

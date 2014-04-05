@@ -230,17 +230,17 @@
         </HBox>
         <Group id="Group" layoutX="10.0" layoutY="22.0" scaleX="1.0" scaleY="1.0">
           <children>
-            <Label alignment="CENTER_RIGHT" layoutX="0.0" layoutY="0.0" text="SAT">
+            <Label fx:id="todayWeekDay" alignment="CENTER_RIGHT" layoutX="0.0" layoutY="0.0" text="SAT">
               <font>
                 <Font name="Segoe UI" size="50.0" />
               </font>
             </Label>
-            <Label layoutX="90.0" layoutY="15.0" text="12 Oct 14">
+            <Label fx:id="todayDate" alignment="CENTER_RIGHT" layoutX="87.0" layoutY="15.0" prefWidth="80.0" text="12 Oct 14">
               <font>
                 <Font size="18.0" fx:id="x6" />
               </font>
             </Label>
-            <Label font="$x6" layoutX="93.0" layoutY="35.0" text="08:00 PM" />
+            <Label fx:id="todayTime" alignment="CENTER_RIGHT" font="$x6" layoutX="87.0" layoutY="35.0" prefWidth="80.0" text="08:00 PM" />
           </children>
         </Group>
         <Line endX="-10.0" endY="-55.0" layoutX="200.0" layoutY="96.0" startX="-10.0" startY="-20.0" />
