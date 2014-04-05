@@ -76,20 +76,20 @@ public class SystemTest {
 		command = "view     ";
 		assertEquals("Invalid View Mode", controller.processCommand(command));
 		
-		command = "view all";
-		assertEquals("All Task Mode", controller.processCommand(command));
+		command = "view today";
+		assertEquals("Viewing all the tasks for today", controller.processCommand(command));
 		
-		command = "view running";
-		assertEquals("Running Task Mode", controller.processCommand(command));
+		command = "view timeless";
+		assertEquals("Viewing timeless tasks", controller.processCommand(command));
 		
-		command = "view deadline";
-		assertEquals("Deadline Task Mode", controller.processCommand(command));
-		
-		command = "view timed";
-		assertEquals("Timed Task Mode", controller.processCommand(command));
+		command = "view expired";
+		assertEquals("Viewing expired tasks", controller.processCommand(command));
 		
 		command = "view search";
-		assertEquals("Search Result Mode", controller.processCommand(command));
+		assertEquals("Viewing search result", controller.processCommand(command));
+		
+		command = "view archive";
+		assertEquals("Viewing completed tasks", controller.processCommand(command));
 	}
 
 	@After
