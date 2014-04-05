@@ -52,7 +52,6 @@ public class DateAndTimeFormat {
 		if(date == null || time == null) {
 			return null;
 		}
-		System.out.println(date+" "+time);
 		Calendar dateAndTime = Calendar.getInstance();
 		
 		convertStringDateToCalendar(dateAndTime, date);
