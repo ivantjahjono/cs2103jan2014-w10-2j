@@ -196,8 +196,6 @@ public class DateAndTimeFormat {
 			hour += Integer.parseInt(date);
 		}
 		
-		System.out.printf("Hour: %d:%02d\n", hour, minutes);
-		
 		return String.format("%02d%02d", hour, minutes);
 	}
 	

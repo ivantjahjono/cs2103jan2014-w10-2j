@@ -265,30 +265,30 @@ public class DateAndTimeFormatTest {
 		String timeString = "";
 		
 		timeString = "1pm";
-		assertEquals("13:00", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("1300", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "1:00";
-		assertEquals("01:00", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("0100", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "13:00";
-		assertEquals("13:00", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("1300", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "8pm";
-		assertEquals("20:00", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("2000", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "8am";
-		assertEquals("08:00", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("0800", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "12:01am";
-		assertEquals("00:01", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("0001", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "12:34pm";
-		assertEquals("12:34", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("1234", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "1234";
-		assertEquals("12:34", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("1234", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "2334";
-		assertEquals("23:34", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("2334", datFormat.convertStringTimeTo24HourString(timeString));
 	}
 }
