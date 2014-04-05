@@ -34,7 +34,7 @@ public class GraphicInterface extends Application {
 	public void start(Stage primaryStage) {
 		FXMLLoader loader = null;
 		try {
-			loader = new FXMLLoader(getClass().getResource("TaskMasterKaboomUi.fxml"));
+			loader = new FXMLLoader(getClass().getResource("TaskMasterKaboomUiUpgrade.fxml"));
 			root = (Parent)(loader.load());
 		} catch(Exception e) {
 			e.printStackTrace();
