@@ -357,7 +357,7 @@ public class TaskListShop {
 	}
 
 	public boolean setDoneByID(int index) {
-		//There might be arrray out of bounds error here
+		//There might be array out of bounds error here
 		try {
 			TaskInfo singleTask = currentTaskList.get(index);
 			singleTask.setDone(true);
@@ -370,7 +370,7 @@ public class TaskListShop {
 	}
 	
 	public boolean setUndoneByID(int index) {
-		//There might be arrray out of bounds error here
+		//There might be array out of bounds error here
 		try {
 			TaskInfo singleTask = archivedTaskList.get(index);
 			singleTask.setDone(false);

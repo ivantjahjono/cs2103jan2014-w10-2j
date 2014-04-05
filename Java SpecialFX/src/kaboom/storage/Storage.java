@@ -5,7 +5,9 @@ import kaboom.storage.TaskListShop;
 import java.util.Scanner;
 import java.util.Vector;
 import java.util.Calendar;
+import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
@@ -34,12 +36,22 @@ public class Storage {
 	private static final int INDEX_IS_DONE = 14;
 
 	private String fileName;
+	private final String storageLoggerFile = "StorageLog.txt";
 
 	private final Logger logger = Logger.getLogger("StorageLogger");
+	private FileHandler fileHandler; 
 	private BufferedWriter writer;
 
 	public Storage(String fileName) {
-		this.fileName = fileName;
+		try {
+			this.fileName = fileName;
+			fileHandler = new FileHandler(storageLoggerFile);
+			logger.addHandler(fileHandler);
+			fileHandler.setFormatter(new SimpleFormatter());
+			logger.setUseParentHandlers(false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -52,7 +64,7 @@ public class Storage {
 	public boolean store() {
 		try {
 			writer = new BufferedWriter(new FileWriter(fileName));
-			
+
 			logger.fine("Trying to write current tasks text file: " + fileName);
 			Vector<TaskInfo> currentTaskList = TaskListShop.getInstance().getAllCurrentTasks();
 			assert(currentTaskList != null);
