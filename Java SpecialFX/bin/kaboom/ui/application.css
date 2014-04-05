@@ -91,6 +91,13 @@
 .header-label-normal {
 	-fx-font-size: 16px;
 	-fx-text-fill: #9F9F9F;
+	-fx-opacity: 1;
+}
+
+.header-label-normal:hover {
+	-fx-font-size: 16px;
+	-fx-text-fill: #0066FF;
+	-fx-opacity: 0.8;
 }
 
 .isRecent {
@@ -218,6 +225,22 @@
 
 .minimise-button:hover {
 	-fx-image: url("img/MarkUnderHover.png");
+}
+
+.nextpage-button {
+	-fx-image: url("img/CaretRight.png");
+}
+
+.nextpage-button:hover {
+	-fx-image: url("img/CaretRightHover.png");
+}
+
+.prevpage-button {
+	-fx-image: url("img/CaretLeft.png");
+}
+
+.prevpage-button:hover {
+	-fx-image: url("img/CaretLeftHover.png");
 }
 
 .root {

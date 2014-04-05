@@ -75,17 +75,18 @@
             <URL value="@application.css" />
           </stylesheets>
         </HBox>
-        <Pane disable="false" focusTraversable="false" layoutX="10.0" layoutY="374.0" prefHeight="22.0" prefWidth="572.0" visible="true">
+        <Pane disable="false" focusTraversable="false" layoutX="10.0" layoutY="374.0" prefHeight="32.0" prefWidth="572.0" visible="true">
           <children>
-            <Text fx:id="nextArrow" layoutX="405.0" layoutY="22.0" onMouseClicked="#onPagesArrowMouseClicked" opacity="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&gt;">
-              <fill>
-                <Color blue="1.000" green="0.784" red="0.400" fx:id="x5" />
-              </fill>
-              <font>
-                <Font name="Segoe UI" size="24.0" fx:id="x6" />
-              </font>
-            </Text>
-            <Text fx:id="prevArrow" fill="$x5" font="$x6" layoutX="150.0" layoutY="22.0" onMouseClicked="#onPagesArrowMouseClicked" opacity="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;" />
+            <ImageView id="exitButton" fx:id="prevArrow" blendMode="SRC_OVER" fitHeight="36.0" fitWidth="36.0" layoutX="145.0" layoutY="1.0" onMouseClicked="#onPagesArrowMouseClicked" onMousePressed="#onExitButtonPressed" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="prevpage-button">
+              <image>
+                <Image url="@img/CaretLeft.png" />
+              </image>
+            </ImageView>
+            <ImageView id="exitButton" fx:id="nextArrow" blendMode="SRC_OVER" fitHeight="36.0" fitWidth="36.0" layoutX="400.0" layoutY="1.0" onMouseClicked="#onPagesArrowMouseClicked" onMousePressed="#onExitButtonPressed" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="nextpage-button">
+              <image>
+                <Image url="@img/CaretRight.png" />
+              </image>
+            </ImageView>
           </children>
         </Pane>
         <HBox id="HBox" fx:id="commandFormatFeedback" alignment="CENTER_LEFT" layoutX="16.0" layoutY="460.0" maxWidth="540.0" prefWidth="540.0" spacing="0.0">
