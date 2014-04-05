@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" fx:id="mainPane" blendMode="SRC_OVER" focusTraversable="true" layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="485.0" prefWidth="600.0" snapToPixel="true" styleClass="root" translateX="0.0" translateY="0.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboom.ui.MainWindow">
+  <children>
+    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="WHITE" height="484.00006948241935" layoutX="0.0" layoutY="0.0" opacity="1.0" smooth="true" strokeType="INSIDE" strokeWidth="1.0" styleClass="column-header" width="600.0">
+      <stroke>
+        <Color blue="0.937" green="0.537" red="0.176" fx:id="x4" />
+      </stroke>
+    </Rectangle>
+    <AnchorPane id="AnchorPane" layoutX="3.0" layoutY="0.0" mouseTransparent="false" pickOnBounds="true" prefWidth="600.0" visible="false">
+      <children>
+        <TableView fx:id="taskDisplayTable" editable="false" focusTraversable="false" layoutX="7.0" layoutY="75.0" prefHeight="309.0" prefWidth="580.0" tableMenuButtonVisible="false" visible="true">
+          <columns>
+            <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="39.0" resizable="false" sortable="false" style="" text="ID" fx:id="columnTaskId" />
+            <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="230.0" resizable="false" sortable="false" text="TASK NAME" fx:id="columnTaskName" />
+            <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="244.0" resizable="false" sortable="false" text="DATE" fx:id="columnStartTime" />
+            <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="65.0" resizable="false" sortable="false" text="PRIORITY" visible="true" fx:id="columnPriority" />
+          </columns>
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </TableView>
+        <HBox alignment="BOTTOM_CENTER" fillHeight="true" layoutX="12.0" layoutY="22.0" prefHeight="35.999900000002526" prefWidth="567.0000999999975" rotate="0.0">
+          <children>
+            <Label id="header_all" fx:id="header_today" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="4.0" onMouseClicked="#onHeaderMouseClicked" prefWidth="80.0" styleClass="header-label-normal" text="TODAY" textAlignment="LEFT" underline="false">
+              <font>
+                <Font name="Segoe UI" size="20.0" fx:id="x1" />
+              </font>
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+              <textFill>
+                <Color blue="0.625" green="0.625" red="0.625" fx:id="x2" />
+              </textFill>
+            </Label>
+            <Label id="header_running" fx:id="header_timeless" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x1" onMouseClicked="#onHeaderMouseClicked" prefWidth="90.0" styleClass="header-label-normal" text="TIMELESS" textAlignment="LEFT" textFill="$x2" underline="false">
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </Label>
+            <Label id="header_deadline" fx:id="header_expired" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x1" onMouseClicked="#onHeaderMouseClicked" prefWidth="90.0" styleClass="header-label-normal" text="EXPIRED" textAlignment="LEFT" underline="false">
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+              <textFill>
+                <Color blue="0.624" green="0.624" red="0.624" fx:id="x3" />
+              </textFill>
+            </Label>
+            <Label fx:id="header_search" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x1" onMouseClicked="#onHeaderMouseClicked" prefWidth="80.0" styleClass="header-label-normal" text="SEARCH" textAlignment="LEFT" textFill="$x3" underline="false">
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </Label>
+            <Label fx:id="header_archive" alignment="CENTER" contentDisplay="TEXT_ONLY" disable="false" focusTraversable="false" font="$x1" onMouseClicked="#onHeaderMouseClicked" prefWidth="90.0" styleClass="header-label-normal" text="ARCHIVE" textAlignment="LEFT" textFill="$x3" underline="false">
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </Label>
+          </children>
+        </HBox>
+        <HBox fx:id="pageTabContainer" alignment="CENTER" layoutX="196.0" layoutY="383.0" prefHeight="22.0" prefWidth="200.0" styleClass="pages-tab-hbox">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </HBox>
+        <Pane disable="false" focusTraversable="false" layoutX="10.0" layoutY="374.0" prefHeight="32.0" prefWidth="572.0" visible="true">
+          <children>
+            <ImageView fx:id="prevArrow" blendMode="SRC_OVER" fitHeight="36.0" fitWidth="36.0" layoutX="145.0" layoutY="1.0" onMouseClicked="#onPagesArrowMouseClicked" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="prevpage-button">
+              <image>
+                <Image url="@img/CaretLeft.png" />
+              </image>
+            </ImageView>
+            <ImageView fx:id="nextArrow" blendMode="SRC_OVER" fitHeight="36.0" fitWidth="36.0" layoutX="400.0" layoutY="1.0" onMouseClicked="#onPagesArrowMouseClicked" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="nextpage-button">
+              <image>
+                <Image url="@img/CaretRight.png" />
+              </image>
+            </ImageView>
+          </children>
+        </Pane>
+        <HBox id="HBox" fx:id="commandFormatFeedback" alignment="CENTER_LEFT" layoutX="16.0" layoutY="460.0" maxWidth="540.0" prefWidth="540.0" spacing="0.0">
+          <children>
+            <Label mnemonicParsing="false" mouseTransparent="true" styleClass="parseCommandTypeName" text="command">
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </Label>
+            <Label styleClass="parseCommandName" text="taskname" />
+            <Label styleClass="parseCommandStartDate" text="startdate" />
+            <Label styleClass="parseCommandEndDate" text="enddate" />
+            <Label styleClass="parseCommandPriority" text="priority" />
+            <Label styleClass="parseCommandInvalid" text="invalid" />
+          </children>
+        </HBox>
+        <HBox alignment="BOTTOM_CENTER" fillHeight="true" layoutX="12.0" layoutY="36.0" mouseTransparent="true" pickOnBounds="false" prefHeight="36.0" prefWidth="567.0" rotate="0.0">
+          <children>
+            <Label id="header_all" fx:id="header_today_count" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="4.0" mouseTransparent="true" prefWidth="80.0" text="128" textAlignment="LEFT" underline="false">
+              <font>
+                <Font name="Segoe UI Light" size="14.0" fx:id="x7" />
+              </font>
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+              <textFill>
+                <Color blue="0.375" green="0.375" red="0.375" fx:id="x8" />
+              </textFill>
+            </Label>
+            <Label id="header_running" fx:id="header_timeless_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="90.0" text="10" textAlignment="LEFT" textFill="$x8" underline="false">
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </Label>
+            <Label id="header_deadline" fx:id="header_expired_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="90.0" text="30" textAlignment="LEFT" textFill="$x8" underline="false">
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </Label>
+            <Label id="header_timed" fx:id="header_search_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="80.0" text="80" textAlignment="LEFT" textFill="$x8" underline="false">
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </Label>
+            <Label id="header_search" fx:id="header_archive_count" alignment="CENTER" contentDisplay="TEXT_ONLY" disable="false" focusTraversable="false" font="$x7" mouseTransparent="true" prefWidth="90.0" text="127" textAlignment="LEFT" textFill="$x8" underline="false">
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </Label>
+          </children>
+        </HBox>
+      </children>
+    </AnchorPane>
+    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_ATOP" fill="#2d89ef" height="27.0" layoutX="0.0" layoutY="0.0" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0" />
+    <ImageView fx:id="exitButton" blendMode="SRC_OVER" fitHeight="27.0" fitWidth="27.0" layoutX="569.0" layoutY="0.0" onMousePressed="#onExitButtonPressed" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="close-button">
+      <image>
+        <Image url="@img/MarkX.png" />
+      </image>
+    </ImageView>
+    <ImageView id="exitButton" fx:id="minimiseButton" blendMode="SRC_OVER" fitHeight="27.0" fitWidth="27.0" layoutX="542.0" layoutY="0.0" onMousePressed="#onMinimiseMousePressed" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="minimise-button">
+      <image>
+        <Image url="@img/MarkX.png" />
+      </image>
+    </ImageView>
+    <Label layoutX="14.0" layoutY="5.0" mouseTransparent="true" text="| TASK MASTER KABOOM V0.3" textFill="WHITE">
+      <font>
+        <Font name="Segoe UI" size="12.0" />
+      </font>
+    </Label>
+    <Label fx:id="counter" layoutX="254.0" layoutY="5.0" mouseTransparent="true" text="Test Counter: 0" textFill="WHITE" visible="false">
+      <font>
+        <Font name="Segoe UI Semibold" size="12.0" fx:id="x10" />
+      </font>
+    </Label>
+    <TextField fx:id="commandTextInput" disable="false" layoutX="11.0" layoutY="434.0" onAction="#onTextfieldAction" onKeyReleased="#onTextfieldKeyReleased" prefWidth="572.0" promptText="Please enter a command" styleClass="text-field-correct" text="" />
+    <Pane fx:id="feedbackBox" blendMode="SRC_OVER" layoutX="10.0" layoutY="410.0" prefHeight="22.0" prefWidth="572.0" styleClass="feedback-pane">
+      <children>
+        <Label id="" fx:id="feedbackText" labelFor="$commandTextInput" layoutX="0.0" layoutY="0.0" minHeight="22.0" prefHeight="22.0" prefWidth="567.0" text="Feedback" textFill="$x4" translateX="5.0" underline="false">
+          <font>
+            <Font name="Segoe UI Semilight" size="16.0" />
+          </font>
+        </Label>
+      </children>
+      <stylesheets>
+        <URL value="@application.css" />
+      </stylesheets>
+    </Pane>
+    <AnchorPane layoutX="3.0" layoutY="0.0" mouseTransparent="true" pickOnBounds="false" prefHeight="485.0" prefWidth="600.0" visible="true">
+      <children>
+        <Label alignment="CENTER_RIGHT" layoutX="17.0" layoutY="32.0" text="SAT">
+          <font>
+            <Font name="Segoe UI" size="60.0" />
+          </font>
+        </Label>
+        <Label layoutX="130.0" layoutY="50.0" text="12 Oct 14">
+          <font>
+            <Font size="20.0" fx:id="x9" />
+          </font>
+        </Label>
+        <Label font="$x9" layoutX="132.0" layoutY="74.0" text="08:00 PM" />
+        <Label font="$x9" layoutX="41.0" layoutY="120.0" text="Today" />
+        <Pane layoutX="30.0" layoutY="156.0" prefHeight="40.0" prefWidth="499.9999000000025">
+          <children>
+            <Label alignment="TOP_LEFT" ellipsisString="..." layoutX="21.0" layoutY="1.0" minWidth="479.0" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true">
+              <font>
+                <Font name="Segoe UI Semibold" size="14.0" fx:id="x11" />
+              </font>
+            </Label>
+            <Rectangle arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
+            <Label alignment="CENTER_RIGHT" font="$x10" layoutX="21.0" layoutY="19.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY" />
+          </children>
+        </Pane>
+        <Pane layoutX="30.0" layoutY="201.0" prefHeight="40.0" prefWidth="499.9999000000025">
+          <children>
+            <Label alignment="TOP_LEFT" ellipsisString="..." font="$x11" layoutX="21.0" layoutY="1.0" minWidth="479.0" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true" />
+            <Rectangle arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
+            <Label alignment="CENTER_RIGHT" font="$x10" layoutX="21.0" layoutY="19.0" text="Due 2:00pm, today" textFill="GREY" />
+          </children>
+        </Pane>
+      </children>
+    </AnchorPane>
+    <Label layoutX="240.0" layoutY="5.0" mouseTransparent="true" text="Development Build" textFill="WHITE">
+      <font>
+        <Font name="Segoe UI Bold" size="12.0" />
+      </font>
+    </Label>
+  </children>
+  <stylesheets>
+    <URL value="@application.css" />
+  </stylesheets>
+</AnchorPane>
