@@ -1,6 +1,5 @@
 package kaboom.logic.command;
 
-import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.Vector;
 
