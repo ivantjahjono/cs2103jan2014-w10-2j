@@ -354,5 +354,10 @@ public class Command {
 	public KEYWORD_TYPE[] getKeywordList() {
 		return keywordList;
 	}
+	
+	public void initialiseCommandVariables(String userInputSentence) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = textParser.testExtractList(userInputSentence, keywordList);
+		extractAndStoreTaskInfo(taskInformationTable);
+	}
 
 }
