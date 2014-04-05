@@ -128,7 +128,7 @@ public class DateAndTimeFormat {
 			return thisTime;
 		}
 		theTime = theTime.toLowerCase();
-		System.out.println(theTime);
+		System.out.println("TP "+theTime);
 		if(theTime.contains("pm") || theTime.contains("am")) {
 			String indicator12HourFormat = "";
 			if(theTime.contains("pm")) {
