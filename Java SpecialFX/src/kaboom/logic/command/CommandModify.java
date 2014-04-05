@@ -39,7 +39,16 @@ public class CommandModify extends Command {
 
 	public CommandModify () {
 		commandType = COMMAND_TYPE.MODIFY;
-		initialiseKeywordList();
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.PRIORITY,
+				KEYWORD_TYPE.END_TIME,
+				KEYWORD_TYPE.END_DATE,
+				KEYWORD_TYPE.START_TIME,
+				KEYWORD_TYPE.START_DATE,
+				KEYWORD_TYPE.MODIFIED_TASKNAME,
+				KEYWORD_TYPE.TASKID,
+				KEYWORD_TYPE.TASKNAME
+		};
 		hasNameChanged = false;
 		hasTimeChanged = false;
 		hasPriorityChanged = false;
@@ -243,17 +252,6 @@ public class CommandModify extends Command {
 		TaskListShop.getInstance().updateTask(preModifiedTaskInfo, taskInfo);
 		taskView.swapView(preModifiedTaskInfo, taskInfo);
 		return true;
-	}
-
-	private void initialiseKeywordList() {
-		keywordList.clear();
-		keywordList.add(KEYWORD_TYPE.PRIORITY);
-		keywordList.add(KEYWORD_TYPE.END_TIME);
-		keywordList.add(KEYWORD_TYPE.END_DATE);
-		keywordList.add(KEYWORD_TYPE.START_TIME);
-		keywordList.add(KEYWORD_TYPE.START_DATE);
-		keywordList.add(KEYWORD_TYPE.MODIFIED_TASKNAME);
-		keywordList.add(KEYWORD_TYPE.TASKNAME);
 	}
 
 	@SuppressWarnings("unchecked")

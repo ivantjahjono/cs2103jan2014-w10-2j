@@ -18,7 +18,12 @@ public class CommandSearch extends Command {
 
 	public CommandSearch () {
 		commandType = COMMAND_TYPE.SEARCH;
-		initialiseKeywordList();
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.END_DATE,
+				KEYWORD_TYPE.END_TIME,
+				KEYWORD_TYPE.TASKID,
+				KEYWORD_TYPE.TASKNAME
+		};
 	}
 
 	public Result execute() {
@@ -87,12 +92,6 @@ public class CommandSearch extends Command {
 		return commandResult; 
 	}
 
-	private void initialiseKeywordList() {
-		keywordList.clear();
-		keywordList.add(KEYWORD_TYPE.END_DATE);
-		keywordList.add(KEYWORD_TYPE.END_TIME);
-		keywordList.add(KEYWORD_TYPE.TASKNAME);
-	}
 
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);

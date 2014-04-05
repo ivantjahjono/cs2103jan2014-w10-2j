@@ -1,5 +1,6 @@
 package kaboom.logic.command;
 
+import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -17,9 +18,17 @@ public class CommandAdd extends Command {
 	private final String MESSAGE_COMMAND_ADD_FAIL_NO_NAME = "Enter a task name please :'(";
 	private final String MESSAGE_COMMAND_ADD_FAIL_STARTDATE_OVER_ENDDATE = "Wow! How did the task end before it even started? 0.0";
 
+	
 	public CommandAdd () {
 		commandType = COMMAND_TYPE.ADD;
-		initialiseKeywordList();
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.PRIORITY,
+				KEYWORD_TYPE.END_TIME,
+				KEYWORD_TYPE.END_DATE,
+				KEYWORD_TYPE.START_TIME,
+				KEYWORD_TYPE.START_DATE,
+				KEYWORD_TYPE.TASKNAME
+		};
 	}
 
 	public Result execute() {
@@ -57,16 +66,6 @@ public class CommandAdd extends Command {
 			return false;
 		else
 			return true;
-	}
-	
-	private void initialiseKeywordList() {
-		keywordList.clear();
-		keywordList.add(KEYWORD_TYPE.PRIORITY);
-		keywordList.add(KEYWORD_TYPE.END_TIME);
-		keywordList.add(KEYWORD_TYPE.END_DATE);
-		keywordList.add(KEYWORD_TYPE.START_TIME);
-		keywordList.add(KEYWORD_TYPE.START_DATE);
-		keywordList.add(KEYWORD_TYPE.TASKNAME);
 	}
 	
 	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
