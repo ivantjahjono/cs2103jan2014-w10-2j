@@ -256,11 +256,6 @@ public class DateAndTimeFormatTest {
 //	}
 	
 	@Test
-	public void timeRegexTest() {
-		assertTrue("Valid", datFormat.testTimeRegex("2pm"));
-	}
-	
-	@Test
 	public void convertTime () {
 		String timeString = "";
 		
