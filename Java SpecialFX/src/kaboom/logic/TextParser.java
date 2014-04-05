@@ -106,7 +106,7 @@ public class TextParser {
 		int startIndex = 0;
 		int endIndex = 0;
 		
-		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, KEYWORD_TIME+TIME_REGEX2);
+		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, KEYWORD_TIME+TIME_REGEX);
 		
 		if (matchList.size() < 2) {
 			return userInputSentence;
