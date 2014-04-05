@@ -138,6 +138,17 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	// Container to keep the pages tabs 
 	@FXML private HBox 					pageTabContainer;
 		  private ArrayList<Rectangle> 	pagesTab;
+		  
+	// Help boxes
+	@FXML private Pane 	helpPane;
+	@FXML private Pane 	helpAddPane;
+	@FXML private Pane 	helpDeletePane;
+	@FXML private Pane 	helpModifyPane;
+	@FXML private Pane 	helpCompletePane;
+	@FXML private Pane 	helpViewPane;
+	@FXML private Pane 	helpSearchPane;
+	
+	private Pane 	currentActiveHelpPane;
 	
 	// Tracks previous commands
 	private String prevCommand;
@@ -314,6 +325,8 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		// Check if need to switch header
 		if (isPageToggle(command)) {
 			activatePageToggle(command);
+		} else if (isHelpCommand(command)) {
+			activateHelpPane(command);
 		} else {
 			applicationController.processCommand(command);
 		}
@@ -500,6 +513,65 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		switch (command) {
 			case "next page":
 			case "prev page":
+				return true;
+				
+			default:
+				return false;
+		}
+	}
+	
+	private void activateHelpPane (String command) {
+		// Disable current help view
+		if (currentActiveHelpPane != null) {
+			currentActiveHelpPane.setVisible(false);
+		}
+		
+		Pane paneToActivate = getPaneBasedOnCommand(command);
+		if (currentActiveHelpPane != paneToActivate) {
+			currentActiveHelpPane = paneToActivate;
+			currentActiveHelpPane.setVisible(true);
+		} else {
+			currentActiveHelpPane = null;
+		}
+	}
+
+	private Pane getPaneBasedOnCommand(String command) {
+		switch (command) {
+			case "help":
+				return helpPane;
+				
+			case "help add":
+				return helpAddPane;
+				
+			case "help delete":
+				return helpDeletePane;
+				
+			case "help modify":
+				return helpModifyPane;
+				
+			case "help complete":
+				return helpCompletePane;
+				
+			case "help view":
+				return helpViewPane;
+				
+			case "help search":
+				return helpSearchPane;
+				
+			default:
+				return null;
+		}
+	}
+
+	private boolean isHelpCommand(String command) {
+		switch (command) {
+			case "help":
+			case "help add":
+			case "help delete":
+			case "help modify":
+			case "help complete":
+			case "help view":
+			case "help search":
 				return true;
 				
 			default:
