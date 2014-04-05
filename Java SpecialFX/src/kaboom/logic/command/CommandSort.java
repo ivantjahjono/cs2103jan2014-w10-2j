@@ -13,7 +13,14 @@ public class CommandSort extends Command {
 
 	public CommandSort() {
 		commandType = COMMAND_TYPE.SORT;
-		initializeKeywordList();
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.END_TIME,
+				KEYWORD_TYPE.END_DATE,
+				KEYWORD_TYPE.START_TIME,
+				KEYWORD_TYPE.START_DATE,
+				KEYWORD_TYPE.PRIORITY,
+				KEYWORD_TYPE.TASKNAME
+		};
 	}
 
 	public Result execute() {
@@ -36,16 +43,6 @@ public class CommandSort extends Command {
 
 		String commandFeedback = String.format(MESSAGE_COMMAND_SORT_SUCCESS, taskListShop.shopSize());
 		return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
-	}
-
-	public void initializeKeywordList() {
-		keywordList.clear();
-		keywordList.add(KEYWORD_TYPE.TASKNAME);
-		keywordList.add(KEYWORD_TYPE.START_DATE);
-		keywordList.add(KEYWORD_TYPE.START_TIME);
-		keywordList.add(KEYWORD_TYPE.END_DATE);
-		keywordList.add(KEYWORD_TYPE.END_TIME);
-		keywordList.add(KEYWORD_TYPE.PRIORITY);
 	}
 	
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
