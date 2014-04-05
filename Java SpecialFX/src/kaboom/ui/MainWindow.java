@@ -58,6 +58,43 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	
 	// Data for the task table
 			private ObservableList<TaskInfoDisplay> data;
+			
+	// Individual tasks
+	Vector<TaskUiContainer> taskUiList;
+	@FXML 	private Pane 		task1;
+	@FXML 	private Label 		taskid1;
+	@FXML 	private Label 		taskname1;
+	@FXML 	private Rectangle 	statusbar1;
+	@FXML 	private Label 		datetime1;
+	@FXML 	private Label 		priority1;
+	
+	@FXML 	private Pane 		task2;
+	@FXML 	private Label 		taskid2;
+	@FXML 	private Label 		taskname2;
+	@FXML 	private Rectangle 	statusbar2;
+	@FXML 	private Label 		datetime2;
+	@FXML 	private Label 		priority2;
+	
+	@FXML 	private Pane 		task3;
+	@FXML 	private Label 		taskid3;
+	@FXML 	private Label 		taskname3;
+	@FXML 	private Rectangle 	statusbar3;
+	@FXML 	private Label 		datetime3;
+	@FXML 	private Label 		priority3;
+	
+	@FXML 	private Pane 		task4;
+	@FXML 	private Label 		taskid4;
+	@FXML 	private Label 		taskname4;
+	@FXML 	private Rectangle 	statusbar4;
+	@FXML 	private Label 		datetime4;
+	@FXML 	private Label 		priority4;
+	
+	@FXML 	private Pane 		task5;
+	@FXML 	private Label 		taskid5;
+	@FXML 	private Label 		taskname5;
+	@FXML 	private Rectangle 	statusbar5;
+	@FXML 	private Label 		datetime5;
+	@FXML 	private Label 		priority5;
 	
 	// Top window toolbar buttons
 	@FXML 	private ImageView 	exitButton;
@@ -132,16 +169,38 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	public void initialize(URL location, ResourceBundle resources) throws NullPointerException {
 		createAndStartLogging();
 		
-		try {
-			columnTaskId.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, Integer>("taskId"));
-			columnTaskName.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("taskName"));
-			columnStartTime.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("startDate"));
-			columnPriority.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("importanceLevel"));
-			
-			taskDisplayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		} catch (NullPointerException e) {
-			return;
-		}
+//		try {
+//			columnTaskId.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, Integer>("taskId"));
+//			columnTaskName.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("taskName"));
+//			columnStartTime.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("startDate"));
+//			columnPriority.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("importanceLevel"));
+//			
+//			taskDisplayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+//		} catch (NullPointerException e) {
+//			return;
+//		}
+		
+		taskUiList = new Vector<TaskUiContainer>();
+		
+		TaskUiContainer newTaskUi1 = new TaskUiContainer();
+		newTaskUi1.setupContainer(task1, taskid1, taskname1, statusbar1, datetime1, priority1);
+		taskUiList.add(newTaskUi1);
+		
+		newTaskUi1 = new TaskUiContainer();
+		newTaskUi1.setupContainer(task2, taskid2, taskname2, statusbar2, datetime2, priority2);
+		taskUiList.add(newTaskUi1);
+		
+		newTaskUi1 = new TaskUiContainer();
+		newTaskUi1.setupContainer(task3, taskid3, taskname3, statusbar3, datetime3, priority3);
+		taskUiList.add(newTaskUi1);
+		
+		newTaskUi1 = new TaskUiContainer();
+		newTaskUi1.setupContainer(task4, taskid4, taskname4, statusbar4, datetime4, priority4);
+		taskUiList.add(newTaskUi1);
+		
+		newTaskUi1 = new TaskUiContainer();
+		newTaskUi1.setupContainer(task5, taskid5, taskname5, statusbar5, datetime5, priority5);
+		taskUiList.add(newTaskUi1);
 		
 		// Disable column reordering
 		//disableTableColumnReordering();
@@ -441,10 +500,22 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		
 		Vector<TaskInfoDisplay> taskList = uiData.getTaskDisplay();
 		
+//		for (int i = 0; i < taskList.size(); i++) {
+//			data.add(taskList.get(i));
+//		}
+//		taskDisplayTable.setItems(data);
+		
+		// Update the data
 		for (int i = 0; i < taskList.size(); i++) {
-			data.add(taskList.get(i));
+			TaskUiContainer currentTaskContainer = taskUiList.get(i);
+			currentTaskContainer.updateWithTaskDisplay(taskList.get(i));
+			currentTaskContainer.setVisibleFlag(true);
 		}
-		taskDisplayTable.setItems(data);
+		
+		for (int i = taskList.size(); i < taskUiList.size(); i++) {
+			TaskUiContainer currentTaskContainer = taskUiList.get(i);
+			currentTaskContainer.setVisibleFlag(false);
+		}
 	}
 	
 	private void updateFeedbackMessage() {
