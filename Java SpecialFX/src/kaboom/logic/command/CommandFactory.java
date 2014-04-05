@@ -27,20 +27,14 @@ public class CommandFactory {
 		//2. Get Command keyword
 		COMMAND_TYPE commandType = determineCommandType(commandKeyword);
 		
-		//2. Create Command
+		//3. Create Command
 		Command commandToExecute = createCommandBasedOnCommandType(commandType);	
 		
-		//3. Remove Command Word From UserInput
+		//4. Remove Command Word From UserInput
 		userInputSentence = textParser.removeFirstWord(userInputSentence);
 		
-		//4. Get CommandKeywordList
-		KEYWORD_TYPE[] commandKeywordList = commandToExecute.getKeywordList();
-		
-		//5. Extract Task Info Base on Keywords
-		Hashtable<KEYWORD_TYPE, String> taskInformationTable = textParser.testExtractList(userInputSentence, commandKeywordList);
-		
-		//6. Command stores TaskInfo
-		commandToExecute.extractAndStoreTaskInfo(taskInformationTable);
+		//5.Initialise variables
+		commandToExecute.initialiseCommandVariables(userInputSentence);
 		
 		return commandToExecute;
 	}
