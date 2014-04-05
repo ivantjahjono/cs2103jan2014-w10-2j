@@ -145,6 +145,9 @@ public class TextParserTest {
 		
 		command = "by    6:00pmpm ";
 		assertEquals("by    6:00pmpm ", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by    06:1 ";
+		assertEquals("by    06:1 ", textparser.extractTimeOnly(keyword, command, tempHashTable));
 	}
 	
 	public void testDateExtraction () {
