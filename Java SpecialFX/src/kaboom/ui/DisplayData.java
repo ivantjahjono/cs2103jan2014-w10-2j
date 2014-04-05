@@ -21,7 +21,7 @@ import kaboom.storage.TaskListShop;
 public class DisplayData extends Observable {
 	// TODO clean up methods
 
-	final int NUM_OF_TASK_PER_PAGE = 10;
+	final int NUM_OF_TASK_PER_PAGE = 5;
 
 	static DisplayData instance;
 
