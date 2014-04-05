@@ -19,6 +19,13 @@ public class TaskInfoDisplay {
 	private SimpleBooleanProperty isDone;
 	private SimpleBooleanProperty isRecent;
 	
+	private DateAndTimeFormat dateTimeFormat;
+	
+	SimpleDateFormat fullTimeFormat = new SimpleDateFormat("h:mma");
+	SimpleDateFormat fullDateFormat = new SimpleDateFormat("dd MMM yy");
+	SimpleDateFormat dayMonthFormat = new SimpleDateFormat("dd MMM");
+	SimpleDateFormat dayOnlyFormat = new SimpleDateFormat("EEE");
+	
 	public TaskInfoDisplay () {
 		taskId = new SimpleIntegerProperty(0);
 		taskName = new SimpleStringProperty("No taskname available");;
@@ -28,17 +35,39 @@ public class TaskInfoDisplay {
 		isExpired = new SimpleBooleanProperty(false);
 		isDone = new SimpleBooleanProperty(false);
 		isRecent = new SimpleBooleanProperty(false);
+		
+		dateTimeFormat = DateAndTimeFormat.getInstance();
 	}
 	
 	public void updateFromThisInfo (TaskInfo infoToUpdateFrom) {
 		setTaskName(infoToUpdateFrom.getTaskName());
 		
-		if (infoToUpdateFrom.getTaskType() == TASK_TYPE.TIMED) {
+		TASK_TYPE currentTaskType = infoToUpdateFrom.getTaskType();
+		if (currentTaskType== TASK_TYPE.TIMED) {
+			// Set time from ?? to ??
 			setStartTime(infoToUpdateFrom.getStartDate());
-		}
-		
-		if (infoToUpdateFrom.getTaskType() != TASK_TYPE.FLOATING) {
-			setEndTime(infoToUpdateFrom.getEndDate());
+			
+			Calendar startTime = infoToUpdateFrom.getStartDate();
+			Calendar endTime = infoToUpdateFrom.getEndDate();
+
+			String startToDisplay = "From " + convertDateTimeFormatBasedOnTime(startTime);
+			String endToDisplay = " to " + convertDateTimeFormatBasedOnTime(endTime);
+			
+			if (dateTimeFormat.isSameDay(startTime, endTime)) {
+				// Remove the first day declaration
+				int index = startToDisplay.indexOf(",");
+				if (index > 0) {
+					startToDisplay = startToDisplay.substring(0, index);
+				}
+			}
+			
+			startDate.set(startToDisplay+endToDisplay);
+		} else if (currentTaskType == TASK_TYPE.DEADLINE) {
+			// Due by ??
+			
+			Calendar dueTime = infoToUpdateFrom.getEndDate();
+			String dueTimeToDisplay = "Due by " + convertDateTimeFormatBasedOnTime(dueTime);
+			startDate.set(dueTimeToDisplay);
 		}
 		
 		setImportanceLevel(infoToUpdateFrom.getImportanceLevel());
@@ -48,6 +77,18 @@ public class TaskInfoDisplay {
 		setRecentFlag(infoToUpdateFrom.isRecent());
 	}
 	
+	private String convertDateTimeFormatBasedOnTime(Calendar timeDate) {
+		if (dateTimeFormat.isToday(timeDate)) {
+			return fullTimeFormat.format(timeDate.getTime());
+		} else if (dateTimeFormat.isThisWeek(timeDate)) {
+			return fullTimeFormat.format(timeDate.getTime()) + ", " + dayOnlyFormat.format(timeDate.getTime());
+		} else if (dateTimeFormat.isThisYear(timeDate)) {
+			return fullTimeFormat.format(timeDate.getTime()) + ", " + dayMonthFormat.format(timeDate.getTime());
+		} else {
+			return fullTimeFormat.format(timeDate.getTime()) + ", " + fullDateFormat.format(timeDate.getTime());
+		}
+	}
+
 	public void setTaskId (int id) {
 		taskId.set(id);
 	}
