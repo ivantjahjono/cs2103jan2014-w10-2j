@@ -3,6 +3,7 @@ package kaboom.ui;
 import java.util.Observable;
 import java.util.Vector;
 
+import kaboom.logic.DateAndTimeFormat;
 import kaboom.logic.FormatIdentify;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
@@ -21,7 +22,7 @@ import kaboom.storage.TaskListShop;
 public class DisplayData extends Observable {
 	// TODO clean up methods
 
-	final int NUM_OF_TASK_PER_PAGE = 10;
+	final int NUM_OF_TASK_PER_PAGE = 5;
 
 	static DisplayData instance;
 
@@ -34,6 +35,10 @@ public class DisplayData extends Observable {
 
 	String 	userFeedbackMessage;
 	int 	currentPage;
+	
+	String currentWeekDay;
+	String currentDate;
+	String currentTime;
 
 	DISPLAY_STATE currentDisplayState;
 
@@ -130,6 +135,10 @@ public class DisplayData extends Observable {
 		if (currentPage > maxPages) {
 			currentPage = maxPages;
 		}
+		
+		currentWeekDay = DateAndTimeFormat.getInstance().getCurrentWeekday();
+		currentDate = DateAndTimeFormat.getInstance().getDateToday();
+		currentTime = DateAndTimeFormat.getInstance().getTimeNow();
 
 		setChanged();
 		notifyObservers();
@@ -282,5 +291,17 @@ public class DisplayData extends Observable {
 
 	public Vector<Integer> getTaskCountList () {
 		return taskCountList;
+	}
+	
+	public String getCurrentWeekDay () {
+		return currentWeekDay;
+	}
+	
+	public String getCurrentTime () {
+		return currentTime;
+	}
+	
+	public String getCurrentDate () {
+		return currentDate;
 	}
 }
