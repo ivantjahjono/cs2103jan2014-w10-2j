@@ -21,7 +21,9 @@ public class CommandDone extends Command{
 
 	public CommandDone() {
 		commandType = COMMAND_TYPE.DONE;
-		initialiseKeywordList();
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.TASKNAME
+		};
 		taskInfoTable = null;
 		taskView = TaskView.getInstance();
 	}
@@ -74,11 +76,6 @@ public class CommandDone extends Command{
 		taskView.addToView(taskToBeModified);
 		taskView.undoneInView(taskToBeModified);
 		return true;
-	}
-
-	private void initialiseKeywordList() {
-		keywordList.clear();
-		keywordList.add(KEYWORD_TYPE.TASKNAME);
 	}
 
 	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {

@@ -34,7 +34,7 @@ public class CommandFactory {
 		userInputSentence = textParser.removeFirstWord(userInputSentence);
 		
 		//4. Get CommandKeywordList
-		Vector<KEYWORD_TYPE> commandKeywordList = commandToExecute.getKeywordList();
+		KEYWORD_TYPE[] commandKeywordList = commandToExecute.getKeywordList();
 		
 		//5. Extract Task Info Base on Keywords
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = textParser.testExtractList(userInputSentence, commandKeywordList);

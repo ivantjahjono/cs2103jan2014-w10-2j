@@ -20,7 +20,10 @@ public class CommandUndone extends Command{
 
 	public CommandUndone() {
 		commandType = COMMAND_TYPE.UNDONE;
-		initialiseKeywordList();
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.TASKID,
+				KEYWORD_TYPE.TASKNAME
+		};
 		taskInfoTable = null;
 		taskView = TaskView.getInstance();
 	}
@@ -74,11 +77,6 @@ public class CommandUndone extends Command{
 		taskView.addToView(taskToBeModified);
 		taskView.doneInView(taskToBeModified);
 		return true;
-	}
-
-	private void initialiseKeywordList() {
-		keywordList.clear();
-		keywordList.add(KEYWORD_TYPE.TASKNAME);
 	}
 
 	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {

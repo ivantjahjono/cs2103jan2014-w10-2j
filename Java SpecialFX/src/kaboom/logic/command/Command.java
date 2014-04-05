@@ -30,7 +30,7 @@ public class Command {
 	protected TextParser textParser;
 	protected TaskListShop taskListShop;
 	protected DisplayData displayData;
-	protected Vector<KEYWORD_TYPE> keywordList;  //Initialized in the individual command constructor
+	protected KEYWORD_TYPE[] keywordList;  //Initialized in the individual command constructor
 	Hashtable<KEYWORD_TYPE, Object> commandObjectTable;
 
 	public Command () {
@@ -39,8 +39,7 @@ public class Command {
 		textParser = TextParser.getInstance();
 		taskListShop = TaskListShop.getInstance();
 		displayData = DisplayData.getInstance();
-		keywordList = new Vector<KEYWORD_TYPE>();
-		
+		keywordList = new KEYWORD_TYPE[0];
 		commandObjectTable = new Hashtable<KEYWORD_TYPE, Object>();
 	}
 
@@ -157,9 +156,9 @@ public class Command {
 		indexList.add(newIdentity);
 	}
 	
-	public Vector<KEYWORD_TYPE> getKeywordList () {
-		return keywordList;
-	}
+//	public KEYWORD_LIST getKeywordList () {
+//		return keywordList;
+//	}
 
 	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
 		taskInfo = new TaskInfo();
@@ -350,6 +349,10 @@ public class Command {
 			return true;
 		}
 		return false;
+	}
+	
+	public KEYWORD_TYPE[] getKeywordList() {
+		return keywordList;
 	}
 
 }

@@ -303,55 +303,64 @@ public class TextParser {
 		return queue;
 	}
 	
-	public Hashtable<KEYWORD_TYPE, String> testExtractList(String userInput, Vector<KEYWORD_TYPE> list) {
+	public Hashtable<KEYWORD_TYPE, String> testExtractList(String userInput, KEYWORD_TYPE[] list) {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = getInfoFromList(userInput,list);
 		return taskInformationTable;
 	}
 	
-	private Hashtable<KEYWORD_TYPE, String> getInfoFromList(String userInput, Vector<KEYWORD_TYPE> list) {
+	private Hashtable<KEYWORD_TYPE, String> getInfoFromList(String userInput, KEYWORD_TYPE[] list) {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = new Hashtable<KEYWORD_TYPE, String>();
-		for(int i=0; i<list.size(); i++) {
-			if(list.get(i) == KEYWORD_TYPE.PRIORITY) {
+		
+		for(int i=0; i<list.length; i++) {
+			switch(list[i]) {
+			
+			case PRIORITY: 
 				userInput = extractPriority(userInput,taskInformationTable);
-			}
-			if(list.get(i) == KEYWORD_TYPE.END_TIME) {
-				ArrayList<Integer> matchList = new ArrayList<Integer>();
-				if(checkTimeAndDateInputFormat(KEYWORD_ENDTIME, userInput, matchList)){
+				break;
+				
+			case END_TIME:
+				ArrayList<Integer> endTimeMatchList = new ArrayList<Integer>();
+				if(checkTimeAndDateInputFormat(KEYWORD_ENDTIME, userInput, endTimeMatchList)){
 					userInput = extractDateAndTime(KEYWORD_ENDTIME,userInput,taskInformationTable);
 				}
-				else if(checkTimeOnlyInputFormat(KEYWORD_ENDTIME, userInput, matchList)){
+				else if(checkTimeOnlyInputFormat(KEYWORD_ENDTIME, userInput, endTimeMatchList)){
 					userInput = extractTimeOnly(KEYWORD_ENDTIME,userInput,taskInformationTable);
 				}
-				else if(checkDateOnlyInputFormat(KEYWORD_ENDTIME, userInput, matchList)){
+				else if(checkDateOnlyInputFormat(KEYWORD_ENDTIME, userInput, endTimeMatchList)){
 					userInput = extractDateOnly(KEYWORD_ENDTIME,userInput,taskInformationTable);
 				}
+				break;
 				
-			}
-			if(list.get(i) == KEYWORD_TYPE.START_TIME) {
+			case START_TIME:
 				//userInput = extractDateAndTime(KEYWORD_STARTTIME,userInput,taskInformationTable);
-				ArrayList<Integer> matchList = new ArrayList<Integer>();
-				if(checkTimeAndDateInputFormat(KEYWORD_STARTTIME, userInput, matchList)){
+				ArrayList<Integer> startTimeMatchList = new ArrayList<Integer>();
+				if(checkTimeAndDateInputFormat(KEYWORD_STARTTIME, userInput, startTimeMatchList)){
 					userInput = extractDateAndTime(KEYWORD_STARTTIME,userInput,taskInformationTable);
 				}
-				else if(checkTimeOnlyInputFormat(KEYWORD_STARTTIME, userInput, matchList)){
+				else if(checkTimeOnlyInputFormat(KEYWORD_STARTTIME, userInput, startTimeMatchList)){
 					userInput = extractTimeOnly(KEYWORD_STARTTIME,userInput,taskInformationTable);
 				}
-				else if(checkDateOnlyInputFormat(KEYWORD_STARTTIME, userInput, matchList)){
+				else if(checkDateOnlyInputFormat(KEYWORD_STARTTIME, userInput, startTimeMatchList)){
 					userInput = extractDateOnly(KEYWORD_STARTTIME,userInput,taskInformationTable);
 				}
-			}
-			if(list.get(i) == KEYWORD_TYPE.MODIFIED_TASKNAME) {
+				break;
+				
+			case MODIFIED_TASKNAME:
 				userInput = extractModifiedTaskName(userInput,taskInformationTable);
-			}
-			if(list.get(i) == KEYWORD_TYPE.TASKNAME) {
+				break;
+				
+			case TASKNAME:
 				userInput = extractTaskName(userInput,taskInformationTable);
-			}
-			if(list.get(i) == KEYWORD_TYPE.VIEWTYPE) {
+				break;
+				
+			case VIEWTYPE:
 				userInput = extractViewType(userInput,taskInformationTable);
-			}	
-			if(list.get(i) == KEYWORD_TYPE.TASKID) {
+				break;
+				
+			case TASKID:
 				userInput = extractTaskId(userInput,taskInformationTable);
-			}	
+				break;
+			}
 		}
 		
 		// If there is still unextracted information after parsing, consider it as invalid command
