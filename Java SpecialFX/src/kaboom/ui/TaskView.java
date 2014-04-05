@@ -41,7 +41,7 @@ public class TaskView {
 			break;
 
 		case EXPIRED:
-			setCurrentView(taskListShop.getDeadlineTasks());
+			setCurrentView(taskListShop.getExpiredTasks());
 			break;
 
 		case SEARCH:
@@ -69,7 +69,7 @@ public class TaskView {
 			return taskListShop.getFloatingTasks();
 
 		case EXPIRED:
-			return taskListShop.getDeadlineTasks();
+			return taskListShop.getExpiredTasks();
 
 		case SEARCH:
 			return searchView;
