@@ -24,7 +24,10 @@ public class CommandDelete extends Command {
 
 	public CommandDelete () {
 		commandType = COMMAND_TYPE.DELETE;
-		initialiseKeywordList();
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.TASKNAME,
+				KEYWORD_TYPE.TASKID
+		};
 		taskId = null;
 		taskInfoTable = null;
 		taskView = TaskView.getInstance();  
@@ -86,12 +89,6 @@ public class CommandDelete extends Command {
 			return true;
 		}
 		return false;
-	}
-
-	private void initialiseKeywordList() {
-		keywordList.clear();
-		keywordList.add(KEYWORD_TYPE.TASKNAME);
-		keywordList.add(KEYWORD_TYPE.TASKID);
 	}
 
 	public void storeTaskInfo (Hashtable<KEYWORD_TYPE, String> infoHashes) {

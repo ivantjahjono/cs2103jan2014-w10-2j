@@ -30,7 +30,9 @@ public class CommandView extends Command{
 	public CommandView () {
 		commandType = COMMAND_TYPE.VIEW;
 		stateToSet = DISPLAY_STATE.INVALID;
-		initialiseKeywordList();
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.VIEWTYPE	
+		};
 	}
 
 	public Result execute() {
@@ -92,10 +94,6 @@ public class CommandView extends Command{
 			default:
 				return DISPLAY_STATE.INVALID;
 		}
-	}
-
-	private void initialiseKeywordList() {
-		keywordList.add(KEYWORD_TYPE.VIEWTYPE);
 	}
 	
 	public void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
