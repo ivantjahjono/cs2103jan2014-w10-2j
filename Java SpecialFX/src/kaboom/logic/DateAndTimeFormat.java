@@ -3,8 +3,27 @@ package kaboom.logic;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DateAndTimeFormat {
+	
+	class TimeFormat {
+		private Pattern timeRegexPattern;
+		private String timeFormat;
+		
+		public TimeFormat (String regex, String format) {
+			timeRegexPattern = Pattern.compile(regex);
+			timeFormat = format;
+		}
+		
+		public Pattern getRegex() {
+			return timeRegexPattern;
+		}
+		public String timeFormat() {
+			return timeFormat;
+		}
+	}
 	
 	private final String dateFormat1 = "ddMMyy";		// 12/06/12 or 12.01.06 or 120106
 	private final String dateFormat2 = "dd'/'MM'/'yy";
@@ -13,8 +32,18 @@ public class DateAndTimeFormat {
 	private final String dateFormat5 = "dd'/'MM'/'yyyy";
 	private final String dateFormat6 = "dd'.'MM'.'yyy";
 	
+	private final String time24hrFormatRegex1 = "0[0-9](am|pm)";			//hour 
+	private final String time24hrFormatRegex2 = "1[0-2](am|pm)";			//10-12am/pm
+	
 	private final String time24hrFormat1 = "HHmm"; 
 	private final String time24hrFormat2 = "HH':'mm";
+	
+	private final String time12hrFormatRegex1 = "[1-9](am|pm)";				//1-9am/pm
+	private final String time12hrFormatRegex2 = "1[0-2](am|pm)";			//10-12am/pm
+	private final String time12hrFormatRegex3 = "[1-9][0-5][0-9](am|pm)";	//1-9am/pm with mins
+	private final String time12hrFormatRegex4 = "1[0-2][0-5][0-9](am|pm)";		//10-12am/pm with mins
+	private final String time12hrFormatRegex5 = "[1-9]:[0-5][0-9](am|pm)";	//1-9am/pm with mins with :
+	private final String time12hrFormatRegex6 = "1[0-2]:[0-5][0-9](am|pm)";		//10-12am/pm with mins with :
 	
 	private final String time12hrFormat1 = "ha";
 	private final String time12hrFormat2 = "hha";
@@ -22,7 +51,6 @@ public class DateAndTimeFormat {
 	private final String time12hrFormat4 = "hhmma";
 	private final String time12hrFormat5 = "h':'mma";
 	private final String time12hrFormat6 = "hh':'mma";
-
 	
 	private final SimpleDateFormat[] dateFormatList = { 
 		new SimpleDateFormat(dateFormat1),
@@ -45,6 +73,24 @@ public class DateAndTimeFormat {
 		new SimpleDateFormat(time12hrFormat4),
 		new SimpleDateFormat(time12hrFormat5),
 		new SimpleDateFormat(time12hrFormat6)
+	};
+	
+	private final Pattern[] time12HrFormatListPair = {
+			Pattern.compile(time12hrFormatRegex1),
+			Pattern.compile(time12hrFormatRegex2),
+			Pattern.compile(time12hrFormatRegex3),
+			Pattern.compile(time12hrFormatRegex4),			
+			Pattern.compile(time12hrFormatRegex5),
+			Pattern.compile(time12hrFormatRegex6)
+	};
+	
+	private final TimeFormat[] timeFormatList = {
+			new TimeFormat(time12hrFormatRegex1,time12hrFormat1),
+			new TimeFormat(time12hrFormatRegex2,time12hrFormat2),
+			new TimeFormat(time12hrFormatRegex3,time12hrFormat3),
+			new TimeFormat(time12hrFormatRegex4,time12hrFormat4),
+			new TimeFormat(time12hrFormatRegex5,time12hrFormat5),		
+			new TimeFormat(time12hrFormatRegex6,time12hrFormat6),
 	};
 	
 	private static DateAndTimeFormat instance = null;
@@ -106,6 +152,7 @@ public class DateAndTimeFormat {
 			dateAndTime = dateTranslator(dateAndTime, date);
 			dateAndTime = timeTranslator(dateAndTime, "0000");
 		} else if (isTimeValid) {
+			System.out.println("asd");
 			dateAndTime = timeTranslator(dateAndTime, time);
 		} 
 	
@@ -187,32 +234,28 @@ public class DateAndTimeFormat {
 				indicator12HourFormat = "am";
 				theTime = theTime.replace("am", "").trim();
 			}
-			
-//			if(theTime.length()==1 || theTime.length()==2) {
-//				theTime += "00";
-//			}
-//			
-//			if(!theTime.contains(":")) {
-//				theTime = String.format("%04d",Integer.parseInt(theTime));
-//				System.out.println("2 "+theTime);
-//			}
-			
 			theTime = theTime + indicator12HourFormat;
-			System.out.println("5 "+theTime);
 			//12hr format check
-			for(int i = 0; i < time12HrFormatList.length; i++) {
+			for(int i = 0; i < time12HrFormatListPair.length; i++) {
 				try {
+					System.out.println("A");
 					//validate time
-					time12HrFormatList[i].setLenient(false);
-					Date time = time12HrFormatList[i].parse(theTime);
-					//set time to thisTime
-					Calendar getTime = Calendar.getInstance();
-					getTime.setTime(time);
-					thisTime.set(Calendar.HOUR, getTime.get(Calendar.HOUR));
-					thisTime.set(Calendar.MINUTE, getTime.get(Calendar.MINUTE));
-					thisTime.set(Calendar.AM_PM, getTime.get(Calendar.AM_PM));
+					if(time12HrFormatListPair[i].matcher(theTime).matches()) {
+						time12HrFormatList[i].setLenient(false);
+						Date time = time12HrFormatList[i].parse(theTime);	
+						//set time to thisTime
+						Calendar getTime = Calendar.getInstance();
+						getTime.setTime(time);
+						thisTime.set(Calendar.HOUR, getTime.get(Calendar.HOUR));
+						thisTime.set(Calendar.MINUTE, getTime.get(Calendar.MINUTE));
+						thisTime.set(Calendar.AM_PM, getTime.get(Calendar.AM_PM));
+						System.out.println(getTime.get(Calendar.HOUR));
+						System.out.println(getTime.get(Calendar.MINUTE));
+						System.out.println(getTime.get(Calendar.AM_PM));
+						return thisTime;
+					}
+					System.out.println("B");
 					
-					return thisTime;
 				} catch (Exception e) {	
 				}
 			}
@@ -316,26 +359,24 @@ public class DateAndTimeFormat {
 				indicator12HourFormat = "am";
 				theTime = theTime.replace("am", "").trim();
 			}
-			
-			if(theTime.length()==1 || theTime.length()==2) {
-				theTime += "00";
-			}
-			if(!theTime.contains(":")) {
-				theTime = String.format("%04d",Integer.parseInt(theTime));
-			}	
 			theTime = theTime + indicator12HourFormat;
 			int count = time12HrFormatList.length;
 			//12hr format check
-			for(int i = 0; i < time12HrFormatList.length; i++) {
+			for(int i = 0; i < time12HrFormatListPair.length; i++) {
 				try {
 					//validate time
-					time12HrFormatList[i].setLenient(false);
-					time12HrFormatList[i].parse(theTime);	
+					if(time12HrFormatListPair[i].matcher(theTime).matches()) {
+						System.out.println("success");
+						time12HrFormatList[i].setLenient(false);
+						time12HrFormatList[i].parse(theTime);	
+						count--;
+					}
 				} catch (Exception e) {	
-					count--;
 				}
 			}
-			if(count > 0) { 
+
+
+			if(count != time12HrFormatList.length) { 
 				return true;
 			}
 			else {
@@ -403,6 +444,7 @@ public class DateAndTimeFormat {
 			}
 		}
 	}
+
 	//*************************** TEST METHODS **********************************
 	
 	
@@ -447,6 +489,15 @@ public class DateAndTimeFormat {
 			return true;
 		}
 		
+		return false;
+	}
+	
+	public boolean testTimeRegex(String time) {
+		for (int i=0;i<time12HrFormatListPair.length;i++){
+			if(time12HrFormatListPair[i].matcher(time).matches()) {
+				return true;
+			}
+		}
 		return false;
 	}
 }
