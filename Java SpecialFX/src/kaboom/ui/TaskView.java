@@ -33,7 +33,7 @@ public class TaskView {
 	public Vector<TaskInfo> setAndGetView(DISPLAY_STATE displayState) {
 		switch (displayState) {
 		case TODAY:
-			setCurrentView(taskListShop.getAllCurrentTasks());
+			setCurrentView(taskListShop.getToday());
 			break;
 
 		case TIMELESS:
@@ -58,29 +58,6 @@ public class TaskView {
 			break;
 		}
 		return currentView;
-	}
-
-	public Vector<TaskInfo> getView(DISPLAY_STATE displayState) {
-		switch (displayState) {
-		case TODAY:
-			return taskListShop.getAllCurrentTasks();
-
-		case TIMELESS:
-			return taskListShop.getFloatingTasks();
-
-		case EXPIRED:
-			return taskListShop.getExpiredTasks();
-
-		case SEARCH:
-			return searchView;
-
-		case ARCHIVE:
-			return taskListShop.getAllArchivedTasks();
-
-		default:
-			System.out.println("Encountered an invalid view!");
-			return taskListShop.getAllCurrentTasks();
-		}
 	}
 
 	public Vector<Integer> getCurrentViewID() {
