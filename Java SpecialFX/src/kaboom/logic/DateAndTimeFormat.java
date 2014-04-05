@@ -9,18 +9,28 @@ public class DateAndTimeFormat {
 	private final String dateFormat1 = "ddMMyy";		// 12/06/12 or 12.01.06 or 120106
 	private final String dateFormat2 = "dd'/'MM'/'yy";
 	private final String dateFormat3 = "dd'.'MM'.'yy";
+	private final String dateFormat4 = "ddMMyyyy";		// 12/06/12 or 12.01.06 or 120106
+	private final String dateFormat5 = "dd'/'MM'/'yyyy";
+	private final String dateFormat6 = "dd'.'MM'.'yyy";
 	
 	private final String time24hrFormat1 = "HHmm"; 
 	private final String time24hrFormat2 = "HH':'mm";
-	private final String time12hrFormat1 = "hhmma";
-	private final String time12hrFormat2 = "hhmm a";
-	private final String time12hrFormat3 = "h':'mma";
-	private final String time12hrFormat4 = "h':'mm a";
+	
+	private final String time12hrFormat1 = "ha";
+	private final String time12hrFormat2 = "hha";
+	private final String time12hrFormat3 = "hmma";
+	private final String time12hrFormat4 = "hhmma";
+	private final String time12hrFormat5 = "h':'mma";
+	private final String time12hrFormat6 = "hh':'mma";
+
 	
 	private final SimpleDateFormat[] dateFormatList = { 
 		new SimpleDateFormat(dateFormat1),
 		new SimpleDateFormat(dateFormat2),
-		new SimpleDateFormat(dateFormat3)
+		new SimpleDateFormat(dateFormat3),
+		new SimpleDateFormat(dateFormat4),
+		new SimpleDateFormat(dateFormat5),
+		new SimpleDateFormat(dateFormat6)
 	};
 	
 	private final SimpleDateFormat[] time24HrFormatList = {
@@ -32,7 +42,9 @@ public class DateAndTimeFormat {
 		new SimpleDateFormat(time12hrFormat1),
 		new SimpleDateFormat(time12hrFormat2),
 		new SimpleDateFormat(time12hrFormat3),
-		new SimpleDateFormat(time12hrFormat4)
+		new SimpleDateFormat(time12hrFormat4),
+		new SimpleDateFormat(time12hrFormat5),
+		new SimpleDateFormat(time12hrFormat6)
 	};
 	
 	private static DateAndTimeFormat instance = null;
@@ -48,7 +60,7 @@ public class DateAndTimeFormat {
 		return instance;
 	}
 
-	public Calendar formatStringToCalendar (String date, String time) throws InvalidDateAndTimeException {
+	public Calendar formatStringToCalendar2 (String date, String time) throws InvalidDateAndTimeException {
 		if(date == null && time == null) {
 			return null;
 		}
@@ -62,6 +74,41 @@ public class DateAndTimeFormat {
 			return null;
 		}
 		
+		return dateAndTime;
+	}
+	
+	
+	/*
+	 * If only date is valid: Set calendar to date and default time of 0000 (12am)
+	 * If only time is valid: Set calendar to time and default date to current day
+	 * If both are valid: Set calendar to respective date and time
+	 * If both are null: return null;
+	 * If date or time is invalid: throw exception
+	 */
+	public Calendar formatStringToCalendar (String date, String time) throws InvalidDateAndTimeException {
+		if(date == null && time == null) {
+			return null;
+		}
+		Calendar dateAndTime = Calendar.getInstance();
+	
+		boolean isDateValid = isDateValid(date);
+		boolean isTimeValid = isTimeValid(time);
+		
+		if((!isDateValid && date != null) || (!isTimeValid && time != null)){
+			System.out.println("Invalid");
+			throw new InvalidDateAndTimeException("Invalid Date or Time");
+		}
+		
+		if (isDateValid && isTimeValid) {
+			dateAndTime = dateTranslator(dateAndTime, date);
+			dateAndTime = timeTranslator(dateAndTime, time);
+		} else if (isDateValid) {
+			dateAndTime = dateTranslator(dateAndTime, date);
+			dateAndTime = timeTranslator(dateAndTime, "0000");
+		} else if (isTimeValid) {
+			dateAndTime = timeTranslator(dateAndTime, time);
+		} 
+	
 		return dateAndTime;
 	}
 	
@@ -128,24 +175,27 @@ public class DateAndTimeFormat {
 			return thisTime;
 		}
 		theTime = theTime.toLowerCase();
-		System.out.println(theTime);
+		System.out.println("TP "+theTime);
+		//12HOUR TEST
 		if(theTime.contains("pm") || theTime.contains("am")) {
 			String indicator12HourFormat = "";
 			if(theTime.contains("pm")) {
 				indicator12HourFormat = "pm";
 				theTime = theTime.replace("pm", "").trim();
-				System.out.println("1 "+theTime);
 			}
 			if(theTime.contains("am")) {
 				indicator12HourFormat = "am";
 				theTime = theTime.replace("am", "").trim();
-				System.out.println("1.1 "+theTime);
 			}
 			
-			if(!theTime.contains(":")) {
-				theTime = String.format("%04d",Integer.parseInt(theTime));
-				System.out.println("2 "+theTime);
-			}
+//			if(theTime.length()==1 || theTime.length()==2) {
+//				theTime += "00";
+//			}
+//			
+//			if(!theTime.contains(":")) {
+//				theTime = String.format("%04d",Integer.parseInt(theTime));
+//				System.out.println("2 "+theTime);
+//			}
 			
 			theTime = theTime + indicator12HourFormat;
 			System.out.println("5 "+theTime);
@@ -194,7 +244,6 @@ public class DateAndTimeFormat {
 		throw new InvalidDateAndTimeException("Invalid Time");
 	}
 	
-
 	
 	//*************************** TEST METHODS **********************************
 	//Date tests
@@ -268,6 +317,9 @@ public class DateAndTimeFormat {
 				theTime = theTime.replace("am", "").trim();
 			}
 			
+			if(theTime.length()==1 || theTime.length()==2) {
+				theTime += "00";
+			}
 			if(!theTime.contains(":")) {
 				theTime = String.format("%04d",Integer.parseInt(theTime));
 			}	
@@ -283,10 +335,15 @@ public class DateAndTimeFormat {
 					count--;
 				}
 			}
-			if(count > 0) return true;
-			else return false;   
-		}	
-		return false;
+			if(count > 0) { 
+				return true;
+			}
+			else {
+				return false;   
+			}
+		} else {
+			return false;
+		}
 	}
 	
 	public boolean isTimeValid (String theTime) {
@@ -304,10 +361,6 @@ public class DateAndTimeFormat {
 				indicator12HourFormat = "am";
 				theTime = theTime.replace("am", "").trim();
 			}
-			
-			if(!theTime.contains(":")) {
-				theTime = String.format("%04d",Integer.parseInt(theTime));
-			}	
 			theTime = theTime + indicator12HourFormat;
 			int count = time12HrFormatList.length;
 			//12hr format check
