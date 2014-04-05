@@ -34,7 +34,7 @@
         </TableView>
         <HBox alignment="BOTTOM_CENTER" fillHeight="true" layoutX="12.0" layoutY="22.0" prefHeight="35.999900000002526" prefWidth="567.0000999999975" rotate="0.0">
           <children>
-            <Label fx:id="header_all" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="4.0" onMouseClicked="#onHeaderMouseClicked" prefWidth="80.0" styleClass="header-label-normal" text="TODAY" textAlignment="LEFT" underline="false">
+            <Label id="header_all" fx:id="header_today" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="4.0" onMouseClicked="#onHeaderMouseClicked" prefWidth="80.0" styleClass="header-label-normal" text="TODAY" textAlignment="LEFT" underline="false">
               <font>
                 <Font name="Segoe UI" size="20.0" fx:id="x1" />
               </font>
@@ -45,12 +45,12 @@
                 <Color blue="0.625" green="0.625" red="0.625" fx:id="x2" />
               </textFill>
             </Label>
-            <Label fx:id="header_running" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x1" onMouseClicked="#onHeaderMouseClicked" prefWidth="90.0" styleClass="header-label-normal" text="TIMELESS" textAlignment="LEFT" textFill="$x2" underline="false">
+            <Label id="header_running" fx:id="header_timeless" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x1" onMouseClicked="#onHeaderMouseClicked" prefWidth="90.0" styleClass="header-label-normal" text="TIMELESS" textAlignment="LEFT" textFill="$x2" underline="false">
               <stylesheets>
                 <URL value="@application.css" />
               </stylesheets>
             </Label>
-            <Label fx:id="header_deadline" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x1" onMouseClicked="#onHeaderMouseClicked" prefWidth="90.0" styleClass="header-label-normal" text="EXPIRED" textAlignment="LEFT" underline="false">
+            <Label id="header_deadline" fx:id="header_expired" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x1" onMouseClicked="#onHeaderMouseClicked" prefWidth="90.0" styleClass="header-label-normal" text="EXPIRED" textAlignment="LEFT" underline="false">
               <stylesheets>
                 <URL value="@application.css" />
               </stylesheets>
@@ -104,7 +104,7 @@
         </HBox>
         <HBox alignment="BOTTOM_CENTER" fillHeight="true" layoutX="12.0" layoutY="36.0" mouseTransparent="true" pickOnBounds="false" prefHeight="36.0" prefWidth="567.0" rotate="0.0">
           <children>
-            <Label id="header_all" fx:id="header_all_count" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="4.0" mouseTransparent="true" prefWidth="80.0" text="128" textAlignment="LEFT" underline="false">
+            <Label id="header_all" fx:id="header_today_count" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="4.0" mouseTransparent="true" prefWidth="80.0" text="128" textAlignment="LEFT" underline="false">
               <font>
                 <Font name="Segoe UI Light" size="14.0" fx:id="x7" />
               </font>
@@ -115,12 +115,12 @@
                 <Color blue="0.375" green="0.375" red="0.375" fx:id="x8" />
               </textFill>
             </Label>
-            <Label id="header_running" fx:id="header_running_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="90.0" text="10" textAlignment="LEFT" textFill="$x8" underline="false">
+            <Label id="header_running" fx:id="header_timeless_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="90.0" text="10" textAlignment="LEFT" textFill="$x8" underline="false">
               <stylesheets>
                 <URL value="@application.css" />
               </stylesheets>
             </Label>
-            <Label id="header_deadline" fx:id="header_deadline_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="90.0" text="30" textAlignment="LEFT" textFill="$x8" underline="false">
+            <Label id="header_deadline" fx:id="header_expired_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="90.0" text="30" textAlignment="LEFT" textFill="$x8" underline="false">
               <stylesheets>
                 <URL value="@application.css" />
               </stylesheets>

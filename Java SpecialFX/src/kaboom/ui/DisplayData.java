@@ -29,8 +29,8 @@ public class DisplayData extends Observable {
 	History 		history;
 
 	Vector<TaskInfoDisplay> tasksDataToDisplay;
-	Vector<FormatIdentify> formattingCommand;
-	Vector<Integer> taskCountList;
+	Vector<FormatIdentify> 	formattingCommand;
+	Vector<Integer> 		taskCountList;
 
 	String 	userFeedbackMessage;
 	int 	currentPage;
@@ -62,7 +62,7 @@ public class DisplayData extends Observable {
 
 		userFeedbackMessage = "";
 		currentPage = 0;
-		currentDisplayState = DISPLAY_STATE.ALL;
+		currentDisplayState = DISPLAY_STATE.TODAY;
 	}
 
 	private void updateTaskCountList() {
@@ -82,18 +82,14 @@ public class DisplayData extends Observable {
 				break;
 
 			case 2:
-				currentCount = taskListShop.getDeadlineTasks().size();
+				currentCount = taskListShop.getExpiredTasks().size();
 				break;
 
 			case 3:
-				currentCount = taskListShop.getTimedTasks().size();
-				break;
-
-			case 4:
 				currentCount = TaskView.getInstance().getSearchView().size();
 				break;
 
-			case 5:
+			case 4:
 				currentCount = taskListShop.getAllArchivedTasks().size();
 				break;
 
