@@ -505,7 +505,15 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				
 			case F5:
 				activateHeaderBasedOnName(HEADER_ARCHIVE_NAME);
-				break;	
+				break;
+				
+			case PAGE_UP:
+				uiData.goToNextPage();
+				break;
+				
+			case PAGE_DOWN:
+				uiData.goToPreviousPage();
+				break;
 				
 			default:
 				String command = commandTextInput.getText();
