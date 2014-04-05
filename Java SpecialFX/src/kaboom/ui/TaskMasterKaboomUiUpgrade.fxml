@@ -26,25 +26,30 @@
           <children>
             <Pane fx:id="task1" prefHeight="40.0" prefWidth="512.0" visible="true" VBox.margin="$x1" VBox.vgrow="NEVER">
               <children>
-                <Label fx:id="taskid1" alignment="CENTER" contentDisplay="RIGHT" layoutX="-59.0" layoutY="5.0" prefWidth="50.0" text="100" textAlignment="LEFT" wrapText="false">
+                <Rectangle arcHeight="0.0" arcWidth="0.0" fill="WHITE" height="40.0" layoutX="0.0" layoutY="0.0" opacity="0.25" pickOnBounds="true" strokeType="INSIDE" strokeWidth="0.0" styleClass="task-box" width="512.0">
+                  <stroke>
+                    <Color blue="0.937" green="0.537" red="0.176" fx:id="x12" />
+                  </stroke>
+                </Rectangle>
+                <Label fx:id="taskid1" alignment="CENTER" contentDisplay="RIGHT" layoutX="-59.0" layoutY="5.0" mouseTransparent="true" prefWidth="50.0" text="100" textAlignment="LEFT" wrapText="false">
                   <font>
                     <Font name="Segoe UI" size="20.0" fx:id="x5" />
                   </font>
                 </Label>
-                <Label fx:id="taskname1" alignment="TOP_LEFT" ellipsisString="..." layoutX="21.0" layoutY="1.0" minWidth="424.0" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true">
+                <Label fx:id="taskname1" alignment="TOP_LEFT" ellipsisString="..." layoutX="21.0" layoutY="1.0" minWidth="424.0" mouseTransparent="true" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true">
                   <font>
                     <Font name="Segoe UI Semibold" size="14.0" fx:id="x10" />
                   </font>
                 </Label>
-                <Rectangle fx:id="statusbar1" arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
-                <Label fx:id="datetime1" alignment="CENTER_LEFT" layoutX="21.0" layoutY="19.0" prefWidth="302.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY">
+                <Rectangle fx:id="statusbar1" arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" mouseTransparent="true" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
+                <Label fx:id="datetime1" alignment="CENTER_LEFT" layoutX="21.0" layoutY="19.0" mouseTransparent="true" prefWidth="302.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY">
                   <font>
                     <Font name="Segoe UI Semibold" size="12.0" fx:id="x11" />
                   </font>
                 </Label>
-                <Label fx:id="priority1" alignment="TOP_RIGHT" layoutX="418.0" layoutY="16.0" prefWidth="80.0" text="*****" textFill="RED">
+                <Label fx:id="priority1" alignment="TOP_RIGHT" layoutX="418.0" layoutY="16.0" mouseTransparent="true" prefWidth="80.0" text="*****" textFill="RED">
                   <font>
-                    <Font name="Segoe UI Semibold" size="20.0" fx:id="x12" />
+                    <Font name="Segoe UI Semibold" size="20.0" fx:id="x13" />
                   </font>
                 </Label>
               </children>
@@ -54,11 +59,12 @@
             </Pane>
             <Pane fx:id="task2" prefHeight="40.0" prefWidth="500.0" VBox.margin="$x1" VBox.vgrow="NEVER">
               <children>
-                <Label id="taskid1" fx:id="taskid2" alignment="CENTER" contentDisplay="RIGHT" font="$x5" layoutX="-59.0" layoutY="5.0" prefWidth="50.0" text="100" textAlignment="LEFT" wrapText="false" />
-                <Label id="taskname1" fx:id="taskname2" alignment="TOP_LEFT" ellipsisString="..." font="$x10" layoutX="21.0" layoutY="1.0" minWidth="424.0" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true" />
-                <Rectangle id="statusbar1" fx:id="statusbar2" arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
-                <Label id="datetime1" fx:id="datetime2" alignment="CENTER_LEFT" font="$x11" layoutX="21.0" layoutY="19.0" prefWidth="302.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY" />
-                <Label id="priority1" fx:id="priority2" alignment="TOP_RIGHT" font="$x12" layoutX="418.0" layoutY="16.0" prefWidth="80.0" text="*****" textFill="RED" />
+                <Rectangle arcHeight="0.0" arcWidth="0.0" fill="WHITE" height="40.0" layoutX="0.0" layoutY="0.0" opacity="0.25" pickOnBounds="true" stroke="$x12" strokeType="INSIDE" strokeWidth="0.0" styleClass="task-box" width="512.0" />
+                <Label id="taskid1" fx:id="taskid2" alignment="CENTER" contentDisplay="RIGHT" font="$x5" layoutX="-59.0" layoutY="5.0" mouseTransparent="true" prefWidth="50.0" text="100" textAlignment="LEFT" wrapText="false" />
+                <Label id="taskname1" fx:id="taskname2" alignment="TOP_LEFT" ellipsisString="..." font="$x10" layoutX="21.0" layoutY="1.0" minWidth="424.0" mouseTransparent="true" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true" />
+                <Rectangle id="statusbar1" fx:id="statusbar2" arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" mouseTransparent="true" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
+                <Label id="datetime1" fx:id="datetime2" alignment="CENTER_LEFT" font="$x11" layoutX="21.0" layoutY="19.0" mouseTransparent="true" prefWidth="302.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY" />
+                <Label id="priority1" fx:id="priority2" alignment="TOP_RIGHT" font="$x13" layoutX="418.0" layoutY="16.0" mouseTransparent="true" prefWidth="80.0" text="*****" textFill="RED" />
               </children>
               <padding>
                 <Insets fx:id="x1" />
@@ -66,11 +72,12 @@
             </Pane>
             <Pane fx:id="task3" prefHeight="40.0" prefWidth="500.0" VBox.margin="$x1" VBox.vgrow="NEVER">
               <children>
-                <Label id="taskid1" fx:id="taskid3" alignment="CENTER" contentDisplay="RIGHT" font="$x5" layoutX="-59.0" layoutY="5.0" prefWidth="50.0" text="100" textAlignment="LEFT" wrapText="false" />
-                <Label id="taskname1" fx:id="taskname3" alignment="TOP_LEFT" ellipsisString="..." font="$x10" layoutX="21.0" layoutY="1.0" minWidth="424.0" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true" />
-                <Rectangle id="statusbar1" fx:id="statusbar3" arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
-                <Label id="datetime1" fx:id="datetime3" alignment="CENTER_LEFT" font="$x11" layoutX="21.0" layoutY="19.0" prefWidth="302.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY" />
-                <Label id="priority1" fx:id="priority3" alignment="TOP_RIGHT" font="$x12" layoutX="418.0" layoutY="16.0" prefWidth="80.0" text="*****" textFill="RED" />
+                <Rectangle arcHeight="0.0" arcWidth="0.0" fill="WHITE" height="40.0" layoutX="0.0" layoutY="0.0" opacity="0.25" pickOnBounds="true" stroke="$x12" strokeType="INSIDE" strokeWidth="0.0" styleClass="task-box" width="512.0" />
+                <Label id="taskid1" fx:id="taskid3" alignment="CENTER" contentDisplay="RIGHT" font="$x5" layoutX="-59.0" layoutY="5.0" mouseTransparent="true" prefWidth="50.0" text="100" textAlignment="LEFT" wrapText="false" />
+                <Label id="taskname1" fx:id="taskname3" alignment="TOP_LEFT" ellipsisString="..." font="$x10" layoutX="21.0" layoutY="1.0" minWidth="424.0" mouseTransparent="true" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true" />
+                <Rectangle id="statusbar1" fx:id="statusbar3" arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" mouseTransparent="true" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
+                <Label id="datetime1" fx:id="datetime3" alignment="CENTER_LEFT" font="$x11" layoutX="21.0" layoutY="19.0" mouseTransparent="true" prefWidth="302.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY" />
+                <Label id="priority1" fx:id="priority3" alignment="TOP_RIGHT" font="$x13" layoutX="418.0" layoutY="16.0" mouseTransparent="true" prefWidth="80.0" text="*****" textFill="RED" />
               </children>
               <padding>
                 <Insets fx:id="x1" />
@@ -78,11 +85,12 @@
             </Pane>
             <Pane fx:id="task4" prefHeight="40.0" prefWidth="500.0" VBox.margin="$x1" VBox.vgrow="NEVER">
               <children>
-                <Label id="taskid1" fx:id="taskid4" alignment="CENTER" contentDisplay="RIGHT" font="$x5" layoutX="-59.0" layoutY="5.0" prefWidth="50.0" text="100" textAlignment="LEFT" wrapText="false" />
-                <Label id="taskname1" fx:id="taskname4" alignment="TOP_LEFT" ellipsisString="..." font="$x10" layoutX="21.0" layoutY="1.0" minWidth="424.0" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true" />
-                <Rectangle id="statusbar1" fx:id="statusbar4" arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
-                <Label id="datetime1" fx:id="datetime4" alignment="CENTER_LEFT" font="$x11" layoutX="21.0" layoutY="19.0" prefWidth="302.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY" />
-                <Label id="priority1" fx:id="priority4" alignment="TOP_RIGHT" font="$x12" layoutX="418.0" layoutY="16.0" prefWidth="80.0" text="*****" textFill="RED" />
+                <Rectangle arcHeight="0.0" arcWidth="0.0" fill="WHITE" height="40.0" layoutX="0.0" layoutY="0.0" opacity="0.25" pickOnBounds="true" stroke="$x12" strokeType="INSIDE" strokeWidth="0.0" styleClass="task-box" width="512.0" />
+                <Label id="taskid1" fx:id="taskid4" alignment="CENTER" contentDisplay="RIGHT" font="$x5" layoutX="-59.0" layoutY="5.0" mouseTransparent="true" prefWidth="50.0" text="100" textAlignment="LEFT" wrapText="false" />
+                <Label id="taskname1" fx:id="taskname4" alignment="TOP_LEFT" ellipsisString="..." font="$x10" layoutX="21.0" layoutY="1.0" minWidth="424.0" mouseTransparent="true" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true" />
+                <Rectangle id="statusbar1" fx:id="statusbar4" arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" mouseTransparent="true" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
+                <Label id="datetime1" fx:id="datetime4" alignment="CENTER_LEFT" font="$x11" layoutX="21.0" layoutY="19.0" mouseTransparent="true" prefWidth="302.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY" />
+                <Label id="priority1" fx:id="priority4" alignment="TOP_RIGHT" font="$x13" layoutX="418.0" layoutY="16.0" mouseTransparent="true" prefWidth="80.0" text="*****" textFill="RED" />
               </children>
               <padding>
                 <Insets fx:id="x1" />
@@ -90,11 +98,12 @@
             </Pane>
             <Pane fx:id="task5" prefHeight="40.0" prefWidth="500.0" VBox.margin="$x1" VBox.vgrow="NEVER">
               <children>
-                <Label id="taskid1" fx:id="taskid5" alignment="CENTER" contentDisplay="RIGHT" font="$x5" layoutX="-59.0" layoutY="5.0" prefWidth="50.0" text="100" textAlignment="LEFT" wrapText="false" />
-                <Label id="taskname1" fx:id="taskname5" alignment="TOP_LEFT" ellipsisString="..." font="$x10" layoutX="21.0" layoutY="1.0" minWidth="424.0" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true" />
-                <Rectangle id="statusbar1" fx:id="statusbar5" arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
-                <Label id="datetime1" fx:id="datetime5" alignment="CENTER_LEFT" font="$x11" layoutX="21.0" layoutY="19.0" prefWidth="302.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY" />
-                <Label id="priority1" fx:id="priority5" alignment="TOP_RIGHT" font="$x12" layoutX="418.0" layoutY="16.0" prefWidth="80.0" text="*****" textFill="RED" />
+                <Rectangle arcHeight="0.0" arcWidth="0.0" fill="WHITE" height="40.0" layoutX="0.0" layoutY="0.0" opacity="0.25" pickOnBounds="true" stroke="$x12" strokeType="INSIDE" strokeWidth="0.0" styleClass="task-box" width="512.0" />
+                <Label id="taskid1" fx:id="taskid5" alignment="CENTER" contentDisplay="RIGHT" font="$x5" layoutX="-59.0" layoutY="5.0" mouseTransparent="true" prefWidth="50.0" text="100" textAlignment="LEFT" wrapText="false" />
+                <Label id="taskname1" fx:id="taskname5" alignment="TOP_LEFT" ellipsisString="..." font="$x10" layoutX="21.0" layoutY="1.0" minWidth="424.0" mouseTransparent="true" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true" />
+                <Rectangle id="statusbar1" fx:id="statusbar5" arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" mouseTransparent="true" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
+                <Label id="datetime1" fx:id="datetime5" alignment="CENTER_LEFT" font="$x11" layoutX="21.0" layoutY="19.0" mouseTransparent="true" prefWidth="302.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY" />
+                <Label id="priority1" fx:id="priority5" alignment="TOP_RIGHT" font="$x13" layoutX="418.0" layoutY="16.0" mouseTransparent="true" prefWidth="80.0" text="*****" textFill="RED" />
               </children>
               <padding>
                 <Insets fx:id="x1" />
@@ -237,7 +246,7 @@
         <Line endX="-10.0" endY="-55.0" layoutX="200.0" layoutY="96.0" startX="-10.0" startY="-20.0" />
       </children>
     </AnchorPane>
-    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_ATOP" fill="#2d89ef" height="27.0" layoutX="0.0" layoutY="0.0" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0" />
+    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_ATOP" fill="$x12" height="27.0" layoutX="0.0" layoutY="0.0" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0" />
     <ImageView fx:id="exitButton" blendMode="SRC_OVER" fitHeight="27.0" fitWidth="27.0" layoutX="569.0" layoutY="0.0" onMousePressed="#onExitButtonPressed" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="close-button">
       <image>
         <Image url="@img/MarkX.png" />
