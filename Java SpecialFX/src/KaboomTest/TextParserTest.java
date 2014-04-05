@@ -120,7 +120,7 @@ public class TextParserTest {
 		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
 		
 		command = "by  160";
-		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		assertEquals("by  160", textparser.extractTimeOnly(keyword, command, tempHashTable));
 		
 		command = "by 17:00";
 		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
@@ -130,6 +130,9 @@ public class TextParserTest {
 		
 		command = "by 180:0 ";
 		assertEquals("by 180:0 ", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 18:0 ";
+		assertEquals("by 18:0 ", textparser.extractTimeOnly(keyword, command, tempHashTable));
 		
 		command = "by 1:6000";
 		assertEquals("by 1:6000", textparser.extractTimeOnly(keyword, command, tempHashTable));
@@ -145,6 +148,18 @@ public class TextParserTest {
 		
 		command = "by    6:00pmpm ";
 		assertEquals("by    6:00pmpm ", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 1:08pm ";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 108pm";
+		assertEquals("by 108pm", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 01:08pm";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 13pm";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
 	}
 	
 	public void testDateExtraction () {
