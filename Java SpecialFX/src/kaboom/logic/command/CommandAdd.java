@@ -153,6 +153,7 @@ public class CommandAdd extends Command {
 			startTime = datFormat.convertStringTimeTo24HourString(startTime);
 			
 			if(hasStartDate) {
+				//startDate = datFormat.convertStringDateToDayMonthYearFormat(startDate); <<<<<<<<<<<<<<<<<
 				if(!datFormat.isDateValid(startDate)) {
 					feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 				} else {
@@ -186,9 +187,9 @@ public class CommandAdd extends Command {
 				endTime = "0000";
 			}
 			endTime = datFormat.convertStringTimeTo24HourString(endTime);
-			endDate = datFormat.convertStringDateToDayMonthYearFormat(endDate);
 			
 			if(hasEndDate) {
+				//endDate = datFormat.convertStringDateToDayMonthYearFormat(endDate); <<<<<<<<<<<<<<<<<<<<<<
 				if(!datFormat.isDateValid(endDate)) {
 					feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 				} else {

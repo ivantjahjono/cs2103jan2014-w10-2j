@@ -14,9 +14,6 @@ public class DateAndTimeFormat {
 	private final String dateFormat4 = "ddMMyyyy";		// 12/06/12 or 12.01.06 or 120106
 	private final String dateFormat5 = "dd'/'MM'/'yyyy";
 	private final String dateFormat6 = "dd'.'MM'.'yyyy";
-	
-	private final String time24hrFormat1 = "HHmm"; 
-	private final String time24hrFormat2 = "HH':'mm";
 
 	private final SimpleDateFormat[] dateFormatList = { 
 		new SimpleDateFormat(dateFormat1),
