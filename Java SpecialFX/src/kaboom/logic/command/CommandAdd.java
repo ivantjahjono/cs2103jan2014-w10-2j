@@ -99,7 +99,6 @@ public class CommandAdd extends Command {
 			return true;
 	}
 	
-		keywordList.add(KEYWORD_TYPE.TASKID);
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
 		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
