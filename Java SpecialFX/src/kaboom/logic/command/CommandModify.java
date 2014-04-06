@@ -33,7 +33,6 @@ public class CommandModify extends Command {
 
 	TaskInfo preModifiedTaskInfo;		// Use to store premodified data so that can undo later
 	TaskInfo taskInfoToModify;
-//	Hashtable<KEYWORD_TYPE, String> taskInfoTable;
 	boolean hasNameChanged;
 	boolean hasTimeChanged;
 	boolean hasPriorityChanged;
@@ -105,7 +104,10 @@ public class CommandModify extends Command {
 		}
 
 
-		if (preModifiedTaskInfo != null) {
+		if (preModifiedTaskInfo == null) {
+			feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_TO_MODIFY,taskName);
+			return createResult(taskListShop.getAllCurrentTasks(), feedback);	
+		} else {
 			TaskInfo temp = new TaskInfo(preModifiedTaskInfo);
 
 			//Modify task name
@@ -150,6 +152,7 @@ public class CommandModify extends Command {
 				if(datFormat.isDateValid(newStartDate)) {
 					startDate = newStartDate;
 					hasStartDate = true;
+					hasTimeChanged = true;
 				} else {
 					feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 					return createResult(taskListShop.getAllCurrentTasks(), feedback);
@@ -158,6 +161,7 @@ public class CommandModify extends Command {
 			if(newStartTime != null) {
 				startTime = datFormat.convertStringTimeTo24HourString(newStartTime);
 				hasStartTime = true;
+				hasTimeChanged = true;
 			}
 
 			
@@ -183,6 +187,7 @@ public class CommandModify extends Command {
 				if(datFormat.isDateValid(newEndDate)) {
 					endDate = newEndDate;
 					hasEndDate = true;
+					hasTimeChanged = true;
 				} else {
 					feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 					return createResult(taskListShop.getAllCurrentTasks(), feedback);
@@ -191,6 +196,7 @@ public class CommandModify extends Command {
 			if(newEndTime != null) {
 				endTime = datFormat.convertStringTimeTo24HourString(newEndTime);
 				hasEndTime = true;
+				hasTimeChanged = true;
 			}
 
 			
@@ -345,12 +351,9 @@ public class CommandModify extends Command {
 			taskInfo.setRecent(true);
 			taskListShop.updateTask(taskInfo, preModifiedTaskInfo);
 			taskView.swapView(taskInfo, preModifiedTaskInfo);
-		} else {
-			feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_TO_MODIFY,taskName);
-			return createResult(taskListShop.getAllCurrentTasks(), feedback);
-		}
+		} 
 
-//		feedback = feedbackGenerator();
+		feedback = feedbackGenerator();
 		return createResult(taskListShop.getAllCurrentTasks(), feedback);
 	}
 
@@ -391,33 +394,33 @@ public class CommandModify extends Command {
 		preModifiedTaskInfo = task;
 	}
 
-//	private String feedbackGenerator() {
-//		String feedback = String.format(MESSAGE_TASK_NAME, preModifiedTaskInfo.getTaskName());
-//		int countNumOfModifications = 0;
-//		if(hasNameChanged) {
-//			countNumOfModifications++;
-//			feedback += String.format(MESSAGE_COMMAND_MODIFY_SUCCESS_NAME_CHANGE, taskInfo.getTaskName());
-//		}
-//		if(hasTimeChanged) {
-//			if (countNumOfModifications > 0) {
-//				feedback += MESSAGE_COMMAND_MODIFY_CONNECTOR;
-//			}
-//			countNumOfModifications++;
-//			feedback += MESSAGE_COMMAND_MODIFY_SUCCESS_TIME_CHANGE;
-//		}
-//		if(hasPriorityChanged) {
-//			if (countNumOfModifications > 0) {
-//				feedback += MESSAGE_COMMAND_MODIFY_CONNECTOR;
-//			}
-//			feedback += MESSAGE_COMMAND_MODIFY_SUCCESS_PRIORITY_CHANGE;
-//		}
-//
-//		if(!hasNameChanged && !hasTimeChanged && !hasPriorityChanged) {
-//			feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_CHANGE;
-//		}
-//
-//		return feedback;
-//	}
+	private String feedbackGenerator() {
+		String feedback = String.format(MESSAGE_TASK_NAME, preModifiedTaskInfo.getTaskName());
+		int countNumOfModifications = 0;
+		if(hasNameChanged) {
+			countNumOfModifications++;
+			feedback += String.format(MESSAGE_COMMAND_MODIFY_SUCCESS_NAME_CHANGE, taskInfo.getTaskName());
+		}
+		if(hasTimeChanged) {
+			if (countNumOfModifications > 0) {
+				feedback += MESSAGE_COMMAND_MODIFY_CONNECTOR;
+			}
+			countNumOfModifications++;
+			feedback += MESSAGE_COMMAND_MODIFY_SUCCESS_TIME_CHANGE;
+		}
+		if(hasPriorityChanged) {
+			if (countNumOfModifications > 0) {
+				feedback += MESSAGE_COMMAND_MODIFY_CONNECTOR;
+			}
+			feedback += MESSAGE_COMMAND_MODIFY_SUCCESS_PRIORITY_CHANGE;
+		}
+
+		if(!hasNameChanged && !hasTimeChanged && !hasPriorityChanged) {
+			feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_CHANGE;
+		}
+
+		return feedback;
+	}
 
 	private boolean isNumeric(String taskName) {
 		return taskName.matches("\\d{1,4}");
