@@ -286,4 +286,16 @@ public class DateAndTimeFormatTest {
 		timeString = "2334";
 		assertEquals("2334", datFormat.convertStringTimeTo24HourString(timeString));
 	}
+	
+	@Test
+	public void convertDate () {
+		String timeString = "";
+		
+		timeString = "1pm";
+		assertEquals("07 Apr 14", datFormat.getNearestWeekdayFromToday(2));
+		
+		assertEquals("12 Apr 14", datFormat.getNearestWeekdayFromToday(7));
+		
+		assertEquals("10 Apr 14", datFormat.getNearestWeekdayFromToday(5));
+	}
 }

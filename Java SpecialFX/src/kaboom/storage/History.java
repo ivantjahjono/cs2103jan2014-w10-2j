@@ -1,6 +1,6 @@
 package kaboom.storage;
 
-import java.util.Vector;
+import java.util.Stack;
 
 import kaboom.logic.command.Command;
 
@@ -10,7 +10,7 @@ public class History {
 
 	private static History historyInstance = null;
 
-	private Vector<Command> previousCommandList;
+	private Stack<Command> previousCommandList;
 	private Command currentCommandView;
 
 	public static History getInstance () {
@@ -21,18 +21,16 @@ public class History {
 	}
 
 	public History () {
-		previousCommandList = new Vector<Command>();
+		previousCommandList = new Stack<Command>();
 		currentCommandView = null;
 	}
 
 	public Command getMostRecentCommand () {
-		if (isCommandListEmpty()) {
+		if (previousCommandList.empty()) {
 			return null;
 		}
 
-		Command recentCommand = previousCommandList.lastElement();
-		previousCommandList.remove(previousCommandList.size()-1);
-		return recentCommand;
+		return previousCommandList.pop();
 	}
 
 	public Command getMostRecentCommandView () {            
@@ -47,12 +45,8 @@ public class History {
 		previousCommandList.clear();
 	}
 
-	private boolean isCommandListEmpty() {
-		return previousCommandList.size() == 0;
-	}
-
 	public void addToRecentCommands(Command recentCommand) {
-		previousCommandList.add(recentCommand);
+		previousCommandList.push(recentCommand);
 
 		trimOutOldCommands();
 	}

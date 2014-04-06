@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.TASK_TYPE;
+import kaboom.logic.command.ComparatorDefault;
 import kaboom.logic.command.ComparatorEndDate;
 import kaboom.logic.command.ComparatorName;
 import kaboom.logic.command.ComparatorPriority;
@@ -37,7 +38,7 @@ public class TaskListShop {
 
 	public boolean addTaskToList (TaskInfo newTask) {
 		if (currentTaskList != null) {
-			logger.fine("Adding one item to TaskListShop");
+			logger.fine("Adding one item to current list");
 			return currentTaskList.add(newTask);
 		} else {
 			return false;
@@ -46,7 +47,7 @@ public class TaskListShop {
 
 	public boolean addTaskToArchivedList (TaskInfo newTask) {
 		if (archivedTaskList != null) {
-			logger.fine("Adding one item to TaskListShop");
+			logger.fine("Adding one item to archived list");
 			return archivedTaskList.add(newTask);
 		} else {
 			return false;
@@ -107,6 +108,63 @@ public class TaskListShop {
 		if (indexOfTaskListToBeModified != -1) {
 			archivedTaskList.set(indexOfTaskListToBeModified, newTaskInfo);
 		}
+	}
+
+	public Vector<TaskInfo> getToday() {
+		Vector<TaskInfo> tasks = new Vector<TaskInfo>();
+		Calendar today = Calendar.getInstance();
+
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
+			Calendar taskStartDate = singleTask.getStartDate();
+			Calendar taskEndDate = singleTask.getEndDate();
+
+			//Do not get floating tasks
+			if (singleTask.getTaskType() != TASK_TYPE.FLOATING) {
+				if ((taskStartDate != null && taskStartDate.before(today)) 
+						&& (taskEndDate != null && taskEndDate.after(today))) {
+					tasks.add(singleTask);  //Add if task starts before and ends after current day
+				}
+				else if (taskStartDate != null && 
+						taskStartDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) &&
+						taskStartDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
+					tasks.add(singleTask);  //Add if task starts on the current day
+				}
+				else if (taskEndDate != null &&
+						taskEndDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) &&
+						taskEndDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
+					tasks.add(singleTask);  //Add if task ends on the current day
+				}
+			}
+		}
+		Collections.sort(tasks, new ComparatorDefault());
+		return tasks;
+	}
+
+	public Vector<TaskInfo> getFutureTasks() {
+		Vector<TaskInfo> tasks = new Vector<TaskInfo>();
+		Calendar today = Calendar.getInstance();
+		today.set(Calendar.HOUR_OF_DAY, 23);
+		today.set(Calendar.MINUTE, 59);
+		today.set(Calendar.SECOND, 59);
+
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
+			Calendar taskStartDate = singleTask.getStartDate();
+			Calendar taskEndDate = singleTask.getEndDate();
+
+			//Do not get floating tasks
+			if (singleTask.getTaskType() != TASK_TYPE.FLOATING) {
+				if (taskStartDate != null && taskStartDate.after(today)) {
+					tasks.add(singleTask);
+				}
+				else if (taskEndDate != null && taskEndDate.after(today)) {
+					tasks.add(singleTask);
+				}
+			}
+		}
+		Collections.sort(tasks, new ComparatorDefault());
+		return tasks;
 	}
 
 	public Vector<TaskInfo> getAllCurrentTasks () {
@@ -205,6 +263,7 @@ public class TaskListShop {
 	//Floating tasks have a default of not expired
 	//Also changes current tasks to archived tasks and vice versa
 	public void refreshTasks() {
+		//Shift from archive to current list
 		for (int i = 0; i < archivedTaskList.size(); i++) {
 			TaskInfo singleTask = archivedTaskList.get(i);
 
@@ -214,60 +273,33 @@ public class TaskListShop {
 			}
 		}
 
+		//Check for expired tasks
 		for (int i = 0; i < currentTaskList.size(); i++) {
 			TaskInfo singleTask = currentTaskList.get(i);
 			Calendar now = Calendar.getInstance();
-			if (now.after(singleTask.getEndDate())) {
-				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
-					singleTask.setExpiryFlag(true);  //Floating tasks cannot expire
-				}
-			}
-			else {
-				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
+
+			if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
+				if (now.after(singleTask.getEndDate())) {
+					singleTask.setExpiryFlag(true);
+				} else {
 					singleTask.setExpiryFlag(false);
 				}
+			} else {
+				singleTask.setExpiryFlag(false);  //Floating tasks cannot expire
 			}
-			
+
 			if (singleTask.isRecent()) {
 				singleTask.setRecent(false);
 			}
 
+			//Shift from current list to archived list
 			if (singleTask.getDone()) {
 				archivedTaskList.add(singleTask);
 				currentTaskList.remove(singleTask);
 			}
 		}
-	}
-	
-	public void refreshTasks(Vector<TaskInfo> viewingTasks) {
-		for (int i = 0; i < archivedTaskList.size(); i++) {
-			TaskInfo singleTask = archivedTaskList.get(i);
-
-			if (!singleTask.getDone()) {
-				currentTaskList.add(singleTask);
-				archivedTaskList.remove(singleTask);
-			}
-		}
-
-		for (int i = 0; i < currentTaskList.size(); i++) {
-			TaskInfo singleTask = currentTaskList.get(i);
-			Calendar now = Calendar.getInstance();
-			if (now.after(singleTask.getEndDate())) {
-				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
-					singleTask.setExpiryFlag(true);  //Floating tasks cannot expire
-				}
-			}
-			else {
-				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
-					singleTask.setExpiryFlag(false);
-				}
-			}
-
-			if (singleTask.getDone()) {
-				archivedTaskList.add(singleTask);
-				currentTaskList.remove(singleTask);
-			}
-		}
+		
+		Collections.sort(currentTaskList, new ComparatorDefault());
 	}
 
 	public Vector<TaskInfo> clearAllTasks () {
@@ -298,6 +330,9 @@ public class TaskListShop {
 		else if (type == KEYWORD_TYPE.PRIORITY) {
 			Collections.sort(currentTaskList, new ComparatorPriority());
 		}
+		else {
+			Collections.sort(currentTaskList, new ComparatorDefault());
+		}
 	}
 
 	public int numOfTasksWithSimilarNames(String name) {
@@ -319,12 +354,12 @@ public class TaskListShop {
 		}
 		return count;
 	}
-	
+
 	public void setLastToDone() {
 		currentTaskList.lastElement().setDone(true);
 		refreshTasks();
 	}
-	
+
 	public void setLastToUndone() {
 		archivedTaskList.lastElement().setDone(false);
 		refreshTasks();
@@ -368,7 +403,7 @@ public class TaskListShop {
 			return false;
 		}
 	}
-	
+
 	public boolean setUndoneByID(int index) {
 		//There might be array out of bounds error here
 		try {

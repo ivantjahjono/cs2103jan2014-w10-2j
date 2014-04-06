@@ -13,89 +13,18 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" fx:id="mainPane" blendMode="SRC_OVER" focusTraversable="true" layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="450.0" prefWidth="600.0" snapToPixel="true" styleClass="root" translateX="0.0" translateY="0.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboom.ui.MainWindow">
+<AnchorPane id="AnchorPane" fx:id="mainPane" blendMode="SRC_OVER" focusTraversable="true" layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="650.0" prefWidth="600.0" snapToPixel="true" styleClass="root" translateX="0.0" translateY="0.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="kaboom.ui.MainWindow">
   <children>
-    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="WHITE" height="451.0" layoutX="0.0" layoutY="0.0" opacity="1.0" smooth="true" strokeType="INSIDE" strokeWidth="1.0" styleClass="column-header" width="600.0">
+    <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_OVER" fill="WHITE" height="650.0" layoutX="0.0" layoutY="0.0" opacity="1.0" smooth="true" strokeType="INSIDE" strokeWidth="1.0" styleClass="column-header" width="600.0">
       <stroke>
         <Color blue="0.937" green="0.537" red="0.176" fx:id="x4" />
       </stroke>
     </Rectangle>
-    <AnchorPane id="AnchorPane" layoutX="3.0" layoutY="0.0" mouseTransparent="false" pickOnBounds="true" prefHeight="451.0" prefWidth="600.0" visible="true">
+    <AnchorPane id="AnchorPane" layoutX="3.0" layoutY="0.0" mouseTransparent="false" pickOnBounds="true" prefHeight="650.0" prefWidth="600.0" visible="true">
       <children>
-        <VBox layoutX="-4.0" layoutY="95.0" prefHeight="251.0" prefWidth="600.0" spacing="10.0">
-          <children>
-            <Pane fx:id="task1" prefHeight="40.0" prefWidth="512.0" visible="true" VBox.vgrow="NEVER">
-              <children>
-                <Rectangle arcHeight="0.0" arcWidth="0.0" fill="WHITE" height="40.0" layoutX="0.0" layoutY="0.0" opacity="0.25" pickOnBounds="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="task-box" width="512.0" />
-                <Label fx:id="taskid1" alignment="CENTER" contentDisplay="RIGHT" layoutX="-59.0" layoutY="5.0" mouseTransparent="true" prefWidth="50.0" text="100" textAlignment="LEFT" wrapText="false">
-                  <font>
-                    <Font name="Segoe UI" size="20.0" fx:id="x5" />
-                  </font>
-                </Label>
-                <Label fx:id="taskname1" alignment="TOP_LEFT" ellipsisString="..." layoutX="21.0" layoutY="1.0" minWidth="424.0" mouseTransparent="true" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true">
-                  <font>
-                    <Font name="Segoe UI Semibold" size="14.0" fx:id="x10" />
-                  </font>
-                </Label>
-                <Rectangle fx:id="statusbar1" arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" mouseTransparent="true" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
-                <Label fx:id="datetime1" alignment="CENTER_LEFT" layoutX="21.0" layoutY="19.0" mouseTransparent="true" prefWidth="302.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY">
-                  <font>
-                    <Font name="Segoe UI Semibold" size="12.0" fx:id="x11" />
-                  </font>
-                </Label>
-                <Label fx:id="priority1" alignment="TOP_RIGHT" layoutX="418.0" layoutY="16.0" mouseTransparent="true" prefWidth="80.0" text="*****" textFill="RED">
-                  <font>
-                    <Font name="Segoe UI Semibold" size="20.0" fx:id="x13" />
-                  </font>
-                </Label>
-              </children>
-            </Pane>
-            <Pane fx:id="task2" prefHeight="40.0" prefWidth="500.0" VBox.margin="$x1" VBox.vgrow="NEVER">
-              <children>
-                <Rectangle arcHeight="0.0" arcWidth="0.0" fill="WHITE" height="40.0" layoutX="0.0" layoutY="0.0" opacity="0.25" pickOnBounds="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="task-box" width="512.0" />
-                <Label id="taskid1" fx:id="taskid2" alignment="CENTER" contentDisplay="RIGHT" font="$x5" layoutX="-59.0" layoutY="5.0" mouseTransparent="true" prefWidth="50.0" text="100" textAlignment="LEFT" wrapText="false" />
-                <Label id="taskname1" fx:id="taskname2" alignment="TOP_LEFT" ellipsisString="..." font="$x10" layoutX="21.0" layoutY="1.0" minWidth="424.0" mouseTransparent="true" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true" />
-                <Rectangle id="statusbar1" fx:id="statusbar2" arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" mouseTransparent="true" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
-                <Label id="datetime1" fx:id="datetime2" alignment="CENTER_LEFT" font="$x11" layoutX="21.0" layoutY="19.0" mouseTransparent="true" prefWidth="302.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY" />
-                <Label id="priority1" fx:id="priority2" alignment="TOP_RIGHT" font="$x13" layoutX="418.0" layoutY="16.0" mouseTransparent="true" prefWidth="80.0" text="*****" textFill="RED" />
-              </children>
-              <padding>
-                <Insets fx:id="x1" />
-              </padding>
-            </Pane>
-            <Pane fx:id="task3" prefHeight="40.0" prefWidth="500.0" VBox.margin="$x1" VBox.vgrow="NEVER">
-              <children>
-                <Rectangle arcHeight="0.0" arcWidth="0.0" fill="WHITE" height="40.0" layoutX="0.0" layoutY="0.0" opacity="0.25" pickOnBounds="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="task-box" width="512.0" />
-                <Label id="taskid1" fx:id="taskid3" alignment="CENTER" contentDisplay="RIGHT" font="$x5" layoutX="-59.0" layoutY="5.0" mouseTransparent="true" prefWidth="50.0" text="100" textAlignment="LEFT" wrapText="false" />
-                <Label id="taskname1" fx:id="taskname3" alignment="TOP_LEFT" ellipsisString="..." font="$x10" layoutX="21.0" layoutY="1.0" minWidth="424.0" mouseTransparent="true" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true" />
-                <Rectangle id="statusbar1" fx:id="statusbar3" arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" mouseTransparent="true" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
-                <Label id="datetime1" fx:id="datetime3" alignment="CENTER_LEFT" font="$x11" layoutX="21.0" layoutY="19.0" mouseTransparent="true" prefWidth="302.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY" />
-                <Label id="priority1" fx:id="priority3" alignment="TOP_RIGHT" font="$x13" layoutX="418.0" layoutY="16.0" mouseTransparent="true" prefWidth="80.0" text="*****" textFill="RED" />
-              </children>
-            </Pane>
-            <Pane fx:id="task4" prefHeight="40.0" prefWidth="500.0" VBox.margin="$x1" VBox.vgrow="NEVER">
-              <children>
-                <Rectangle arcHeight="0.0" arcWidth="0.0" fill="WHITE" height="40.0" layoutX="0.0" layoutY="0.0" opacity="0.25" pickOnBounds="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="task-box" width="512.0" />
-                <Label id="taskid1" fx:id="taskid4" alignment="CENTER" contentDisplay="RIGHT" font="$x5" layoutX="-59.0" layoutY="5.0" mouseTransparent="true" prefWidth="50.0" text="100" textAlignment="LEFT" wrapText="false" />
-                <Label id="taskname1" fx:id="taskname4" alignment="TOP_LEFT" ellipsisString="..." font="$x10" layoutX="21.0" layoutY="1.0" minWidth="424.0" mouseTransparent="true" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true" />
-                <Rectangle id="statusbar1" fx:id="statusbar4" arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" mouseTransparent="true" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
-                <Label id="datetime1" fx:id="datetime4" alignment="CENTER_LEFT" font="$x11" layoutX="21.0" layoutY="19.0" mouseTransparent="true" prefWidth="302.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY" />
-                <Label id="priority1" fx:id="priority4" alignment="TOP_RIGHT" font="$x13" layoutX="418.0" layoutY="16.0" mouseTransparent="true" prefWidth="80.0" text="*****" textFill="RED" />
-              </children>
-            </Pane>
-            <Pane fx:id="task5" prefHeight="40.0" prefWidth="500.0" VBox.margin="$x1" VBox.vgrow="NEVER">
-              <children>
-                <Rectangle arcHeight="0.0" arcWidth="0.0" fill="WHITE" height="40.0" layoutX="0.0" layoutY="0.0" opacity="0.25" pickOnBounds="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="task-box" width="512.0" />
-                <Label id="taskid1" fx:id="taskid5" alignment="CENTER" contentDisplay="RIGHT" font="$x5" layoutX="-59.0" layoutY="5.0" mouseTransparent="true" prefWidth="50.0" text="100" textAlignment="LEFT" wrapText="false" />
-                <Label id="taskname1" fx:id="taskname5" alignment="TOP_LEFT" ellipsisString="..." font="$x10" layoutX="21.0" layoutY="1.0" minWidth="424.0" mouseTransparent="true" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true" />
-                <Rectangle id="statusbar1" fx:id="statusbar5" arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" mouseTransparent="true" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
-                <Label id="datetime1" fx:id="datetime5" alignment="CENTER_LEFT" font="$x11" layoutX="21.0" layoutY="19.0" mouseTransparent="true" prefWidth="302.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY" />
-                <Label id="priority1" fx:id="priority5" alignment="TOP_RIGHT" font="$x13" layoutX="418.0" layoutY="16.0" mouseTransparent="true" prefWidth="80.0" text="*****" textFill="RED" />
-              </children>
-            </Pane>
-          </children>
+        <VBox fx:id="taskListContainer" layoutX="-4.0" layoutY="82.0" prefHeight="462.49609375" prefWidth="600.0" spacing="5.0">
           <padding>
-            <Insets left="70.0" />
+            <Insets left="70.0" top="5.0" />
           </padding>
         </VBox>
         <TableView fx:id="taskDisplayTable" editable="false" focusTraversable="false" layoutX="7.0" layoutY="75.0" prefHeight="309.0" prefWidth="580.0" tableMenuButtonVisible="false" visible="false">
@@ -109,9 +38,12 @@
             <URL value="@application.css" />
           </stylesheets>
         </TableView>
-        <HBox alignment="BOTTOM_CENTER" fillHeight="true" layoutX="180.0" layoutY="29.0" prefHeight="32.0" prefWidth="418.0" rotate="0.0">
+        <HBox alignment="BOTTOM_CENTER" fillHeight="true" layoutX="180.0" layoutY="22.0" prefHeight="32.0" prefWidth="418.0" rotate="0.0">
           <children>
-            <Label id="header_all" fx:id="header_today" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x5" graphicTextGap="4.0" onMouseClicked="#onHeaderMouseClicked" prefWidth="70.0" styleClass="header-label-normal" text="TODAY" textAlignment="LEFT" underline="false">
+            <Label id="header_all" fx:id="header_today" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="4.0" onMouseClicked="#onHeaderMouseClicked" prefWidth="70.0" styleClass="header-label-normal" text="TODAY" textAlignment="LEFT" underline="false">
+              <font>
+                <Font name="Segoe UI" size="20.0" fx:id="x5" />
+              </font>
               <stylesheets>
                 <URL value="@application.css" />
               </stylesheets>
@@ -144,7 +76,7 @@
             </Label>
           </children>
         </HBox>
-        <HBox alignment="BOTTOM_CENTER" fillHeight="true" layoutX="179.0" layoutY="53.0" mouseTransparent="true" pickOnBounds="false" prefHeight="22.0" prefWidth="418.0" rotate="0.0">
+        <HBox alignment="BOTTOM_CENTER" fillHeight="true" layoutX="179.0" layoutY="46.0" mouseTransparent="true" pickOnBounds="false" prefHeight="22.0" prefWidth="418.0" rotate="0.0">
           <children>
             <Label id="header_all" fx:id="header_today_count" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="4.0" mouseTransparent="true" prefWidth="70.0" text="128" textAlignment="LEFT" underline="false">
               <font>
@@ -179,12 +111,12 @@
             </Label>
           </children>
         </HBox>
-        <HBox fx:id="pageTabContainer" alignment="CENTER" layoutX="196.0" layoutY="351.0" prefHeight="22.0" prefWidth="200.0" styleClass="pages-tab-hbox">
+        <HBox fx:id="pageTabContainer" alignment="CENTER" layoutX="196.0" layoutY="552.0" prefHeight="23.9415283203125" prefWidth="200.0" styleClass="pages-tab-hbox">
           <stylesheets>
             <URL value="@application.css" />
           </stylesheets>
         </HBox>
-        <Pane disable="false" focusTraversable="false" layoutX="10.0" layoutY="342.0" prefHeight="32.0001220703125" prefWidth="572.0" visible="true">
+        <Pane disable="false" focusTraversable="false" layoutX="10.0" layoutY="544.0" prefHeight="32.0001220703125" prefWidth="572.0" visible="true">
           <children>
             <ImageView fx:id="prevArrow" blendMode="SRC_OVER" fitHeight="36.0" fitWidth="36.0" layoutX="145.0" layoutY="1.0" onMouseClicked="#onPagesArrowMouseClicked" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="prevpage-button">
               <image>
@@ -198,36 +130,22 @@
             </ImageView>
           </children>
         </Pane>
-        <HBox id="HBox" fx:id="commandFormatFeedback" alignment="CENTER_LEFT" layoutX="15.0" layoutY="426.0" maxWidth="540.0" prefWidth="540.0" spacing="0.0">
-          <children>
-            <Label mnemonicParsing="false" mouseTransparent="true" styleClass="parseCommandTypeName" text="command">
-              <stylesheets>
-                <URL value="@application.css" />
-              </stylesheets>
-            </Label>
-            <Label styleClass="parseCommandName" text="taskname" />
-            <Label styleClass="parseCommandStartDate" text="startdate" />
-            <Label styleClass="parseCommandEndDate" text="enddate" />
-            <Label styleClass="parseCommandPriority" text="priority" />
-            <Label styleClass="parseCommandInvalid" text="invalid" />
-          </children>
-        </HBox>
-        <Group id="Group" layoutX="10.0" layoutY="22.0" scaleX="1.0" scaleY="1.0">
+        <Group id="Group" layoutX="10.0" layoutY="15.0" scaleX="1.0" scaleY="1.0">
           <children>
             <Label fx:id="todayWeekDay" alignment="CENTER_RIGHT" layoutX="0.0" layoutY="0.0" text="SAT">
               <font>
                 <Font name="Segoe UI" size="50.0" />
               </font>
             </Label>
-            <Label fx:id="todayDate" alignment="CENTER_RIGHT" layoutX="87.0" layoutY="15.0" prefWidth="80.0" text="12 Oct 14">
+            <Label fx:id="todayDate" alignment="CENTER_RIGHT" layoutX="87.0" layoutY="14.0" prefWidth="80.0" text="12 Oct 14">
               <font>
                 <Font size="18.0" fx:id="x6" />
               </font>
             </Label>
-            <Label fx:id="todayTime" alignment="CENTER_RIGHT" font="$x6" layoutX="87.0" layoutY="35.0" prefWidth="80.0" text="08:00 PM" />
+            <Label fx:id="todayTime" alignment="CENTER_RIGHT" font="$x6" layoutX="87.0" layoutY="34.0" prefWidth="80.0" text="08:00 PM" />
           </children>
         </Group>
-        <Line endX="-10.0" endY="-55.0" layoutX="200.0" layoutY="96.0" startX="-10.0" startY="-20.0" />
+        <Line endX="-10.0" endY="-55.0" layoutX="200.0" layoutY="88.0" startX="-10.0" startY="-20.0" />
       </children>
     </AnchorPane>
     <Rectangle arcHeight="0.0" arcWidth="0.0" blendMode="SRC_ATOP" fill="$x4" height="27.0" layoutX="0.0" layoutY="0.0" onMouseDragged="#onWindowMouseDrag" onMousePressed="#onWindowMousePressed" opacity="1.0" smooth="true" stroke="$x4" strokeType="INSIDE" strokeWidth="0.0" styleClass="column-header" width="600.0" />
@@ -246,20 +164,46 @@
         <Font name="Segoe UI" size="12.0" fx:id="x14" />
       </font>
     </Label>
-    <Label fx:id="counter" font="$x11" layoutX="254.0" layoutY="5.0" mouseTransparent="true" text="Test Counter: 0" textFill="WHITE" visible="false" />
-    <TextField fx:id="commandTextInput" disable="false" layoutX="11.0" layoutY="403.0" onAction="#onTextfieldAction" onKeyReleased="#onTextfieldKeyReleased" prefWidth="572.0" promptText="Please enter a command" styleClass="text-field-correct" text="" />
-    <Pane fx:id="feedbackBox" blendMode="SRC_OVER" layoutX="10.0" layoutY="379.0" prefHeight="22.0001220703125" prefWidth="572.0" styleClass="feedback-pane">
+    <Label fx:id="counter" layoutX="254.0" layoutY="5.0" mouseTransparent="true" text="Test Counter: 0" textFill="WHITE" visible="false">
+      <font>
+        <Font name="Segoe UI Semibold" size="12.0" fx:id="x11" />
+      </font>
+    </Label>
+    <Pane fx:id="feedbackBox" blendMode="SRC_OVER" layoutX="10.0" layoutY="579.0" prefHeight="23.0001220703125" prefWidth="572.0" styleClass="feedback-pane">
       <children>
-        <Label id="" fx:id="feedbackText" labelFor="$commandTextInput" layoutX="0.0" layoutY="0.0" minHeight="22.0" prefHeight="22.0" prefWidth="567.0" text="Feedback" textFill="$x4" translateX="5.0" underline="false">
+        <Label id="" fx:id="feedbackText" layoutX="0.0" layoutY="0.0" minHeight="22.0" prefHeight="22.0" prefWidth="567.0" text="Feedback" textFill="$x4" translateX="5.0" underline="false">
           <font>
             <Font name="Segoe UI Semilight" size="16.0" />
           </font>
+          <labelFor>
+            <TextField fx:id="commandTextInput" disable="false" layoutX="11.0" layoutY="603.0" onAction="#onTextfieldAction" onKeyReleased="#onTextfieldKeyReleased" prefWidth="572.0" promptText="Please enter a command" styleClass="text-field-correct" text="" />
+          </labelFor>
         </Label>
       </children>
       <stylesheets>
         <URL value="@application.css" />
       </stylesheets>
     </Pane>
+    <fx:reference source="commandTextInput" />
+    <HBox id="HBox" fx:id="commandFormatFeedback" alignment="CENTER_LEFT" layoutX="16.0" layoutY="627.0" maxWidth="540.0" prefWidth="540.0" spacing="0.0">
+      <children>
+        <Label mnemonicParsing="false" mouseTransparent="true" styleClass="parseCommandTypeName" text="command">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </Label>
+        <Label styleClass="parseCommandName" text="taskname" />
+        <Label styleClass="parseCommandStartDate" text="startdate" />
+        <Label styleClass="parseCommandEndDate" text="enddate" />
+        <Label styleClass="parseCommandPriority" text="priority" />
+        <Label styleClass="parseCommandInvalid" text="invalid" />
+      </children>
+    </HBox>
+    <Label layoutX="240.0" layoutY="5.0" mouseTransparent="true" text="Development Build" textFill="WHITE">
+      <font>
+        <Font name="Segoe UI Bold" size="12.0" fx:id="x12" />
+      </font>
+    </Label>
     <AnchorPane layoutX="3.0" layoutY="0.0" mouseTransparent="true" pickOnBounds="false" prefHeight="451.0" prefWidth="600.0" visible="false">
       <children>
         <Group id="Group" layoutX="17.0" layoutY="32.0">
@@ -280,7 +224,11 @@
         </Group>
         <Pane layoutX="30.0" layoutY="156.0" prefHeight="40.0" prefWidth="499.9999000000025">
           <children>
-            <Label alignment="TOP_LEFT" ellipsisString="..." font="$x10" layoutX="21.0" layoutY="1.0" minWidth="479.0" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true" />
+            <Label alignment="TOP_LEFT" ellipsisString="..." layoutX="21.0" layoutY="1.0" minWidth="479.0" prefHeight="22.0" prefWidth="479.0" text="Prepare for world domination and initiate order #66 and declare war on the universe" textOverrun="CENTER_ELLIPSIS" underline="false" wrapText="true">
+              <font>
+                <Font name="Segoe UI Semibold" size="14.0" fx:id="x10" />
+              </font>
+            </Label>
             <Rectangle arcHeight="0.0" arcWidth="0.0" fill="DODGERBLUE" height="40.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="5.0" />
             <Label alignment="CENTER_RIGHT" font="$x11" layoutX="21.0" layoutY="19.0" text="From 6:00pm, Friday to 8:00pm, Saturday" textFill="GREY" />
           </children>
@@ -294,11 +242,6 @@
         </Pane>
       </children>
     </AnchorPane>
-    <Label layoutX="240.0" layoutY="5.0" mouseTransparent="true" text="Development Build" textFill="WHITE">
-      <font>
-        <Font name="Segoe UI Bold" size="12.0" fx:id="x12" />
-      </font>
-    </Label>
     <Pane fx:id="helpPane" layoutX="14.0" layoutY="89.0" prefHeight="290.49609375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />

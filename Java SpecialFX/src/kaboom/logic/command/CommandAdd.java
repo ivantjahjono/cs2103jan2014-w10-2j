@@ -16,7 +16,7 @@ import kaboom.logic.TaskInfo;
 public class CommandAdd extends Command {
 	private final String MESSAGE_COMMAND_ADD_SUCCESS = "WOOT! <%1$s> ADDED. MORE STUFF TO DO!";
 	private final String MESSAGE_COMMAND_ADD_FAIL = "Fail to add <%1$s>... Error somewhere...";
-	private final String MESSAGE_COMMAND_ADD_FAIL_NO_NAME = "Enter a task name please :'(";
+	private final String MESSAGE_COMMAND_ADD_FAIL_NO_NAME = "Error! Task cannot be entered without a name Y_Y";
 	private final String MESSAGE_COMMAND_ADD_FAIL_STARTDATE_OVER_ENDDATE = "Wow! How did the task end before it even started? 0.0";
 	
 
@@ -186,6 +186,7 @@ public class CommandAdd extends Command {
 				endTime = "0000";
 			}
 			endTime = datFormat.convertStringTimeTo24HourString(endTime);
+			endDate = datFormat.convertStringDateToDayMonthYearFormat(endDate);
 			
 			if(hasEndDate) {
 				if(!datFormat.isDateValid(endDate)) {
@@ -195,6 +196,7 @@ public class CommandAdd extends Command {
 					if(taskInfo.getStartDate() != null && !hasEndTime) {
 						endTime = datFormat.timeFromCalendarToString(taskInfo.getStartDate());
 					}
+					
 					taskInfo.setEndDate(datFormat.formatStringToCalendar(endDate, endTime));
 				}
 			} else {

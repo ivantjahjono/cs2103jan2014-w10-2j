@@ -27,6 +27,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.RectangleBuilder;
 import javafx.stage.Stage;
@@ -43,18 +44,11 @@ import kaboom.logic.TaskMasterKaboom;
 
 public class MainWindow implements javafx.fxml.Initializable, Observer {	
 	private final int MAX_TABS = 5;
+	private final int MAX_COMMAND_KEEP = 20;
 	
 	// User interface elements
 			private Stage 		windowStage;
 	@FXML	private AnchorPane 	mainPane;
-	
-	// Table ui elements and its ui columns
-	@FXML 	private TableView<TaskInfoDisplay> 				taskDisplayTable;
-	@FXML	private TableColumn<TaskInfoDisplay, Integer> 	columnTaskId;
-	@FXML 	private TableColumn<TaskInfoDisplay, String> 	columnTaskName;
-	@FXML 	private TableColumn<TaskInfoDisplay, String> 	columnStartTime;
-	@FXML 	private TableColumn<TaskInfoDisplay, String> 	columnEndTime;
-	@FXML 	private TableColumn<TaskInfoDisplay, String> 	columnPriority;
 	
 	// Data for the task table
 			private ObservableList<TaskInfoDisplay> data;
@@ -65,40 +59,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			
 	// Individual tasks
 	Vector<TaskUiContainer> taskUiList;
-	@FXML 	private Pane 		task1;
-	@FXML 	private Label 		taskid1;
-	@FXML 	private Label 		taskname1;
-	@FXML 	private Rectangle 	statusbar1;
-	@FXML 	private Label 		datetime1;
-	@FXML 	private Label 		priority1;
-	
-	@FXML 	private Pane 		task2;
-	@FXML 	private Label 		taskid2;
-	@FXML 	private Label 		taskname2;
-	@FXML 	private Rectangle 	statusbar2;
-	@FXML 	private Label 		datetime2;
-	@FXML 	private Label 		priority2;
-	
-	@FXML 	private Pane 		task3;
-	@FXML 	private Label 		taskid3;
-	@FXML 	private Label 		taskname3;
-	@FXML 	private Rectangle 	statusbar3;
-	@FXML 	private Label 		datetime3;
-	@FXML 	private Label 		priority3;
-	
-	@FXML 	private Pane 		task4;
-	@FXML 	private Label 		taskid4;
-	@FXML 	private Label 		taskname4;
-	@FXML 	private Rectangle 	statusbar4;
-	@FXML 	private Label 		datetime4;
-	@FXML 	private Label 		priority4;
-	
-	@FXML 	private Pane 		task5;
-	@FXML 	private Label 		taskid5;
-	@FXML 	private Label 		taskname5;
-	@FXML 	private Rectangle 	statusbar5;
-	@FXML 	private Label 		datetime5;
-	@FXML 	private Label 		priority5;
+	@FXML	private VBox		taskListContainer;
 	
 	// Top window toolbar buttons
 	@FXML 	private ImageView 	exitButton;
@@ -151,8 +112,9 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	private Pane 	currentActiveHelpPane;
 	
 	// Tracks previous commands
-	private String prevCommand;
 	private String currentCommand;
+	private Vector<String> commandsEnteredList;
+	private int currentCommandIndex;
 	
 	// Used in tracking window dragging
 	private double initialX;
@@ -167,7 +129,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	private static FileHandler fh;
 	
 	public MainWindow () {
-		prevCommand = "";
 		currentCommand = "";
 		
 		data = FXCollections.observableArrayList();
@@ -177,6 +138,9 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		
 		labelList = new Vector<Label>();
 		
+		commandsEnteredList = new Vector<String>();
+		currentCommandIndex = 0;
+		
 		applicationController = TaskMasterKaboom.getInstance();
 	}
 	
@@ -184,38 +148,16 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	public void initialize(URL location, ResourceBundle resources) throws NullPointerException {
 		createAndStartLogging();
 		
-//		try {
-//			columnTaskId.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, Integer>("taskId"));
-//			columnTaskName.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("taskName"));
-//			columnStartTime.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("startDate"));
-//			columnPriority.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("importanceLevel"));
-//			
-//			taskDisplayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-//		} catch (NullPointerException e) {
-//			return;
-//		}
-		
 		taskUiList = new Vector<TaskUiContainer>();
 		
-		TaskUiContainer newTaskUi1 = new TaskUiContainer();
-		newTaskUi1.setupContainer(task1, taskid1, taskname1, statusbar1, datetime1, priority1);
-		taskUiList.add(newTaskUi1);
-		
-		newTaskUi1 = new TaskUiContainer();
-		newTaskUi1.setupContainer(task2, taskid2, taskname2, statusbar2, datetime2, priority2);
-		taskUiList.add(newTaskUi1);
-		
-		newTaskUi1 = new TaskUiContainer();
-		newTaskUi1.setupContainer(task3, taskid3, taskname3, statusbar3, datetime3, priority3);
-		taskUiList.add(newTaskUi1);
-		
-		newTaskUi1 = new TaskUiContainer();
-		newTaskUi1.setupContainer(task4, taskid4, taskname4, statusbar4, datetime4, priority4);
-		taskUiList.add(newTaskUi1);
-		
-		newTaskUi1 = new TaskUiContainer();
-		newTaskUi1.setupContainer(task5, taskid5, taskname5, statusbar5, datetime5, priority5);
-		taskUiList.add(newTaskUi1);
+		TaskUiContainer tempTaskUi;
+		int maxTaskToDisplay = uiData.getMaxTasksPerPage();
+		for (int i = 0; i < maxTaskToDisplay; i++) {
+			tempTaskUi = new TaskUiContainer();
+			taskListContainer.getChildren().add(tempTaskUi.getPaneContainer());
+			
+			taskUiList.add(tempTaskUi);
+		}
 		
 		// Disable column reordering
 		//disableTableColumnReordering();
@@ -231,7 +173,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		previousLabelIndex = 0;
 		
 		setHeaderLabelToSelected(labelList.get(currentLabelIndex));
-		setTablelistToRespondToExpiry();
 		
 		DisplayData.getInstance().addObserver(this);
 		updateDisplay();
@@ -253,55 +194,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		logger.addHandler(fh);
 		logger.setLevel(Level.CONFIG);
 	}
-
-	private void setTablelistToRespondToExpiry() {
-		taskDisplayTable.setRowFactory(new Callback<TableView<TaskInfoDisplay>, TableRow<TaskInfoDisplay>>() {
-	        @Override
-	        public TableRow<TaskInfoDisplay> call(TableView<TaskInfoDisplay> tableView) {
-	            final TableRow<TaskInfoDisplay> row = new TableRow<TaskInfoDisplay>() {
-	                @Override
-	                protected void updateItem(TaskInfoDisplay person, boolean empty){
-	                    super.updateItem(person, empty);
-	                    
-	                    getStyleClass().removeAll(Collections.singleton("isNotExpired"));
-	                    getStyleClass().removeAll(Collections.singleton("isExpired"));
-	                    getStyleClass().removeAll(Collections.singleton("isComplete"));
-	                    getStyleClass().removeAll(Collections.singleton("isEmpty"));
-	                    getStyleClass().removeAll(Collections.singleton("isRecent"));
-	                    
-	                    if (person == null) {
-	                    	 getStyleClass().add("isEmpty");
-	                    	 return;
-	                    }
-	                    
-	                    if (person.isDone()) {
-	                    	getStyleClass().add("isComplete");
-	                    } else if (person.isExpired()) {
-	                    	getStyleClass().add("isExpired");
-	                    } else if (person.isRecent()) {
-	                    	getStyleClass().add("isRecent");
-	                    } else {   
-	                        getStyleClass().add("isNotExpired");
-	                    }
-	                }
-	            };
-	            return row;
-	        }
-	    });
-	}
-
-//	private void disableTableColumnReordering() {
-//		taskDisplayTable.getColumns().addListener(new ListChangeListener() {
-//	        @Override
-//	        public void onChanged(Change change) {
-//	          change.next();
-//	          if(change.wasReplaced()) {
-//	        	  taskDisplayTable.getColumns().clear();
-//	        	  taskDisplayTable.getColumns().addAll(columnTaskId, columnTaskName, columnStartTime, columnEndTime, columnPriority);
-//	          }
-//	        }
-//	    });
-//	}
 	
 	public void setStage (Stage currentStage) {
 		windowStage = currentStage;
@@ -331,8 +223,8 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			applicationController.processCommand(command);
 		}
 		
-		prevCommand = command;
-		currentCommand = "";
+		// Store the command entered
+		storeCommandEntered(command);
 		
 		commandTextInput.setText("");
 	}
@@ -607,34 +499,57 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		feedbackText.setText(feedback);
 	}
 	
+	private void storeCommandEntered(String command) {
+		commandsEnteredList.add(command);
+		
+		while (commandsEnteredList.size() > MAX_COMMAND_KEEP) {
+			commandsEnteredList.remove(0);
+		}
+
+		currentCommandIndex = commandsEnteredList.size();
+	}
+	
 	private void recallPreviousCommand () {
-		if (!prevCommand.equals(commandTextInput.getText())) {
-			currentCommand = commandTextInput.getText();
-			commandTextInput.setText(prevCommand);
-			commandTextInput.end();
+		if (currentCommandIndex > 0) {
+			currentCommandIndex--;
+			commandTextInput.setText(commandsEnteredList.get(currentCommandIndex));
 		}
 	}
 	
 	private void recallStoredTypedCommand () {
-		if (!currentCommand.equals(commandTextInput.getText())) {
+		if (currentCommandIndex < commandsEnteredList.size()-1) {
+			currentCommandIndex++;
+			commandTextInput.setText(commandsEnteredList.get(currentCommandIndex));
+		} else {
+			currentCommandIndex =  commandsEnteredList.size();
 			commandTextInput.setText(currentCommand);
-			commandTextInput.end();
 		}
+	}
+	
+	private void setTextfieldCursorToLast () {
+		commandTextInput.positionCaret(commandTextInput.getText().length());
 	}
 
 	@FXML
 	private void onTextfieldKeyReleased (KeyEvent keyEvent) {
 		//System.out.println("Key pressed: " + keyEvent.getText());
 		boolean processResult = false;
+		
 		switch(keyEvent.getCode()) {
 			case UP:
+				if (commandsEnteredList.size() < currentCommandIndex+1) {
+					currentCommand = commandTextInput.getText();
+				}
+				
 				loggerUnit.log(Level.FINE, "Recalling previous command.");
 				recallPreviousCommand();
+				setTextfieldCursorToLast();
 				break;
 				
 			case DOWN:
 				loggerUnit.log(Level.FINE, "Recalling next command.");
 				recallStoredTypedCommand();
+				setTextfieldCursorToLast();
 				break;
 				
 			case ESCAPE:

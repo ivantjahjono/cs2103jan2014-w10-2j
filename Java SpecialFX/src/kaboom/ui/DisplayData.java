@@ -8,7 +8,6 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.TaskInfoDisplay;
-import kaboom.storage.History;
 import kaboom.storage.TaskListShop;
 
 /**
@@ -22,12 +21,11 @@ import kaboom.storage.TaskListShop;
 public class DisplayData extends Observable {
 	// TODO clean up methods
 
-	final int NUM_OF_TASK_PER_PAGE = 5;
+	final int NUM_OF_TASK_PER_PAGE = 10;
 
 	static DisplayData instance;
 
 	TaskListShop 	taskListShop;
-	History 		history;
 
 	Vector<TaskInfoDisplay> tasksDataToDisplay;
 	Vector<FormatIdentify> 	formattingCommand;
@@ -59,7 +57,6 @@ public class DisplayData extends Observable {
 
 	private DisplayData () {
 		taskListShop = TaskListShop.getInstance();
-		history = History.getInstance();
 
 		tasksDataToDisplay = new Vector<TaskInfoDisplay>();
 		formattingCommand = new Vector<FormatIdentify>();
@@ -79,7 +76,7 @@ public class DisplayData extends Observable {
 
 			switch (i) {
 			case 0:
-				currentCount = taskListShop.getAllCurrentTasks().size();
+				currentCount = taskListShop.getToday().size();
 				break;
 
 			case 1:
@@ -303,5 +300,9 @@ public class DisplayData extends Observable {
 	
 	public String getCurrentDate () {
 		return currentDate;
+	}
+	
+	public int getMaxTasksPerPage () {
+		return NUM_OF_TASK_PER_PAGE;
 	}
 }
