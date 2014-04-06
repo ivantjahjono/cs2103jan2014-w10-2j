@@ -93,6 +93,15 @@ public class TextParserTest {
 		command = "at 1800 on 25/12/18     ";
 		assertTrue(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
 		
+//		command = "at 1700 today";
+//		assertTrue(textparser.checkTimeAndDateInputFormat2(timeKeyword, command, matchVector));
+//		
+//		command = "at 1800 on 25/12/18";
+//		assertTrue(textparser.checkTimeAndDateInputFormat2(timeKeyword, command, matchVector));
+//		
+//		command = "at 600   on 25/12/18";
+//		assertTrue(textparser.checkTimeAndDateInputFormat2(timeKeyword, command, matchVector));
+		
 		//assertion errsor (fix please)
 //		command = "at  160 on 25/12/18";
 //		assertTrue(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
