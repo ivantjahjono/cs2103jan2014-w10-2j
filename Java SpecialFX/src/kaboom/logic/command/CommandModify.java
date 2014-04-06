@@ -219,7 +219,7 @@ public class CommandModify extends Command {
 					//set end date to start date (end time > start time) or after start date (end time <= start time)
 					Calendar endCal = datFormat.formatStringToCalendar(startDate, endTime);
 					if(Integer.parseInt(endTime) <= Integer.parseInt(startTime)) {
-						datFormat.addDayToCalendar(endCal, 1);
+						endCal = datFormat.addDayToCalendar(endCal, 1);
 					} 
 					temp.setStartDate(startCal);
 					temp.setEndDate(endCal);
@@ -228,13 +228,15 @@ public class CommandModify extends Command {
 					//set end time to same start time (if not the same date) or 1hr after start time(same date)
 					Calendar endCal = datFormat.formatStringToCalendar(endDate, startTime);
 					if(!datFormat.isFirstDateBeforeSecondDate(startCal, endCal)) {
-						datFormat.addTimeToCalendar(endCal, 1, 0);
+						endCal = datFormat.addTimeToCalendar(endCal, 1, 0);
 					}
 					temp.setStartDate(startCal);
 					temp.setEndDate(endCal);
 				} else {
-					//overwrite start cal only
+					//set end date to 1 hour after start date
+					Calendar endCal = datFormat.addTimeToCalendar(startCal, 1, 0);
 					temp.setStartDate(startCal);
+					temp.setEndDate(endCal);
 				}
 			} else if (!hasStartCal && hasEndCal) {
 				
@@ -244,7 +246,7 @@ public class CommandModify extends Command {
 					//set start date to same end date (start time before end time) or before end date (start time >= end time)
 					Calendar startCal = datFormat.formatStringToCalendar(endDate, startTime);
 					if(Integer.parseInt(endTime) <= Integer.parseInt(startTime)) {
-						datFormat.addDayToCalendar(startCal, -1);
+						startCal = datFormat.addDayToCalendar(startCal, -1);
 					} 
 					temp.setStartDate(startCal);
 					temp.setEndDate(endCal);
@@ -252,7 +254,7 @@ public class CommandModify extends Command {
 					//set start time to same end time (if not the same date) or 1hr before end time(same date)
 					Calendar startCal = datFormat.formatStringToCalendar(startDate, endTime);
 					if(!datFormat.isFirstDateBeforeSecondDate(startCal, endCal)) {
-						datFormat.addTimeToCalendar(startCal, 1, 0);
+						startCal = datFormat.addTimeToCalendar(startCal, -1, 0);
 					}
 					temp.setStartDate(startCal);
 					temp.setEndDate(endCal);	
@@ -322,8 +324,8 @@ public class CommandModify extends Command {
 			
 			
 			//validate start end time if both are not null
-			if(hasStartCal && hasEndCal) {
-				if(!datFormat.isFirstDateBeforeSecondDate(temp.getStartDate(), temp.getStartDate())) {
+			if(temp.getStartDate() != null && temp.getEndDate() != null) {
+				if(!datFormat.isFirstDateBeforeSecondDate(temp.getStartDate(), temp.getEndDate())) {
 					feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 					return createResult(taskListShop.getAllCurrentTasks(), feedback);
 				}
@@ -337,36 +339,6 @@ public class CommandModify extends Command {
 			} else {
 				temp.setTaskType(TASK_TYPE.DEADLINE);
 			}
-			
-//			
-//			try {
-//				Calendar startDateCal = DateAndTimeFormat.getInstance().formatStringToCalendar(startDate, startTime);
-//				Calendar endDateCal = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
-//
-//				if(infoTable.get(KEYWORD_TYPE.START_DATE) != null || infoTable.get(KEYWORD_TYPE.START_TIME) != null || 
-//						infoTable.get(KEYWORD_TYPE.END_DATE) != null || infoTable.get(KEYWORD_TYPE.END_TIME) != null) {
-//					if(DateAndTimeFormat.getInstance().isFirstDateBeforeSecondDate(startDateCal, endDateCal)){
-//						hasTimeChanged = true;
-//						temp.setStartDate (startDateCal);
-//						temp.setEndDate (endDateCal);
-//					} else {
-//						if (infoTable.get(KEYWORD_TYPE.START_DATE) != null || infoTable.get(KEYWORD_TYPE.START_TIME) != null) {
-//							feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_SET_STARTDATEAFTERENDDATE, taskName);
-//						} else {
-//							feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_SET_ENDDATEBOFORESTARDATE, taskName);
-//						}
-//						return createResult(taskListShop.getAllCurrentTasks(), feedback);
-//					}
-//				}
-//				setEndDateAndTimeToHourBlock (temp);
-//			} catch (Exception e) {
-//				feedback = e.toString();
-//				return createResult(taskListShop.getAllCurrentTasks(), feedback);
-//			}
-//
-//			determineAndSetTaskType(temp);
-			
-			
 			
 			//store and update in memory
 			taskInfo = temp;
