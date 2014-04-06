@@ -102,7 +102,6 @@ public class Command {
 		
 		Enumeration<KEYWORD_TYPE> elementItr =  taskInformationTable.keys();
 		
-		
 		while (elementItr.hasMoreElements()) {
 			KEYWORD_TYPE currentKeyword = elementItr.nextElement();
 			KEYWORD_TYPE resultKeyword = currentKeyword;

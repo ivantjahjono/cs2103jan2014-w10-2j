@@ -21,7 +21,7 @@ public class CommandSearch extends Command {
 		keywordList = new KEYWORD_TYPE[] {
 				KEYWORD_TYPE.END_DATE,
 				KEYWORD_TYPE.END_TIME,
-				KEYWORD_TYPE.TASKID,
+				//KEYWORD_TYPE.TASKID,
 				KEYWORD_TYPE.TASKNAME
 		};
 	}
