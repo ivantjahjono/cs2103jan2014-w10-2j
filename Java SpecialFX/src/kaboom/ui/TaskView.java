@@ -17,7 +17,7 @@ public class TaskView {
 
 	public TaskView() {
 		taskListShop = TaskListShop.getInstance();
-		currentView = taskListShop.getAllCurrentTasks();
+		currentView = taskListShop.getToday();
 		currentViewID = taskListShop.getCorrespondingID(currentView);
 		searchView = new Vector<TaskInfo>();
 		displayData = DisplayData.getInstance();
