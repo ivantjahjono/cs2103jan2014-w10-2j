@@ -57,6 +57,7 @@ public class CommandDelete extends Command {
 				if (prevTask != null) {
 					TaskView.getInstance().deleteInView(prevTask);
 					commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
+					addCommandToHistory ();
 				} else {
 					commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
 				}
@@ -73,6 +74,7 @@ public class CommandDelete extends Command {
 			prevTask = taskListShop.removeTaskByName(taskName);
 			taskView.deleteInView(prevTask);
 			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
+			addCommandToHistory ();
 		} else {
 			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_NO_SUCH_TASK, taskName);
 		}	
