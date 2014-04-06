@@ -292,10 +292,10 @@ public class DateAndTimeFormatTest {
 		String timeString = "";
 		
 		timeString = "1pm";
-		assertEquals("07 Apr 14", datFormat.getNearestWeekdayFromToday(2));
+		assertEquals("07 04 14", datFormat.getNearestWeekdayFromToday(2));
 		
-		assertEquals("12 Apr 14", datFormat.getNearestWeekdayFromToday(7));
+		assertEquals("12 04 14", datFormat.getNearestWeekdayFromToday(7));
 		
-		assertEquals("10 Apr 14", datFormat.getNearestWeekdayFromToday(5));
+		assertEquals("10 04 14", datFormat.getNearestWeekdayFromToday(5));
 	}
 }
