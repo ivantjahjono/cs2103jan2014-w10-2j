@@ -23,7 +23,7 @@ import kaboom.ui.DisplayData;
  */
 
 public class Command {
-
+	protected final String MESSAGE_COMMAND_FAIL_INVALID_DATE = "Invalid date... Noob";
 	private final String MESSAGE_COMMAND_INVALID = "Invalid command!";
 
 	protected COMMAND_TYPE commandType;

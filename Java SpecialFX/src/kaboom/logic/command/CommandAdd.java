@@ -18,7 +18,7 @@ public class CommandAdd extends Command {
 	private final String MESSAGE_COMMAND_ADD_FAIL = "Fail to add <%1$s>... Error somewhere...";
 	private final String MESSAGE_COMMAND_ADD_FAIL_NO_NAME = "Enter a task name please :'(";
 	private final String MESSAGE_COMMAND_ADD_FAIL_STARTDATE_OVER_ENDDATE = "Wow! How did the task end before it even started? 0.0";
-	private final String MESSAGE_COMMAND_ADD_FAIL_INVALID_DATE = "Invalid date... Noob";
+	
 
 	DateAndTimeFormat datFormat;
 	
@@ -154,7 +154,7 @@ public class CommandAdd extends Command {
 			
 			if(hasStartDate) {
 				if(!datFormat.isDateValid(startDate)) {
-					feedback = MESSAGE_COMMAND_ADD_FAIL_INVALID_DATE;
+					feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 				} else {
 					taskInfo.setStartDate(datFormat.formatStringToCalendar(startDate, startTime));
 				}
@@ -189,7 +189,7 @@ public class CommandAdd extends Command {
 			
 			if(hasEndDate) {
 				if(!datFormat.isDateValid(endDate)) {
-					feedback = MESSAGE_COMMAND_ADD_FAIL_INVALID_DATE;
+					feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 				} else {
 					//hasEndDate noEndTime hasStartDate -> Append same time(startTime)
 					if(taskInfo.getStartDate() != null && !hasEndTime) {
@@ -227,7 +227,7 @@ public class CommandAdd extends Command {
 		}
 		
 		if(hasStartCal && hasEndCal) {
-			if(!datFormat.dateValidityForStartAndEndDate(taskInfo.getStartDate(),taskInfo.getEndDate())) {
+			if(!datFormat.isFirstDateBeforeSecondDate(taskInfo.getStartDate(),taskInfo.getEndDate())) {
 				feedback = MESSAGE_COMMAND_ADD_FAIL_STARTDATE_OVER_ENDDATE;
 			} else {
 				taskInfo.setTaskType(TASK_TYPE.TIMED);
