@@ -50,14 +50,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			private Stage 		windowStage;
 	@FXML	private AnchorPane 	mainPane;
 	
-	// Table ui elements and its ui columns
-	@FXML 	private TableView<TaskInfoDisplay> 				taskDisplayTable;
-	@FXML	private TableColumn<TaskInfoDisplay, Integer> 	columnTaskId;
-	@FXML 	private TableColumn<TaskInfoDisplay, String> 	columnTaskName;
-	@FXML 	private TableColumn<TaskInfoDisplay, String> 	columnStartTime;
-	@FXML 	private TableColumn<TaskInfoDisplay, String> 	columnEndTime;
-	@FXML 	private TableColumn<TaskInfoDisplay, String> 	columnPriority;
-	
 	// Data for the task table
 			private ObservableList<TaskInfoDisplay> data;
 			
@@ -156,38 +148,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	public void initialize(URL location, ResourceBundle resources) throws NullPointerException {
 		createAndStartLogging();
 		
-//		try {
-//			columnTaskId.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, Integer>("taskId"));
-//			columnTaskName.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("taskName"));
-//			columnStartTime.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("startDate"));
-//			columnPriority.setCellValueFactory(new PropertyValueFactory<TaskInfoDisplay, String>("importanceLevel"));
-//			
-//			taskDisplayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-//		} catch (NullPointerException e) {
-//			return;
-//		}
-		
 		taskUiList = new Vector<TaskUiContainer>();
-		
-//		TaskUiContainer newTaskUi1 = new TaskUiContainer();
-//		newTaskUi1.setupContainer(task1, taskid1, taskname1, statusbar1, datetime1, priority1);
-//		taskUiList.add(newTaskUi1);
-//		
-//		newTaskUi1 = new TaskUiContainer();
-//		newTaskUi1.setupContainer(task2, taskid2, taskname2, statusbar2, datetime2, priority2);
-//		taskUiList.add(newTaskUi1);
-//		
-//		newTaskUi1 = new TaskUiContainer();
-//		newTaskUi1.setupContainer(task3, taskid3, taskname3, statusbar3, datetime3, priority3);
-//		taskUiList.add(newTaskUi1);
-//		
-//		newTaskUi1 = new TaskUiContainer();
-//		newTaskUi1.setupContainer(task4, taskid4, taskname4, statusbar4, datetime4, priority4);
-//		taskUiList.add(newTaskUi1);
-//		
-//		newTaskUi1 = new TaskUiContainer();
-//		newTaskUi1.setupContainer(task5, taskid5, taskname5, statusbar5, datetime5, priority5);
-//		taskUiList.add(newTaskUi1);
 		
 		TaskUiContainer tempTaskUi;
 		int maxTaskToDisplay = uiData.getMaxTasksPerPage();
@@ -212,7 +173,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		previousLabelIndex = 0;
 		
 		setHeaderLabelToSelected(labelList.get(currentLabelIndex));
-		setTablelistToRespondToExpiry();
 		
 		DisplayData.getInstance().addObserver(this);
 		updateDisplay();
@@ -234,55 +194,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		logger.addHandler(fh);
 		logger.setLevel(Level.CONFIG);
 	}
-
-	private void setTablelistToRespondToExpiry() {
-		taskDisplayTable.setRowFactory(new Callback<TableView<TaskInfoDisplay>, TableRow<TaskInfoDisplay>>() {
-	        @Override
-	        public TableRow<TaskInfoDisplay> call(TableView<TaskInfoDisplay> tableView) {
-	            final TableRow<TaskInfoDisplay> row = new TableRow<TaskInfoDisplay>() {
-	                @Override
-	                protected void updateItem(TaskInfoDisplay person, boolean empty){
-	                    super.updateItem(person, empty);
-	                    
-	                    getStyleClass().removeAll(Collections.singleton("isNotExpired"));
-	                    getStyleClass().removeAll(Collections.singleton("isExpired"));
-	                    getStyleClass().removeAll(Collections.singleton("isComplete"));
-	                    getStyleClass().removeAll(Collections.singleton("isEmpty"));
-	                    getStyleClass().removeAll(Collections.singleton("isRecent"));
-	                    
-	                    if (person == null) {
-	                    	 getStyleClass().add("isEmpty");
-	                    	 return;
-	                    }
-	                    
-	                    if (person.isDone()) {
-	                    	getStyleClass().add("isComplete");
-	                    } else if (person.isExpired()) {
-	                    	getStyleClass().add("isExpired");
-	                    } else if (person.isRecent()) {
-	                    	getStyleClass().add("isRecent");
-	                    } else {   
-	                        getStyleClass().add("isNotExpired");
-	                    }
-	                }
-	            };
-	            return row;
-	        }
-	    });
-	}
-
-//	private void disableTableColumnReordering() {
-//		taskDisplayTable.getColumns().addListener(new ListChangeListener() {
-//	        @Override
-//	        public void onChanged(Change change) {
-//	          change.next();
-//	          if(change.wasReplaced()) {
-//	        	  taskDisplayTable.getColumns().clear();
-//	        	  taskDisplayTable.getColumns().addAll(columnTaskId, columnTaskName, columnStartTime, columnEndTime, columnPriority);
-//	          }
-//	        }
-//	    });
-//	}
 	
 	public void setStage (Stage currentStage) {
 		windowStage = currentStage;
