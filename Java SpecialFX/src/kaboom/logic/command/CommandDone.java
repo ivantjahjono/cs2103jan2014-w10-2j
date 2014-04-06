@@ -39,8 +39,16 @@ public class CommandDone extends Command{
 		if (isNumeric(taskName)) {
 			int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
 			taskToBeModified = taskListShop.getTaskByID(index);
-			taskListShop.setDoneByID(index);
-			taskView.deleteInView(taskToBeModified);
+			if (taskToBeModified.getDone()) {
+				feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
+				return createResult(taskListShop.getAllCurrentTasks(), feedback);
+			} else if (taskToBeModified == null) {
+				feedback = String.format(MESSAGE_COMMAND_DONE_FAIL, taskName);
+				return createResult(taskListShop.getAllCurrentTasks(), feedback);
+			} else {
+				taskListShop.setDoneByID(index);
+				taskView.deleteInView(taskToBeModified);
+			}
 		}
 		else if (taskCount > 1) {
 			commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
@@ -50,24 +58,21 @@ public class CommandDone extends Command{
 			return search.execute();
 		} else {
 			taskToBeModified = taskListShop.getTaskByName(taskName);
-			taskListShop.setDoneByName(taskName);
-			taskView.deleteInView(taskToBeModified);
-		}
-
-		if (taskToBeModified == null) {
-			//can throw exception (task does not exist)
-			feedback = String.format(MESSAGE_COMMAND_DONE_FAIL, taskName);
-			return createResult(taskListShop.getAllCurrentTasks(), feedback);
-		}
-
-		if (taskToBeModified.getDone()) {
-			//can throw exception (command incomplete)
-			feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
-			return createResult(taskListShop.getAllCurrentTasks(), feedback);
+			if (taskToBeModified.getDone()) {
+				feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
+				return createResult(taskListShop.getAllCurrentTasks(), feedback);
+			} else if (taskToBeModified == null) {
+				feedback = String.format(MESSAGE_COMMAND_DONE_FAIL, taskName);
+				return createResult(taskListShop.getAllCurrentTasks(), feedback);
+			} else {
+				taskListShop.setDoneByName(taskName);
+				taskView.deleteInView(taskToBeModified);
+			}
 		}
 
 		taskInfo.setRecent(true);
 		feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
+		addCommandToHistory ();
 		return createResult(taskListShop.getAllCurrentTasks(), feedback);
 	}
 
