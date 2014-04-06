@@ -14,9 +14,59 @@ public class TaskUiContainer {
  	private Rectangle 	statusbar;
  	private Label 		datetime;
  	private Label 		priority;
+ 	private Rectangle 	backlitBox;
  	
  	
  	public TaskUiContainer () {
+ 		createTaskUi();
+ 	}
+ 	
+ 	public void createTaskUi () {
+ 		task = new Pane();
+ 		task.setPrefSize(512, 40);
+ 		
+ 		taskid = new Label();
+ 		taskid.setPrefSize(50, 26.6);
+ 		taskid.setLayoutX(-59);
+ 		taskid.setLayoutY(5);
+ 		taskid.getStyleClass().add("taskid-label");
+ 		task.getChildren().add(taskid);
+ 		
+ 		taskname = new Label();
+ 		taskname.setPrefSize(479, 22);
+ 		taskname.setLayoutX(21);
+ 		taskname.setLayoutY(1);
+ 		taskname.getStyleClass().add("taskname-label");
+ 		task.getChildren().add(taskname);
+ 		
+ 		statusbar = new Rectangle();
+ 		statusbar.setWidth(5);
+ 		statusbar.setHeight(40);
+ 		task.getChildren().add(statusbar);
+ 		
+ 		datetime = new Label();
+ 		datetime.setPrefSize(302, 19);
+ 		datetime.setLayoutX(21);
+ 		datetime.setLayoutY(19);
+ 		datetime.getStyleClass().add("taskdatetime-label");
+ 		task.getChildren().add(datetime);
+ 		
+ 		priority  = new Label();
+ 		priority.setPrefSize(80, 26.6);
+ 		priority.setLayoutX(418);
+ 		priority.setLayoutY(16);
+ 		priority.getStyleClass().add("taskpriority-label");
+ 		task.getChildren().add(priority);
+ 		
+ 		backlitBox = new Rectangle();
+ 		backlitBox.setWidth(512);
+ 		backlitBox.setHeight(40);
+ 		backlitBox.getStyleClass().add("taskbox-rectangle");
+ 		task.getChildren().add(backlitBox);
+ 	}
+ 	
+ 	public Pane getPaneContainer () {
+ 		return task;
  	}
  	
  	public void setupContainer (Pane taskLink, Label id, Label name, Rectangle status, Label date, Label priorityLink) {
