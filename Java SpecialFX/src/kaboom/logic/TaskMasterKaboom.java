@@ -157,7 +157,6 @@ public class TaskMasterKaboom {
 			case VIEW:
 				commandHistory.setCurrentViewCommand(command);
 				break;
-			case MODIFY:
 			case UNDONE:
 				commandHistory.addToRecentCommands(command);
 				break;
