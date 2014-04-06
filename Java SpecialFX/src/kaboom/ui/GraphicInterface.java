@@ -19,7 +19,7 @@ public class GraphicInterface extends Application {
 	
 	private final int UPDATE_INTERVAL = 10;
 	private final int WINDOW_WIDTH = 700;
-	private final int WINDOW_HEIGHT = 550;
+	private final int WINDOW_HEIGHT = 700;
 	
 	Parent root;
 	MainWindow mainWindow;
