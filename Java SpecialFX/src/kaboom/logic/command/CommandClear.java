@@ -36,18 +36,19 @@ public class CommandClear extends Command {
 		
 		clearType = infoTable.get(KEYWORD_TYPE.CLEARTYPE);
 		
-		if(clearType == null) {
+		if(clearType == null || clearType.isEmpty()) {
 			clearType = CLEAR_TYPE_ALL;
 		}
 		
 		String commandFeedback = "";
-		Vector<TaskInfo> display = taskListShop.clearAllTasks();
+		Vector<TaskInfo> display = null;
 		
 		switch (clearType) {
 		case CLEAR_TYPE_ALL:
-			tasksCleared = taskListShop.getAllCurrentTasks();
+			tasksCleared = taskListShop.getAllCurrentTasks();		
 			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
 			display = taskListShop.clearAllTasks();
+			addCommandToHistory ();
 			break;
 		case CLEAR_TYPE_CURRENT:
 			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NOT_IMPLEMENTED;

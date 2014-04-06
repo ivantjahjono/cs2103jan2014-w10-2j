@@ -14,6 +14,7 @@ import kaboom.logic.Result;
 import kaboom.logic.TASK_TYPE;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.TextParser;
+import kaboom.storage.History;
 import kaboom.storage.TaskListShop;
 import kaboom.ui.DisplayData;
 
@@ -350,7 +351,7 @@ public class Command {
 	}
 	
 	protected void addCommandToHistory () {
-		
+		History.getInstance().addToRecentCommands(this);
 	}
 
 }

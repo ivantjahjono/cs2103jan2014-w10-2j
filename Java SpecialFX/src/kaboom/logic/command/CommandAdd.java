@@ -79,6 +79,7 @@ public class CommandAdd extends Command {
 		taskInfo.setRecent(true);
 		
 		if (taskListShop.addTaskToList(taskInfo)) {
+			addCommandToHistory ();
 			commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
 		} else {
 			commandFeedback = String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
