@@ -8,7 +8,6 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.TaskInfoDisplay;
-import kaboom.storage.History;
 import kaboom.storage.TaskListShop;
 
 /**
@@ -27,7 +26,6 @@ public class DisplayData extends Observable {
 	static DisplayData instance;
 
 	TaskListShop 	taskListShop;
-	History 		history;
 
 	Vector<TaskInfoDisplay> tasksDataToDisplay;
 	Vector<FormatIdentify> 	formattingCommand;
@@ -59,7 +57,6 @@ public class DisplayData extends Observable {
 
 	private DisplayData () {
 		taskListShop = TaskListShop.getInstance();
-		history = History.getInstance();
 
 		tasksDataToDisplay = new Vector<TaskInfoDisplay>();
 		formattingCommand = new Vector<FormatIdentify>();
@@ -79,7 +76,7 @@ public class DisplayData extends Observable {
 
 			switch (i) {
 			case 0:
-				currentCount = taskListShop.getAllCurrentTasks().size();
+				currentCount = taskListShop.getToday().size();
 				break;
 
 			case 1:
