@@ -15,8 +15,6 @@ public class CommandDone extends Command{
 	private final String MESSAGE_COMMAND_DONE_FAIL = "%1$s does not exist";
 
 	TaskInfo taskToBeModified;
-	Hashtable<KEYWORD_TYPE,String> taskInfoTable;
-	String commandFeedback;
 	TaskView taskView;
 
 	public CommandDone() {
@@ -24,7 +22,6 @@ public class CommandDone extends Command{
 		keywordList = new KEYWORD_TYPE[] {
 				KEYWORD_TYPE.TASKNAME
 		};
-		taskInfoTable = null;
 		taskView = TaskView.getInstance();
 	}
 
@@ -32,7 +29,8 @@ public class CommandDone extends Command{
 		assert taskListShop != null;
 
 		String feedback = "";
-		String taskName = taskInfo.getTaskName();
+		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
+		//get id
 
 		int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
 
@@ -51,10 +49,9 @@ public class CommandDone extends Command{
 			}
 		}
 		else if (taskCount > 1) {
-			commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
-
+			//CLASH
 			Command search = new CommandSearch();
-			search.storeTaskInfo(taskInfoTable);
+			search.storeTaskInfo(infoTable);
 			return search.execute();
 		} else {
 			taskToBeModified = taskListShop.getTaskByName(taskName);
@@ -81,12 +78,6 @@ public class CommandDone extends Command{
 		taskView.addToView(taskToBeModified);
 		taskView.undoneInView(taskToBeModified);
 		return true;
-	}
-
-	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
-		taskInfo = new TaskInfo();
-		taskInfoTable = infoHashes;
-		saveTaskName(infoHashes, taskInfo);
 	}
 
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
