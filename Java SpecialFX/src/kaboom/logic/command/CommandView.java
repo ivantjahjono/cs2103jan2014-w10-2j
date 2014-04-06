@@ -7,6 +7,7 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
+import kaboom.storage.History;
 import kaboom.ui.DISPLAY_STATE;
 import kaboom.ui.TaskView;
 
@@ -76,6 +77,7 @@ public class CommandView extends Command{
 		commandResult.setDisplayState(stateToSet);
 		commandResult.setTasksToDisplay(taskList);
 		commandResult.setFeedback(feedback);
+		History.getInstance().setCurrentViewCommand(this);
 		return commandResult;
 	}
 

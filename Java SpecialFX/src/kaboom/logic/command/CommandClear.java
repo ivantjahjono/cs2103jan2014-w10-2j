@@ -11,20 +11,60 @@ import kaboom.logic.TaskInfo;
 
 public class CommandClear extends Command {
 	
-	private final String MESSAGE_COMMAND_CLEAR_SUCCESS = "Cleared memory";
+	private final String CLEAR_TYPE_ALL = "all";
+	private final String CLEAR_TYPE_CURRENT = "current";
+	private final String CLEAR_TYPE_EMPTY = "";
+	
+	private final String MESSAGE_COMMAND_CLEAR_SUCCESS = "1.. 2.. 3.. Pooof! Your schedule has gone with the wind";
+	private final String MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE = "1.. 2.. 3.. Pooof! Your schedule has gone with the wind";
+	private final String MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE = "please enter <clear all> to remove all tasks or <clear current> to remove current view";
+	private final String MESSAGE_COMMAND_CLEAR_FAIL_NOT_IMPLEMENTED = "LOL";
 	
 	Vector<TaskInfo> tasksCleared;
+	String clearType;
 		
 	public CommandClear () {
 		commandType = COMMAND_TYPE.CLEAR;
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.CLEARTYPE
+		};
+		clearType = null;
 	}
 
 	public Result execute() {
 		assert taskListShop != null;
 		
-		tasksCleared = taskListShop.getAllCurrentTasks();
-		Vector<TaskInfo> display = taskListShop.clearAllTasks();
-		return createResult(display, MESSAGE_COMMAND_CLEAR_SUCCESS);
+		clearType = infoTable.get(KEYWORD_TYPE.CLEARTYPE);
+		
+		if(clearType == null || clearType.isEmpty()) {
+			clearType = CLEAR_TYPE_ALL;
+		}
+		
+		String commandFeedback = "";
+		Vector<TaskInfo> display = null;
+		
+		switch (clearType) {
+		case CLEAR_TYPE_ALL:
+			tasksCleared = taskListShop.getAllCurrentTasks();		
+			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
+			display = taskListShop.clearAllTasks();
+			addCommandToHistory ();
+			break;
+		case CLEAR_TYPE_CURRENT:
+			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NOT_IMPLEMENTED;
+			display = taskListShop.getAllCurrentTasks();
+			break;
+		case CLEAR_TYPE_EMPTY:
+			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE;
+			display = taskListShop.getAllCurrentTasks();
+			break;
+		default: 
+			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE;
+			display = taskListShop.getAllCurrentTasks();
+		}
+		
+		display = taskListShop.getAllCurrentTasks();
+		return createResult(display, commandFeedback);
 	}
 	
 	public boolean undo () {

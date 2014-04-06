@@ -229,11 +229,20 @@ public class DateAndTimeFormat {
 		return dateAndTimeToAdd;
 	}
 	
-	public boolean dateValidityForStartAndEndDate (Calendar startDate, Calendar endDate) {
-		if (startDate == null || endDate == null) {
-			return true;
+	public boolean isFirstDateBeforeSecondDate (Calendar firstDate, Calendar secondDate) {
+		if (firstDate == null || secondDate == null) {
+			return false;
 		}
-		if (startDate.before(endDate)) {
+		if (firstDate.before(secondDate)) {
+			String firstStringDate = dateFromCalendarToString(firstDate);
+			String secondStringDate = dateFromCalendarToString(secondDate);
+			if(firstStringDate.equals(secondStringDate)) {
+				String firstStringTime = timeFromCalendarToString (firstDate);
+				String secondStringTime = timeFromCalendarToString (secondDate);
+				if(firstStringTime.equals(secondStringTime)) {
+					return false;
+				}
+			}
 			return true;
 		}
 		return false;
@@ -250,12 +259,20 @@ public class DateAndTimeFormat {
 		return todayString;
 	}
 	
-	public String getNextDate (Calendar cal) {
+	public String getCurrentTime () {
 		Calendar todayCal = Calendar.getInstance();
+		String time = "";
+		String hour = String.format("%02d",todayCal.get(Calendar.HOUR_OF_DAY));
+		String mins = String.format("%02d",todayCal.get(Calendar.MINUTE));
+		time = hour + mins;
+		return time;
+	}
+	
+	public String getNextDay (Calendar cal) {
 		String todayString = "";
-		String day = String.format("%02d",todayCal.get(Calendar.DATE));
-		String month = String.format("%02d",todayCal.get(Calendar.MONTH) + 1);
-		String year = Integer.toString(todayCal.get(Calendar.YEAR));
+		String day = String.format("%02d",cal.get(Calendar.DATE)+1);
+		String month = String.format("%02d",cal.get(Calendar.MONTH) + 1);
+		String year = Integer.toString(cal.get(Calendar.YEAR));
 		todayString = day + month + year;
 		return todayString;
 	}

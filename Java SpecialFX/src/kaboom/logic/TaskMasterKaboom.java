@@ -109,10 +109,7 @@ public class TaskMasterKaboom {
 		
 		updateUi(commandResult);
 		
-		//3. Add recent command to History list
-		addToCommandHistory(commandToExecute);
-		
-		//4. Save data to file
+		//3. Save data to file
 		fileStorage.store();
 		
 		return commandResult.getFeedback();
@@ -150,33 +147,4 @@ public class TaskMasterKaboom {
 		guiDisplayData.updateDisplayWithResult(commandResult);
 	}
 	
-	private void addToCommandHistory(Command command) {
-		COMMAND_TYPE currentCommandType = command.getCommandType();
-		
-		switch (currentCommandType) {
-			case VIEW:
-				commandHistory.setCurrentViewCommand(command);
-				break;
-				
-			case ADD:
-			case DELETE:
-			case MODIFY:
-			case DONE:
-			case UNDONE:
-				commandHistory.addToRecentCommands(command);
-				break;
-				
-			case INVALID:
-			case UNDO:
-			case SEARCH:
-				break;
-				
-			default:
-				break;
-		}
-	}
-	
-	//********************************
-
-
 }

@@ -15,8 +15,6 @@ public class CommandDone extends Command{
 	private final String MESSAGE_COMMAND_DONE_FAIL = "%1$s does not exist";
 
 	TaskInfo taskToBeModified;
-	Hashtable<KEYWORD_TYPE,String> taskInfoTable;
-	String commandFeedback;
 	TaskView taskView;
 
 	public CommandDone() {
@@ -24,7 +22,6 @@ public class CommandDone extends Command{
 		keywordList = new KEYWORD_TYPE[] {
 				KEYWORD_TYPE.TASKNAME
 		};
-		taskInfoTable = null;
 		taskView = TaskView.getInstance();
 	}
 
@@ -32,42 +29,47 @@ public class CommandDone extends Command{
 		assert taskListShop != null;
 
 		String feedback = "";
-		String taskName = taskInfo.getTaskName();
+		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
+		//get id
 
 		int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
 
 		if (isNumeric(taskName)) {
 			int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
 			taskToBeModified = taskListShop.getTaskByID(index);
-			taskListShop.setDoneByID(index);
-			taskView.deleteInView(taskToBeModified);
+			if (taskToBeModified.getDone()) {
+				feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
+				return createResult(taskListShop.getAllCurrentTasks(), feedback);
+			} else if (taskToBeModified == null) {
+				feedback = String.format(MESSAGE_COMMAND_DONE_FAIL, taskName);
+				return createResult(taskListShop.getAllCurrentTasks(), feedback);
+			} else {
+				taskListShop.setDoneByID(index);
+				taskView.deleteInView(taskToBeModified);
+			}
 		}
 		else if (taskCount > 1) {
-			commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
-
+			//CLASH
 			Command search = new CommandSearch();
-			search.storeTaskInfo(taskInfoTable);
+			search.storeTaskInfo(infoTable);
 			return search.execute();
 		} else {
 			taskToBeModified = taskListShop.getTaskByName(taskName);
-			taskListShop.setDoneByName(taskName);
-			taskView.deleteInView(taskToBeModified);
-		}
-
-		if (taskToBeModified == null) {
-			//can throw exception (task does not exist)
-			feedback = String.format(MESSAGE_COMMAND_DONE_FAIL, taskName);
-			return createResult(taskListShop.getAllCurrentTasks(), feedback);
-		}
-
-		if (taskToBeModified.getDone()) {
-			//can throw exception (command incomplete)
-			feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
-			return createResult(taskListShop.getAllCurrentTasks(), feedback);
+			if (taskToBeModified.getDone()) {
+				feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
+				return createResult(taskListShop.getAllCurrentTasks(), feedback);
+			} else if (taskToBeModified == null) {
+				feedback = String.format(MESSAGE_COMMAND_DONE_FAIL, taskName);
+				return createResult(taskListShop.getAllCurrentTasks(), feedback);
+			} else {
+				taskListShop.setDoneByName(taskName);
+				taskView.deleteInView(taskToBeModified);
+			}
 		}
 
 		taskInfo.setRecent(true);
 		feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
+		addCommandToHistory ();
 		return createResult(taskListShop.getAllCurrentTasks(), feedback);
 	}
 
@@ -76,12 +78,6 @@ public class CommandDone extends Command{
 		taskView.addToView(taskToBeModified);
 		taskView.undoneInView(taskToBeModified);
 		return true;
-	}
-
-	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
-		taskInfo = new TaskInfo();
-		taskInfoTable = infoHashes;
-		saveTaskName(infoHashes, taskInfo);
 	}
 
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {

@@ -14,6 +14,7 @@ import kaboom.logic.Result;
 import kaboom.logic.TASK_TYPE;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.TextParser;
+import kaboom.storage.History;
 import kaboom.storage.TaskListShop;
 import kaboom.ui.DisplayData;
 
@@ -22,7 +23,7 @@ import kaboom.ui.DisplayData;
  */
 
 public class Command {
-
+	protected final String MESSAGE_COMMAND_FAIL_INVALID_DATE = "Invalid date... Noob";
 	private final String MESSAGE_COMMAND_INVALID = "Invalid command!";
 
 	protected COMMAND_TYPE commandType;
@@ -346,6 +347,10 @@ public class Command {
 	public void initialiseCommandVariables(String userInputSentence) {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = textParser.testExtractList(userInputSentence, keywordList);
 		extractAndStoreTaskInfo(taskInformationTable);
+	}
+	
+	protected void addCommandToHistory () {
+		History.getInstance().addToRecentCommands(this);
 	}
 
 }
