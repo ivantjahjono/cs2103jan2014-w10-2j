@@ -180,6 +180,15 @@ public class DateAndTimeFormat {
 			return false;
 		}
 		if (firstDate.before(secondDate)) {
+			String firstStringDate = dateFromCalendarToString(firstDate);
+			String secondStringDate = dateFromCalendarToString(secondDate);
+			if(firstStringDate.equals(secondStringDate)) {
+				String firstStringTime = timeFromCalendarToString (firstDate);
+				String secondStringTime = timeFromCalendarToString (secondDate);
+				if(firstStringTime.equals(secondStringTime)) {
+					return false;
+				}
+			}
 			return true;
 		}
 		return false;
