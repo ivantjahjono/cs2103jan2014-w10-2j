@@ -164,28 +164,36 @@ public class TextParser {
 	}
 	
 	public String extractDateAndTime(String KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
-		String fulldateFormat = String.format(FULLDATE_REGEX, KEYWORD_TIME, "");
-		String timeAndDateRegex = KEYWORD_TIME+TIME_REGEX+"\\s*"+KEYWORD_DATE+DATE_REGEX;
+		String fulldateFormat = KEYWORD_DATE + DATE_REGEX;
+		String dateFormat2 = DATE_NAME_REGEX;
+		String timeAndDateRegex = KEYWORD_TIME+TIME_REGEX+"\\s*"+fulldateFormat;
+		String timeAndDateRegex2 = KEYWORD_TIME+TIME_REGEX+"\\s*"+dateFormat2;
+		
+		//GET PATTERN FOR WHOLE START/END DATE AND TIME
+		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, timeAndDateRegex);
+		ArrayList<Integer> matchList2 = searchForPatternMatch(userInputSentence, timeAndDateRegex2);
+		ArrayList<Integer> matchListToUse = matchList;
 		
 		int startIndex = 0;
 		int endIndex = 0;
 		
-		//GET PATTERN FOR WHOLE START/END DATE AND TIME
-		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, timeAndDateRegex);
-		
 		//IF NOTHING RETURN
-		if (matchList.size() < 2) {
+		if (matchList.size() < 2 && matchList2.size() < 2) {
 			return "";
 		}
 		
+		if (matchList.size() < 2) {
+			matchListToUse = matchList2;
+		}
+		
 		//EXTRACT START/END DATE AND TIME
-		endIndex = matchList.get(matchList.size()-1);
-		startIndex = matchList.get(matchList.size()-2);
+		endIndex = matchListToUse.get(matchListToUse.size()-1);
+		startIndex = matchListToUse.get(matchListToUse.size()-2);
 		String extractedDateAndTimeString = userInputSentence.substring(startIndex, endIndex);
 		
 		//GET DATE
 		String extractedDateString = extractDateOnly(KEYWORD_DATE, "", extractedDateAndTimeString, keywordTable);
-		extractedDateString = extractedDateString.replaceAll(KEYWORD_TIME, "").trim();
+		extractedDateString = extractedDateString.replaceAll(KEYWORD_DATE, "").trim();
 		
 		//GET TIME
 		String extractedTimeString = extractTimeOnly(KEYWORD_TIME, extractedDateAndTimeString, keywordTable);
@@ -406,14 +414,17 @@ public class TextParser {
 	}
 	
 	public boolean checkTimeAndDateInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){		
-		String fulldateFormat = String.format(FULLDATE_REGEX, KEYWORD_TIME, "");
-		String timeAndDateRegex = KEYWORD_TIME+TIME_REGEX+"\\s*"+KEYWORD_DATE+DATE_REGEX;
+		String fulldateFormat = KEYWORD_DATE + DATE_REGEX;
+		String dateFormat2 = DATE_NAME_REGEX;
+		String timeAndDateRegex = KEYWORD_TIME+TIME_REGEX+"\\s*"+fulldateFormat;
+		String timeAndDateRegex2 = KEYWORD_TIME+TIME_REGEX+"\\s*"+dateFormat2;
 		
 		//GET PATTERN FOR WHOLE START/END DATE AND TIME
 		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, timeAndDateRegex);
+		ArrayList<Integer> matchList2 = searchForPatternMatch(userInputSentence, timeAndDateRegex2);
 		
 		//IF NOTHING RETURN
-		if (matchList.size() < 2) {
+		if (matchList.size() < 2 && matchList2.size() < 2) {
 			return false;
 		}
 		else{
