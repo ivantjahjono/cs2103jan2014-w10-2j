@@ -3,6 +3,8 @@ package kaboom.logic;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DateAndTimeFormat {
 	
@@ -11,19 +13,11 @@ public class DateAndTimeFormat {
 	private final String dateFormat3 = "dd'.'MM'.'yy";
 	private final String dateFormat4 = "ddMMyyyy";		// 12/06/12 or 12.01.06 or 120106
 	private final String dateFormat5 = "dd'/'MM'/'yyyy";
-	private final String dateFormat6 = "dd'.'MM'.'yyy";
+	private final String dateFormat6 = "dd'.'MM'.'yyyy";
 	
 	private final String time24hrFormat1 = "HHmm"; 
 	private final String time24hrFormat2 = "HH':'mm";
-	
-	private final String time12hrFormat1 = "ha";
-	private final String time12hrFormat2 = "hha";
-	private final String time12hrFormat3 = "hmma";
-	private final String time12hrFormat4 = "hhmma";
-	private final String time12hrFormat5 = "h':'mma";
-	private final String time12hrFormat6 = "hh':'mma";
 
-	
 	private final SimpleDateFormat[] dateFormatList = { 
 		new SimpleDateFormat(dateFormat1),
 		new SimpleDateFormat(dateFormat2),
@@ -31,20 +25,6 @@ public class DateAndTimeFormat {
 		new SimpleDateFormat(dateFormat4),
 		new SimpleDateFormat(dateFormat5),
 		new SimpleDateFormat(dateFormat6)
-	};
-	
-	private final SimpleDateFormat[] time24HrFormatList = {
-		new SimpleDateFormat(time24hrFormat1),
-		new SimpleDateFormat(time24hrFormat2)
-	};
-	
-	private final SimpleDateFormat[] time12HrFormatList = {
-		new SimpleDateFormat(time12hrFormat1),
-		new SimpleDateFormat(time12hrFormat2),
-		new SimpleDateFormat(time12hrFormat3),
-		new SimpleDateFormat(time12hrFormat4),
-		new SimpleDateFormat(time12hrFormat5),
-		new SimpleDateFormat(time12hrFormat6)
 	};
 	
 	private static DateAndTimeFormat instance = null;
@@ -60,62 +40,111 @@ public class DateAndTimeFormat {
 		return instance;
 	}
 
-	public Calendar formatStringToCalendar2 (String date, String time) throws InvalidDateAndTimeException {
-		if(date == null && time == null) {
-			return null;
-		}
-		Calendar currentDateAndTime = Calendar.getInstance();
-		Calendar dateAndTime = (Calendar) currentDateAndTime.clone();
-	
-		dateAndTime = dateTranslator(dateAndTime, date);
-		dateAndTime = timeTranslator(dateAndTime,time);
 		
-		if (currentDateAndTime.equals(dateAndTime)) {
-			return null;
-		}
-		
-		return dateAndTime;
-	}
-	
-	
-	/*
+	/* (MOVING TO CONTROLLER)
 	 * If only date is valid: Set calendar to date and default time of 0000 (12am)
 	 * If only time is valid: Set calendar to time and default date to current day
 	 * If both are valid: Set calendar to respective date and time
 	 * If both are null: return null;
-	 * If date or time is invalid: throw exception
 	 */
-	public Calendar formatStringToCalendar (String date, String time) throws InvalidDateAndTimeException {
-		if(date == null && time == null) {
+	
+	public Calendar formatStringToCalendar (String date, String time) {
+		if(date == null || time == null) {
 			return null;
 		}
 		Calendar dateAndTime = Calendar.getInstance();
-	
-		boolean isDateValid = isDateValid(date);
-		boolean isTimeValid = isTimeValid(time);
 		
-		if((!isDateValid && date != null) || (!isTimeValid && time != null)){
-			System.out.println("Invalid");
-			throw new InvalidDateAndTimeException("Invalid Date or Time");
+		convertStringDateToCalendar(dateAndTime, date);
+		convertStringTimeToCalendar(dateAndTime,time);
+
+		return dateAndTime;
+	}
+	
+	public void convertStringDateToCalendar(Calendar cal, String date) {		
+		for(int i = 0; i < dateFormatList.length; i++) {
+			try {
+				//validate date
+				dateFormatList[i].setLenient(false);
+				Date dateType = dateFormatList[i].parse(date);
+				//set date to thisDate
+				Calendar getDate = Calendar.getInstance();
+				getDate.setTime(dateType);
+				cal.set(Calendar.DAY_OF_MONTH, getDate.get(Calendar.DAY_OF_MONTH));
+				cal.set(Calendar.MONTH, getDate.get(Calendar.MONTH));
+				cal.set(Calendar.YEAR, getDate.get(Calendar.YEAR));
+			} catch (Exception e) {	
+			}
+		}
+	}
+	
+	public void convertStringTimeToCalendar(Calendar cal, String time) {	
+		String minutesString = time.substring(time.length()-2, time.length());
+		String hourString = time.replaceFirst(minutesString, "");
+		int minutes = Integer.parseInt(minutesString);
+		int hour = Integer.parseInt(hourString);
+		cal.set(Calendar.HOUR_OF_DAY, hour);
+		cal.set(Calendar.MINUTE, minutes);
+	}
+	
+	public String convertStringTimeTo24HourString(String date) {
+		// Convert time to 2400hr format
+		int hour = 0;
+		int addedHour = 0;
+		int minutes = 0;
+		boolean ampmTiming = false;
+		
+		// Check if it contains am or pm
+		if (date.contains("pm")) {
+			hour += 12;
+			ampmTiming = true;
+		} else if (date.contains("am")) {
+			ampmTiming = true;
 		}
 		
-		if (isDateValid && isTimeValid) {
-			dateAndTime = dateTranslator(dateAndTime, date);
-			dateAndTime = timeTranslator(dateAndTime, time);
-		} else if (isDateValid) {
-			dateAndTime = dateTranslator(dateAndTime, date);
-			dateAndTime = timeTranslator(dateAndTime, "0000");
-		} else if (isTimeValid) {
-			dateAndTime = timeTranslator(dateAndTime, time);
-		} 
+		// Remove all instance of am and pm and colon if possible
+		date = date.replaceAll(":?(am|pm)?", "");
+		
+		// Extract time into hours and minutes
+		if (date.length() > 2) {
+			String minuteString = date.substring(date.length()-2, date.length());
+			minutes += Integer.parseInt(minuteString);
+			date =  date.replaceAll(minuteString, "");
+			
+			if (!date.equals("")) {
+				addedHour = Integer.parseInt(date);
+				
+				// Checks for 12am and 12pm
+				if (addedHour == 12 && ampmTiming) {
+					hour -= 12;
+				}
+				hour += addedHour;
+			}
+		} else {
+			hour += Integer.parseInt(date);
+		}
+		
+		return String.format("%02d%02d", hour, minutes);
+	}
 	
-		return dateAndTime;
+	public boolean isDateValid (String theDate) {
+		if(theDate == null) {
+			return false;
+		}
+		for(int i = 0; i < dateFormatList.length; i++) {
+			try {
+				dateFormatList[i].setLenient(false);
+				dateFormatList[i].parse(theDate);
+				return true;
+			} catch (Exception e) {	
+			}
+		}
+		return false;
 	}
 	
 	public String dateFromCalendarToString (Calendar cal) {
 		String day = String.format("%02d", cal.get(Calendar.DATE));
 		String month = String.format("%02d", cal.get(Calendar.MONTH)+1);
-		String year = String.format("%02d", cal.get(Calendar.YEAR)%100);
+		String year = String.format("%02d", cal.get(Calendar.YEAR));
 		String date = day+month+year;
 		return date;
 	}
@@ -134,7 +163,18 @@ public class DateAndTimeFormat {
 		return dateAndTimeToAdd;
 	}
 	
-	//testing phase
+	public Calendar addDayToCalendar (Calendar dateAndTime, int day) {
+		Calendar dateAndTimeToAdd = (Calendar) dateAndTime.clone();
+		dateAndTimeToAdd.add(Calendar.DATE, day);
+		return dateAndTimeToAdd;
+	}
+	
+	public Calendar addMonthToCalendar (Calendar dateAndTime, int month) {
+		Calendar dateAndTimeToAdd = (Calendar) dateAndTime.clone();
+		dateAndTimeToAdd.add(Calendar.MONTH, month);
+		return dateAndTimeToAdd;
+	}
+	
 	public boolean dateValidityForStartAndEndDate (Calendar startDate, Calendar endDate) {
 		if (startDate == null || endDate == null) {
 			return true;
@@ -145,264 +185,55 @@ public class DateAndTimeFormat {
 		return false;
 	}
 	
-	private Calendar dateTranslator(Calendar thisDate, String theDate) throws InvalidDateAndTimeException{
-		if(theDate == null) {
-			return thisDate;
-		}
-		
-		for(int i = 0; i < dateFormatList.length; i++) {
-			try {
-				//validate date
-				dateFormatList[i].setLenient(false);
-				Date date = dateFormatList[i].parse(theDate);
-				//set date to thisDate
-				Calendar getDate = Calendar.getInstance();
-				getDate.setTime(date);
-				thisDate.set(Calendar.DAY_OF_MONTH, getDate.get(Calendar.DAY_OF_MONTH));
-				thisDate.set(Calendar.MONTH, getDate.get(Calendar.MONTH));
-				thisDate.set(Calendar.YEAR, getDate.get(Calendar.YEAR));
-				return thisDate;
-			} catch (Exception e) {	
-			}
-		}
-		throw new InvalidDateAndTimeException("Invalid Date");
-		//throw invalid date exception
-//		return thisDate;
+
+	public String getTodayDate () {
+		Calendar todayCal = Calendar.getInstance();
+		String todayString = "";
+		String day = String.format("%02d",todayCal.get(Calendar.DATE));
+		String month = String.format("%02d",todayCal.get(Calendar.MONTH) + 1);
+		String year = Integer.toString(todayCal.get(Calendar.YEAR));
+		todayString = day + month + year;
+		return todayString;
 	}
 	
-	private Calendar timeTranslator(Calendar thisTime, String theTime) throws InvalidDateAndTimeException{
-		if(theTime == null) {
-			return thisTime;
-		}
-		theTime = theTime.toLowerCase();
-		System.out.println("TP "+theTime);
-		//12HOUR TEST
-		if(theTime.contains("pm") || theTime.contains("am")) {
-			String indicator12HourFormat = "";
-			if(theTime.contains("pm")) {
-				indicator12HourFormat = "pm";
-				theTime = theTime.replace("pm", "").trim();
-			}
-			if(theTime.contains("am")) {
-				indicator12HourFormat = "am";
-				theTime = theTime.replace("am", "").trim();
-			}
-			
-//			if(theTime.length()==1 || theTime.length()==2) {
-//				theTime += "00";
-//			}
-//			
-//			if(!theTime.contains(":")) {
-//				theTime = String.format("%04d",Integer.parseInt(theTime));
-//				System.out.println("2 "+theTime);
-//			}
-			
-			theTime = theTime + indicator12HourFormat;
-			System.out.println("5 "+theTime);
-			//12hr format check
-			for(int i = 0; i < time12HrFormatList.length; i++) {
-				try {
-					//validate time
-					time12HrFormatList[i].setLenient(false);
-					Date time = time12HrFormatList[i].parse(theTime);
-					//set time to thisTime
-					Calendar getTime = Calendar.getInstance();
-					getTime.setTime(time);
-					thisTime.set(Calendar.HOUR, getTime.get(Calendar.HOUR));
-					thisTime.set(Calendar.MINUTE, getTime.get(Calendar.MINUTE));
-					thisTime.set(Calendar.AM_PM, getTime.get(Calendar.AM_PM));
-					
-					return thisTime;
-				} catch (Exception e) {	
-				}
-			}
-		}
-		else {
-			if(!theTime.contains(":")) {
-				theTime = String.format("%04d",Integer.parseInt(theTime));
-				System.out.println("6 "+theTime);
-			}
-			//24hr format check
-			for(int i = 0; i < time24HrFormatList.length; i++) {
-				try {
-					//validate time
-					time24HrFormatList[i].setLenient(false);
-					Date time = time24HrFormatList[i].parse(theTime);
-					//set time to thisTime
-					Calendar getTime = Calendar.getInstance();
-					getTime.setTime(time);
-					thisTime.set(Calendar.HOUR_OF_DAY, getTime.get(Calendar.HOUR_OF_DAY));
-					thisTime.set(Calendar.MINUTE, getTime.get(Calendar.MINUTE));
-					return thisTime;
-				} catch (Exception e) {	
-				}
-			}
-		}
-
-		//throw invalid time exception
-//		return thisTime;
-		throw new InvalidDateAndTimeException("Invalid Time");
+	public String getNextDate (Calendar cal) {
+		Calendar todayCal = Calendar.getInstance();
+		String todayString = "";
+		String day = String.format("%02d",todayCal.get(Calendar.DATE));
+		String month = String.format("%02d",todayCal.get(Calendar.MONTH) + 1);
+		String year = Integer.toString(todayCal.get(Calendar.YEAR));
+		todayString = day + month + year;
+		return todayString;
 	}
+
 	
 	
 	//*************************** TEST METHODS **********************************
 	//Date tests
-	public String testDayFromDateTranslator (Calendar thisDate, String theDate) throws InvalidDateAndTimeException {
-		dateTranslator (thisDate,theDate);	
-		return Integer.toString(thisDate.get(Calendar.DAY_OF_MONTH));
-	}
-	public String testMonthFromDateTranslator (Calendar thisDate, String theDate) throws InvalidDateAndTimeException {
-		dateTranslator (thisDate,theDate);	
-		return Integer.toString(thisDate.get(Calendar.MONTH));
-	}
-	public String testYearFromDateTranslator (Calendar thisDate, String theDate) throws InvalidDateAndTimeException {
-		dateTranslator (thisDate,theDate);	
-		return Integer.toString(thisDate.get(Calendar.YEAR));
-	}
-	//Time tests
-	public String testHourFromTimeTranslator (Calendar cal, String theTime) throws InvalidDateAndTimeException {
-		timeTranslator (cal,theTime);	
-		return Integer.toString(cal.get(Calendar.HOUR_OF_DAY));
-	}
-	public String testMinFromTimeTranslator (Calendar cal, String theTime) throws InvalidDateAndTimeException {
-		timeTranslator (cal,theTime);	
-		return Integer.toString(cal.get(Calendar.MINUTE));
-	}
-	public boolean isDateValid (String theDate) {
-		if(theDate == null) {
-			return false;
-		}
-		for(int i = 0; i < dateFormatList.length; i++) {
-			try {
-				dateFormatList[i].setLenient(false);
-				dateFormatList[i].parse(theDate);
-				return true;
-			} catch (Exception e) {	
-			}
-		}
-		return false;
-	}
-	
-	public boolean is24hrTimeValid (String theTime) {
-		if(theTime == null) {
-			return false;
-		}
-		if(!theTime.contains("pm") || theTime.contains("am")) {
-			for(int i = 0; i < time24HrFormatList.length; i++) {
-				try {
-					time24HrFormatList[i].setLenient(false);
-					Date date = time24HrFormatList[i].parse(theTime);
-					System.out.println(date);
-					return true;
-				} catch (Exception e) {	
-				}
-			}
-		}
-		return false;
-	}
-	
-	public boolean is12hrTimeValid (String theTime) {
-		if(theTime == null) {
-			return false;
-		}
-		theTime = theTime.toLowerCase();
-		if(theTime.contains("pm") || theTime.contains("am")) {
-			String indicator12HourFormat = "";
-			if(theTime.contains("pm")) {
-				indicator12HourFormat = "pm";
-				theTime = theTime.replace("pm", "").trim();
-			}
-			if(theTime.contains("am")) {
-				indicator12HourFormat = "am";
-				theTime = theTime.replace("am", "").trim();
-			}
-			
-			if(theTime.length()==1 || theTime.length()==2) {
-				theTime += "00";
-			}
-			if(!theTime.contains(":")) {
-				theTime = String.format("%04d",Integer.parseInt(theTime));
-			}	
-			theTime = theTime + indicator12HourFormat;
-			int count = time12HrFormatList.length;
-			//12hr format check
-			for(int i = 0; i < time12HrFormatList.length; i++) {
-				try {
-					//validate time
-					time12HrFormatList[i].setLenient(false);
-					time12HrFormatList[i].parse(theTime);	
-				} catch (Exception e) {	
-					count--;
-				}
-			}
-			if(count > 0) { 
-				return true;
-			}
-			else {
-				return false;   
-			}
-		} else {
-			return false;
-		}
-	}
-	
-	public boolean isTimeValid (String theTime) {
-		if(theTime == null) {
-			return false;
-		}
-		theTime = theTime.toLowerCase();
-		if(theTime.contains("pm") || theTime.contains("am")) {
-			String indicator12HourFormat = "";
-			if(theTime.contains("pm")) {
-				indicator12HourFormat = "pm";
-				theTime = theTime.replace("pm", "").trim();
-			}
-			if(theTime.contains("am")) {
-				indicator12HourFormat = "am";
-				theTime = theTime.replace("am", "").trim();
-			}
-			theTime = theTime + indicator12HourFormat;
-			int count = time12HrFormatList.length;
-			//12hr format check
-			for(int i = 0; i < time12HrFormatList.length; i++) {
-				try {
-					//validate time
-					time12HrFormatList[i].setLenient(false);
-					time12HrFormatList[i].parse(theTime);	
-				} catch (Exception e) {	
-					count--;
-				}
-			}
-			if(count > 0) { 
-				return true;
-			}
-			else {
-				return false;   
-			}
-		} else {
-			//24hr format
-			if(!theTime.contains(":")) {
-				theTime = String.format("%04d",Integer.parseInt(theTime));
-			}
-			//24hr format check
-			int count = time24HrFormatList.length;
-			for(int i = 0; i < time24HrFormatList.length; i++) {
-				try {
-					//validate time
-					time24HrFormatList[i].setLenient(false);
-					time24HrFormatList[i].parse(theTime);
-				} catch (Exception e) {	
-					count--;
-				}
-			}
-			if(count > 0) { 
-				return true;
-			}
-			else {
-				return false;   
-			}
-		}
-	}
+//	public String testDayFromDateTranslator (Calendar thisDate, String theDate) throws InvalidDateAndTimeException {
+//		dateTranslator (thisDate,theDate);	
+//		return Integer.toString(thisDate.get(Calendar.DAY_OF_MONTH));
+//	}
+//	public String testMonthFromDateTranslator (Calendar thisDate, String theDate) throws InvalidDateAndTimeException {
+//		dateTranslator (thisDate,theDate);	
+//		return Integer.toString(thisDate.get(Calendar.MONTH));
+//	}
+//	public String testYearFromDateTranslator (Calendar thisDate, String theDate) throws InvalidDateAndTimeException {
+//		dateTranslator (thisDate,theDate);	
+//		return Integer.toString(thisDate.get(Calendar.YEAR));
+//	}
+//	//Time tests
+//	public String testHourFromTimeTranslator (Calendar cal, String theTime) throws InvalidDateAndTimeException {
+//		timeTranslator (cal,theTime);	
+//		return Integer.toString(cal.get(Calendar.HOUR_OF_DAY));
+//	}
+//	public String testMinFromTimeTranslator (Calendar cal, String theTime) throws InvalidDateAndTimeException {
+//		timeTranslator (cal,theTime);	
+//		return Integer.toString(cal.get(Calendar.MINUTE));
+//	}
+
+
+
 	//*************************** TEST METHODS **********************************
 	
 	

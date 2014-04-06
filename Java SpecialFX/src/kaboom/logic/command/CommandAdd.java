@@ -1,6 +1,6 @@
 package kaboom.logic.command;
 
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -8,6 +8,7 @@ import kaboom.logic.DateAndTimeFormat;
 import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
+import kaboom.logic.TASK_TYPE;
 import kaboom.logic.TaskInfo;
 
 
@@ -17,7 +18,9 @@ public class CommandAdd extends Command {
 	private final String MESSAGE_COMMAND_ADD_FAIL = "Fail to add <%1$s>... Error somewhere...";
 	private final String MESSAGE_COMMAND_ADD_FAIL_NO_NAME = "Enter a task name please :'(";
 	private final String MESSAGE_COMMAND_ADD_FAIL_STARTDATE_OVER_ENDDATE = "Wow! How did the task end before it even started? 0.0";
+	private final String MESSAGE_COMMAND_ADD_FAIL_INVALID_DATE = "Invalid date... Noob";
 
+	DateAndTimeFormat datFormat;
 	
 	public CommandAdd () {
 		commandType = COMMAND_TYPE.ADD;
@@ -29,6 +32,7 @@ public class CommandAdd extends Command {
 				KEYWORD_TYPE.START_DATE,
 				KEYWORD_TYPE.TASKNAME
 		};
+		datFormat = DateAndTimeFormat.getInstance();
 	}
 
 	public Result execute() {
@@ -37,26 +41,47 @@ public class CommandAdd extends Command {
 		
 		String commandFeedback = "";
 		
-		if (taskInfo!=null && !taskInfo.getTaskName().isEmpty()) {
-			if(DateAndTimeFormat.getInstance().dateValidityForStartAndEndDate(taskInfo.getStartDate(),taskInfo.getEndDate())) {
-				taskInfo.setRecent(true);
-				
-				if (taskListShop.addTaskToList(taskInfo)) {
-					commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
-				} else {
-					commandFeedback = String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
-				}
-			} else {
-				commandFeedback = MESSAGE_COMMAND_ADD_FAIL_STARTDATE_OVER_ENDDATE;
-			}
+		taskInfo = new TaskInfo();
+		
+		commandFeedback = saveTaskNameAndGetErrorMessage();
+		if(!commandFeedback.isEmpty()) {
+			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
 		}
-		else {
-			commandFeedback = MESSAGE_COMMAND_ADD_FAIL_NO_NAME;
+
+		saveTaskPriority();
+		/*
+		 * If only date is specified: Set calendar to date and default time of 0000 (12am)
+		 * If only time is specified: Set calendar to time and default date to current day
+		 * If both are specified: Set calendar to respective date and time
+		 * If both are null: return null;
+		 * If any are invalid: cancel add and return invalid command
+		 */
+		commandFeedback = saveStartDateAndTime();
+		if(!commandFeedback.isEmpty()) {
+			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+		}
+		
+		commandFeedback = saveEndDateAndTime();
+		if(!commandFeedback.isEmpty()) {
+			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+		}
+		
+		commandFeedback = startAndEndTimeValidityAndSetTaskType ();
+		if(!commandFeedback.isEmpty()) {
+			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+		}
+		
+		taskInfo.setRecent(true);
+		
+		if (taskListShop.addTaskToList(taskInfo)) {
+			commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
+		} else {
+			commandFeedback = String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
 		}
 		
 		return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
 	}
-	
+
 	public boolean undo () {
 		String taskName = taskInfo.getTaskName();
 		
@@ -66,16 +91,6 @@ public class CommandAdd extends Command {
 			return false;
 		else
 			return true;
-	}
-	
-	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
-		taskInfo = new TaskInfo();
-		saveTaskName(infoHashes,taskInfo);
-		saveTaskPriority(infoHashes,taskInfo);
-		saveTaskStartDateAndTime(infoHashes,taskInfo);
-		saveTaskEndDateAndTime(infoHashes,taskInfo);
-		setEndDateAndTimeToHourBlock (taskInfo);
-		determineAndSetTaskType(taskInfo);
 	}
 	
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
@@ -88,4 +103,138 @@ public class CommandAdd extends Command {
 		
 		return true;
 	}
+	
+	//********************************* STORING METHODS **********************************************
+	private String saveTaskNameAndGetErrorMessage() {
+		String feedback = "";
+		//End if no task name
+		if (infoTable.get(KEYWORD_TYPE.TASKNAME) == null || infoTable.get(KEYWORD_TYPE.TASKNAME).isEmpty()) {
+			feedback = MESSAGE_COMMAND_ADD_FAIL_NO_NAME;
+		} else {
+			taskInfo.setTaskName(infoTable.get(KEYWORD_TYPE.TASKNAME));
+		}
+		return feedback;
+	}
+	
+	private void saveTaskPriority() {
+		//Default priority = 1
+		if (infoTable.get(KEYWORD_TYPE.PRIORITY) == null) {
+			taskInfo.setImportanceLevel(1);
+		} else {
+			taskInfo.setImportanceLevel(Integer.parseInt(infoTable.get(KEYWORD_TYPE.PRIORITY)));
+		}
+	}
+	
+	private String saveStartDateAndTime() {
+		String feedback = "";
+		String startDate = infoTable.get(KEYWORD_TYPE.START_DATE);
+		String startTime = infoTable.get(KEYWORD_TYPE.START_TIME);
+		boolean hasStartDate = false;
+		boolean hasStartTime = false;
+		
+		if(startDate != null) {
+			hasStartDate = true;
+		}
+		if(startTime != null) {
+			hasStartTime = true;
+		}
+		if(!hasStartDate && !hasStartTime) {
+			taskInfo.setStartDate(null);
+		} else {
+			if(!hasStartTime) {
+				startTime = "0000";
+			}
+			startTime = datFormat.convertStringTimeTo24HourString(startTime);
+			
+			if(hasStartDate) {
+				if(!datFormat.isDateValid(startDate)) {
+					feedback = MESSAGE_COMMAND_ADD_FAIL_INVALID_DATE;
+				} else {
+					taskInfo.setStartDate(datFormat.formatStringToCalendar(startDate, startTime));
+				}
+			} else {
+				startDate = datFormat.getTodayDate();
+				taskInfo.setStartDate(datFormat.formatStringToCalendar(startDate, startTime));
+			}
+		}
+		return feedback;
+	}
+	
+	private String saveEndDateAndTime() {
+		String feedback = "";
+		String endDate = infoTable.get(KEYWORD_TYPE.END_DATE);
+		String endTime = infoTable.get(KEYWORD_TYPE.END_TIME);
+		boolean hasEndDate = false;
+		boolean hasEndTime = false;
+		
+		if(endDate != null) {
+			hasEndDate = true;
+		}
+		if(endTime != null) {
+			hasEndTime = true;
+		}
+		if(!hasEndDate && !hasEndTime) {
+			taskInfo.setEndDate(null);
+		} else {
+			if(!hasEndTime) {
+				endTime = "0000";
+			}
+			endTime = datFormat.convertStringTimeTo24HourString(endTime);
+			
+			if(hasEndDate) {
+				if(!datFormat.isDateValid(endDate)) {
+					feedback = MESSAGE_COMMAND_ADD_FAIL_INVALID_DATE;
+				} else {
+					//hasEndDate noEndTime hasStartDate -> Append same time(startTime)
+					if(taskInfo.getStartDate() != null && !hasEndTime) {
+						endTime = datFormat.timeFromCalendarToString(taskInfo.getStartDate());
+					}
+					taskInfo.setEndDate(datFormat.formatStringToCalendar(endDate, endTime));
+				}
+			} else {
+				//hasEndTime noEndDate hasStartDate -> check if time is before start time set 1 day later else set same day				
+				if(taskInfo.getStartDate() != null) {
+					if(Integer.parseInt(endTime) < Integer.parseInt(datFormat.timeFromCalendarToString(taskInfo.getStartDate()))) {
+						Calendar endDateCal = datFormat.addDayToCalendar(taskInfo.getStartDate(), 1);
+						datFormat.convertStringTimeToCalendar(endDateCal, endTime);
+						taskInfo.setEndDate(endDateCal);
+					}
+				} else {
+					endDate = datFormat.getTodayDate();
+					taskInfo.setEndDate(datFormat.formatStringToCalendar(endDate, endTime));
+				}
+			}
+		}
+		return feedback;
+	}
+	
+	private String startAndEndTimeValidityAndSetTaskType () {
+		String feedback = "";
+		
+		boolean hasStartCal = false;
+		boolean hasEndCal = false;
+		if(taskInfo.getStartDate() != null) {
+			hasStartCal = true;
+		}
+		if(taskInfo.getEndDate() != null) {
+			hasEndCal = true;
+		}
+		
+		if(hasStartCal && hasEndCal) {
+			if(!datFormat.dateValidityForStartAndEndDate(taskInfo.getStartDate(),taskInfo.getEndDate())) {
+				feedback = MESSAGE_COMMAND_ADD_FAIL_STARTDATE_OVER_ENDDATE;
+			} else {
+				taskInfo.setTaskType(TASK_TYPE.TIMED);
+			}
+		} else if(hasStartCal && !hasEndCal) {
+			taskInfo.setEndDate(datFormat.addTimeToCalendar(taskInfo.getStartDate(), 1, 0));
+			taskInfo.setTaskType(TASK_TYPE.TIMED);
+		} else if(!hasStartCal && hasEndCal) {
+			taskInfo.setTaskType(TASK_TYPE.DEADLINE);
+		} else {
+			taskInfo.setTaskType(TASK_TYPE.FLOATING);
+		}
+		return feedback;
+	}
+	
 }

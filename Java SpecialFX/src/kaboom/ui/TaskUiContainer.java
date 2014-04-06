@@ -46,10 +46,10 @@ public class TaskUiContainer {
  		
  		if (info.isExpired()) {
  			statusbar.getStyleClass().add("isExpired");
- 		} else if (info.isRecent()) {
- 			statusbar.getStyleClass().add("isRecent");
  		} else if (info.isDone()) {
  			statusbar.getStyleClass().add("isComplete");
+ 		} else if (info.isRecent()) {
+ 			statusbar.getStyleClass().add("isRecent");
  		} else {
  			statusbar.getStyleClass().add("isNotExpired");
  		}
