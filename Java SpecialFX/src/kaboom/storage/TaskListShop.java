@@ -140,7 +140,7 @@ public class TaskListShop {
 		Collections.sort(tasks, new ComparatorDefault());
 		return tasks;
 	}
-	
+
 	public Vector<TaskInfo> getFutureTasks() {
 		Vector<TaskInfo> tasks = new Vector<TaskInfo>();
 		Calendar today = Calendar.getInstance();
@@ -263,6 +263,7 @@ public class TaskListShop {
 	//Floating tasks have a default of not expired
 	//Also changes current tasks to archived tasks and vice versa
 	public void refreshTasks() {
+		//Shift from archive to current list
 		for (int i = 0; i < archivedTaskList.size(); i++) {
 			TaskInfo singleTask = archivedTaskList.get(i);
 
@@ -272,29 +273,33 @@ public class TaskListShop {
 			}
 		}
 
+		//Check for expired tasks
 		for (int i = 0; i < currentTaskList.size(); i++) {
 			TaskInfo singleTask = currentTaskList.get(i);
 			Calendar now = Calendar.getInstance();
-			if (now.after(singleTask.getEndDate())) {
-				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
-					singleTask.setExpiryFlag(true);  //Floating tasks cannot expire
-				}
-			}
-			else {
-				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
+
+			if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
+				if (now.after(singleTask.getEndDate())) {
+					singleTask.setExpiryFlag(true);
+				} else {
 					singleTask.setExpiryFlag(false);
 				}
+			} else {
+				singleTask.setExpiryFlag(false);  //Floating tasks cannot expire
 			}
 
 			if (singleTask.isRecent()) {
 				singleTask.setRecent(false);
 			}
 
+			//Shift from current list to archived list
 			if (singleTask.getDone()) {
 				archivedTaskList.add(singleTask);
 				currentTaskList.remove(singleTask);
 			}
 		}
+		
+		Collections.sort(currentTaskList, new ComparatorDefault());
 	}
 
 	public Vector<TaskInfo> clearAllTasks () {
@@ -324,6 +329,9 @@ public class TaskListShop {
 		}
 		else if (type == KEYWORD_TYPE.PRIORITY) {
 			Collections.sort(currentTaskList, new ComparatorPriority());
+		}
+		else {
+			Collections.sort(currentTaskList, new ComparatorDefault());
 		}
 	}
 
