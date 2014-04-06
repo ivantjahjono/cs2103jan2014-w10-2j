@@ -348,5 +348,9 @@ public class Command {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = textParser.testExtractList(userInputSentence, keywordList);
 		extractAndStoreTaskInfo(taskInformationTable);
 	}
+	
+	protected void addCommandToHistory () {
+		
+	}
 
 }

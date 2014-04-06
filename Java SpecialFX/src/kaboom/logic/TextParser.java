@@ -351,6 +351,10 @@ public class TextParser {
 				userInput = extractTaskName(userInput,taskInformationTable);
 				break;
 				
+			case CLEARTYPE:
+				userInput = extractClearType(userInput,taskInformationTable);
+				break;
+				
 			case VIEWTYPE:
 				userInput = extractViewType(userInput,taskInformationTable);
 				break;
@@ -422,6 +426,13 @@ public class TextParser {
 		String viewType = getFirstWord(userInput);
 		taskInformationTable.put(KEYWORD_TYPE.VIEWTYPE, viewType);
 		
+		userInput  = userInput.replace(viewType, "").trim();
+		return userInput;
+	}
+	
+	private String extractClearType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
+		String viewType = getFirstWord(userInput);
+		taskInformationTable.put(KEYWORD_TYPE.CLEARTYPE, viewType);
 		userInput  = userInput.replace(viewType, "").trim();
 		return userInput;
 	}

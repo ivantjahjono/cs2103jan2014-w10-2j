@@ -34,9 +34,20 @@ public class CommandAdd extends Command {
 		};
 		datFormat = DateAndTimeFormat.getInstance();
 	}
-
+	
+	/* 
+	 * Error handling (Prevent add):
+	 * -When there is no task name
+	 * -Invalid dates
+	 * -Memory inaccessible
+	 * Date Formats:
+	 * If only date is specified: Set calendar to date and default time of 0000 (12am)
+	 * If only time is specified: Set calendar to time and default date to current day
+	 * If both are specified: Set calendar to respective date and time
+	 * If both are null: return null;
+	 * If any are invalid: cancel add and return invalid command
+	 */
 	public Result execute() {
-		assert taskInfo != null;
 		assert taskListShop != null;
 		
 		String commandFeedback = "";
@@ -49,13 +60,7 @@ public class CommandAdd extends Command {
 		}
 
 		saveTaskPriority();
-		/*
-		 * If only date is specified: Set calendar to date and default time of 0000 (12am)
-		 * If only time is specified: Set calendar to time and default date to current day
-		 * If both are specified: Set calendar to respective date and time
-		 * If both are null: return null;
-		 * If any are invalid: cancel add and return invalid command
-		 */
+
 		commandFeedback = saveStartDateAndTime();
 		if(!commandFeedback.isEmpty()) {
 			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
