@@ -43,6 +43,7 @@ import kaboom.logic.TaskMasterKaboom;
 
 public class MainWindow implements javafx.fxml.Initializable, Observer {	
 	private final int MAX_TABS = 5;
+	private final int MAX_COMMAND_KEEP = 20;
 	
 	// User interface elements
 			private Stage 		windowStage;
@@ -151,8 +152,9 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	private Pane 	currentActiveHelpPane;
 	
 	// Tracks previous commands
-	private String prevCommand;
 	private String currentCommand;
+	private Vector<String> commandsEnteredList;
+	private int currentCommandIndex;
 	
 	// Used in tracking window dragging
 	private double initialX;
@@ -167,7 +169,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	private static FileHandler fh;
 	
 	public MainWindow () {
-		prevCommand = "";
 		currentCommand = "";
 		
 		data = FXCollections.observableArrayList();
@@ -176,6 +177,9 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		uiData = DisplayData.getInstance();
 		
 		labelList = new Vector<Label>();
+		
+		commandsEnteredList = new Vector<String>();
+		currentCommandIndex = 0;
 		
 		applicationController = TaskMasterKaboom.getInstance();
 	}
@@ -331,8 +335,8 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			applicationController.processCommand(command);
 		}
 		
-		prevCommand = command;
-		currentCommand = "";
+		// Store the command entered
+		storeCommandEntered(command);
 		
 		commandTextInput.setText("");
 	}
@@ -607,34 +611,57 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		feedbackText.setText(feedback);
 	}
 	
+	private void storeCommandEntered(String command) {
+		commandsEnteredList.add(command);
+		
+		while (commandsEnteredList.size() > MAX_COMMAND_KEEP) {
+			commandsEnteredList.remove(0);
+		}
+
+		currentCommandIndex = commandsEnteredList.size();
+	}
+	
 	private void recallPreviousCommand () {
-		if (!prevCommand.equals(commandTextInput.getText())) {
-			currentCommand = commandTextInput.getText();
-			commandTextInput.setText(prevCommand);
-			commandTextInput.end();
+		if (currentCommandIndex > 0) {
+			currentCommandIndex--;
+			commandTextInput.setText(commandsEnteredList.get(currentCommandIndex));
 		}
 	}
 	
 	private void recallStoredTypedCommand () {
-		if (!currentCommand.equals(commandTextInput.getText())) {
+		if (currentCommandIndex < commandsEnteredList.size()-1) {
+			currentCommandIndex++;
+			commandTextInput.setText(commandsEnteredList.get(currentCommandIndex));
+		} else {
+			currentCommandIndex =  commandsEnteredList.size();
 			commandTextInput.setText(currentCommand);
-			commandTextInput.end();
 		}
+	}
+	
+	private void setTextfieldCursorToLast () {
+		commandTextInput.positionCaret(commandTextInput.getText().length());
 	}
 
 	@FXML
 	private void onTextfieldKeyReleased (KeyEvent keyEvent) {
 		//System.out.println("Key pressed: " + keyEvent.getText());
 		boolean processResult = false;
+		
 		switch(keyEvent.getCode()) {
 			case UP:
+				if (commandsEnteredList.size() < currentCommandIndex+1) {
+					currentCommand = commandTextInput.getText();
+				}
+				
 				loggerUnit.log(Level.FINE, "Recalling previous command.");
 				recallPreviousCommand();
+				setTextfieldCursorToLast();
 				break;
 				
 			case DOWN:
 				loggerUnit.log(Level.FINE, "Recalling next command.");
 				recallStoredTypedCommand();
+				setTextfieldCursorToLast();
 				break;
 				
 			case ESCAPE:
