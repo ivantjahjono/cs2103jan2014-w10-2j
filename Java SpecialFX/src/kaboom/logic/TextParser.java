@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 
 public class TextParser {
 	
-	private final String KEYWORD_STARTTIME = "at";
-	private final String KEYWORD_ENDTIME = "by";
+	private final String KEYWORD_STARTTIME = "(at|from)";
+	private final String KEYWORD_ENDTIME = "(by|to)";
 	private final String KEYWORD_DATE = "on";
 	private final String KEYWORD_MODIFY = ">";
 	
@@ -119,7 +119,7 @@ public class TextParser {
 		
 		userInputSentence = userInputSentence.replace(extractedTimeString, "");
 		
-		extractedTimeString = extractedTimeString.replace(KEYWORD_TIME, "").trim();
+		extractedTimeString = extractedTimeString.replaceAll(KEYWORD_TIME, "").trim();
 		
 		switch(KEYWORD_TIME) {
 		case KEYWORD_ENDTIME: 
@@ -150,7 +150,7 @@ public class TextParser {
 		
 		userInputSentence = userInputSentence.replace(extractedDateString, "");
 		
-		extractedDateString = extractedDateString.replace(KEYWORD_TIME, "").trim();
+		extractedDateString = extractedDateString.replaceAll(KEYWORD_TIME, "").trim();
 		
 		switch(KEYWORD_TIME) {
 		case KEYWORD_ENDTIME: 
