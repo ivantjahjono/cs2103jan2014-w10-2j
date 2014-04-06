@@ -15,7 +15,6 @@ public class CommandUndone extends Command{
 	private final String MESSAGE_COMMAND_UNDONE_FAIL = "%1$s does not exist";
 
 	TaskInfo taskToBeModified;
-	Hashtable<KEYWORD_TYPE,String> taskInfoTable;
 	TaskView taskView;
 
 	public CommandUndone() {
@@ -24,7 +23,6 @@ public class CommandUndone extends Command{
 				KEYWORD_TYPE.TASKID,
 				KEYWORD_TYPE.TASKNAME
 		};
-		taskInfoTable = null;
 		taskView = TaskView.getInstance();
 	}
 
@@ -32,7 +30,7 @@ public class CommandUndone extends Command{
 		assert taskListShop != null;
 
 		String feedback = "";
-		String taskName = taskInfo.getTaskName();
+		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 
 		int taskCount = taskListShop.numOfArchivedTasksWithSimilarNames(taskName);
 
@@ -44,10 +42,8 @@ public class CommandUndone extends Command{
 		}
 
 		else if (taskCount > 1) {
-			feedback = "OH YEA! CLASH.. BOO000000000M!";
-
 			Command search = new CommandSearch();
-			search.storeTaskInfo(taskInfoTable);
+			search.storeTaskInfo(infoTable);
 			return search.execute();  //No support for archive search yet
 		} else {
 			taskToBeModified = taskListShop.getTaskByName(taskName);
@@ -56,19 +52,18 @@ public class CommandUndone extends Command{
 		}
 
 		if (taskToBeModified == null) {
-			//can throw exception (task does not exist)
 			feedback = String.format(MESSAGE_COMMAND_UNDONE_FAIL, taskName);
 			return createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
 
 		if (taskToBeModified.getDone()) {
-			//can throw exception (command incomplete)
 			feedback = String.format(MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE, taskName);
 			return createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
 
 		taskInfo.setRecent(true);
 		feedback = String.format(MESSAGE_COMMAND_UNDONE_SUCCESS, taskName);
+		addCommandToHistory();
 		return createResult(taskListShop.getAllCurrentTasks(), feedback);
 	}
 
@@ -77,12 +72,6 @@ public class CommandUndone extends Command{
 		taskView.addToView(taskToBeModified);
 		taskView.doneInView(taskToBeModified);
 		return true;
-	}
-
-	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
-		taskInfo = new TaskInfo();
-		taskInfoTable = infoHashes;
-		saveTaskName(infoHashes, taskInfo);
 	}
 
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
