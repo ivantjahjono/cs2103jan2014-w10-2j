@@ -99,15 +99,6 @@
 	-fx-opacity: 0.8;
 }
 
-.task-box {
-	-fx-opacity: 0;
-}
-
-.task-box:hover {
-	-fx-fill: #BBBBBB;
-	-fx-opacity: 0.2;
-}
-
 .task-pane:hover {
 	-fx-fill: #0000FF;
 }
@@ -226,6 +217,44 @@
 
 .prevpage-button:hover {
 	-fx-image: url("img/CaretLeftHover.png");
+}
+
+.taskid-label {
+	-fx-alignment: center ;
+	-fx-font-family: "Segoe UI";
+	-fx-font-size: 20px;
+	-fx-wrap-text: false;
+}
+
+.taskname-label {
+	-fx-alignment: TOP_LEFT ;
+	-fx-font-family: "Segoe UI Semibold";
+	-fx-font-size: 14px;
+	-fx-text-overrun: center-ellipsis ;
+	-fx-wrap-text: false;
+}
+
+.taskdatetime-label {
+	-fx-alignment: CENTER_LEFT ;
+	-fx-font-family: "Segoe UI Semibold";
+	-fx-font-size: 12px;
+	-fx-text-fill: gray ;
+}
+
+.taskpriority-label {
+	-fx-alignment: TOP_RIGHT ;
+	-fx-font-family: "Segoe UI Semibold";
+	-fx-font-size: 20px;
+	-fx-text-fill: red ;
+}
+
+.taskbox-rectangle {
+	-fx-opacity: 0;
+}
+
+.taskbox-rectangle:hover {
+	-fx-fill: #BBBBBB;
+	-fx-opacity: 0.2;
 }
 
 .root {

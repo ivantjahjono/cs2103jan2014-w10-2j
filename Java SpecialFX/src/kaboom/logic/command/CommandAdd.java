@@ -180,6 +180,7 @@ public class CommandAdd extends Command {
 				endTime = "0000";
 			}
 			endTime = datFormat.convertStringTimeTo24HourString(endTime);
+			endDate = datFormat.convertStringDateToDayMonthYearFormat(endDate);
 			
 			if(hasEndDate) {
 				if(!datFormat.isDateValid(endDate)) {
@@ -189,6 +190,7 @@ public class CommandAdd extends Command {
 					if(taskInfo.getStartDate() != null && !hasEndTime) {
 						endTime = datFormat.timeFromCalendarToString(taskInfo.getStartDate());
 					}
+					
 					taskInfo.setEndDate(datFormat.formatStringToCalendar(endDate, endTime));
 				}
 			} else {
