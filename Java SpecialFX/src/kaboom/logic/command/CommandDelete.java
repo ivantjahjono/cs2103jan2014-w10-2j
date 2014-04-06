@@ -17,8 +17,6 @@ public class CommandDelete extends Command {
 	private final String MESSAGE_COMMAND_DELETE_INVALID = "Enter a taskname or task id, please ?";
 	private final String MESSAGE_COMMAND_DELETE_NO_SUCH_TASK = "<%1$s> does not exist...";
 
-	String taskId;
-	Hashtable<KEYWORD_TYPE,String> taskInfoTable;
 	TaskInfo prevTask;
 	TaskView taskView;
 
@@ -28,15 +26,17 @@ public class CommandDelete extends Command {
 				KEYWORD_TYPE.TASKNAME,
 				KEYWORD_TYPE.TASKID
 		};
-		taskId = null;
-		taskInfoTable = null;
 		taskView = TaskView.getInstance();  
 	}
 
 	public Result execute() {
 		assert taskInfo != null;
-		assert taskInfoTable != null;
 		assert taskListShop != null;
+		
+		
+		taskInfo = new TaskInfo();
+		taskInfo.setTaskName(infoTable.get(KEYWORD_TYPE.TASKNAME));
+		//set task id;
 
 		String taskName = taskInfo.getTaskName();
 		String commandFeedback = "";
@@ -56,7 +56,7 @@ public class CommandDelete extends Command {
 
 				if (prevTask != null) {
 					TaskView.getInstance().deleteInView(prevTask);
-					commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
+					commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, prevTask.getTaskName());
 					addCommandToHistory ();
 				} else {
 					commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
@@ -68,12 +68,12 @@ public class CommandDelete extends Command {
 			commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
 
 			Command search = new CommandSearch();
-			search.storeTaskInfo(taskInfoTable);
+			search.storeTaskInfo(infoTable);
 			return search.execute();
 		} else if (taskCount == 1){
 			prevTask = taskListShop.removeTaskByName(taskName);
 			taskView.deleteInView(prevTask);
-			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
+			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, prevTask.getTaskName());
 			addCommandToHistory ();
 		} else {
 			commandFeedback = String.format(MESSAGE_COMMAND_DELETE_NO_SUCH_TASK, taskName);
@@ -91,14 +91,6 @@ public class CommandDelete extends Command {
 			return true;
 		}
 		return false;
-	}
-
-	public void storeTaskInfo (Hashtable<KEYWORD_TYPE, String> infoHashes) {
-		taskInfo = new TaskInfo();
-		taskInfoTable = infoHashes;
-		saveTaskName(infoHashes, taskInfo);
-		taskId = infoHashes.get(KEYWORD_TYPE.TASKID);
-
 	}
 
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
