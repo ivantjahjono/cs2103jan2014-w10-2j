@@ -110,17 +110,17 @@ public class DateAndTimeFormat {
 			minutes += Integer.parseInt(minuteString);
 			date =  date.replaceAll(minuteString, "");
 			
-			if (!date.equals("")) {
-				addedHour = Integer.parseInt(date);
-				
-				// Checks for 12am and 12pm
-				if (addedHour == 12 && ampmTiming) {
-					hour -= 12;
-				}
-				hour += addedHour;
+			
+		} 
+		
+		if (!date.equals("")) {
+			addedHour = Integer.parseInt(date);
+			
+			// Checks for 12am and 12pm
+			if (addedHour == 12 && ampmTiming) {
+				hour -= 12;
 			}
-		} else {
-			hour += Integer.parseInt(date);
+			hour += addedHour;
 		}
 		
 		return String.format("%02d%02d", hour, minutes);
