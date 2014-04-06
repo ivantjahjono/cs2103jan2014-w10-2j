@@ -109,27 +109,81 @@ public class DateAndTimeFormat {
 			String minuteString = date.substring(date.length()-2, date.length());
 			minutes += Integer.parseInt(minuteString);
 			date =  date.replaceAll(minuteString, "");
+		} 
+		
+		if (!date.equals("")) {
+			addedHour = Integer.parseInt(date);
 			
-			if (!date.equals("")) {
-				addedHour = Integer.parseInt(date);
-				
-				// Checks for 12am and 12pm
-				if (addedHour == 12 && ampmTiming) {
-					hour -= 12;
-				}
-				hour += addedHour;
+			// Checks for 12am and 12pm
+			if (addedHour == 12 && ampmTiming) {
+				hour -= 12;
 			}
-		} else {
-			hour += Integer.parseInt(date);
+			hour += addedHour;
 		}
 		
 		return String.format("%02d%02d", hour, minutes);
 	}
 	
+	public String convertStringDateToDayMonthYearFormat(String date) {
+		if (date.matches("[a-zA-Z]+")) {
+			date =  convertWordsToDayMonthYearFormat(date);
+		}
+		
+		// Replace all separators
+		date = date.replaceAll("(\\/|\\.|\\s+)", "");
+		
+		if (date.length() == 5) {
+			date = "0" + date;
+		}
+		
+		return date;
+	}
+	
+	private String convertWordsToDayMonthYearFormat(String date) {
+		// TODO Auto-generated method stub
+		switch (date) {
+			case "today":
+				return getDateToday();
+		
+			case "tmr":
+			case "tomorrow":
+				return getDateOffsetFromToday(1);
+				
+			case "monday":
+				return getNearestWeekdayFromToday(2);
+				
+			case "tuesday":
+				return  getNearestWeekdayFromToday(3);
+				
+			case "wednesday":
+				return  getNearestWeekdayFromToday(4);
+				
+			case "thursday":
+				return  getNearestWeekdayFromToday(5);
+				
+			case "friday":
+				return  getNearestWeekdayFromToday(6);
+				
+			case "saturday":
+				return  getNearestWeekdayFromToday(7);
+				
+			case "sunday":
+				return  getNearestWeekdayFromToday(1);
+		}
+		
+		return "";
+	}
+
 	public boolean isDateValid (String theDate) {
 		if(theDate == null) {
 			return false;
 		}
+		
+		// Allow matches for weekday words
+		if (theDate.matches("[a-zA-Z]+")) {
+			return true;
+		}
+		
 		for(int i = 0; i < dateFormatList.length; i++) {
 			try {
 				dateFormatList[i].setLenient(false);
@@ -310,5 +364,26 @@ public class DateAndTimeFormat {
 		SimpleDateFormat timeFormat = new SimpleDateFormat(timeFormatString);
 		
 		return timeFormat.format(dateTime.getTime());
+	}
+	
+	public String getDateOffsetFromToday (int offset) {
+		Calendar dateTime = Calendar.getInstance();
+		dateTime.add(Calendar.DAY_OF_YEAR, offset);
+		
+		String dayFormatString = "dd MM yy";
+		SimpleDateFormat dayFormat = new SimpleDateFormat(dayFormatString);
+		
+		return dayFormat.format(dateTime.getTime());
+	}
+	
+	public String getNearestWeekdayFromToday (int weekday) {
+		Calendar dateTime = Calendar.getInstance();
+		int currentWeekday = dateTime.get(Calendar.DAY_OF_WEEK);
+		
+		int difference = 0;
+		if (currentWeekday != weekday) {
+			difference = (-currentWeekday + weekday + 7)%7;
+		}
+		return getDateOffsetFromToday(difference);
 	}
 }

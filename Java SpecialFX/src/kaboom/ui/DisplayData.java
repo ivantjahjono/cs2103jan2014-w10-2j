@@ -21,7 +21,7 @@ import kaboom.storage.TaskListShop;
 public class DisplayData extends Observable {
 	// TODO clean up methods
 
-	final int NUM_OF_TASK_PER_PAGE = 5;
+	final int NUM_OF_TASK_PER_PAGE = 10;
 
 	static DisplayData instance;
 
@@ -300,5 +300,9 @@ public class DisplayData extends Observable {
 	
 	public String getCurrentDate () {
 		return currentDate;
+	}
+	
+	public int getMaxTasksPerPage () {
+		return NUM_OF_TASK_PER_PAGE;
 	}
 }
