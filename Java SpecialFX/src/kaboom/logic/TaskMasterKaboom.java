@@ -157,7 +157,6 @@ public class TaskMasterKaboom {
 			case VIEW:
 				commandHistory.setCurrentViewCommand(command);
 				break;
-			case ADD:
 			case DELETE:
 			case MODIFY:
 			case DONE:
@@ -166,7 +165,6 @@ public class TaskMasterKaboom {
 				break;
 				
 			case INVALID:
-			case UNDO:
 			case SEARCH:
 				break;
 				
