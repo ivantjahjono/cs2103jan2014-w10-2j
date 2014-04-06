@@ -53,7 +53,7 @@ public class CommandDelete extends Command {
 			if (taskView.getCurrentViewID().size() >= Integer.parseInt(taskName)) {
 				int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
 				prevTask = taskListShop.removeTaskByID(index);  //Set for undo
-
+				
 				if (prevTask != null) {
 					TaskView.getInstance().deleteInView(prevTask);
 					commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskName);
@@ -64,7 +64,7 @@ public class CommandDelete extends Command {
 				commandFeedback = String.format(MESSAGE_COMMAND_DELETE_FAIL, taskName);
 			}
 		} else if (taskCount > 1) {
-			commandFeedback = "OH YEA! CLASH.. BOO000000000M!";
+			commandFeedback = "Clash detected";
 
 			Command search = new CommandSearch();
 			search.storeTaskInfo(taskInfoTable);
