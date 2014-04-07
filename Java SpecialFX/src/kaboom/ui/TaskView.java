@@ -43,6 +43,10 @@ public class TaskView {
 		case EXPIRED:
 			setCurrentView(taskListShop.getExpiredTasks());
 			break;
+			
+		case FUTURE:
+			setCurrentView(taskListShop.getFutureTasks());
+			break;
 
 		case SEARCH:
 			setCurrentView(searchView);

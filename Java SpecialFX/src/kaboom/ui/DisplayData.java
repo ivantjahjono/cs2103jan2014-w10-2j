@@ -78,17 +78,17 @@ public class DisplayData extends Observable {
 			case 0:
 				currentCount = taskListShop.getToday().size();
 				break;
-
+				
 			case 1:
-				currentCount = taskListShop.getFloatingTasks().size();
+				currentCount = taskListShop.getFutureTasks().size();
 				break;
 
 			case 2:
-				currentCount = taskListShop.getExpiredTasks().size();
+				currentCount = taskListShop.getFloatingTasks().size();
 				break;
 
 			case 3:
-				currentCount = TaskView.getInstance().getSearchView().size();
+				currentCount = taskListShop.getExpiredTasks().size();
 				break;
 
 			case 4:
