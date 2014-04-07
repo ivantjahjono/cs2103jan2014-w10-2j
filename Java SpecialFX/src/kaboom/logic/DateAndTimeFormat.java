@@ -158,7 +158,7 @@ public class DateAndTimeFormat {
 		// TODO Auto-generated method stub
 		switch (date) {
 			case "today":
-				return getDateToday();
+				return getDateToday2();
 		
 			case "tmr":
 			case "tomorrow":
@@ -396,7 +396,7 @@ public class DateAndTimeFormat {
 		Calendar dateTime = Calendar.getInstance();
 		dateTime.add(Calendar.DAY_OF_YEAR, offset);
 		
-		String dayFormatString = "dd MM yy";
+		String dayFormatString = "ddMMyy";
 		SimpleDateFormat dayFormat = new SimpleDateFormat(dayFormatString);
 		
 		return dayFormat.format(dateTime.getTime());
