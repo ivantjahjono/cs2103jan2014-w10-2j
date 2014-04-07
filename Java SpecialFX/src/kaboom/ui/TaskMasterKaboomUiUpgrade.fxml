@@ -132,7 +132,7 @@
         </Pane>
         <Group id="Group" layoutX="10.0" layoutY="15.0" scaleX="1.0" scaleY="1.0">
           <children>
-            <Label fx:id="todayWeekDay" alignment="CENTER_RIGHT" layoutX="0.0" layoutY="0.0" text="MON">
+            <Label fx:id="todayWeekDay" alignment="CENTER_LEFT" layoutX="0.0" layoutY="0.0" text="MON">
               <font>
                 <Font name="Segoe UI Mono" size="50.0" />
               </font>
