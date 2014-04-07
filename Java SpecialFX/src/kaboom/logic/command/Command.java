@@ -34,6 +34,10 @@ public class Command {
 	Hashtable<KEYWORD_TYPE, Object> commandObjectTable;
 	Hashtable<KEYWORD_TYPE, String> infoTable; //TEMP
 
+	protected enum COMMAND_ERROR{
+		NO_TASK_NAME, INVALID_DATE, NIL
+	}
+	
 	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
 		textParser = TextParser.getInstance();
