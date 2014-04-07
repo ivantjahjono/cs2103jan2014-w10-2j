@@ -68,21 +68,21 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	
 	// Task header to show the current type of tasks displayed
 	@FXML 	private Label header_today;
+	@FXML 	private Label header_future;
 	@FXML 	private Label header_timeless;
 	@FXML 	private Label header_expired;
-	@FXML 	private Label header_search;
 	@FXML 	private Label header_archive;
 	
 	@FXML 	private Label header_today_count;
+	@FXML 	private Label header_future_count;
 	@FXML 	private Label header_timeless_count;
 	@FXML 	private Label header_expired_count;
-	@FXML 	private Label header_search_count;
 	@FXML 	private Label header_archive_count;
 	
-	private final String HEADER_TODAY_NAME 		= "header_all";
-	private final String HEADER_TIMELESS_NAME 	= "header_running";
-	private final String HEADER_EXPIRED_NAME 	= "header_deadline";
-	private final String HEADER_SEARCH_NAME 	= "header_search";
+	private final String HEADER_TODAY_NAME 		= "header_today";
+	private final String HEADER_FUTURE_NAME 	= "header_future";
+	private final String HEADER_TIMELESS_NAME 	= "header_timeless";
+	private final String HEADER_EXPIRED_NAME 	= "header_expired";
 	private final String HEADER_ARCHIVE_NAME 	= "header_archive";
 	
 	// List and tracks of previously activated headers
@@ -165,9 +165,9 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		mainPane.getStyleClass().add("root");
 		
 		labelList.add(header_today);
+		labelList.add(header_future);
 		labelList.add(header_timeless);
 		labelList.add(header_expired);
-		labelList.add(header_search);
 		labelList.add(header_archive);
 		currentLabelIndex = 0;
 		previousLabelIndex = 0;
@@ -275,15 +275,15 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 					break;
 					
 				case 1:
-					header_timeless_count.setText(countString);
+					header_future_count.setText(countString);
 					break;
 					
 				case 2:
-					header_expired_count.setText(countString);
+					header_timeless_count.setText(countString);
 					break;
 					
 				case 3:
-					header_search_count.setText(countString);
+					header_expired_count.setText(countString);
 					break;
 					
 				case 4:
@@ -362,15 +362,15 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				newHeaderIndex = 0;
 				break;
 				
-			case TIMELESS:
+			case FUTURE:
 				newHeaderIndex = 1;
 				break;
 				
-			case EXPIRED:
+			case TIMELESS:
 				newHeaderIndex = 2;
 				break;
 				
-			case SEARCH:
+			case EXPIRED:
 				newHeaderIndex = 3;
 				break;
 				
@@ -379,7 +379,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				break;
 				
 			default:
-				break;
+				return;
 				
 		}
 		
@@ -562,15 +562,15 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				break;
 				
 			case F2:
-				activateHeaderBasedOnName(HEADER_TIMELESS_NAME);
+				activateHeaderBasedOnName(HEADER_FUTURE_NAME);
 				break;
 				
 			case F3:
-				activateHeaderBasedOnName(HEADER_EXPIRED_NAME);
+				activateHeaderBasedOnName(HEADER_TIMELESS_NAME);
 				break;
 				
 			case F4:
-				activateHeaderBasedOnName(HEADER_SEARCH_NAME);
+				activateHeaderBasedOnName(HEADER_EXPIRED_NAME);
 				break;
 				
 			case F5:
@@ -664,16 +664,16 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				command = "view today";
 				break;
 				
+			case HEADER_FUTURE_NAME:
+				command = "view future";
+				break;
+				
 			case HEADER_TIMELESS_NAME:
 				command = "view timeless";
 				break;
 				
 			case HEADER_EXPIRED_NAME:
 				command = "view expired";
-				break;
-				
-			case HEADER_SEARCH_NAME:
-				command = "view search";
 				break;
 				
 			case HEADER_ARCHIVE_NAME:
