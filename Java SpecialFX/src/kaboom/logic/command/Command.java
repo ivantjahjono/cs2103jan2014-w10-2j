@@ -35,7 +35,7 @@ public class Command {
 	Hashtable<KEYWORD_TYPE, String> infoTable; //TEMP
 
 	protected enum COMMAND_ERROR{
-		NO_TASK_NAME, INVALID_DATE, NIL
+		NO_TASK_NAME, INVALID_DATE, NIL, STARTDATE_AFTER_ENDDATE
 	}
 	
 	public Command () {

@@ -100,40 +100,6 @@ public class CommandModify extends Command {
 			feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
 			return createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
-		
-		
-//		if (infoTable.get(KEYWORD_TYPE.TASKNAME) != null) {
-//			taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
-//			
-//			 if (infoTable.get(KEYWORD_TYPE.TASKNAME).isEmpty()) {
-//				feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
-//				return createResult(taskListShop.getAllCurrentTasks(), feedback);
-//			}
-//			 
-//			if (isNumeric(taskName)) {
-//				int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
-//				preModifiedTaskInfo = taskListShop.getTaskByID(index);
-//			} else {
-//				int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
-//
-//				if (taskCount > 1) {
-//					Command search = new CommandSearch();
-//					search.storeTaskInfo(infoTable);
-//					return search.execute();
-//				}
-//				else if (taskCount == 1) {
-//					preModifiedTaskInfo = taskListShop.getTaskByName(taskName);
-//				}
-//				else {
-//					feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_SUCH_TASK;
-//					return createResult(taskListShop.getAllCurrentTasks(), feedback);
-//				}
-//			}
-//		}  else {
-//			feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
-//			return createResult(taskListShop.getAllCurrentTasks(), feedback);
-//		}
-
 
 		if (preModifiedTaskInfo == null) {
 			feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_TO_MODIFY,taskName);
