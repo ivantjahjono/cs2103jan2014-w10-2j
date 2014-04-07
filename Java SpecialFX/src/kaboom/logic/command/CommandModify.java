@@ -73,8 +73,35 @@ public class CommandModify extends Command {
 			return createResult(taskListShop.getAllCurrentTasks(), "No TaskInfoTable");
 		}
 		String feedback = "";
-		String taskName = "";
 
+		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
+		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
+		
+//		//get PreModifiedTaskInfo 
+//		if (taskId != null) {
+//			int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
+//			preModifiedTaskInfo = taskListShop.getTaskByID(index);
+//		} else if (taskName != null){
+//			//detect clash
+//			int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
+//			if (taskCount > 1) {
+//				Command search = new CommandSearch();
+//				search.storeTaskInfo(infoTable);
+//				return search.execute();
+//			}
+//			else if (taskCount == 1) {
+//				preModifiedTaskInfo = taskListShop.getTaskByName(taskName);
+//			}
+//			else {
+//				feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_SUCH_TASK;
+//				return createResult(taskListShop.getAllCurrentTasks(), feedback);
+//			}
+//		} else {
+//			feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
+//			return createResult(taskListShop.getAllCurrentTasks(), feedback);
+//		}
+//		
+		
 		if (infoTable.get(KEYWORD_TYPE.TASKNAME) != null) {
 			taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 			
