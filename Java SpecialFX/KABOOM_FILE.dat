@@ -1,39 +1,4 @@
-hjkhjkh~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-1~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-2~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-3~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-1~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-1~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-1~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-1~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-1~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-1~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-1~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-1~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-2~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-1~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-2~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-1~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-2~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-asdjkasjdklajs~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-meeting~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-meeting~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~false~
-meeting~TIMED~14~3~7~0~0~14~3~7~1~0~1~true~false~
-meeting~DEADLINE~ ~ ~ ~ ~ ~14~3~8~0~0~1~true~false~
-gg~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~true~
-hjkhjkh~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~true~
-gg~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~true~
-gg~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~true~
-hello world~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~true~
-hello~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~true~
-hello~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~true~
-hello world~DEADLINE~ ~ ~ ~ ~ ~2014~3~1~15~0~1~true~true~
-ajsdlkajslkd~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~true~
-jkl~DEADLINE~ ~ ~ ~ ~ ~2014~3~1~20~0~1~true~true~
-hello~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~true~
-asd~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~true~
-asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdas~FLOATING~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~1~false~true~
-hjkhkj~DEADLINE~ ~ ~ ~ ~ ~2014~3~1~15~0~1~true~true~
-jkl~DEADLINE~ ~ ~ ~ ~ ~2014~3~1~3~0~1~true~true~
-helo~TIMED~2014~3~2~15~0~2014~3~2~16~0~1~true~true~
-LOL~DEADLINE~ ~ ~ ~ ~ ~2014~3~2~15~0~1~true~true~
+meeting°FLOATING° ° ° ° ° ° ° ° ° ° °1°false°true°
+test2°FLOATING° ° ° ° ° ° ° ° ° ° °1°false°true°
+meeting°FLOATING° ° ° ° ° ° ° ° ° ° °1°false°true°
+test°FLOATING° ° ° ° ° ° ° ° ° ° °1°false°true°
