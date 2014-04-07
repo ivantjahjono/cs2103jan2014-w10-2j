@@ -6,11 +6,14 @@ import java.util.Vector;
 import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
+import kaboom.logic.TaskInfo;
 
 public class CommandSort extends Command {
 
 	private final String MESSAGE_COMMAND_SORT_SUCCESS = "Sort done. %d item(s) sorted.";
 
+	TaskInfo taskInfo = null;
+	
 	public CommandSort() {
 		commandType = COMMAND_TYPE.SORT;
 		keywordList = new KEYWORD_TYPE[] {
