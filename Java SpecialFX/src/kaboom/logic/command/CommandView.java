@@ -12,21 +12,21 @@ import kaboom.ui.DISPLAY_STATE;
 import kaboom.ui.TaskView;
 
 public class CommandView extends Command{
+	private final String KEYWORD_TODAY = "today";
+	private final String KEYWORD_FUTURE = "future";
 	private final String KEYWORD_TIMELESS = "timeless";
 	private final String KEYWORD_EXPIRED = "expired";
-	private final String KEYWORD_SEARCH = "search";
 	private final String KEYWORD_ARCHIVE = "archive";
-	private final String KEYWORD_TODAY = "today";
 	
 	private final String MESSAGE_VIEW_TODAY 	= "Viewing all the tasks for today";
 	private final String MESSAGE_VIEW_TIMELESS 	= "Viewing timeless tasks";
 	private final String MESSAGE_VIEW_EXPIRED 	= "Viewing expired tasks";
-	private final String MESSAGE_VIEW_SEARCH 	= "Viewing search result";
+	private final String MESSAGE_VIEW_FUTURE 	= "Viewing upcoming tasks";
 	private final String MESSAGE_VIEW_ARCHIVE 	= "Viewing completed tasks";
 	private final String MESSAGE_VIEW_INVALID 	= "Invalid View Mode";
 	
-	String viewType;
-	DISPLAY_STATE stateToSet;
+	String 			viewType;
+	DISPLAY_STATE 	stateToSet;
 	
 	public CommandView () {
 		commandType = COMMAND_TYPE.VIEW;
@@ -52,6 +52,10 @@ public class CommandView extends Command{
 				taskList = taskListShop.getAllCurrentTasks();
 				feedback = MESSAGE_VIEW_TODAY;
 				break;
+			case FUTURE:
+				taskList = new Vector<TaskInfo>();
+				feedback = MESSAGE_VIEW_FUTURE;
+				break;
 			case TIMELESS:
 				taskList = taskListShop.getFloatingTasks();
 				feedback = MESSAGE_VIEW_TIMELESS;
@@ -59,10 +63,6 @@ public class CommandView extends Command{
 			case EXPIRED:
 				taskList = taskListShop.getDeadlineTasks();
 				feedback = MESSAGE_VIEW_EXPIRED;
-				break;
-			case SEARCH:
-				taskList = new Vector<TaskInfo>();
-				feedback = MESSAGE_VIEW_SEARCH;
 				break;
 			case ARCHIVE:
 				taskList = taskListShop.getAllArchivedTasks();
@@ -85,12 +85,12 @@ public class CommandView extends Command{
 		switch(viewType) {
 			case KEYWORD_TODAY:
 				return DISPLAY_STATE.TODAY;
+			case KEYWORD_FUTURE:
+				return DISPLAY_STATE.FUTURE;
 			case KEYWORD_TIMELESS:
 				return DISPLAY_STATE.TIMELESS;
 			case KEYWORD_EXPIRED:
 				return DISPLAY_STATE.EXPIRED;
-			case KEYWORD_SEARCH:
-				return DISPLAY_STATE.SEARCH;
 			case KEYWORD_ARCHIVE:
 				return DISPLAY_STATE.ARCHIVE;
 			default:
