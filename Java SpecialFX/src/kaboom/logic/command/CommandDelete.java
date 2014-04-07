@@ -38,10 +38,18 @@ public class CommandDelete extends Command {
 		taskInfo = new TaskInfo();
 		taskInfo.setTaskName(infoTable.get(KEYWORD_TYPE.TASKNAME));
 		//set task id;
-
-		String taskName = taskInfo.getTaskName();
+		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
+		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 		String commandFeedback = "";
 
+//		if(taskId != null) {
+//			int index = taskView.getIndexFromView(Integer.parseInt(taskId)-1);
+//			prevTask = taskListShop.removeTaskByID(index);  //Set for undo
+//		}
+//		
+		
+		
+		
 		if (taskName.equals("")) {
 			commandFeedback = MESSAGE_COMMAND_DELETE_INVALID;
 			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
