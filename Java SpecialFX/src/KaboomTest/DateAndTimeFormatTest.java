@@ -2,6 +2,7 @@ package KaboomTest;
 
 import static org.junit.Assert.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import kaboom.logic.DateAndTimeFormat;
@@ -297,5 +298,18 @@ public class DateAndTimeFormatTest {
 		assertEquals("12 04 14", datFormat.getNearestWeekdayFromToday(7));
 		
 		assertEquals("10 04 14", datFormat.getNearestWeekdayFromToday(5));
+	}
+	
+	@Test
+	public void convertDateStringToCalendar () {
+		String timeString = "";
+		String dateString = "";
+		Calendar testCalendar = null;
+		SimpleDateFormat sdf = new  SimpleDateFormat("hhmm ddMMyy");
+		
+		timeString = "0800";
+		dateString = "121212";
+		testCalendar = datFormat.formatStringToCalendar(dateString, timeString);
+		assertEquals(sdf.format(testCalendar.getTime()), timeString + " " + dateString);
 	}
 }
