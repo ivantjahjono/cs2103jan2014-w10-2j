@@ -1,0 +1,274 @@
+.feedback-pane {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #2d89ef;
+    -fx-font-family: "Segoe UI Semilight";
+}
+
+.text-field {
+	-fx-font-family: "Segoe UI Semilight";
+}
+
+.text-field-correct:focused {
+    -fx-background-color: green, -fx-text-box-border, -fx-control-inner-background;
+}
+
+.text-field-wrong:focused {
+    -fx-background-color: #FFAAAA;
+    -fx-control-inner-background: #FF4444;
+    -fx-text-box-border: #FF4444;
+}
+
+.text-area {
+	-fx-background-color: white ;
+    -fx-text-fill: #111111;
+    -fx-font-family: "Segoe UI Semilight";
+}
+
+.text-area .scroll-pane {
+	-fx-hbar-policy: never;
+	-fx-vbar-policy: never;
+	-fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .scroll-bar:vertical, 
+.text-area .scroll-pane .scroll-bar:horizontal {
+    -fx-blend-mode:soft-light ;
+	-fx-block-increment: 100000;
+	-fx-opacity: 0;
+	-fx-scale-x: 0;
+	-fx-scale-y: 0;
+	-fx-scale-z: 0;
+	visibility: false;
+}
+
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+
+.table-view {
+  -fx-table-cell-border-color: transparent;
+  -fx-border-width: 0 0 0 0;
+  -fx-border-color: #FFFFFF;
+  -fx-background-insets: 0, 0, 0, 0;
+}
+
+.table-view .filler {
+  -fx-border-color: transparent;
+}
+
+.table-view .table-cell {
+	-fx-padding: 5;
+	-fx-font-family: "Segoe UI Semibold";
+}
+
+.column-header {
+	-fx-background-color: #2d89ef;
+	-fx-border-width: 0, 1, 0, 0;
+	-fx-border-color: #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF;
+	-fx-padding: 5;
+}
+
+.column-header .label {
+	-fx-text-fill: #FFFFFF;
+	-fx-alignment: CENTER_LEFT;
+	-fx-font-family: "Segoe UI Semibold";
+}
+
+.table-view .placeholder .label {
+	-fx-text-fill: transparent;
+}
+
+.header-label-selected {
+	-fx-font-size: 18px;
+	-fx-text-fill: #0066FF;
+}
+
+.header-label-normal {
+	-fx-font-size: 16px;
+	-fx-text-fill: #9F9F9F;
+	-fx-opacity: 1;
+}
+
+.header-label-normal:hover {
+	-fx-font-size: 16px;
+	-fx-text-fill: #0066FF;
+	-fx-opacity: 0.8;
+}
+
+.task-pane:hover {
+	-fx-fill: #0000FF;
+}
+
+.isRecent {
+	-fx-fill: #DDDDFF;
+}
+
+.isExpired {
+	-fx-fill: #FF5555;
+}
+
+.isComplete {
+	-fx-fill: #55FF55;
+}
+
+.isNotExpired {
+	-fx-fill: #2d89ef;
+}
+
+.isEmpty {
+	-fx-border-width: 0 0 0 0;
+	-fx-background-color: #FFFFFF;
+}
+
+.table-view .table-row {
+	-fx-background-color: #FFFFFF;
+}
+
+.pages-tab-hbox {
+	-fx-spacing: 5; 
+}
+
+.pagesOn {
+	-fx-fill: #2d89ef;
+	-fx-border-color: red;
+	-fx-opacity: 1;
+}
+
+.pagesOff {
+	-fx-fill: #2d89ef;
+	-fx-opacity: 0.3;
+}
+
+.commandValid {
+	-fx-fill: #00cc83;
+}
+
+.commandInvalid {
+	-fx-fill: #ff3333;
+}
+
+.parseCommandTypeName {
+	-fx-font-family: "Segoe UI Semibold";
+	-fx-text-fill: #2d89ef;
+	-fx-font-weight: bold;
+}
+
+.parseCommandName {
+	-fx-font-family: "Segoe UI Semilight";
+	-fx-text-fill: #000000;
+	-fx-font-weight: normal;
+}
+
+.parseCommandStartDate {
+	-fx-font-family: "Segoe UI Semilight";
+	-fx-text-fill: #00AA00;
+	-fx-font-weight: normal;
+}
+
+.parseCommandEndDate {
+	-fx-font-family: "Segoe UI Semilight";
+	-fx-text-fill: #AA0000;
+	-fx-font-weight: normal;
+}
+
+.parseCommandPriority {
+	-fx-font-family: "Segoe UI Semilight";
+	-fx-text-fill: #AA00AA;
+	-fx-font-weight: normal;
+}
+
+.parseCommandInvalid .text {
+	-fx-font-family: "Segoe UI Semilight";
+	-fx-font-weight: normal;
+	-fx-strikethrough: true ;
+}
+
+.close-button {
+	-fx-image: url("img/MarkX.png");
+}
+
+.close-button:hover {
+	-fx-image: url("img/MarkXHover.png");
+}
+
+.minimise-button {
+	-fx-image: url("img/MarkUnder.png");
+}
+
+.minimise-button:hover {
+	-fx-image: url("img/MarkUnderHover.png");
+}
+
+.nextpage-button {
+	-fx-image: url("img/CaretRight.png");
+}
+
+.nextpage-button:hover {
+	-fx-image: url("img/CaretRightHover.png");
+}
+
+.prevpage-button {
+	-fx-image: url("img/CaretLeft.png");
+}
+
+.prevpage-button:hover {
+	-fx-image: url("img/CaretLeftHover.png");
+}
+
+.taskid-label {
+	-fx-alignment: center ;
+	-fx-font-family: "Segoe UI";
+	-fx-font-size: 20px;
+	-fx-wrap-text: false;
+}
+
+.taskname-label {
+	-fx-alignment: TOP_LEFT ;
+	-fx-font-family: "Segoe UI Semibold";
+	-fx-font-size: 14px;
+	-fx-text-overrun: center-ellipsis ;
+	-fx-wrap-text: false;
+}
+
+.taskdatetime-label {
+	-fx-alignment: CENTER_LEFT ;
+	-fx-font-family: "Segoe UI Semibold";
+	-fx-font-size: 12px;
+	-fx-text-fill: gray ;
+}
+
+.taskpriority-label {
+	-fx-alignment: TOP_RIGHT ;
+	-fx-font-family: "Segoe UI Semibold";
+	-fx-font-size: 20px;
+	-fx-text-fill: red ;
+}
+
+.taskbox-rectangle {
+	-fx-opacity: 0;
+}
+
+.taskbox-rectangle:hover {
+	-fx-fill: #BBBBBB;
+	-fx-opacity: 0.2;
+}
+
+.taskbox-recent-rectangle {
+	-fx-opacity: 1;
+	-fx-fill: #DDDDFF;
+}
+
+.taskbox-recent-rectangle:hover {
+	-fx-opacity: 1;
+	-fx-fill: #AAAAFF;
+}
+
+.root {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0.5, 0.0, 0.0);
+    -fx-background-radius: 5;
+    -fx-padding: 50;
+}
