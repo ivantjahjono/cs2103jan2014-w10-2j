@@ -257,6 +257,16 @@
 	-fx-opacity: 0.2;
 }
 
+.taskbox-recent-rectangle {
+	-fx-opacity: 1;
+	-fx-fill: #DDDDFF;
+}
+
+.taskbox-recent-rectangle:hover {
+	-fx-opacity: 1;
+	-fx-fill: #AAAAFF;
+}
+
 .root {
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0.5, 0.0, 0.0);
     -fx-background-radius: 5;

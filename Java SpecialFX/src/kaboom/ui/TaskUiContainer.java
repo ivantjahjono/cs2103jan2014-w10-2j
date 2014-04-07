@@ -25,11 +25,18 @@ public class TaskUiContainer {
  		task = new Pane();
  		task.setPrefSize(512, 40);
  		
+ 		backlitBox = new Rectangle();
+ 		backlitBox.setWidth(512);
+ 		backlitBox.setHeight(40);
+ 		backlitBox.getStyleClass().add("taskbox-rectangle");
+ 		task.getChildren().add(backlitBox);
+ 		
  		taskid = new Label();
  		taskid.setPrefSize(50, 26.6);
  		taskid.setLayoutX(-59);
  		taskid.setLayoutY(5);
  		taskid.getStyleClass().add("taskid-label");
+ 		taskid.setMouseTransparent(true);
  		task.getChildren().add(taskid);
  		
  		taskname = new Label();
@@ -37,11 +44,13 @@ public class TaskUiContainer {
  		taskname.setLayoutX(21);
  		taskname.setLayoutY(1);
  		taskname.getStyleClass().add("taskname-label");
+ 		taskname.setMouseTransparent(true);
  		task.getChildren().add(taskname);
  		
  		statusbar = new Rectangle();
  		statusbar.setWidth(5);
  		statusbar.setHeight(40);
+ 		statusbar.setMouseTransparent(true);
  		task.getChildren().add(statusbar);
  		
  		datetime = new Label();
@@ -49,6 +58,7 @@ public class TaskUiContainer {
  		datetime.setLayoutX(21);
  		datetime.setLayoutY(19);
  		datetime.getStyleClass().add("taskdatetime-label");
+ 		datetime.setMouseTransparent(true);
  		task.getChildren().add(datetime);
  		
  		priority  = new Label();
@@ -56,13 +66,8 @@ public class TaskUiContainer {
  		priority.setLayoutX(418);
  		priority.setLayoutY(16);
  		priority.getStyleClass().add("taskpriority-label");
+ 		priority.setMouseTransparent(true);
  		task.getChildren().add(priority);
- 		
- 		backlitBox = new Rectangle();
- 		backlitBox.setWidth(512);
- 		backlitBox.setHeight(40);
- 		backlitBox.getStyleClass().add("taskbox-rectangle");
- 		task.getChildren().add(backlitBox);
  	}
  	
  	public Pane getPaneContainer () {
@@ -93,15 +98,21 @@ public class TaskUiContainer {
  		statusbar.getStyleClass().removeAll(Collections.singleton("isComplete"));
  		statusbar.getStyleClass().removeAll(Collections.singleton("isEmpty"));
  		statusbar.getStyleClass().removeAll(Collections.singleton("isRecent"));
+ 		backlitBox.getStyleClass().removeAll(Collections.singleton("taskbox-rectangle"));
+ 		backlitBox.getStyleClass().removeAll(Collections.singleton("taskbox-recent-rectangle"));
  		
  		if (info.isExpired()) {
  			statusbar.getStyleClass().add("isExpired");
+ 			backlitBox.getStyleClass().add("taskbox-rectangle");
  		} else if (info.isDone()) {
  			statusbar.getStyleClass().add("isComplete");
+ 			backlitBox.getStyleClass().add("taskbox-rectangle");
  		} else if (info.isRecent()) {
- 			statusbar.getStyleClass().add("isRecent");
+ 			backlitBox.getStyleClass().add("taskbox-recent-rectangle");
+ 			//statusbar.getStyleClass().add("isRecent");
  		} else {
  			statusbar.getStyleClass().add("isNotExpired");
+ 			backlitBox.getStyleClass().add("taskbox-rectangle");
  		}
  	}
 }
