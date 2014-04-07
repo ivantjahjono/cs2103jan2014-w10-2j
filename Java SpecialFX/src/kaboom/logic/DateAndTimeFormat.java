@@ -211,18 +211,26 @@ public class DateAndTimeFormat {
 	}
 	
 	public String dateFromCalendarToString (Calendar cal) {
-		String day = String.format("%02d", cal.get(Calendar.DATE));
-		String month = String.format("%02d", cal.get(Calendar.MONTH)+1);
-		String year = String.format("%02d", cal.get(Calendar.YEAR));
-		String date = day+month+year;
-		return date;
+		String dayFormatString = "ddMMyy";
+		SimpleDateFormat dayFormat = new SimpleDateFormat(dayFormatString);
+		
+		return dayFormat.format(cal.getTime());
+//		String day = String.format("%02d", cal.get(Calendar.DATE));
+//		String month = String.format("%02d", cal.get(Calendar.MONTH)+1);
+//		String year = String.format("%02d", cal.get(Calendar.YEAR));
+//		String date = day+month+year;
+//		return date;
 	}
 	
 	public String timeFromCalendarToString (Calendar cal) {
-		String hour = String.format("%02d", cal.get(Calendar.HOUR_OF_DAY));
-		String min = String.format("%02d", cal.get(Calendar.MINUTE));
-		String time = hour+min;
-		return time;
+		String timeFormatString = "hhmm";
+		SimpleDateFormat dayFormat = new SimpleDateFormat(timeFormatString);
+		
+		return dayFormat.format(cal.getTime());
+//		String hour = String.format("%02d", cal.get(Calendar.HOUR_OF_DAY));
+//		String min = String.format("%02d", cal.get(Calendar.MINUTE));
+//		String time = hour+min;
+//		return time;
 	}
 
 	public Calendar addTimeToCalendar (Calendar dateAndTime, int hour, int min) {

@@ -77,62 +77,62 @@ public class CommandModify extends Command {
 		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
 		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 		
-//		//get PreModifiedTaskInfo 
-//		if (taskId != null) {
-//			int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
-//			preModifiedTaskInfo = taskListShop.getTaskByID(index);
-//		} else if (taskName != null){
-//			//detect clash
-//			int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
-//			if (taskCount > 1) {
-//				Command search = new CommandSearch();
-//				search.storeTaskInfo(infoTable);
-//				return search.execute();
-//			}
-//			else if (taskCount == 1) {
-//				preModifiedTaskInfo = taskListShop.getTaskByName(taskName);
-//			}
-//			else {
-//				feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_SUCH_TASK;
-//				return createResult(taskListShop.getAllCurrentTasks(), feedback);
-//			}
-//		} else {
-//			feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
-//			return createResult(taskListShop.getAllCurrentTasks(), feedback);
-//		}
-//		
-		
-		if (infoTable.get(KEYWORD_TYPE.TASKNAME) != null) {
-			taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
-			
-			 if (infoTable.get(KEYWORD_TYPE.TASKNAME).isEmpty()) {
-				feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
+		//get PreModifiedTaskInfo 
+		if (taskId != null) {
+			int index = taskView.getIndexFromView(Integer.parseInt(taskId)-1);
+			preModifiedTaskInfo = taskListShop.getTaskByID(index);
+		} else if (taskName != null){
+			//detect clash
+			int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
+			if (taskCount > 1) {
+				Command search = new CommandSearch();
+				search.storeTaskInfo(infoTable);
+				return search.execute();
+			}
+			else if (taskCount == 1) {
+				preModifiedTaskInfo = taskListShop.getTaskByName(taskName);
+			}
+			else {
+				feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_SUCH_TASK;
 				return createResult(taskListShop.getAllCurrentTasks(), feedback);
 			}
-			 
-			if (isNumeric(taskName)) {
-				int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
-				preModifiedTaskInfo = taskListShop.getTaskByID(index);
-			} else {
-				int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
-
-				if (taskCount > 1) {
-					Command search = new CommandSearch();
-					search.storeTaskInfo(infoTable);
-					return search.execute();
-				}
-				else if (taskCount == 1) {
-					preModifiedTaskInfo = taskListShop.getTaskByName(taskName);
-				}
-				else {
-					feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_SUCH_TASK;
-					return createResult(taskListShop.getAllCurrentTasks(), feedback);
-				}
-			}
-		}  else {
+		} else {
 			feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
 			return createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
+		
+		
+//		if (infoTable.get(KEYWORD_TYPE.TASKNAME) != null) {
+//			taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
+//			
+//			 if (infoTable.get(KEYWORD_TYPE.TASKNAME).isEmpty()) {
+//				feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
+//				return createResult(taskListShop.getAllCurrentTasks(), feedback);
+//			}
+//			 
+//			if (isNumeric(taskName)) {
+//				int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
+//				preModifiedTaskInfo = taskListShop.getTaskByID(index);
+//			} else {
+//				int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
+//
+//				if (taskCount > 1) {
+//					Command search = new CommandSearch();
+//					search.storeTaskInfo(infoTable);
+//					return search.execute();
+//				}
+//				else if (taskCount == 1) {
+//					preModifiedTaskInfo = taskListShop.getTaskByName(taskName);
+//				}
+//				else {
+//					feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_SUCH_TASK;
+//					return createResult(taskListShop.getAllCurrentTasks(), feedback);
+//				}
+//			}
+//		}  else {
+//			feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
+//			return createResult(taskListShop.getAllCurrentTasks(), feedback);
+//		}
 
 
 		if (preModifiedTaskInfo == null) {
@@ -258,7 +258,7 @@ public class CommandModify extends Command {
 	}
 	
 	private String getNewStartTime(String startTime) {
-		String newStartTime =  infoTable.get(KEYWORD_TYPE.START_TIME);
+		String newStartTime =  datFormat.convertStringTimeTo24HourString(infoTable.get(KEYWORD_TYPE.START_TIME));
 		if(newStartTime != null) {
 			startTime = datFormat.convertStringTimeTo24HourString(newStartTime);
 			hasTimeChanged = true;
@@ -267,7 +267,7 @@ public class CommandModify extends Command {
 	}
 	
 	private String getNewStartDate(String startDate) {
-		String newStartDate = infoTable.get(KEYWORD_TYPE.START_DATE);
+		String newStartDate = datFormat.convertStringDateToDayMonthYearFormat(infoTable.get(KEYWORD_TYPE.START_DATE));
 		if(newStartDate != null) {
 			if(datFormat.isDateValid(newStartDate)) {
 				startDate = newStartDate;
@@ -296,7 +296,7 @@ public class CommandModify extends Command {
 	}
 	
 	private String getNewEndDate(String endDate) {
-		String newEndDate = infoTable.get(KEYWORD_TYPE.END_DATE);
+		String newEndDate = datFormat.convertStringDateToDayMonthYearFormat(infoTable.get(KEYWORD_TYPE.END_DATE));
 		if(newEndDate != null) {
 			if(datFormat.isDateValid(newEndDate)) {
 				endDate = newEndDate;
@@ -309,7 +309,7 @@ public class CommandModify extends Command {
 	}
 	
 	private String getNewEndTime(String endTime) {
-		String newEndTime = infoTable.get(KEYWORD_TYPE.END_TIME);
+		String newEndTime = datFormat.convertStringTimeTo24HourString(infoTable.get(KEYWORD_TYPE.END_TIME));
 		if(newEndTime != null) {
 			endTime = datFormat.convertStringTimeTo24HourString(newEndTime);
 			hasTimeChanged = true;
