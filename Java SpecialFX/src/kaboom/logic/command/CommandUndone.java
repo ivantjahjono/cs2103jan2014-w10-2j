@@ -62,7 +62,7 @@ public class CommandUndone extends Command{
 			return createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
 
-		taskInfo.setRecent(true);
+		taskToBeModified.setRecent(true);
 		feedback = String.format(MESSAGE_COMMAND_UNDONE_SUCCESS, taskName);
 		addCommandToHistory();
 		return createResult(taskListShop.getAllCurrentTasks(), feedback);
