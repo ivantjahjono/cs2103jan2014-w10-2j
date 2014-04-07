@@ -22,7 +22,7 @@
     </Rectangle>
     <AnchorPane id="AnchorPane" layoutX="3.0" layoutY="0.0" mouseTransparent="false" pickOnBounds="true" prefHeight="650.0" prefWidth="600.0" visible="true">
       <children>
-        <VBox fx:id="taskListContainer" layoutX="-4.0" layoutY="82.0" prefHeight="462.49609375" prefWidth="600.0" spacing="5.0">
+        <VBox fx:id="taskListContainer" layoutX="-4.0" layoutY="80.0" prefHeight="462.49609375" prefWidth="600.0" spacing="5.0">
           <padding>
             <Insets left="70.0" top="5.0" />
           </padding>
@@ -111,12 +111,12 @@
             </Label>
           </children>
         </HBox>
-        <HBox fx:id="pageTabContainer" alignment="CENTER" layoutX="196.0" layoutY="552.0" prefHeight="23.9415283203125" prefWidth="200.0" styleClass="pages-tab-hbox">
+        <HBox fx:id="pageTabContainer" alignment="CENTER" layoutX="196.0" layoutY="550.0" prefHeight="24.0001220703125" prefWidth="200.0" styleClass="pages-tab-hbox">
           <stylesheets>
             <URL value="@application.css" />
           </stylesheets>
         </HBox>
-        <Pane disable="false" focusTraversable="false" layoutX="10.0" layoutY="544.0" prefHeight="32.0001220703125" prefWidth="572.0" visible="true">
+        <Pane disable="false" focusTraversable="false" layoutX="10.0" layoutY="542.0" prefHeight="32.0001220703125" prefWidth="572.0" visible="true">
           <children>
             <ImageView fx:id="prevArrow" blendMode="SRC_OVER" fitHeight="36.0" fitWidth="36.0" layoutX="145.0" layoutY="1.0" onMouseClicked="#onPagesArrowMouseClicked" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="prevpage-button">
               <image>

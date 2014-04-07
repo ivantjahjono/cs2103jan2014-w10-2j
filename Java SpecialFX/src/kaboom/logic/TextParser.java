@@ -8,7 +8,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TextParser {
-	
 	private final String KEYWORD_STARTTIME = "(at|from)\\s";
 	private final String KEYWORD_ENDTIME = "(by|to)\\s";
 	private final String KEYWORD_DATE = "on";
