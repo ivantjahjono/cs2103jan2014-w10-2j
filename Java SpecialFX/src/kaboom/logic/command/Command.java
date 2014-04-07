@@ -342,5 +342,9 @@ public class Command {
 	protected void addCommandToHistory () {
 		History.getInstance().addToRecentCommands(this);
 	}
+	
+	protected Result clashDetection() {
+		return null;
+	}
 
 }

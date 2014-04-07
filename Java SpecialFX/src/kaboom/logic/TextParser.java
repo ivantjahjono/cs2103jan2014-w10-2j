@@ -246,7 +246,7 @@ public class TextParser {
 		int endIndex = 0;
 		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, ID_REGEX);
 		if (matchList.size() < 2) {
-			return userInputSentence;
+			return "";
 		}
 		endIndex = matchList.get(matchList.size()-1);
 		startIndex = matchList.get(matchList.size()-2);
