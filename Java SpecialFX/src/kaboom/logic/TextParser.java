@@ -250,11 +250,10 @@ public class TextParser {
 		}
 		endIndex = matchList.get(matchList.size()-1);
 		startIndex = matchList.get(matchList.size()-2);
-		String taskId = userInputSentence.substring(startIndex, endIndex);
-		userInputSentence = userInputSentence.replace(taskId, "");
+		String taskId = userInputSentence.substring(startIndex, endIndex);;
 		taskId = taskId.replace(KEYWORD_TASKID, "").trim();
 		keywordTable.put(KEYWORD_TYPE.TASKID, taskId);
-		return userInputSentence;
+		return taskId;
 	}
 
 	private ArrayList<Integer> searchForPatternMatch(String userInputSentence, String regex) {
