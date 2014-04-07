@@ -79,8 +79,11 @@ public class CommandModify extends Command {
 		
 		//get PreModifiedTaskInfo 
 		if (taskId != null) {
-			int index = taskView.getIndexFromView(Integer.parseInt(taskId)-1);
-			preModifiedTaskInfo = taskListShop.getTaskByID(index);
+			int taskIdInteger = Integer.parseInt(taskId);
+			if (taskView.getCurrentViewID().size() >= taskIdInteger) {
+				int index = taskView.getIndexFromView(taskIdInteger-1);
+				preModifiedTaskInfo = taskListShop.getTaskByID(index);
+			}
 		} else if (taskName != null){
 			//detect clash
 			int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
