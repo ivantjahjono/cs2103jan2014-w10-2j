@@ -133,7 +133,8 @@ public class DisplayData extends Observable {
 			currentPage = maxPages;
 		}
 		
-		currentWeekDay = DateAndTimeFormat.getInstance().getCurrentWeekday().toUpperCase();
+		//currentWeekDay = DateAndTimeFormat.getInstance().getCurrentWeekday().toUpperCase();
+		currentWeekDay = "MON";
 		currentDate = DateAndTimeFormat.getInstance().getDateToday();
 		currentTime = DateAndTimeFormat.getInstance().getTimeNow();
 

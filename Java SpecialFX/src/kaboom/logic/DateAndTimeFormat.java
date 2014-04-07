@@ -51,7 +51,7 @@ public class DateAndTimeFormat {
 			return null;
 		}
 		Calendar dateAndTime = Calendar.getInstance();
-		SimpleDateFormat sdf = new  SimpleDateFormat("hhmm ddMMyy");
+		SimpleDateFormat sdf = new  SimpleDateFormat("HHmm ddMMyy");
 		Date dateTime = null;
 		try {
 			dateTime = sdf.parse(time+" "+date);
@@ -279,8 +279,6 @@ public class DateAndTimeFormat {
 		todayString = day + month + year;
 		return todayString;
 	}
-
-	
 	
 	//*************************** TEST METHODS **********************************
 	//Date tests
