@@ -1,5 +1,6 @@
 package kaboom.logic;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,14 +51,23 @@ public class DateAndTimeFormat {
 			return null;
 		}
 		Calendar dateAndTime = Calendar.getInstance();
+		SimpleDateFormat sdf = new  SimpleDateFormat("hhmm ddMMyy");
+		Date dateTime = null;
+		try {
+			dateTime = sdf.parse(time+" "+date);
+		} catch (ParseException e) {
+			return null;
+		}
 		
-		convertStringDateToCalendar(dateAndTime, date);
-		convertStringTimeToCalendar(dateAndTime,time);
+		dateAndTime.setTime(dateTime);
+		
+		//convertStringDateToCalendar(dateAndTime, date);
+		//convertStringTimeToCalendar(dateAndTime, time);
 
 		return dateAndTime;
 	}
 	
-	public void convertStringDateToCalendar(Calendar cal, String date) {		
+	public void convertStringDateToCalendar(Calendar cal, String date) {
 		for(int i = 0; i < dateFormatList.length; i++) {
 			try {
 				//validate date
