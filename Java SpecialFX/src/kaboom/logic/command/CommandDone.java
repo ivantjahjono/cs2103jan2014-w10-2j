@@ -29,7 +29,7 @@ public class CommandDone extends Command{
 
 	public Result execute() {
 		assert taskListShop != null;
-
+		
 		String feedback = "";
 		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 		//get id
@@ -69,7 +69,7 @@ public class CommandDone extends Command{
 			}
 		}
 
-		taskInfo.setRecent(true);
+		taskToBeModified.setRecent(true);
 		feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
 		addCommandToHistory ();
 		return createResult(taskListShop.getAllCurrentTasks(), feedback);
