@@ -20,6 +20,7 @@ public class CommandAdd extends Command {
 	private final String MESSAGE_COMMAND_ADD_FAIL_STARTDATE_OVER_ENDDATE = "Wow! How did the task end before it even started? 0.0";
 	
 	DateAndTimeFormat datFormat;
+	TaskInfo taskInfo;
 	
 	public CommandAdd () {
 		commandType = COMMAND_TYPE.ADD;

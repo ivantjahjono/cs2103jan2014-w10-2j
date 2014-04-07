@@ -19,6 +19,7 @@ public class CommandDelete extends Command {
 
 	TaskInfo prevTask;
 	TaskView taskView;
+	TaskInfo taskInfo;
 
 	public CommandDelete () {
 		commandType = COMMAND_TYPE.DELETE;

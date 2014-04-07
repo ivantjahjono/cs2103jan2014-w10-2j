@@ -16,6 +16,8 @@ public class CommandSearch extends Command {
 
 	private final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done. %d item(s) found.";
 
+	TaskInfo taskInfo = null;
+	
 	public CommandSearch () {
 		commandType = COMMAND_TYPE.SEARCH;
 		keywordList = new KEYWORD_TYPE[] {
