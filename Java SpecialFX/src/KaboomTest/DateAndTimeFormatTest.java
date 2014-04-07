@@ -305,11 +305,17 @@ public class DateAndTimeFormatTest {
 		String timeString = "";
 		String dateString = "";
 		Calendar testCalendar = null;
-		SimpleDateFormat sdf = new  SimpleDateFormat("hhmm ddMMyy");
+		SimpleDateFormat sdf = new  SimpleDateFormat("HHmm ddMMyy");
 		
 		timeString = "0800";
 		dateString = "121212";
 		testCalendar = datFormat.formatStringToCalendar(dateString, timeString);
 		assertEquals(sdf.format(testCalendar.getTime()), timeString + " " + dateString);
+		
+		timeString = "2000";
+		dateString = "080414";
+		testCalendar = datFormat.formatStringToCalendar(dateString, timeString);
+		assertEquals(sdf.format(testCalendar.getTime()), timeString + " " + dateString);
+		System.out.println(sdf.format(testCalendar.getTime()));
 	}
 }
