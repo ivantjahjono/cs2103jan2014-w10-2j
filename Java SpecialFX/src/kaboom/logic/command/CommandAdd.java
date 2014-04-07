@@ -19,7 +19,6 @@ public class CommandAdd extends Command {
 	private final String MESSAGE_COMMAND_ADD_FAIL_NO_NAME = "Error! Task cannot be entered without a name Y_Y";
 	private final String MESSAGE_COMMAND_ADD_FAIL_STARTDATE_OVER_ENDDATE = "Wow! How did the task end before it even started? 0.0";
 	
-
 	DateAndTimeFormat datFormat;
 	
 	public CommandAdd () {
@@ -189,7 +188,7 @@ public class CommandAdd extends Command {
 			endTime = datFormat.convertStringTimeTo24HourString(endTime);
 			
 			if(hasEndDate) {
-				//endDate = datFormat.convertStringDateToDayMonthYearFormat(endDate); <<<<<<<<<<<<<<<<<<<<<<
+				endDate = datFormat.convertStringDateToDayMonthYearFormat(endDate);
 				if(!datFormat.isDateValid(endDate)) {
 					feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 				} else {
