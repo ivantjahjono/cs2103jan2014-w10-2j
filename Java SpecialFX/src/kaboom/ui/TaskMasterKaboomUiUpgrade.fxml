@@ -40,7 +40,7 @@
         </TableView>
         <HBox alignment="BOTTOM_CENTER" fillHeight="true" layoutX="180.0" layoutY="22.0" prefHeight="32.0" prefWidth="418.0" rotate="0.0">
           <children>
-            <Label id="header_all" fx:id="header_today" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="4.0" onMouseClicked="#onHeaderMouseClicked" prefWidth="70.0" styleClass="header-label-normal" text="TODAY" textAlignment="LEFT" underline="false">
+            <Label fx:id="header_today" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="4.0" onMouseClicked="#onHeaderMouseClicked" prefWidth="70.0" styleClass="header-label-normal" text="TODAY" textAlignment="LEFT" underline="false">
               <font>
                 <Font name="Segoe UI" size="20.0" fx:id="x5" />
               </font>
@@ -51,12 +51,12 @@
                 <Color blue="0.625" green="0.625" red="0.625" fx:id="x2" />
               </textFill>
             </Label>
-            <Label id="header_running" fx:id="header_timeless" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x5" onMouseClicked="#onHeaderMouseClicked" prefWidth="80.0" styleClass="header-label-normal" text="TIMELESS" textAlignment="LEFT" textFill="$x2" underline="false">
+            <Label fx:id="header_future" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x5" onMouseClicked="#onHeaderMouseClicked" prefWidth="80.0" styleClass="header-label-normal" text="FUTURE" textAlignment="LEFT" textFill="$x2" underline="false">
               <stylesheets>
                 <URL value="@application.css" />
               </stylesheets>
             </Label>
-            <Label id="header_deadline" fx:id="header_expired" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x5" onMouseClicked="#onHeaderMouseClicked" prefWidth="80.0" styleClass="header-label-normal" text="EXPIRED" textAlignment="LEFT" underline="false">
+            <Label fx:id="header_timeless" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x5" onMouseClicked="#onHeaderMouseClicked" prefWidth="80.0" styleClass="header-label-normal" text="TIMELESS" textAlignment="LEFT" underline="false">
               <stylesheets>
                 <URL value="@application.css" />
               </stylesheets>
@@ -64,7 +64,7 @@
                 <Color blue="0.624" green="0.624" red="0.624" fx:id="x3" />
               </textFill>
             </Label>
-            <Label fx:id="header_search" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x5" onMouseClicked="#onHeaderMouseClicked" prefWidth="70.0" styleClass="header-label-normal" text="SEARCH" textAlignment="LEFT" textFill="$x3" underline="false">
+            <Label fx:id="header_expired" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x5" onMouseClicked="#onHeaderMouseClicked" prefWidth="70.0" styleClass="header-label-normal" text="EXPIRED" textAlignment="LEFT" textFill="$x3" underline="false">
               <stylesheets>
                 <URL value="@application.css" />
               </stylesheets>
@@ -89,17 +89,17 @@
                 <Color blue="0.375" green="0.375" red="0.375" fx:id="x8" />
               </textFill>
             </Label>
-            <Label id="header_running" fx:id="header_timeless_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="80.0" text="10" textAlignment="LEFT" textFill="$x8" underline="false">
+            <Label id="header_running" fx:id="header_future_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="80.0" text="10" textAlignment="LEFT" textFill="$x8" underline="false">
               <stylesheets>
                 <URL value="@application.css" />
               </stylesheets>
             </Label>
-            <Label id="header_deadline" fx:id="header_expired_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="80.0" text="30" textAlignment="LEFT" textFill="$x8" underline="false">
+            <Label id="header_deadline" fx:id="header_timeless_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="80.0" text="30" textAlignment="LEFT" textFill="$x8" underline="false">
               <stylesheets>
                 <URL value="@application.css" />
               </stylesheets>
             </Label>
-            <Label id="header_timed" fx:id="header_search_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="70.0" text="80" textAlignment="LEFT" textFill="$x8" underline="false">
+            <Label id="header_timed" fx:id="header_expired_count" alignment="CENTER" contentDisplay="TEXT_ONLY" font="$x7" mouseTransparent="true" prefWidth="70.0" text="80" textAlignment="LEFT" textFill="$x8" underline="false">
               <stylesheets>
                 <URL value="@application.css" />
               </stylesheets>
