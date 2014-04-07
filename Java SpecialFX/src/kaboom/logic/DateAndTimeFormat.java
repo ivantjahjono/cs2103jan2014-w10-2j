@@ -94,6 +94,10 @@ public class DateAndTimeFormat {
 	}
 	
 	public String convertStringTimeTo24HourString(String date) {
+		if(date == null) {
+			return null;
+		}
+		
 		// Convert time to 2400hr format
 		int hour = 0;
 		int addedHour = 0;
@@ -132,6 +136,10 @@ public class DateAndTimeFormat {
 	}
 	
 	public String convertStringDateToDayMonthYearFormat(String date) {
+		if (date == null) {
+			return null;
+		}
+		
 		if (date.matches("[a-zA-Z]+")) {
 			date =  convertWordsToDayMonthYearFormat(date);
 		}
@@ -150,7 +158,7 @@ public class DateAndTimeFormat {
 		// TODO Auto-generated method stub
 		switch (date) {
 			case "today":
-				return getDateToday();
+				return getDateToday2();
 		
 			case "tmr":
 			case "tomorrow":
@@ -203,18 +211,26 @@ public class DateAndTimeFormat {
 	}
 	
 	public String dateFromCalendarToString (Calendar cal) {
-		String day = String.format("%02d", cal.get(Calendar.DATE));
-		String month = String.format("%02d", cal.get(Calendar.MONTH)+1);
-		String year = String.format("%02d", cal.get(Calendar.YEAR));
-		String date = day+month+year;
-		return date;
+		String dayFormatString = "ddMMyy";
+		SimpleDateFormat dayFormat = new SimpleDateFormat(dayFormatString);
+		
+		return dayFormat.format(cal.getTime());
+//		String day = String.format("%02d", cal.get(Calendar.DATE));
+//		String month = String.format("%02d", cal.get(Calendar.MONTH)+1);
+//		String year = String.format("%02d", cal.get(Calendar.YEAR));
+//		String date = day+month+year;
+//		return date;
 	}
 	
 	public String timeFromCalendarToString (Calendar cal) {
-		String hour = String.format("%02d", cal.get(Calendar.HOUR_OF_DAY));
-		String min = String.format("%02d", cal.get(Calendar.MINUTE));
-		String time = hour+min;
-		return time;
+		String timeFormatString = "hhmm";
+		SimpleDateFormat dayFormat = new SimpleDateFormat(timeFormatString);
+		
+		return dayFormat.format(cal.getTime());
+//		String hour = String.format("%02d", cal.get(Calendar.HOUR_OF_DAY));
+//		String min = String.format("%02d", cal.get(Calendar.MINUTE));
+//		String time = hour+min;
+//		return time;
 	}
 
 	public Calendar addTimeToCalendar (Calendar dateAndTime, int hour, int min) {
@@ -253,26 +269,6 @@ public class DateAndTimeFormat {
 			return true;
 		}
 		return false;
-	}
-	
-
-	public String getTodayDate () {
-		Calendar todayCal = Calendar.getInstance();
-		String todayString = "";
-		String day = String.format("%02d",todayCal.get(Calendar.DATE));
-		String month = String.format("%02d",todayCal.get(Calendar.MONTH) + 1);
-		String year = Integer.toString(todayCal.get(Calendar.YEAR));
-		todayString = day + month + year;
-		return todayString;
-	}
-	
-	public String getCurrentTime () {
-		Calendar todayCal = Calendar.getInstance();
-		String time = "";
-		String hour = String.format("%02d",todayCal.get(Calendar.HOUR_OF_DAY));
-		String mins = String.format("%02d",todayCal.get(Calendar.MINUTE));
-		time = hour + mins;
-		return time;
 	}
 	
 	public String getNextDay (Calendar cal) {
@@ -386,6 +382,15 @@ public class DateAndTimeFormat {
 		return dayFormat.format(dateTime.getTime());
 	}
 	
+	public String getDateToday2 () {
+		Calendar dateTime = Calendar.getInstance();
+		
+		String dayFormatString = "ddMMyy";
+		SimpleDateFormat dayFormat = new SimpleDateFormat(dayFormatString);
+		
+		return dayFormat.format(dateTime.getTime());
+	}
+	
 	public String getTimeNow () {
 		Calendar dateTime = Calendar.getInstance();
 		
@@ -399,7 +404,7 @@ public class DateAndTimeFormat {
 		Calendar dateTime = Calendar.getInstance();
 		dateTime.add(Calendar.DAY_OF_YEAR, offset);
 		
-		String dayFormatString = "dd MM yy";
+		String dayFormatString = "ddMMyy";
 		SimpleDateFormat dayFormat = new SimpleDateFormat(dayFormatString);
 		
 		return dayFormat.format(dateTime.getTime());
@@ -415,4 +420,5 @@ public class DateAndTimeFormat {
 		}
 		return getDateOffsetFromToday(difference);
 	}
+	
 }

@@ -27,7 +27,6 @@ public class Command {
 	private final String MESSAGE_COMMAND_INVALID = "Invalid command!";
 
 	protected COMMAND_TYPE commandType;
-	protected TaskInfo taskInfo;
 	protected TextParser textParser;
 	protected TaskListShop taskListShop;
 	protected DisplayData displayData;
@@ -35,9 +34,12 @@ public class Command {
 	Hashtable<KEYWORD_TYPE, Object> commandObjectTable;
 	Hashtable<KEYWORD_TYPE, String> infoTable; //TEMP
 
+	protected enum COMMAND_ERROR{
+		NO_TASK_NAME, INVALID_DATE, NIL
+	}
+	
 	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
-		taskInfo = null;
 		textParser = TextParser.getInstance();
 		taskListShop = TaskListShop.getInstance();
 		displayData = DisplayData.getInstance();
@@ -49,16 +51,8 @@ public class Command {
 		commandType = type;
 	}
 
-	public void setTaskInfo (TaskInfo info) {
-		taskInfo = info;
-	}
-
 	public COMMAND_TYPE getCommandType () {
 		return commandType;
-	}
-
-	public TaskInfo getTaskInfo () {
-		return taskInfo;
 	}
 
 	public Result execute() {
@@ -143,16 +137,12 @@ public class Command {
 
 		indexList.add(newIdentity);
 	}
-	
-//	public KEYWORD_LIST getKeywordList () {
-//		return keywordList;
-//	}
 
 	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
-		taskInfo = new TaskInfo();
-		
-		
-		// In progress
+//		taskInfo = new TaskInfo();
+//		
+//		
+//		 //In progress
 //		String stringDate;
 //		String stringTime;
 //		Calendar dateAndTime = null;
@@ -351,6 +341,10 @@ public class Command {
 	
 	protected void addCommandToHistory () {
 		History.getInstance().addToRecentCommands(this);
+	}
+	
+	protected Result clashDetection() {
+		return null;
 	}
 
 }
