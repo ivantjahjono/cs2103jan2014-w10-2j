@@ -17,7 +17,7 @@ import kaboom.logic.TaskMasterKaboom;
 
 public class GraphicInterface extends Application {
 	
-	private final int UPDATE_INTERVAL = 10;
+	private final int UPDATE_INTERVAL = 30;
 	private final int WINDOW_WIDTH = 700;
 	private final int WINDOW_HEIGHT = 700;
 	
