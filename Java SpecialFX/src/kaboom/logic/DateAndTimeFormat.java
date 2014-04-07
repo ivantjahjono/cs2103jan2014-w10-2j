@@ -325,6 +325,9 @@ public class DateAndTimeFormat {
 	
 	public boolean isThisWeek (Calendar dateTime) {
 		Calendar todayDateTime = Calendar.getInstance();
+		todayDateTime.setFirstDayOfWeek(Calendar.MONDAY);
+		dateTime.setFirstDayOfWeek(Calendar.MONDAY);
+		
 		if (isThisYear(dateTime) && todayDateTime.get(Calendar.WEEK_OF_YEAR) == dateTime.get(Calendar.WEEK_OF_YEAR)) {
 			return true;
 		}
@@ -333,6 +336,8 @@ public class DateAndTimeFormat {
 	
 	public boolean isNextWeek (Calendar dateTime) {
 		Calendar todayDateTime = Calendar.getInstance();
+		todayDateTime.setFirstDayOfWeek(Calendar.MONDAY);
+		dateTime.setFirstDayOfWeek(Calendar.MONDAY);
 		
 		int thisWeek = todayDateTime.get(Calendar.WEEK_OF_YEAR);
 		int dateWeek = dateTime.get(Calendar.WEEK_OF_YEAR);
