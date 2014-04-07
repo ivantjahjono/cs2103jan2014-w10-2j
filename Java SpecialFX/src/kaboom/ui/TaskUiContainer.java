@@ -109,7 +109,7 @@ public class TaskUiContainer {
  			backlitBox.getStyleClass().add("taskbox-rectangle");
  		} else if (info.isRecent()) {
  			backlitBox.getStyleClass().add("taskbox-recent-rectangle");
- 			//statusbar.getStyleClass().add("isRecent");
+ 			statusbar.getStyleClass().add("isNotExpired");
  		} else {
  			statusbar.getStyleClass().add("isNotExpired");
  			backlitBox.getStyleClass().add("taskbox-rectangle");
