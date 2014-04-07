@@ -18,7 +18,7 @@ import kaboom.logic.TaskInfo;
 
 
 public class Storage {
-	private static final String delimiter = "~";
+	private static final String delimiter = "\u00b0";
 	private static final int INDEX_TASK_NAME = 0;
 	private static final int INDEX_TASK_TYPE = 1;
 	private static final int INDEX_START_YEAR = 2;
@@ -219,6 +219,8 @@ public class Storage {
 				logger.warning("Cannot read from text file: " + fileName);
 				return false;
 			}
+		} catch (Exception e) {
+			return store();
 		}
 	}
 }

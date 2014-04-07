@@ -16,6 +16,8 @@ public class CommandDone extends Command{
 
 	TaskInfo taskToBeModified;
 	TaskView taskView;
+	
+	TaskInfo taskInfo;
 
 	public CommandDone() {
 		commandType = COMMAND_TYPE.DONE;

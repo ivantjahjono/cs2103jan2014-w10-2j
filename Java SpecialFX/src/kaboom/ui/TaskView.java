@@ -57,7 +57,7 @@ public class TaskView {
 			break;
 
 		default:
-			setCurrentView(taskListShop.getAllCurrentTasks());
+			setCurrentView(taskListShop.getToday());
 			System.out.println("Encountered an invalid view!");
 			break;
 		}

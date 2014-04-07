@@ -16,7 +16,8 @@ public class CommandUndone extends Command{
 
 	TaskInfo taskToBeModified;
 	TaskView taskView;
-
+	TaskInfo taskInfo = null;
+	
 	public CommandUndone() {
 		commandType = COMMAND_TYPE.UNDONE;
 		keywordList = new KEYWORD_TYPE[] {
