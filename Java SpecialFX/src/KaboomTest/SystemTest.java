@@ -31,15 +31,15 @@ public class SystemTest {
 		
 		// Process only whitespaces command
 		command = "      add ";
-		assertEquals("Enter a task name please :'(", controller.processCommand(command));
+		assertEquals("Error! Task cannot be entered without a name Y_Y", controller.processCommand(command));
 		
 		// Add only command
 		command = "add";
-		assertEquals("Enter a task name please :'(", controller.processCommand(command));
+		assertEquals("Error! Task cannot be entered without a name Y_Y", controller.processCommand(command));
 		
 		// Add whitespaces command
 		command = "add     ";
-		assertEquals("Enter a task name please :'(", controller.processCommand(command));
+		assertEquals("Error! Task cannot be entered without a name Y_Y", controller.processCommand(command));
 		
 		// Add whitespaces command
 		command = "add hello";
@@ -85,8 +85,8 @@ public class SystemTest {
 		command = "view expired";
 		assertEquals("Viewing expired tasks", controller.processCommand(command));
 		
-		command = "view search";
-		assertEquals("Viewing search result", controller.processCommand(command));
+		command = "view future";
+		assertEquals("Viewing upcoming tasks", controller.processCommand(command));
 		
 		command = "view archive";
 		assertEquals("Viewing completed tasks", controller.processCommand(command));
