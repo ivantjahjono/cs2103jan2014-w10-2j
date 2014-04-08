@@ -34,10 +34,10 @@ public class CommandSearch extends Command {
 		String searchName = taskInfo.getTaskName().toLowerCase();
 		Calendar searchByDate = taskInfo.getEndDate();
 		Calendar searchOnDate = taskInfo.getStartDate();
-		
+
 		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
 		Vector<TaskInfo> listToSearch;
-		
+
 		if (searchByDate != null || searchOnDate != null) {
 			listToSearch = taskListShop.getAllCurrentTasks();
 		} else {
@@ -57,22 +57,12 @@ public class CommandSearch extends Command {
 			//Search only on a particular day
 			for (int i = 0; i < listToSearch.size(); i++) {
 				TaskInfo singleTask = listToSearch.get(i);
-				Calendar taskStartDate = singleTask.getStartDate();
-				Calendar taskEndDate = singleTask.getEndDate();
-				if (taskStartDate != null) {
-					if (taskStartDate.get(Calendar.DAY_OF_YEAR) == searchOnDate.get(Calendar.DAY_OF_YEAR) &&
-							taskStartDate.get(Calendar.YEAR) == searchOnDate.get(Calendar.YEAR)) {
-						tasksFound.add(singleTask);
-					}
-				} else if(taskEndDate!=null) {
-					if (taskEndDate.get(Calendar.DAY_OF_YEAR) == searchOnDate.get(Calendar.DAY_OF_YEAR) &&
-						taskEndDate.get(Calendar.YEAR) == searchOnDate.get(Calendar.YEAR)) {
-						tasksFound.add(singleTask);
-					}
+				if (isTaskOnDate(singleTask)) {
+					tasksFound.add(singleTask);
 				}
 			}
 		} else if (searchByDate != null) {
-			//Search only on a particular day
+			//Cumulative search to a particular day
 			for (int i = 0; i < listToSearch.size(); i++) {
 				TaskInfo singleTask = listToSearch.get(i);
 				Calendar taskEndDate = singleTask.getEndDate();
@@ -107,5 +97,23 @@ public class CommandSearch extends Command {
 		saveTaskStartDateAndTime(infoHashes,taskInfo);
 		saveTaskEndDateAndTime(infoHashes,taskInfo);
 		saveTaskName(infoHashes,taskInfo);
+	}
+
+	private boolean isTaskOnDate(TaskInfo task) {
+		Calendar taskStartDate = task.getStartDate();
+		Calendar taskEndDate = task.getEndDate();
+		Calendar searchOnDate = taskInfo.getStartDate();
+		if (taskStartDate != null) {
+			if (taskStartDate.get(Calendar.DAY_OF_YEAR) == searchOnDate.get(Calendar.DAY_OF_YEAR) &&
+					taskStartDate.get(Calendar.YEAR) == searchOnDate.get(Calendar.YEAR)) {
+				return true;
+			}
+		} else if(taskEndDate!=null) {
+			if (taskEndDate.get(Calendar.DAY_OF_YEAR) == searchOnDate.get(Calendar.DAY_OF_YEAR) &&
+					taskEndDate.get(Calendar.YEAR) == searchOnDate.get(Calendar.YEAR)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
