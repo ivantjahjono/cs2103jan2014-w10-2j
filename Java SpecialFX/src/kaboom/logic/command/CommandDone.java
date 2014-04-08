@@ -14,7 +14,6 @@ public class CommandDone extends Command{
 	private final String MESSAGE_COMMAND_DONE_AlEADY_COMPLETED = "%1$s was completed";
 
 	TaskInfo taskToBeModified;
-	TaskView taskView;
 
 	public CommandDone() {
 		commandType = COMMAND_TYPE.DONE;
@@ -22,7 +21,6 @@ public class CommandDone extends Command{
 				KEYWORD_TYPE.TASKID,
 				KEYWORD_TYPE.TASKNAME
 		};
-		taskView = TaskView.getInstance();
 	}
 
 	public Result execute() {
