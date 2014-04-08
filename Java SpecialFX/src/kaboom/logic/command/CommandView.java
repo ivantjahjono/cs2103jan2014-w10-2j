@@ -92,8 +92,6 @@ public class CommandView extends Command{
 		}
 	}
 	
-		if (viewType != null) {
-		}
 	public void setDisplayState (DISPLAY_STATE state) {
 		stateToSet = state;
 	}
