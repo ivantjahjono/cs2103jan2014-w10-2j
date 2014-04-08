@@ -382,6 +382,7 @@ public class Command {
 	}
 
 	protected TaskInfo getTaskWithTaskId() {
+		//TODO TASK ID WITH ARCHIVE SUPPORT
 		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
 		if (taskId != null) {
 			int taskIdInteger = Integer.parseInt(taskId);
@@ -394,8 +395,12 @@ public class Command {
 	protected TaskInfo getTaskWithTaskName() {
 		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 		if (taskName != null && !taskName.isEmpty()) {
-			return taskListShop.getTaskByName(taskName);
-		}
+			TaskInfo task = taskListShop.getTaskByName(taskName);
+			if(task == null) {
+				task = taskListShop.getArchivedTaskByName (taskName);
+			}
+			return task;
+		} 
 		return null;
 	}
 	
@@ -409,6 +414,7 @@ public class Command {
 	
 	protected Result callSearch() {
 		Command search = new CommandSearch();
+		//TODO TASK ID WITH ARCHIVE SUPPORT
 		search.storeTaskInfo(infoTable);
 		return search.execute();
 	}
@@ -418,6 +424,13 @@ public class Command {
 		for (int i = 0; i < taskListShop.getAllCurrentTasks().size(); i++) {
 			if (taskListShop.getAllCurrentTasks().get(i).getTaskName().contains(name)) {
 				count++;
+			}
+		}
+		if (count == 0) {
+			for (int i = 0; i < taskListShop.getAllArchivedTasks().size(); i++) {
+				if (taskListShop.getAllArchivedTasks().get(i).getTaskName().contains(name)) {
+					count++;
+				}
 			}
 		}
 		return count;
