@@ -384,10 +384,14 @@ public class Command {
 	protected TaskInfo getTaskWithTaskId() {
 		//TODO TASK ID WITH ARCHIVE SUPPORT
 		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
+		TaskInfo task = null;
 		if (taskId != null) {
 			int taskIdInteger = Integer.parseInt(taskId);
 			int index = taskView.getIndexFromView(taskIdInteger-1);
-			return taskListShop.getTaskByID(index);
+			task = taskListShop.getTaskByID(index);
+			if(task == null) {
+				task = taskListShop.getArchivedTaskByID(index);
+			}
 		}
 		return null;
 	}
