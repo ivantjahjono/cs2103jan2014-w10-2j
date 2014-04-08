@@ -57,10 +57,6 @@ public class CommandSearch extends Command {
 				}
 			}
 		} else if (searchOnDate != null){
-			searchOnDate.set(Calendar.HOUR_OF_DAY, 23);
-			searchOnDate.set(Calendar.MINUTE, 59);
-			searchOnDate.set(Calendar.SECOND, 59);
-
 			//Search only on a particular day
 			for (int i = 0; i < listToSearch.size(); i++) {
 				TaskInfo singleTask = listToSearch.get(i);
@@ -71,32 +67,20 @@ public class CommandSearch extends Command {
 							taskStartDate.get(Calendar.YEAR) == searchOnDate.get(Calendar.YEAR)) {
 						tasksFound.add(singleTask);
 					}
-				}
-				else if (taskEndDate != null) {
-					if (DateAndTimeFormat.getInstance().isFirstDateBeforeSecondDate (taskEndDate, searchDate)) {
+				} else if(taskEndDate!=null) {
+					if (taskEndDate.get(Calendar.DAY_OF_YEAR) == searchOnDate.get(Calendar.DAY_OF_YEAR) &&
+						taskEndDate.get(Calendar.YEAR) == searchOnDate.get(Calendar.YEAR)) {
 						tasksFound.add(singleTask);
 					}
 				}
 			}
 		} else if (searchByDate != null) {
-			searchByDate.set(Calendar.HOUR_OF_DAY, 23);
-			searchByDate.set(Calendar.MINUTE, 59);
-			searchByDate.set(Calendar.SECOND, 59);
-
 			//Search only on a particular day
 			for (int i = 0; i < listToSearch.size(); i++) {
 				TaskInfo singleTask = listToSearch.get(i);
-				Calendar taskStartDate = singleTask.getStartDate();
 				Calendar taskEndDate = singleTask.getEndDate();
-				if (taskStartDate != null) {
-					if (taskStartDate.get(Calendar.DAY_OF_YEAR) == searchByDate.get(Calendar.DAY_OF_YEAR) &&
-							taskStartDate.get(Calendar.YEAR) == searchByDate.get(Calendar.YEAR)) {
-						tasksFound.add(singleTask);
-					}
-				}
-				else if (taskEndDate != null) {
-					if (taskEndDate.get(Calendar.DAY_OF_YEAR) == searchByDate.get(Calendar.DAY_OF_YEAR) &&
-							taskEndDate.get(Calendar.YEAR) == searchByDate.get(Calendar.YEAR)) {
+				if (taskEndDate != null) {
+					if (DateAndTimeFormat.getInstance().isFirstDateBeforeSecondDate (taskEndDate, searchByDate)) {
 						tasksFound.add(singleTask);
 					}
 				}
@@ -120,10 +104,7 @@ public class CommandSearch extends Command {
 		return true;
 	}
 
-	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
-		// TODO HARDCODED !!!
-		infoHashes.put(KEYWORD_TYPE.START_TIME, "0000");
-		
+	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {	
 		taskInfo = new TaskInfo();
 		saveTaskPriority(infoHashes,taskInfo);
 		saveTaskStartDateAndTime(infoHashes,taskInfo);
