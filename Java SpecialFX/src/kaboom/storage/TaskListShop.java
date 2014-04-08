@@ -178,6 +178,7 @@ public class TaskListShop {
 
 	public Vector<TaskInfo> getAllArchivedTasks () {
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(archivedTaskList);
+		Collections.sort(vectorToReturn, new ComparatorDefault());
 		return vectorToReturn;
 	}
 
@@ -227,6 +228,7 @@ public class TaskListShop {
 				returnVector.add(singleTask);
 			}
 		}
+		Collections.sort(returnVector, new ComparatorDefault());
 		return returnVector;
 	}
 
@@ -400,32 +402,6 @@ public class TaskListShop {
 			}
 		}
 		return false;
-	}
-
-	public boolean setDoneByID(int index) {
-		//There might be array out of bounds error here
-		try {
-			TaskInfo singleTask = currentTaskList.get(index);
-			singleTask.setDone(true);
-			refreshTasks();
-			return true;
-		}
-		catch (Exception e) {
-			return false;
-		}
-	}
-
-	public boolean setUndoneByID(int index) {
-		//There might be array out of bounds error here
-		try {
-			TaskInfo singleTask = archivedTaskList.get(index);
-			singleTask.setDone(false);
-			refreshTasks();
-			return true;
-		}
-		catch (Exception e) {
-			return false;
-		}
 	}
 
 	public boolean isTaskToday(TaskInfo task) {
