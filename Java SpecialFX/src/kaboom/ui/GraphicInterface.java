@@ -59,16 +59,6 @@ public class GraphicInterface extends Application {
 		initialiseAndStartUpdateService();
 	}
 
-	private void loadAllFonts() {
-		String resourcesPath = "resources/";
-		
-		String fullFontfilePath;
-		for (int i = 0; i < fontList.length; i++) {
-			fullFontfilePath = resourcesPath + fontList[i];
-			Font.loadFont(GraphicInterface.class.getResource(fullFontfilePath).toExternalForm(), 10);
-		}
-	}
-
 	private void initialiseAndStartUpdateService() {
 		updateTimeline.setCycleCount(Animation.INDEFINITE);
 		updateTimeline.playFrom("end");
