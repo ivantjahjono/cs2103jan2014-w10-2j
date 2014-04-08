@@ -242,6 +242,16 @@ public class TaskListShop {
 		}
 		return returnVector;
 	}
+	
+	public TaskInfo removeTask(TaskInfo taskToDelete) {
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
+			if (singleTask.getTaskName().equals(taskToDelete)) {
+				return currentTaskList.remove(currentTaskList.indexOf(singleTask));
+			}
+		}
+		return null;
+	}
 
 	public TaskInfo removeTaskByName (String taskName) {
 		//Assumes that there is only one task with the samen name
