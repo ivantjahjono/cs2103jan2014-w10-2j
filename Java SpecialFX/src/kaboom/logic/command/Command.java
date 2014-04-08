@@ -16,6 +16,7 @@ import kaboom.logic.TaskInfo;
 import kaboom.logic.TextParser;
 import kaboom.storage.History;
 import kaboom.storage.TaskListShop;
+import kaboom.ui.DISPLAY_STATE;
 import kaboom.ui.DisplayData;
 import kaboom.ui.TaskView;
 
@@ -62,13 +63,17 @@ public class Command {
 	}
 
 	public Result execute() {
-		return createResult(null, MESSAGE_COMMAND_INVALID);
+		return createResult(MESSAGE_COMMAND_INVALID, DISPLAY_STATE.INVALID);
+	}
+	
+	protected Result createResult (String feedback) {
+		return createResult(feedback, DISPLAY_STATE.INVALID);
 	}
 
-	protected Result createResult (Vector<TaskInfo> taskToBeDisplayed, String feedback) {
+	protected Result createResult (String feedback, DISPLAY_STATE displayState) {
 		Result commandResult = new Result();
-		commandResult.setTasksToDisplay(taskToBeDisplayed);
 		commandResult.setFeedback(feedback);
+		commandResult.setDisplayState(displayState);
 
 		return commandResult;
 	}
@@ -363,11 +368,11 @@ public class Command {
 				}
 				else if (taskCount < 1) {
 					feedback = MESSAGE_COMMAND_FAIL_NO_SUCH_TASK;
-					errorFeedback = createResult(taskListShop.getAllCurrentTasks(), feedback);
+					errorFeedback = createResult(feedback);
 				}
 			} else {
 				feedback = MESSAGE_COMMAND_FAIL_NO_TASK_NAME;
-				errorFeedback = createResult(taskListShop.getAllCurrentTasks(), feedback);
+				errorFeedback = createResult(feedback);
 			}
 		}
 		return errorFeedback;
@@ -423,4 +428,19 @@ public class Command {
 		return count;
 	}
 
+	public DISPLAY_STATE getDisplayStateBasedOnTaskType(TASK_TYPE type) {
+		switch (type) {
+			case FLOATING:
+				return DISPLAY_STATE.TIMELESS;
+				
+			case DEADLINE:
+				return DISPLAY_STATE.TODAY;
+			
+			case TIMED:
+				return DISPLAY_STATE.TODAY;
+				
+			default:
+				return DISPLAY_STATE.INVALID;
+		}
+	}
 }
