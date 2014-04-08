@@ -39,6 +39,7 @@ public class CommandDone extends Command{
 			feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
 		} else {
 			taskToBeModified.setDone(true);
+			taskToBeModified.setExpiryFlag(false);
 			taskListShop.refreshTasks();  //Refresh to shift task to archive
 			taskView.deleteInSearchView(taskToBeModified);
 			feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
