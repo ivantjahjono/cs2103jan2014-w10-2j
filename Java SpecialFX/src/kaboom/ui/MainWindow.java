@@ -233,9 +233,14 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			return;
 		}
 		
-		previousLabelIndex = currentLabelIndex;
-		currentLabelIndex = switchIndexResult;
-		switchMainHeaderHighlight(previousLabelIndex, currentLabelIndex);
+		if (switchIndexResult == -1) {
+			previousLabelIndex = currentLabelIndex;
+			setHeaderLabelToNormal(labelList.get(previousLabelIndex));
+		} else {
+			previousLabelIndex = currentLabelIndex;
+			currentLabelIndex = switchIndexResult;
+			switchMainHeaderHighlight(previousLabelIndex, currentLabelIndex);
+		}
 	}
 
 	private void updateDisplay() {
@@ -373,7 +378,8 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				break;
 				
 			default:
-				return;
+				newHeaderIndex = -1;
+				break;
 				
 		}
 		
