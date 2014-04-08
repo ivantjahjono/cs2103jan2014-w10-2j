@@ -39,7 +39,7 @@ public class CommandUndone extends Command{
 			int index = Integer.parseInt(taskName)-1;
 			taskToBeModified = taskListShop.getArchivedTaskByID(index);
 			taskListShop.setUndoneByID(index);
-			taskView.deleteInView(taskToBeModified);
+			taskView.deleteInSearchView(taskToBeModified);
 		}
 
 		else if (taskCount > 1) {
@@ -49,7 +49,7 @@ public class CommandUndone extends Command{
 		} else {
 			taskToBeModified = taskListShop.getTaskByName(taskName);
 			taskListShop.setUndoneByName(taskName);
-			taskView.deleteInView(taskToBeModified);
+			taskView.deleteInSearchView(taskToBeModified);
 		}
 
 		if (taskToBeModified == null) {
@@ -70,8 +70,7 @@ public class CommandUndone extends Command{
 
 	public boolean undo() {
 		taskListShop.setLastToDone();
-		taskView.addToView(taskToBeModified);
-		taskView.doneInView(taskToBeModified);
+		taskView.addToSearchView(taskToBeModified);
 		return true;
 	}
 

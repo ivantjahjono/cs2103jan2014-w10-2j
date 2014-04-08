@@ -100,7 +100,7 @@ public class CommandModify extends Command {
 		modifiedTaskInfo = temp;
 		modifiedTaskInfo.setRecent(true);
 		taskListShop.updateTask(modifiedTaskInfo, preModifiedTaskInfo);
-		taskView.swapView(modifiedTaskInfo, preModifiedTaskInfo);
+		taskView.updateInSearchView(modifiedTaskInfo, preModifiedTaskInfo);
 		
 		feedback = feedbackGenerator();
 		addCommandToHistory ();
@@ -110,7 +110,7 @@ public class CommandModify extends Command {
 	public boolean undo () {
 		System.out.println(preModifiedTaskInfo.getTaskName()+" > "+ modifiedTaskInfo.getTaskName());
 		TaskListShop.getInstance().updateTask(preModifiedTaskInfo, modifiedTaskInfo);
-		taskView.swapView(preModifiedTaskInfo,  modifiedTaskInfo);
+		taskView.updateInSearchView(preModifiedTaskInfo,  modifiedTaskInfo);
 		return true;
 	}
 
