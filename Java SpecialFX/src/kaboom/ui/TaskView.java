@@ -86,6 +86,23 @@ public class TaskView {
 	public int getIndexFromView(int index) {
 		return currentViewID.get(index);
 	}
+	
+	public TaskInfo getTaskFromViewByName(String searchName) {
+		for (int i = 0; i < currentView.size(); i++) {
+			if (currentView.get(i).getTaskName().equals(searchName)) {
+				return currentView.get(i);
+			}
+		}
+		return null;
+	}
+	
+	public TaskInfo getTaskFromViewByID(int index) {
+		if (currentView.size() <= index) {
+			return null;
+		} else {
+			return currentView.get(index);			
+		}
+	}
 
 	public void addToSearchView(TaskInfo task) {
 		searchView.add(task);
