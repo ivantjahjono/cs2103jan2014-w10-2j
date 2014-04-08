@@ -100,9 +100,14 @@ public class CommandView extends Command{
 	
 	private void storeViewVariables() {
 		viewType = infoTable.get(KEYWORD_TYPE.VIEWTYPE);
+		if (viewType == null) {
+			return;
+		}
+		
 		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
 			viewType += infoTable.get(KEYWORD_TYPE.VIEWTYPE);
 		}
+		
 		stateToSet = determineDisplayState(viewType);
 	}
 	
