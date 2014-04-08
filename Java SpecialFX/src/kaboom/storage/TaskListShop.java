@@ -246,7 +246,7 @@ public class TaskListShop {
 	public TaskInfo removeTask(TaskInfo taskToDelete) {
 		for (int i = 0; i < currentTaskList.size(); i++) {
 			TaskInfo singleTask = currentTaskList.get(i);
-			if (singleTask.getTaskName().equals(taskToDelete)) {
+			if (singleTask.equals(taskToDelete)) {
 				return currentTaskList.remove(currentTaskList.indexOf(singleTask));
 			}
 		}
