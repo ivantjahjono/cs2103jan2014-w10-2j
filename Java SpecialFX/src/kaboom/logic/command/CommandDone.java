@@ -40,7 +40,7 @@ public class CommandDone extends Command{
 			feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
 		} else {
 			taskListShop.setDoneByName(taskName);
-			taskView.deleteInView(taskToBeModified);
+			taskView.deleteInSearchView(taskToBeModified);
 			feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
 		}
 		
@@ -51,8 +51,7 @@ public class CommandDone extends Command{
 
 	public boolean undo() {
 		taskListShop.setLastToUndone();
-		taskView.addToView(taskToBeModified);
-		taskView.undoneInView(taskToBeModified);
+		taskView.addToSearchView(taskToBeModified);
 		return true;
 	}
 

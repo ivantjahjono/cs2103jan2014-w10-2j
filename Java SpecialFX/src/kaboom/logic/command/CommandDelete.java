@@ -44,7 +44,7 @@ public class CommandDelete extends Command {
 		}
 		
 		taskListShop.removeTask(taskToBeDeleted);
-		taskView.deleteInView(taskToBeDeleted);
+		taskView.deleteInSearchView(taskToBeDeleted);
 		commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskToBeDeleted.getTaskName());
 		addCommandToHistory ();
 		return createResult(commandFeedback);
@@ -52,7 +52,7 @@ public class CommandDelete extends Command {
 
 	public boolean undo () {
 		if (taskListShop.addTaskToList(taskToBeDeleted)) {
-			taskView.addToView(taskToBeDeleted);
+			taskView.addToSearchView(taskToBeDeleted);
 			return true;
 		}
 		return false;

@@ -43,7 +43,7 @@ public class TaskView {
 		case EXPIRED:
 			setCurrentView(taskListShop.getExpiredTasks());
 			break;
-			
+
 		case FUTURE:
 			setCurrentView(taskListShop.getFutureTasks());
 			break;
@@ -63,7 +63,7 @@ public class TaskView {
 		}
 		return currentView;
 	}
-	
+
 	public Vector<TaskInfo> getCurrentView() {
 		return currentView;
 	}
@@ -81,17 +81,17 @@ public class TaskView {
 		return searchView;
 	}
 
+	//Precondition: The index already has offset applied
+	//i.e. index starts from 0
 	public int getIndexFromView(int index) {
 		return currentViewID.get(index);
 	}
 
-	public void deleteInView(TaskInfo task) {
-		for (int i = 0; i < currentView.size(); i++) {
-			if (currentView.get(i).equals(task)) {
-				currentView.remove(i);
-			}
-		}
+	public void addToSearchView(TaskInfo task) {
+		searchView.add(task);
+	}
 
+	public void deleteInSearchView(TaskInfo task) {
 		for (int i = 0; i < searchView.size(); i++) {
 			if (searchView.get(i).equals(task)) {
 				searchView.remove(i);
@@ -99,45 +99,7 @@ public class TaskView {
 		}
 	}
 
-	public void doneInView(TaskInfo task) {
-		for (int i = 0; i < currentView.size(); i++) {
-			if (currentView.get(i).equals(task) && 
-					displayData.getCurrentDisplayState() != DISPLAY_STATE.ARCHIVE) {
-				currentView.remove(i);
-			}
-		}
-
-		for (int i = 0; i < searchView.size(); i++) {
-			if (searchView.get(i).equals(task)) {
-				searchView.remove(i);
-			}
-		}
-	}
-
-	public void undoneInView(TaskInfo task) {
-		for (int i = 0; i < currentView.size(); i++) {
-			if (currentView.get(i).equals(task) && 
-					displayData.getCurrentDisplayState() == DISPLAY_STATE.ARCHIVE) {
-				currentView.remove(i);
-			}
-		}
-
-		//no support for undone tasks in search yet
-		/*
-		for (int i = 0; i < searchView.size(); i++) {
-			if (searchView.get(i).equals(task)) {
-				searchView.remove(i);
-			}
-		}*/
-	}
-
-	public void addToView(TaskInfo task) {
-		if (displayData.getCurrentDisplayState() == DISPLAY_STATE.SEARCH) {
-			searchView.add(task);
-		}
-	}
-	
-	public void swapView(TaskInfo newTask, TaskInfo oldTask) {
+	public void updateInSearchView(TaskInfo newTask, TaskInfo oldTask) {
 		for (int i = 0; i < searchView.size(); i++) {
 			if (searchView.get(i).equals(oldTask) 
 					&& displayData.getCurrentDisplayState() == DISPLAY_STATE.SEARCH) {
@@ -146,9 +108,8 @@ public class TaskView {
 		}
 	}
 
-	public void setCurrentView(Vector<TaskInfo> taskList) {
+	private void setCurrentView(Vector<TaskInfo> taskList) {
 		currentView = taskList;
 		currentViewID = taskListShop.getCorrespondingID(taskList);
 	}
-
 }

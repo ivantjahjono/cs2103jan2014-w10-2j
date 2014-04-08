@@ -323,32 +323,6 @@ public class Command {
 		} 
 	}
 	
-	public int getNumberOfTasksWithName (String name) {
-		int count = 0;
-		Vector<TaskInfo> taskList = taskListShop.getAllCurrentTasks();
-		for (int i = 0; i < taskList.size(); i++) {
-			if (taskList.get(i).getTaskName().equals(name)) {
-				count++;
-			}
-		}
-		return count;
-	}
-	
-	protected boolean hasMultipleTaskOfSimilarName(String name) {
-		//id and name
-		int count = 0;
-		count += getNumberOfTasksWithName(name);
-		if(name.matches("\\d+")) {
-			if(Integer.parseInt(name) < taskListShop.shopSize()) {
-				count++;
-			}
-		}
-		if(count > 1) {
-			return true;
-		}
-		return false;
-	}
-	
 	public KEYWORD_TYPE[] getKeywordList() {
 		return keywordList;
 	}
@@ -384,7 +358,7 @@ public class Command {
 			}
 		}
 		return errorFeedback;
-	}	
+	}
 	
 	protected boolean hasTaskWithTaskId() {
 		TaskInfo task = getTaskWithTaskId();
@@ -428,8 +402,9 @@ public class Command {
 	
 	protected int numOfTasksWithSimilarNames(String name) {
 		int count = 0;
-		for (int i = 0; i < taskListShop.getAllCurrentTasks().size(); i++) {
-			if (taskListShop.getAllCurrentTasks().get(i).getTaskName().contains(name)) {
+		Vector<TaskInfo> currentView = taskView.getCurrentView();
+		for (int i = 0; i < currentView.size(); i++) {
+			if (currentView.get(i).getTaskName().toLowerCase().contains(name.toLowerCase())) {
 				count++;
 			}
 		}
