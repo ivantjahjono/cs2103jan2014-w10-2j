@@ -21,7 +21,7 @@ public class CommandSearch extends Command {
 	public CommandSearch () {
 		commandType = COMMAND_TYPE.SEARCH;
 		keywordList = new KEYWORD_TYPE[] {
-				KEYWORD_TYPE.END_DATE,
+				KEYWORD_TYPE.DATE,
 				KEYWORD_TYPE.END_TIME,
 				KEYWORD_TYPE.TASKNAME
 		};
@@ -44,7 +44,8 @@ public class CommandSearch extends Command {
 		}
 
 		String searchName = taskInfo.getTaskName().toLowerCase();
-		Calendar searchDate = taskInfo.getEndDate();
+		Calendar searchByDate = taskInfo.getEndDate();
+		Calendar searchOnDate = taskInfo.getStartDate();
 
 		if (!searchName.equals("")) {
 			for (int i = 0; i < listToSearch.size(); i++) {
@@ -55,10 +56,10 @@ public class CommandSearch extends Command {
 					}
 				}
 			}
-		} else if (searchDate != null){
-			searchDate.set(Calendar.HOUR_OF_DAY, 23);
-			searchDate.set(Calendar.MINUTE, 59);
-			searchDate.set(Calendar.SECOND, 59);
+		} else if (searchOnDate != null){
+			searchOnDate.set(Calendar.HOUR_OF_DAY, 23);
+			searchOnDate.set(Calendar.MINUTE, 59);
+			searchOnDate.set(Calendar.SECOND, 59);
 
 			//Search only on a particular day
 			for (int i = 0; i < listToSearch.size(); i++) {
@@ -66,14 +67,37 @@ public class CommandSearch extends Command {
 				Calendar taskStartDate = singleTask.getStartDate();
 				Calendar taskEndDate = singleTask.getEndDate();
 				if (taskStartDate != null) {
-					if (taskStartDate.get(Calendar.DAY_OF_YEAR) == searchDate.get(Calendar.DAY_OF_YEAR) &&
-							taskStartDate.get(Calendar.YEAR) == searchDate.get(Calendar.YEAR)) {
+					if (taskStartDate.get(Calendar.DAY_OF_YEAR) == searchOnDate.get(Calendar.DAY_OF_YEAR) &&
+							taskStartDate.get(Calendar.YEAR) == searchOnDate.get(Calendar.YEAR)) {
 						tasksFound.add(singleTask);
 					}
 				}
 				else if (taskEndDate != null) {
-					if (taskEndDate.get(Calendar.DAY_OF_YEAR) == searchDate.get(Calendar.DAY_OF_YEAR) &&
-							taskEndDate.get(Calendar.YEAR) == searchDate.get(Calendar.YEAR)) {
+					if (taskEndDate.get(Calendar.DAY_OF_YEAR) == searchOnDate.get(Calendar.DAY_OF_YEAR) &&
+							taskEndDate.get(Calendar.YEAR) == searchOnDate.get(Calendar.YEAR)) {
+						tasksFound.add(singleTask);
+					}
+				}
+			}
+		} else if (searchByDate != null) {
+			searchByDate.set(Calendar.HOUR_OF_DAY, 23);
+			searchByDate.set(Calendar.MINUTE, 59);
+			searchByDate.set(Calendar.SECOND, 59);
+
+			//Search only on a particular day
+			for (int i = 0; i < listToSearch.size(); i++) {
+				TaskInfo singleTask = listToSearch.get(i);
+				Calendar taskStartDate = singleTask.getStartDate();
+				Calendar taskEndDate = singleTask.getEndDate();
+				if (taskStartDate != null) {
+					if (taskStartDate.get(Calendar.DAY_OF_YEAR) == searchByDate.get(Calendar.DAY_OF_YEAR) &&
+							taskStartDate.get(Calendar.YEAR) == searchByDate.get(Calendar.YEAR)) {
+						tasksFound.add(singleTask);
+					}
+				}
+				else if (taskEndDate != null) {
+					if (taskEndDate.get(Calendar.DAY_OF_YEAR) == searchByDate.get(Calendar.DAY_OF_YEAR) &&
+							taskEndDate.get(Calendar.YEAR) == searchByDate.get(Calendar.YEAR)) {
 						tasksFound.add(singleTask);
 					}
 				}
@@ -85,7 +109,6 @@ public class CommandSearch extends Command {
 
 		return createResult(commandFeedback, DISPLAY_STATE.SEARCH); 
 	}
-
 
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
@@ -99,6 +122,9 @@ public class CommandSearch extends Command {
 	}
 
 	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
+		// TODO HARDCODED !!!
+		infoHashes.put(KEYWORD_TYPE.START_TIME, "0000");
+		
 		taskInfo = new TaskInfo();
 		saveTaskPriority(infoHashes,taskInfo);
 		saveTaskStartDateAndTime(infoHashes,taskInfo);
