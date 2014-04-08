@@ -79,60 +79,30 @@ public class TaskListShop {
 	}
 
 	public Vector<TaskInfo> getToday() {
-		Vector<TaskInfo> tasks = new Vector<TaskInfo>();
-		Calendar today = Calendar.getInstance();
+		Vector<TaskInfo> tasksToReturn = new Vector<TaskInfo>();
 
 		for (int i = 0; i < currentTaskList.size(); i++) {
 			TaskInfo singleTask = currentTaskList.get(i);
-			Calendar taskStartDate = singleTask.getStartDate();
-			Calendar taskEndDate = singleTask.getEndDate();
-
-			//Do not get floating tasks
-			if (singleTask.getTaskType() != TASK_TYPE.FLOATING) {
-				if ((taskStartDate != null && taskStartDate.before(today)) 
-						&& (taskEndDate != null && taskEndDate.after(today))) {
-					tasks.add(singleTask);  //Add if task starts before and ends after current day
-				}
-				else if (taskStartDate != null && 
-						taskStartDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) &&
-						taskStartDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
-					tasks.add(singleTask);  //Add if task starts on the current day
-				}
-				else if (taskEndDate != null &&
-						taskEndDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) &&
-						taskEndDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
-					tasks.add(singleTask);  //Add if task ends on the current day
-				}
+			if (isTaskToday(singleTask)) {
+				tasksToReturn.add(singleTask);
 			}
 		}
-		Collections.sort(tasks, new ComparatorDefault());
-		return tasks;
+		Collections.sort(tasksToReturn, new ComparatorDefault());
+		return tasksToReturn;
 	}
 
 	public Vector<TaskInfo> getFutureTasks() {
-		Vector<TaskInfo> tasks = new Vector<TaskInfo>();
-		Calendar today = Calendar.getInstance();
-		today.set(Calendar.HOUR_OF_DAY, 23);
-		today.set(Calendar.MINUTE, 59);
-		today.set(Calendar.SECOND, 59);
+		Vector<TaskInfo> tasksToReturn = new Vector<TaskInfo>();
+		
 
 		for (int i = 0; i < currentTaskList.size(); i++) {
 			TaskInfo singleTask = currentTaskList.get(i);
-			Calendar taskStartDate = singleTask.getStartDate();
-			Calendar taskEndDate = singleTask.getEndDate();
-
-			//Do not get floating tasks
-			if (singleTask.getTaskType() != TASK_TYPE.FLOATING) {
-				if (taskStartDate != null && taskStartDate.after(today)) {
-					tasks.add(singleTask);
-				}
-				else if (taskEndDate != null && taskEndDate.after(today)) {
-					tasks.add(singleTask);
-				}
+			if (isFutureTask(singleTask)) {
+				tasksToReturn.add(singleTask);
 			}
 		}
-		Collections.sort(tasks, new ComparatorDefault());
-		return tasks;
+		Collections.sort(tasksToReturn, new ComparatorDefault());
+		return tasksToReturn;
 	}
 
 	public Vector<TaskInfo> getAllCurrentTasks () {
@@ -183,7 +153,7 @@ public class TaskListShop {
 		Collections.sort(returnVector, new ComparatorDefault());
 		return returnVector;
 	}
-	
+
 	public TaskInfo removeTask(TaskInfo taskToDelete) {
 		for (int i = 0; i < currentTaskList.size(); i++) {
 			TaskInfo singleTask = currentTaskList.get(i);
@@ -256,7 +226,7 @@ public class TaskListShop {
 		logger.fine("All tasks cleared");
 		return vectorToReturn;
 	}
-	
+
 	public Vector<TaskInfo> clearAllArchivedTasks () {
 		archivedTaskList = new Vector<TaskInfo>();
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(archivedTaskList);
@@ -313,6 +283,28 @@ public class TaskListShop {
 				return true;
 			}
 		}
+		return false;
+	}
+	
+	public boolean isFutureTask(TaskInfo task) {
+		Calendar today = Calendar.getInstance();
+		today.set(Calendar.HOUR_OF_DAY, 23);
+		today.set(Calendar.MINUTE, 59);
+		today.set(Calendar.SECOND, 59);
+		
+		Calendar taskStartDate = task.getStartDate();
+		Calendar taskEndDate = task.getEndDate();
+
+		//Do not get floating tasks
+		if (task.getTaskType() != TASK_TYPE.FLOATING) {
+			if (taskStartDate != null && taskStartDate.after(today)) {
+				return true;
+			}
+			else if (taskEndDate != null && taskEndDate.after(today)) {
+				return true;
+			}
+		}
+		
 		return false;
 	}
 
