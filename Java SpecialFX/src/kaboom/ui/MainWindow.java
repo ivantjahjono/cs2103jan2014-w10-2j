@@ -329,6 +329,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				case VIEWTYPE:
 				case MODIFIED_TASKNAME:
 				case DATE:
+				case CLEARTYPE:
 					newLabel.getStyleClass().add("parseCommandName");
 					break;
 					
