@@ -23,18 +23,18 @@ public class CommandUndo extends Command{
 		
 		if (commandToUndo == null) {
 			feedback = MESSAGE_COMMAND_NOTHING_TO_UNDO;
-			return createResult(taskListShop.getAllCurrentTasks(),feedback);
+			return createResult(feedback);
 		}
 		
 		boolean isUndoSuccessful = commandToUndo.undo();
 		
 		if (isUndoSuccessful) {
 			feedback = MESSAGE_COMMAND_UNDO_SUCCESS;
-			return createResult(taskListShop.getAllCurrentTasks(),feedback);
+			return createResult(feedback);
 		}
 		
 		feedback = MESSAGE_COMMAND_UNDO_FAIL;
-		return createResult(taskListShop.getAllCurrentTasks(),feedback);
+		return createResult(feedback);
 	}
 	
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {

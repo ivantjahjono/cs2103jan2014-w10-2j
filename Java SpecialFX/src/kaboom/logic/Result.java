@@ -24,7 +24,7 @@ public class Result {
 		feedback = "";
 		isGoToNextPage = false;
 		isGoToPreviousPage = false;
-		stateToChangeTo = null;
+		stateToChangeTo = DISPLAY_STATE.INVALID;
 	}
 	
 	public void setTasksToDisplay (Vector<TaskInfo> taskList) {

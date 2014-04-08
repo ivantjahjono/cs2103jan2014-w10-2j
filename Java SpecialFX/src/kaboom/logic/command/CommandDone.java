@@ -35,21 +35,18 @@ public class CommandDone extends Command{
 		
 		String feedback = MESSAGE_COMMAND_INVALID;
 		String taskName = taskToBeModified.getTaskName();
-		Result executionResult = createResult(taskListShop.getAllCurrentTasks(), feedback);
 		
 		if (taskToBeModified.getDone()) {
 			feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
-			executionResult = createResult(taskListShop.getAllCurrentTasks(), feedback);
 		} else {
 			taskListShop.setDoneByName(taskName);
 			taskView.deleteInView(taskToBeModified);
 			feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
-			executionResult = createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
-
+		
 		taskToBeModified.setRecent(true);
 		addCommandToHistory ();
-		return executionResult;
+		return createResult(feedback);
 	}
 
 	public boolean undo() {
