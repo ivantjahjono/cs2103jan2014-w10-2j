@@ -4,11 +4,11 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import kaboom.logic.DateAndTimeFormat;
 import kaboom.logic.FormatIdentify;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.KEYWORD_TYPE;
-
 import kaboom.ui.DISPLAY_STATE;
 import kaboom.ui.DisplayData;
 
@@ -56,9 +56,9 @@ public class CommandSearch extends Command {
 				}
 			}
 		} else if (searchDate != null){
-			searchDate.set(Calendar.HOUR_OF_DAY, 23);
-			searchDate.set(Calendar.MINUTE, 59);
-			searchDate.set(Calendar.SECOND, 59);
+//			searchDate.set(Calendar.HOUR_OF_DAY, 00);
+//			searchDate.set(Calendar.MINUTE, 0);
+//			searchDate.set(Calendar.SECOND, 0);
 
 			//Search only on a particular day
 			for (int i = 0; i < listToSearch.size(); i++) {
@@ -72,8 +72,7 @@ public class CommandSearch extends Command {
 					}
 				}
 				else if (taskEndDate != null) {
-					if (taskEndDate.get(Calendar.DAY_OF_YEAR) == searchDate.get(Calendar.DAY_OF_YEAR) &&
-							taskEndDate.get(Calendar.YEAR) == searchDate.get(Calendar.YEAR)) {
+					if (DateAndTimeFormat.getInstance().isFirstDateBeforeSecondDate (taskEndDate, searchDate)) {
 						tasksFound.add(singleTask);
 					}
 				}

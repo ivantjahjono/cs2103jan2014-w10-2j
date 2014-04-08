@@ -39,6 +39,9 @@ public class CommandView extends Command{
 	public Result execute() {
 		assert taskListShop != null;
 		
+		//store info
+		storeViewVariables();
+		
 		String feedback = "";
 		Result commandResult = createResult(feedback);
 		
@@ -89,22 +92,20 @@ public class CommandView extends Command{
 		}
 	}
 	
-	public void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
-		viewType = infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
-		
-		if (infoHashes.containsKey(KEYWORD_TYPE.INVALID)) {
-			viewType += infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
-		}
-
-		stateToSet = determineDisplayState(viewType);
-	}
-	
 	public void setDisplayState (DISPLAY_STATE state) {
 		stateToSet = state;
 	}
 	
 	public DISPLAY_STATE getDisplayState () {
 		return stateToSet;
+	}
+	
+	private void storeViewVariables() {
+		viewType = infoTable.get(KEYWORD_TYPE.VIEWTYPE);
+		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			viewType += infoTable.get(KEYWORD_TYPE.VIEWTYPE);
+		}
+		stateToSet = determineDisplayState(viewType);
 	}
 	
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
