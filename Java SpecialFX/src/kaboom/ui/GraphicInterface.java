@@ -22,14 +22,6 @@ public class GraphicInterface extends Application {
 	private final int WINDOW_WIDTH = 700;
 	private final int WINDOW_HEIGHT = 700;
 	
-	private final String [] fontList = { "SEGOEUI.TTF", "SEGOEUIB.TTF", "SEGOEUII.TTF", "SEGOEUIL.TTF",
-										 "SEGOEUIMONO-BOLD.TTF", "SEGOEUIMONO-REGULAR.TTF",
-										 "SEGOEUISL.TTF", "SEGOEUIZ.TTF", 
-										 "SEGUIBL.TTF", "SEGUIBLI.TTF",
-										 "SEGUILI.TTF",
-										 "SEGUISB.TTF", "SEGUISBI.TTF",
-										 "SEGUISLI.TTF" };
-	
 	Parent root;
 	MainWindow mainWindow;
 	
@@ -41,9 +33,6 @@ public class GraphicInterface extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
-		// Load in all the fonts used
-		//loadAllFonts();
-		
 		FXMLLoader loader = null;
 		try {
 			loader = new FXMLLoader(getClass().getResource("TaskMasterKaboomUiUpgrade.fxml"));
