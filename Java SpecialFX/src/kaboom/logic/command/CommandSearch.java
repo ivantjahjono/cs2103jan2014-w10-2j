@@ -48,9 +48,7 @@ public class CommandSearch extends Command {
 			for (int i = 0; i < listToSearch.size(); i++) {
 				TaskInfo singleTask = listToSearch.get(i);
 				if (singleTask.getTaskName().toLowerCase().contains(searchName)) {
-					if (!singleTask.getExpiryFlag()) {
-						tasksFound.add(singleTask);  //Expired tasks are not considered
-					}
+					tasksFound.add(singleTask);
 				}
 			}
 		} else if (searchOnDate != null){
