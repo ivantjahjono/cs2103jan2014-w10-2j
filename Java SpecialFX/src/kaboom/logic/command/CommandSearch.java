@@ -31,7 +31,7 @@ public class CommandSearch extends Command {
 
 		assert taskInfo != null;
 		assert taskListShop != null;
-
+		
 		DISPLAY_STATE currentDisplayState = DisplayData.getInstance().getCurrentDisplayState();
 		Vector<TaskInfo> listToSearch;
 		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
