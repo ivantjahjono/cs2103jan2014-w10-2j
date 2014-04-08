@@ -81,7 +81,6 @@ public class CommandSearch extends Command {
 		}
 
 		commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
-		commandResult.setDisplayState(DISPLAY_STATE.SEARCH);
 		taskView.setSearchView(tasksFound);
 
 		return createResult(commandFeedback, DISPLAY_STATE.SEARCH); 
