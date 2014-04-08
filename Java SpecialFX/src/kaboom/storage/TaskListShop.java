@@ -242,6 +242,16 @@ public class TaskListShop {
 		}
 		return returnVector;
 	}
+	
+	public TaskInfo removeTask(TaskInfo taskToDelete) {
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
+			if (singleTask.getTaskName().equals(taskToDelete)) {
+				return currentTaskList.remove(currentTaskList.indexOf(singleTask));
+			}
+		}
+		return null;
+	}
 
 	public TaskInfo removeTaskByName (String taskName) {
 		//Assumes that there is only one task with the samen name
@@ -302,7 +312,7 @@ public class TaskListShop {
 				currentTaskList.remove(singleTask);
 			}
 		}
-		
+
 		Collections.sort(currentTaskList, new ComparatorDefault());
 	}
 
@@ -310,6 +320,13 @@ public class TaskListShop {
 		currentTaskList = new Vector<TaskInfo>();
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(currentTaskList);
 		logger.fine("All tasks cleared");
+		return vectorToReturn;
+	}
+	
+	public Vector<TaskInfo> clearAllArchivedTasks () {
+		archivedTaskList = new Vector<TaskInfo>();
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(archivedTaskList);
+		logger.fine("All archive tasks cleared");
 		return vectorToReturn;
 	}
 
@@ -409,6 +426,32 @@ public class TaskListShop {
 		catch (Exception e) {
 			return false;
 		}
+	}
+
+	public boolean isTaskToday(TaskInfo task) {
+		Calendar today = Calendar.getInstance();
+
+		Calendar taskStartDate = task.getStartDate();
+		Calendar taskEndDate = task.getEndDate();
+
+		//Do not get floating tasks
+		if (task.getTaskType() != TASK_TYPE.FLOATING) {
+			if ((taskStartDate != null && taskStartDate.before(today)) 
+					&& (taskEndDate != null && taskEndDate.after(today))) {
+				return true;
+			}
+			else if (taskStartDate != null && 
+					taskStartDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) &&
+					taskStartDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
+				return true;
+			}
+			else if (taskEndDate != null &&
+					taskEndDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) &&
+					taskEndDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public int shopSize () {

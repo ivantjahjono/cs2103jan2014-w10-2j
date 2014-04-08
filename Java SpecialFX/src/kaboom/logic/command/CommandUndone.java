@@ -54,18 +54,18 @@ public class CommandUndone extends Command{
 
 		if (taskToBeModified == null) {
 			feedback = String.format(MESSAGE_COMMAND_UNDONE_FAIL, taskName);
-			return createResult(taskListShop.getAllCurrentTasks(), feedback);
+			return createResult(feedback);
 		}
 
 		if (taskToBeModified.getDone()) {
 			feedback = String.format(MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE, taskName);
-			return createResult(taskListShop.getAllCurrentTasks(), feedback);
+			return createResult(feedback);
 		}
 
 		taskToBeModified.setRecent(true);
 		feedback = String.format(MESSAGE_COMMAND_UNDONE_SUCCESS, taskName);
 		addCommandToHistory();
-		return createResult(taskListShop.getAllCurrentTasks(), feedback);
+		return createResult(feedback);
 	}
 
 	public boolean undo() {

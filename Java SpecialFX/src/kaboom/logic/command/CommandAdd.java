@@ -10,6 +10,7 @@ import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TASK_TYPE;
 import kaboom.logic.TaskInfo;
+import kaboom.ui.DISPLAY_STATE;
 
 
 
@@ -56,7 +57,7 @@ public class CommandAdd extends Command {
 		
 		commandFeedback = saveTaskNameAndGetErrorMessage();
 		if(!commandFeedback.isEmpty()) {
-			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+			return createResult(commandFeedback);
 		}
 
 		saveTaskPriority();
@@ -79,13 +80,13 @@ public class CommandAdd extends Command {
 		COMMAND_ERROR commandError = modifyDateAndTime(taskInfo);
 		if(commandError != COMMAND_ERROR.NIL) {
 			commandFeedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
-			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+			return createResult(commandFeedback);
 		}
 		
 		commandError = validateStartAndEndTime (taskInfo);
 		if(commandError != COMMAND_ERROR.NIL) {
 			commandFeedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
-			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+			return createResult(commandFeedback);
 		}
 		
 		//check wad type of task
@@ -94,14 +95,17 @@ public class CommandAdd extends Command {
 		
 		taskInfo.setRecent(true);
 		
+		DISPLAY_STATE stateToSet = DISPLAY_STATE.INVALID;
 		if (taskListShop.addTaskToList(taskInfo)) {
 			addCommandToHistory ();
 			commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
+			
+			stateToSet = getDisplayStateBasedOnTaskType(taskInfo.getTaskType());
 		} else {
 			commandFeedback = String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
 		}
 		
-		return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+		return createResult(commandFeedback, stateToSet);
 	}
 
 	public boolean undo () {

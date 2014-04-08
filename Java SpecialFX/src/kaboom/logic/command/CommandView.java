@@ -40,8 +40,7 @@ public class CommandView extends Command{
 		assert taskListShop != null;
 		
 		String feedback = "";
-		Vector<TaskInfo> taskList = null;
-		Result commandResult = createResult(taskList, feedback);
+		Result commandResult = createResult(feedback);
 		
 		if(viewType == null) {
 			viewType = "Nothing to view";
@@ -49,33 +48,25 @@ public class CommandView extends Command{
 		
 		switch(stateToSet) {
 			case TODAY:
-				taskList = taskListShop.getAllCurrentTasks();
 				feedback = MESSAGE_VIEW_TODAY;
 				break;
 			case FUTURE:
-				taskList = new Vector<TaskInfo>();
 				feedback = MESSAGE_VIEW_FUTURE;
 				break;
 			case TIMELESS:
-				taskList = taskListShop.getFloatingTasks();
 				feedback = MESSAGE_VIEW_TIMELESS;
 				break;
 			case EXPIRED:
-				taskList = taskListShop.getDeadlineTasks();
 				feedback = MESSAGE_VIEW_EXPIRED;
 				break;
 			case ARCHIVE:
-				taskList = taskListShop.getAllArchivedTasks();
 				feedback = MESSAGE_VIEW_ARCHIVE;
 				break;
 			default:
-				taskList = new Vector<TaskInfo>();
 				feedback = MESSAGE_VIEW_INVALID;
 		}
 		
-		TaskView.getInstance().setCurrentView(taskList);
 		commandResult.setDisplayState(stateToSet);
-		commandResult.setTasksToDisplay(taskList);
 		commandResult.setFeedback(feedback);
 		History.getInstance().setCurrentViewCommand(this);
 		return commandResult;

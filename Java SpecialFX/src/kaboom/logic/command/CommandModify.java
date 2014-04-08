@@ -70,7 +70,7 @@ public class CommandModify extends Command {
 		assert infoTable != null;
 
 		if(infoTable == null) {
-			return createResult(taskListShop.getAllCurrentTasks(), "No TaskInfoTable");
+			return createResult("No TaskInfoTable");
 		}
 		
 		Result errorResult = taskDetectionWithErrorFeedback();
@@ -88,12 +88,12 @@ public class CommandModify extends Command {
 		COMMAND_ERROR commandError = modifyDateAndTime(temp);
 		if(commandError == COMMAND_ERROR.INVALID_DATE) {
 			feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
-			return createResult(taskListShop.getAllCurrentTasks(), feedback);
+			return createResult(feedback);
 		}
 		commandError = validateStartAndEndTime (temp);
 		if(commandError == COMMAND_ERROR.INVALID_DATE) {
 			feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
-			return createResult(taskListShop.getAllCurrentTasks(), feedback);
+			return createResult(feedback);
 		}
 		setTaskType(temp);
 		//store and update in memory
@@ -101,11 +101,10 @@ public class CommandModify extends Command {
 		modifiedTaskInfo.setRecent(true);
 		taskListShop.updateTask(modifiedTaskInfo, preModifiedTaskInfo);
 		taskView.swapView(modifiedTaskInfo, preModifiedTaskInfo);
-
-
+		
 		feedback = feedbackGenerator();
 		addCommandToHistory ();
-		return createResult(taskListShop.getAllCurrentTasks(), feedback);
+		return createResult(feedback);
 	}
 
 	public boolean undo () {
