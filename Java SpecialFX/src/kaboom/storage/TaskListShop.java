@@ -75,7 +75,11 @@ public class TaskListShop {
 	}
 
 	public TaskInfo getTaskByID(int index) {
-		return currentTaskList.get(index);
+		if(currentTaskList.size() <= index) {
+			return null;
+		} else {
+			return currentTaskList.get(index);			
+		}
 	}
 
 	public TaskInfo getArchivedTaskByID(int index) {
@@ -333,16 +337,6 @@ public class TaskListShop {
 		else {
 			Collections.sort(currentTaskList, new ComparatorDefault());
 		}
-	}
-
-	public int numOfTasksWithSimilarNames(String name) {
-		int count = 0;
-		for (int i = 0; i < currentTaskList.size(); i++) {
-			if (currentTaskList.get(i).getTaskName().contains(name)) {
-				count++;
-			}
-		}
-		return count;
 	}
 
 	public int numOfArchivedTasksWithSimilarNames(String name) {

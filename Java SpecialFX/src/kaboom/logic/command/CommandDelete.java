@@ -17,7 +17,7 @@ public class CommandDelete extends Command {
 	private final String MESSAGE_COMMAND_DELETE_INVALID = "Enter a taskname or task id, please ?";
 	private final String MESSAGE_COMMAND_DELETE_NO_SUCH_TASK = "<%1$s> does not exist...";
 
-	TaskInfo prevTask;
+	TaskInfo taskToBeDeleted;
 	TaskView taskView;
 
 	public CommandDelete () {
@@ -33,47 +33,25 @@ public class CommandDelete extends Command {
 		assert taskListShop != null;
 		
 		//set task id;
-		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
-		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 		String commandFeedback = "";
 
-		//get tasktodelete
-		if (taskId != null) {
-			int taskIdInteger = Integer.parseInt(taskId);
-			if (taskView.getCurrentViewID().size() >= taskIdInteger) {
-				int index = taskView.getIndexFromView(taskIdInteger-1);
-				prevTask = taskListShop.getTaskByID(index);
-			}
-		} else if (taskName != null){
-			//detect clash
-			int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
-			if (taskCount > 1) {
-				Command search = new CommandSearch();
-				search.storeTaskInfo(infoTable);
-				return search.execute();
-			}
-			else if (taskCount == 1) {
-				prevTask = taskListShop.getTaskByName(taskName);
-			}
-			else {
-				commandFeedback = MESSAGE_COMMAND_DELETE_NO_SUCH_TASK;
-				return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
-			}
+		Result errorResult = taskDetectionWithErrorFeedback();
+		if(errorResult != null) {
+			return errorResult;
 		} else {
-			commandFeedback = MESSAGE_COMMAND_DELETE_INVALID;
-			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+			taskToBeDeleted = getTask();
 		}
 		
-		taskListShop.removeTaskByName(prevTask.getTaskName());
-		taskView.deleteInView(prevTask);
-		commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, prevTask.getTaskName());
+		taskListShop.removeTaskByName(taskToBeDeleted.getTaskName());
+		taskView.deleteInView(taskToBeDeleted);
+		commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskToBeDeleted.getTaskName());
 		addCommandToHistory ();
 		return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
 	}
 
 	public boolean undo () {
-		if (taskListShop.addTaskToList(prevTask)) {
-			taskView.addToView(prevTask);
+		if (taskListShop.addTaskToList(taskToBeDeleted)) {
+			taskView.addToView(taskToBeDeleted);
 			return true;
 		}
 		return false;

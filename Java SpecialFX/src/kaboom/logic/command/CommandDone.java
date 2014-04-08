@@ -30,9 +30,9 @@ public class CommandDone extends Command{
 		
 		String feedback = "";
 		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
-		//get id
+		
 
-		int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
+		int taskCount = numOfTasksWithSimilarNames(taskName);
 
 		if (isNumeric(taskName)) {
 			int index = taskView.getIndexFromView(Integer.parseInt(taskName)-1);
