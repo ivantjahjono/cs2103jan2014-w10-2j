@@ -10,7 +10,6 @@ import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.ui.DISPLAY_STATE;
-import kaboom.ui.DisplayData;
 
 public class CommandSearch extends Command {
 
@@ -32,16 +31,9 @@ public class CommandSearch extends Command {
 		assert taskInfo != null;
 		assert taskListShop != null;
 		
-		DISPLAY_STATE currentDisplayState = DisplayData.getInstance().getCurrentDisplayState();
-		Vector<TaskInfo> listToSearch;
+		Vector<TaskInfo> listToSearch = taskView.getCurrentView();
 		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
-		String commandFeedback;
 
-		if (currentDisplayState == DISPLAY_STATE.ARCHIVE) {
-			listToSearch = taskListShop.getAllArchivedTasks();
-		} else {
-			listToSearch = taskListShop.getAllCurrentTasks();
-		}
 
 		String searchName = taskInfo.getTaskName().toLowerCase();
 		Calendar searchByDate = taskInfo.getEndDate();
@@ -80,14 +72,14 @@ public class CommandSearch extends Command {
 				TaskInfo singleTask = listToSearch.get(i);
 				Calendar taskEndDate = singleTask.getEndDate();
 				if (taskEndDate != null) {
-					if (DateAndTimeFormat.getInstance().isFirstDateBeforeSecondDate (taskEndDate, searchByDate)) {
+					if (DateAndTimeFormat.getInstance().isFirstDateBeforeSecondDate(taskEndDate, searchByDate)) {
 						tasksFound.add(singleTask);
 					}
 				}
 			}
 		}
 
-		commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
+		String commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
 		taskView.setSearchView(tasksFound);
 
 		return createResult(commandFeedback, DISPLAY_STATE.SEARCH); 
