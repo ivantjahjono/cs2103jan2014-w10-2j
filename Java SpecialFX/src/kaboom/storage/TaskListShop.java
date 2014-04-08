@@ -203,7 +203,7 @@ public class TaskListShop {
 			Calendar now = Calendar.getInstance();
 
 			if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
-				if (now.after(singleTask.getEndDate())) {
+				if (now.after(singleTask.getEndDate()) && !singleTask.getDone()) {
 					singleTask.setExpiryFlag(true);
 				} else {
 					singleTask.setExpiryFlag(false);
