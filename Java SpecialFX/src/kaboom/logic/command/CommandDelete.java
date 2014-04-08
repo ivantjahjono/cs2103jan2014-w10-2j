@@ -7,6 +7,7 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
+import kaboom.ui.DISPLAY_STATE;
 import kaboom.ui.TaskView;
 
 
@@ -46,7 +47,7 @@ public class CommandDelete extends Command {
 		taskView.deleteInView(taskToBeDeleted);
 		commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskToBeDeleted.getTaskName());
 		addCommandToHistory ();
-		return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+		return createResult(commandFeedback);
 	}
 
 	public boolean undo () {

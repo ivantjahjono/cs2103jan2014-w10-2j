@@ -111,7 +111,7 @@ public class DisplayData extends Observable {
 
 		// Update display state
 		DISPLAY_STATE stateChange = commandResult.getDisplayState();
-		if (stateChange != null) {
+		if (stateChange != DISPLAY_STATE.INVALID) {
 			currentDisplayState = stateChange; 
 		}
 
@@ -133,8 +133,7 @@ public class DisplayData extends Observable {
 			currentPage = maxPages;
 		}
 		
-		//currentWeekDay = DateAndTimeFormat.getInstance().getCurrentWeekday().toUpperCase();
-		currentWeekDay = "MON";
+		currentWeekDay = DateAndTimeFormat.getInstance().getCurrentWeekday().toUpperCase();
 		currentDate = DateAndTimeFormat.getInstance().getDateToday();
 		currentTime = DateAndTimeFormat.getInstance().getTimeNow();
 
