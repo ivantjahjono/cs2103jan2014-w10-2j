@@ -42,7 +42,7 @@ public class GraphicInterface extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		// Load in all the fonts used
-		loadAllFonts();
+		//loadAllFonts();
 		
 		FXMLLoader loader = null;
 		try {
