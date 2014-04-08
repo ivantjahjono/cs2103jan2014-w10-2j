@@ -64,28 +64,6 @@ public class TaskListShop {
 		return null;
 	}
 
-	public TaskInfo getArchivedTaskByName (String taskName) {
-		for (int i = archivedTaskList.size()-1; i >= 0; i--) {
-			//System.out.println(taskList.get(i).getTaskName());
-			if (taskName.equals(archivedTaskList.get(i).getTaskName())) {
-				return archivedTaskList.get(i);
-			}
-		}
-		return null;
-	}
-
-	public TaskInfo getTaskByID(int index) {
-		if(currentTaskList.size() <= index) {
-			return null;
-		} else {
-			return currentTaskList.get(index);			
-		}
-	}
-
-	public TaskInfo getArchivedTaskByID(int index) {
-		return archivedTaskList.get(index);
-	}
-
 	public void updateTask (TaskInfo newTaskInfo, TaskInfo prevTaskInfo) {
 		int indexOfTaskListToBeModified = -1;
 		for (int i = 0; i < currentTaskList.size(); i++) {
@@ -97,20 +75,6 @@ public class TaskListShop {
 
 		if (indexOfTaskListToBeModified != -1) {
 			currentTaskList.set(indexOfTaskListToBeModified, newTaskInfo);
-		}
-	}
-
-	public void updateArchivedTask(TaskInfo newTaskInfo, TaskInfo prevTaskInfo) {
-		int indexOfTaskListToBeModified = -1;
-		for (int i = 0; i < archivedTaskList.size(); i++) {
-			if (prevTaskInfo.equals(archivedTaskList.get(i))) {
-				indexOfTaskListToBeModified = i;
-				//System.out.println("index="+indexOfTaskListToBeModified);
-			}
-		}
-
-		if (indexOfTaskListToBeModified != -1) {
-			archivedTaskList.set(indexOfTaskListToBeModified, newTaskInfo);
 		}
 	}
 
@@ -194,18 +158,6 @@ public class TaskListShop {
 		return returnVector;
 	}
 
-	public Vector<TaskInfo> getDeadlineTasks() {
-		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
-
-		for (int i = 0; i < currentTaskList.size(); i++) {
-			TaskInfo singleTask = currentTaskList.get(i);
-			if (singleTask.getTaskType() == TASK_TYPE.DEADLINE) {
-				returnVector.add(singleTask);
-			}
-		}
-		return returnVector;
-	}
-
 	public Vector<TaskInfo> getTimedTasks() {
 		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
 
@@ -231,19 +183,6 @@ public class TaskListShop {
 		Collections.sort(returnVector, new ComparatorDefault());
 		return returnVector;
 	}
-
-	public Vector<TaskInfo> getNonExpiredTasks() {
-		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
-
-		for (int i = 0; i < currentTaskList.size(); i++) {
-			TaskInfo singleTask = currentTaskList.get(i);
-			boolean isExpired = singleTask.getExpiryFlag();
-			if (!isExpired) {
-				returnVector.add(singleTask);
-			}
-		}
-		return returnVector;
-	}
 	
 	public TaskInfo removeTask(TaskInfo taskToDelete) {
 		for (int i = 0; i < currentTaskList.size(); i++) {
@@ -256,7 +195,7 @@ public class TaskListShop {
 	}
 
 	public TaskInfo removeTaskByName (String taskName) {
-		//Assumes that there is only one task with the samen name
+		//Assumes that there is only one task with the same name
 		for (int i = 0; i < currentTaskList.size(); i++) {
 			TaskInfo singleTask = currentTaskList.get(i);
 			if (singleTask.getTaskName().contains(taskName)) {
@@ -264,13 +203,6 @@ public class TaskListShop {
 			}
 		}
 		return null;
-	}
-
-	public TaskInfo removeTaskByID(int taskID) {
-		assert taskID <= currentTaskList.size();
-
-		//TaskID is the position of the task in the vector
-		return currentTaskList.remove(taskID);
 	}
 
 	//This function refreshes all the tasks in the vector to check
@@ -356,52 +288,6 @@ public class TaskListShop {
 		else {
 			Collections.sort(currentTaskList, new ComparatorDefault());
 		}
-	}
-
-	public int numOfArchivedTasksWithSimilarNames(String name) {
-		int count = 0;
-		for (int i = 0; i < archivedTaskList.size(); i++) {
-			if (archivedTaskList.get(i).getTaskName().contains(name)) {
-				count++;
-			}
-		}
-		return count;
-	}
-
-	public void setLastToDone() {
-		currentTaskList.lastElement().setDone(true);
-		refreshTasks();
-	}
-
-	public void setLastToUndone() {
-		archivedTaskList.lastElement().setDone(false);
-		refreshTasks();
-	}
-
-	public boolean setDoneByName(String name) {
-		//Assumes that there is only one task that has that exact name
-		for (int i = 0; i < currentTaskList.size(); i++) {
-			TaskInfo singleTask = currentTaskList.get(i);
-			if (singleTask.getTaskName().equals(name)) {
-				singleTask.setDone(true);
-				refreshTasks();
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean setUndoneByName(String name) {
-		//Assumes that there is only one task that has that exact name
-		for (int i = 0; i < archivedTaskList.size(); i++) {
-			TaskInfo singleTask = archivedTaskList.get(i);
-			if (singleTask.getTaskName().equals(name)) {
-				singleTask.setDone(false);
-				refreshTasks();
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public boolean isTaskToday(TaskInfo task) {
