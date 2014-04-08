@@ -30,14 +30,19 @@ public class CommandSearch extends Command {
 
 		assert taskInfo != null;
 		assert taskListShop != null;
-		
-		Vector<TaskInfo> listToSearch = taskView.getCurrentView();
-		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
-
 
 		String searchName = taskInfo.getTaskName().toLowerCase();
 		Calendar searchByDate = taskInfo.getEndDate();
 		Calendar searchOnDate = taskInfo.getStartDate();
+		
+		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
+		Vector<TaskInfo> listToSearch;
+		
+		if (searchByDate != null || searchOnDate != null) {
+			listToSearch = taskListShop.getAllCurrentTasks();
+		} else {
+			listToSearch = taskView.getCurrentView();
+		}
 
 		if (!searchName.equals("")) {
 			for (int i = 0; i < listToSearch.size(); i++) {
