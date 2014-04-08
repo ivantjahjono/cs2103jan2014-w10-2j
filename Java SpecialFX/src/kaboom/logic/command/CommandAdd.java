@@ -89,6 +89,8 @@ public class CommandAdd extends Command {
 			return createResult(commandFeedback);
 		}
 		
+		//check wad type of task
+		
 		setTaskType(taskInfo);
 		
 		taskInfo.setRecent(true);
@@ -227,9 +229,9 @@ public class CommandAdd extends Command {
 			}
 		} else {
 			if (hasStartDate && hasEndDate) {
-				//time to 0000 if different date or start time to 0000 and end time to 2359 if same date
+				//time to 0000 if different date or start time to 2359 and end time to 2359 if same date
 				Calendar startCal = datFormat.formatStringToCalendar(startDate, "0000");
-				Calendar endCal = datFormat.formatStringToCalendar(endDate, "0000");
+				Calendar endCal = datFormat.formatStringToCalendar(endDate, "2359");
 				if(!datFormat.isFirstDateBeforeSecondDate(startCal, endCal)) {
 					startCal = datFormat.formatStringToCalendar(startDate, "0000");
 					endCal = datFormat.formatStringToCalendar(endDate, "2359");
@@ -260,9 +262,9 @@ public class CommandAdd extends Command {
 				temp.setStartDate(startCal);
 				temp.setEndDate(endCal);
 			} else if (hasStartDate) {
-				//set time to 0000 and save start date and end date to 1 day later
+				//set time from 0000 to 2359 and save start date
 				Calendar startCal = datFormat.formatStringToCalendar(startDate, "0000");
-				Calendar endCal = datFormat.addDayToCalendar(startCal, 1);
+				Calendar endCal = datFormat.formatStringToCalendar(startDate, "2359");
 				temp.setStartDate(startCal);
 				temp.setEndDate(endCal);
 				} else if (hasStartTime) {
@@ -273,8 +275,8 @@ public class CommandAdd extends Command {
 				temp.setStartDate(startCal);
 				temp.setEndDate(endCal);
 			} else if (hasEndDate) {
-				//set time to 0000 and save end date only
-				Calendar endCal = datFormat.formatStringToCalendar(endDate, "0000");
+				//set time to 2359 and save end date only
+				Calendar endCal = datFormat.formatStringToCalendar(endDate, "2359");
 				temp.setEndDate(endCal);
 			} else if (hasEndTime) {
 				//set date to today and save end date only

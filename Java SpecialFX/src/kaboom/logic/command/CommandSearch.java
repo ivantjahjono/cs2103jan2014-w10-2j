@@ -8,7 +8,7 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.KEYWORD_TYPE;
-import kaboom.logic.TASK_TYPE;
+
 import kaboom.ui.DISPLAY_STATE;
 import kaboom.ui.DisplayData;
 
@@ -31,7 +31,7 @@ public class CommandSearch extends Command {
 
 		assert taskInfo != null;
 		assert taskListShop != null;
-
+		
 		DISPLAY_STATE currentDisplayState = DisplayData.getInstance().getCurrentDisplayState();
 		Vector<TaskInfo> listToSearch;
 		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
@@ -81,6 +81,7 @@ public class CommandSearch extends Command {
 		}
 
 		commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
+		commandResult.setDisplayState(DISPLAY_STATE.SEARCH);
 		taskView.setSearchView(tasksFound);
 
 		return createResult(commandFeedback, DISPLAY_STATE.SEARCH); 

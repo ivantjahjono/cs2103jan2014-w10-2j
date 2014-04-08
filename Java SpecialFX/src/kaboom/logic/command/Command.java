@@ -262,11 +262,12 @@ public class Command {
 //	}
 	
 	protected void saveTaskStartDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
-		String startDate = infoHashes.get(KEYWORD_TYPE.START_DATE);
-		String startTime = infoHashes.get(KEYWORD_TYPE.START_TIME);
+		DateAndTimeFormat datFormat = DateAndTimeFormat.getInstance();
+		String startDate = datFormat.convertStringDateToDayMonthYearFormat(infoHashes.get(KEYWORD_TYPE.START_DATE));
+		String startTime = datFormat.convertStringTimeTo24HourString(infoHashes.get(KEYWORD_TYPE.START_TIME));
 		Calendar startDateAndTime = null;
 		try {
-			startDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(startDate, startTime);
+			startDateAndTime = datFormat.formatStringToCalendar(startDate, startTime);
 			task.setStartDate(startDateAndTime);
 		} catch (Exception e) {
 			task.setStartDate(startDateAndTime);
@@ -274,11 +275,12 @@ public class Command {
 	}
 	
 	protected void saveTaskEndDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
-		String endDate = infoHashes.get(KEYWORD_TYPE.END_DATE);
-		String endTime = infoHashes.get(KEYWORD_TYPE.END_TIME);
+		DateAndTimeFormat datFormat = DateAndTimeFormat.getInstance();
+		String endDate = datFormat.convertStringDateToDayMonthYearFormat(infoHashes.get(KEYWORD_TYPE.END_DATE));
+		String endTime = "2359";
 		Calendar endDateAndTime = null;
 		try {
-			endDateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(endDate, endTime);
+			endDateAndTime = datFormat.formatStringToCalendar(endDate, endTime);
 			task.setEndDate(endDateAndTime);
 		} catch (Exception e) {
 			task.setEndDate(endDateAndTime);
