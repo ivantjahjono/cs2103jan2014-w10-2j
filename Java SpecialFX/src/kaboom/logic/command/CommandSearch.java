@@ -10,20 +10,19 @@ import kaboom.logic.TaskInfo;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.TASK_TYPE;
 import kaboom.ui.DISPLAY_STATE;
-import kaboom.ui.TaskView;
+import kaboom.ui.DisplayData;
 
 public class CommandSearch extends Command {
 
 	private final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done. %d item(s) found.";
 
 	TaskInfo taskInfo = null;
-	
+
 	public CommandSearch () {
 		commandType = COMMAND_TYPE.SEARCH;
 		keywordList = new KEYWORD_TYPE[] {
 				KEYWORD_TYPE.END_DATE,
 				KEYWORD_TYPE.END_TIME,
-				//KEYWORD_TYPE.TASKID,
 				KEYWORD_TYPE.TASKNAME
 		};
 	}
@@ -32,65 +31,62 @@ public class CommandSearch extends Command {
 
 		assert taskInfo != null;
 		assert taskListShop != null;
-		TaskView taskView = TaskView.getInstance();
 
-		Calendar endDate = taskInfo.getEndDate();
-		if (endDate != null) {
-			//Set the end time to 2359 for searching		
-			endDate.set(Calendar.HOUR_OF_DAY, 23);
-			endDate.set(Calendar.MINUTE, 59);
-			taskInfo.setEndDate(endDate);
-		}
-
-		String commandFeedback;
+		DISPLAY_STATE currentDisplayState = DisplayData.getInstance().getCurrentDisplayState();
+		Vector<TaskInfo> listToSearch;
 		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
-		Vector<TaskInfo> allTasks = taskListShop.getAllCurrentTasks();
+		String commandFeedback;
 
-		String taskName = taskInfo.getTaskName();
-		if (!taskName.equals("")) {
-			//If taskName is not empty, search by task name			
-			for (int i = 0; i < allTasks.size(); i++) {
-				TaskInfo singleTask = allTasks.get(i);
-				if (singleTask.getTaskName().contains(taskName)) {
-					tasksFound.add(singleTask);  //Expired tasks are considered too
-				}
-			}
-			
-			//task id search (have to convert to get from task id)
-			if(taskName.matches("\\d+")) {
-				int id = Integer.parseInt(taskName);
-				if(id < allTasks.size() && id >= 0) {
-					tasksFound.add(allTasks.get(id-1));
-				}
-			}
+		if (currentDisplayState == DISPLAY_STATE.ARCHIVE) {
+			listToSearch = taskListShop.getAllArchivedTasks();
+		} else {
+			listToSearch = taskListShop.getAllCurrentTasks();
 		}
-		else if (endDate != null){
-			//search by date
-			for (int i = 0; i < allTasks.size(); i++) {
-				TaskInfo singleTask = allTasks.get(i);
-				if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
-					Calendar targetDate = taskInfo.getEndDate();
-					if (singleTask.getEndDate().before(targetDate)) {
-						//For deadline tasks
+
+		String searchName = taskInfo.getTaskName().toLowerCase();
+		Calendar searchDate = taskInfo.getEndDate();
+
+		if (!searchName.equals("")) {
+			for (int i = 0; i < listToSearch.size(); i++) {
+				TaskInfo singleTask = listToSearch.get(i);
+				if (singleTask.getTaskName().toLowerCase().contains(searchName)) {
+					if (!singleTask.getExpiryFlag()) {
+						tasksFound.add(singleTask);  //Expired tasks are not considered
+					}
+				}
+			}
+		} else if (searchDate != null){
+			searchDate.set(Calendar.HOUR_OF_DAY, 23);
+			searchDate.set(Calendar.MINUTE, 59);
+			searchDate.set(Calendar.SECOND, 59);
+
+			//Search only on a particular day
+			for (int i = 0; i < listToSearch.size(); i++) {
+				TaskInfo singleTask = listToSearch.get(i);
+				Calendar taskStartDate = singleTask.getStartDate();
+				Calendar taskEndDate = singleTask.getEndDate();
+				if (taskStartDate != null) {
+					if (taskStartDate.get(Calendar.DAY_OF_YEAR) == searchDate.get(Calendar.DAY_OF_YEAR) &&
+							taskStartDate.get(Calendar.YEAR) == searchDate.get(Calendar.YEAR)) {
 						tasksFound.add(singleTask);
 					}
-					if (singleTask.getStartDate() != null && (singleTask.getStartDate().before(targetDate) && 
-							singleTask.getEndDate().after(targetDate))) {
-						//For timed tasks
-						if (!tasksFound.contains(singleTask)) {
-							tasksFound.add(singleTask);  //Expired tasks are considered too
-						}
+				}
+				else if (taskEndDate != null) {
+					if (taskEndDate.get(Calendar.DAY_OF_YEAR) == searchDate.get(Calendar.DAY_OF_YEAR) &&
+							taskEndDate.get(Calendar.YEAR) == searchDate.get(Calendar.YEAR)) {
+						tasksFound.add(singleTask);
 					}
 				}
 			}
 		}
 
-		taskView.setSearchView(tasksFound);
 		commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
-
 		Result commandResult = createResult(tasksFound, commandFeedback);
-		commandResult.setDisplayState(DISPLAY_STATE.SEARCH);
-		
+		if (currentDisplayState != DISPLAY_STATE.ARCHIVE) {
+			commandResult.setDisplayState(DISPLAY_STATE.SEARCH);
+		}
+		taskView.setSearchView(tasksFound);
+
 		return commandResult; 
 	}
 
@@ -98,11 +94,11 @@ public class CommandSearch extends Command {
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
 		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
-		
+
 		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
