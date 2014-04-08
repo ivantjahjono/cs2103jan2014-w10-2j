@@ -96,7 +96,9 @@ public class CommandView extends Command{
 			viewType += infoHashes.get(KEYWORD_TYPE.VIEWTYPE);
 		}
 
-		stateToSet = determineDisplayState(viewType);
+		if (viewType != null) {
+			stateToSet = determineDisplayState(viewType);
+		}
 	}
 	
 	public void setDisplayState (DISPLAY_STATE state) {
