@@ -134,7 +134,7 @@
           <children>
             <Label fx:id="todayWeekDay" alignment="CENTER_LEFT" graphicTextGap="0.0" layoutX="0.0" layoutY="-1.0" minHeight="46.544921875" prefHeight="57.94140625" text="MON" textAlignment="LEFT">
               <font>
-                <Font name="Segoe UI Mono" size="50.0" />
+                <Font name="Segoe UI MONO" size="50.0" />
               </font>
             </Label>
             <Label fx:id="todayDate" alignment="CENTER_RIGHT" layoutX="92.0" layoutY="14.0" prefWidth="80.0" text="12 Oct 14">
@@ -177,7 +177,7 @@
       <children>
         <Label id="" fx:id="feedbackText" layoutX="0.0" layoutY="0.0" minHeight="22.0" prefHeight="22.0" prefWidth="567.0" text="Feedback" textFill="$x4" translateX="5.0" underline="false">
           <font>
-            <Font name="Segoe UI Semilight" size="16.0" />
+            <Font size="16.0" fx:id="x1" />
           </font>
           <labelFor>
             <TextField fx:id="commandTextInput" disable="false" layoutX="11.0" layoutY="603.0" onAction="#onTextfieldAction" onKeyReleased="#onTextfieldKeyReleased" prefWidth="572.0" promptText="Please enter a command" styleClass="text-field-correct" text="" />
@@ -308,7 +308,7 @@
         </VBox>
       </children>
     </Pane>
-    <Pane id="helpadd" fx:id="helpAddPane" layoutX="16.0" layoutY="72.0" prefHeight="290.49609375" prefWidth="567.0" visible="true">
+    <Pane id="helpadd" fx:id="helpAddPane" layoutX="16.0" layoutY="72.0" prefHeight="290.49609375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help Add" />
@@ -319,11 +319,7 @@
             <Label styleClass="parseCommandPriority" text="Optional" />
           </children>
         </HBox>
-        <Label layoutX="20.0" layoutY="54.0" text="Adding scheduled task:">
-          <font>
-            <Font size="16.0" fx:id="x15" />
-          </font>
-        </Label>
+        <Label font="$x1" layoutX="20.0" layoutY="54.0" text="Adding scheduled task:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="75.0" prefHeight="26.6015625" prefWidth="310.0" spacing="10.0">
           <children>
             <Label styleClass="parseCommandTypeName" text="add" />
@@ -343,7 +339,7 @@
             <Label styleClass="parseCommandPriority" text="***" />
           </children>
         </HBox>
-        <Label font="$x15" layoutX="20.0" layoutY="123.0" text="Adding deadline task:" />
+        <Label font="$x1" layoutX="20.0" layoutY="123.0" text="Adding deadline task:" />
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="158.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
@@ -353,7 +349,7 @@
             <Label styleClass="parseCommandPriority" text="*****" />
           </children>
         </HBox>
-        <Label font="$x15" layoutX="20.0" layoutY="188.0" text="Adding timeless task:" />
+        <Label font="$x1" layoutX="20.0" layoutY="188.0" text="Adding timeless task:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="207.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
           <children>
             <Label styleClass="parseCommandTypeName" text="modify" />
@@ -410,7 +406,7 @@
             <Label styleClass="parseCommandPriority" text="Optional" />
           </children>
         </HBox>
-        <Label font="$x15" layoutX="20.0" layoutY="54.0" text="Deleting task" />
+        <Label font="$x1" layoutX="20.0" layoutY="54.0" text="Deleting task" />
         <HBox alignment="CENTER_LEFT" layoutX="55.0" layoutY="73.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
           <children>
             <Label styleClass="parseCommandTypeName" text="delete" />
@@ -444,7 +440,7 @@
             <Label styleClass="parseCommandPriority" text="Optional" />
           </children>
         </HBox>
-        <Label font="$x15" layoutX="20.0" layoutY="54.0" text="Modifying task:" />
+        <Label font="$x1" layoutX="20.0" layoutY="54.0" text="Modifying task:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="75.0" prefHeight="26.6015625" prefWidth="506.0" spacing="10.0">
           <children>
             <Label styleClass="parseCommandTypeName" text="modify" />
@@ -503,7 +499,7 @@
             <Label styleClass="parseCommandPriority" text="Optional" />
           </children>
         </HBox>
-        <Label font="$x15" layoutX="20.0" layoutY="54.0" text="Marking task as complete:" />
+        <Label font="$x1" layoutX="20.0" layoutY="54.0" text="Marking task as complete:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="75.0" prefHeight="26.6015625" prefWidth="504.0" spacing="10.0">
           <children>
             <Label styleClass="parseCommandTypeName" text="boom" />
@@ -517,7 +513,7 @@
             <Label styleClass="parseCommandName" text="Hello world" />
           </children>
         </HBox>
-        <Label font="$x15" layoutX="20.0" layoutY="146.0" text="Marking task as incomplete:" />
+        <Label font="$x1" layoutX="20.0" layoutY="146.0" text="Marking task as incomplete:" />
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="111.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
@@ -558,7 +554,7 @@
             <Label styleClass="parseCommandPriority" text="Optional" />
           </children>
         </HBox>
-        <Label font="$x15" layoutX="20.0" layoutY="60.0" text="Changing view" />
+        <Label font="$x1" layoutX="20.0" layoutY="60.0" text="Changing view" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="81.0" prefHeight="26.6015625" prefWidth="504.0" spacing="10.0">
           <children>
             <Label styleClass="parseCommandTypeName" text="view" />
@@ -613,7 +609,7 @@
             <Label styleClass="parseCommandPriority" text="Optional" />
           </children>
         </HBox>
-        <Label font="$x15" layoutX="20.0" layoutY="60.0" text="Search task by name:" />
+        <Label font="$x1" layoutX="20.0" layoutY="60.0" text="Search task by name:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="81.0" prefHeight="26.6015625" prefWidth="504.0" spacing="10.0">
           <children>
             <Label styleClass="parseCommandTypeName" text="search" />
@@ -627,7 +623,7 @@
             <Label styleClass="parseCommandName" text="Hello" />
           </children>
         </HBox>
-        <Label font="$x15" layoutX="20.0" layoutY="126.0" text="Search by date:" />
+        <Label font="$x1" layoutX="20.0" layoutY="126.0" text="Search by date:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="145.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
           <children>
             <Label styleClass="parseCommandTypeName" text="search" />
