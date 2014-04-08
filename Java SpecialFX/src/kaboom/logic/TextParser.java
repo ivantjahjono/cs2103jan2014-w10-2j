@@ -14,6 +14,8 @@ public class TextParser {
 	private final String KEYWORD_MODIFY = ">";
 	private final String KEYWORD_TASKID = "#";
 	private final String KEYWORD_DATEONLY = "^";
+	private final String KEYWORD_CLEAR = "^(all|current|archive)";
+	private final String KEYWORD_VIEW = "^(today|future|timeless|expired|archive)";
 	
 	private final String TIME_REGEX = "\\s*(([0-9]|0[0-9]|1[0-9]|2[0-3])([\\s?:\\s?]?[0-5][0-9])?|([0-9]|0[1-9]|1[0-2])(([\\s?:\\s?]?[0-5][0-9])?(am|pm)))(\\s|$)";
 	private final String DATE_REGEX = "\\s*\\d{1,2}[\\/\\.]?\\d{2}[\\/\\.]?\\d{2}(\\s|$)";
@@ -374,7 +376,7 @@ public class TextParser {
 				break;
 				
 			case CLEARTYPE:
-				userInput = extractClearType(userInput,taskInformationTable);
+				result = extractClearType(userInput,taskInformationTable);
 				break;
 				
 			case VIEWTYPE:
@@ -453,17 +455,36 @@ public class TextParser {
 		}
 	}
 	
-	private String extractViewType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
-		String viewType = getFirstWord(userInput);
-		taskInformationTable.put(KEYWORD_TYPE.VIEWTYPE, viewType);
-		return viewType;
+	private String extractViewType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {		
+		ArrayList<Integer> matchList = searchForPatternMatch(userInput, KEYWORD_VIEW);
+		
+		if (matchList.size() < 2) {
+			return "";
+		}
+		
+		int endIndex = matchList.get(matchList.size()-1);
+		int startIndex = matchList.get(matchList.size()-2);
+		
+		String extractedViewString = userInput.substring(startIndex, endIndex).trim();
+		taskInformationTable.put(KEYWORD_TYPE.VIEWTYPE, extractedViewString);
+		
+		return extractedViewString;
 	}
 	
 	private String extractClearType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
-		String viewType = getFirstWord(userInput);
-		taskInformationTable.put(KEYWORD_TYPE.CLEARTYPE, viewType);
-		userInput  = userInput.replace(viewType, "").trim();
-		return userInput;
+		ArrayList<Integer> matchList = searchForPatternMatch(userInput, KEYWORD_CLEAR);
+		
+		if (matchList.size() < 2) {
+			return "";
+		}
+		
+		int endIndex = matchList.get(matchList.size()-1);
+		int startIndex = matchList.get(matchList.size()-2);
+		
+		String extractedClearString = userInput.substring(startIndex, endIndex).trim();
+		taskInformationTable.put(KEYWORD_TYPE.CLEARTYPE, extractedClearString);
+
+		return extractedClearString;
 	}
 	
 }
