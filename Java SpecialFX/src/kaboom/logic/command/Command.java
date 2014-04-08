@@ -17,6 +17,7 @@ import kaboom.logic.TextParser;
 import kaboom.storage.History;
 import kaboom.storage.TaskListShop;
 import kaboom.ui.DisplayData;
+import kaboom.ui.TaskView;
 
 /* 
  ** Purpose: 
@@ -24,8 +25,11 @@ import kaboom.ui.DisplayData;
 
 public class Command {
 	protected final String MESSAGE_COMMAND_FAIL_INVALID_DATE = "Invalid date... Noob";
-	private final String MESSAGE_COMMAND_INVALID = "Invalid command!";
-
+	protected final String MESSAGE_COMMAND_FAIL_NO_SUCH_TASK = "Trying to manipulate air";
+	protected final String MESSAGE_COMMAND_FAIL_NO_TASK_NAME = "Master Wugui says: 'My time has come to find the task name'";
+	protected final String MESSAGE_COMMAND_INVALID = "Invalid command!";
+	
+	
 	protected COMMAND_TYPE commandType;
 	protected TextParser textParser;
 	protected TaskListShop taskListShop;
@@ -33,6 +37,7 @@ public class Command {
 	protected KEYWORD_TYPE[] keywordList;
 	Hashtable<KEYWORD_TYPE, Object> commandObjectTable;
 	Hashtable<KEYWORD_TYPE, String> infoTable; //TEMP
+	protected TaskView taskView;
 
 	protected enum COMMAND_ERROR{
 		NO_TASK_NAME, INVALID_DATE, NIL, STARTDATE_AFTER_ENDDATE
@@ -45,6 +50,7 @@ public class Command {
 		displayData = DisplayData.getInstance();
 		keywordList = new KEYWORD_TYPE[0];
 		commandObjectTable = new Hashtable<KEYWORD_TYPE, Object>();
+		taskView = TaskView.getInstance();
 	}
 
 	public void setCommandType (COMMAND_TYPE type) {
@@ -343,8 +349,78 @@ public class Command {
 		History.getInstance().addToRecentCommands(this);
 	}
 	
-	protected Result clashDetection() {
+	protected Result taskDetectionWithErrorFeedback() {
+		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
+		String feedback = "";
+		Result errorFeedback = null;
+		
+		if(!hasTaskWithTaskId()) {
+			if (taskName != null){
+				int taskCount = numOfTasksWithSimilarNames(taskName);
+				
+				if (taskCount > 1) {
+					errorFeedback = callSearch();
+				}
+				else if (taskCount < 1) {
+					feedback = MESSAGE_COMMAND_FAIL_NO_SUCH_TASK;
+					errorFeedback = createResult(taskListShop.getAllCurrentTasks(), feedback);
+				}
+			} else {
+				feedback = MESSAGE_COMMAND_FAIL_NO_TASK_NAME;
+				errorFeedback = createResult(taskListShop.getAllCurrentTasks(), feedback);
+			}
+		}
+		return errorFeedback;
+	}	
+	
+	protected boolean hasTaskWithTaskId() {
+		TaskInfo task = getTaskWithTaskId();
+		if(task == null) {
+			return false;
+		}
+		return true;
+	}
+
+	protected TaskInfo getTaskWithTaskId() {
+		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
+		if (taskId != null) {
+			int taskIdInteger = Integer.parseInt(taskId);
+			int index = taskView.getIndexFromView(taskIdInteger-1);
+			return taskListShop.getTaskByID(index);
+		}
 		return null;
+	}
+	
+	protected TaskInfo getTaskWithTaskName() {
+		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
+		if (taskName != null && !taskName.isEmpty()) {
+			return taskListShop.getTaskByName(taskName);
+		}
+		return null;
+	}
+	
+	protected TaskInfo getTask() {
+		TaskInfo task = getTaskWithTaskId();
+		if(task == null) {
+			task = getTaskWithTaskName();
+		}
+		return task;
+	}
+	
+	protected Result callSearch() {
+		Command search = new CommandSearch();
+		search.storeTaskInfo(infoTable);
+		return search.execute();
+	}
+	
+	protected int numOfTasksWithSimilarNames(String name) {
+		int count = 0;
+		for (int i = 0; i < taskListShop.getAllCurrentTasks().size(); i++) {
+			if (taskListShop.getAllCurrentTasks().get(i).getTaskName().contains(name)) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 }

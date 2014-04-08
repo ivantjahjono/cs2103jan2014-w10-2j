@@ -18,8 +18,8 @@ public class CommandModify extends Command {
 
 	private final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
 	private final String MESSAGE_COMMAND_MODIFY_FAIL = "Fail to cast a spell on <%1$s>";
-	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME = "Master Wugui says: 'My time has come to find the task name'";
-	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_SUCH_TASK = "Trying to manipulate air";
+//	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME = "Master Wugui says: 'My time has come to find the task name'";
+//	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_SUCH_TASK = "Trying to manipulate air";
 	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_TO_MODIFY = "<%1$s> does not exist...";
 	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_CHANGE = "Nothing happened...";
 	private final String MESSAGE_COMMAND_MODIFY_FAIL_SET_ENDDATEBOFORESTARDATE = "Trying to let <%1$s> end before it even started...";
@@ -72,62 +72,36 @@ public class CommandModify extends Command {
 		if(infoTable == null) {
 			return createResult(taskListShop.getAllCurrentTasks(), "No TaskInfoTable");
 		}
-		String feedback = "";
-
-		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
-		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 		
-		//get PreModifiedTaskInfo 
-		if (taskId != null) {
-			int taskIdInteger = Integer.parseInt(taskId);
-			if (taskView.getCurrentViewID().size() >= taskIdInteger) {
-				int index = taskView.getIndexFromView(taskIdInteger-1);
-				preModifiedTaskInfo = taskListShop.getTaskByID(index);
-			}
-		} else if (taskName != null){
-			//detect clash
-			int taskCount = taskListShop.numOfTasksWithSimilarNames(taskName);
-			if (taskCount > 1) {
-				Command search = new CommandSearch();
-				search.storeTaskInfo(infoTable);
-				return search.execute();
-			}
-			else if (taskCount == 1) {
-				preModifiedTaskInfo = taskListShop.getTaskByName(taskName);
-			}
-			else {
-				feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_SUCH_TASK;
-				return createResult(taskListShop.getAllCurrentTasks(), feedback);
-			}
+		Result errorResult = taskDetectionWithErrorFeedback();
+		if(errorResult != null) {
+			return errorResult;
 		} else {
-			feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME;
+			preModifiedTaskInfo = getTask();
+		}
+		
+		String feedback = "";
+		
+		TaskInfo temp = new TaskInfo(preModifiedTaskInfo);
+		hasNameChanged = modifyTaskName(temp);
+		hasPriorityChanged = modifyTaskPriority(temp);
+		COMMAND_ERROR commandError = modifyDateAndTime(temp);
+		if(commandError == COMMAND_ERROR.INVALID_DATE) {
+			feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 			return createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
+		commandError = validateStartAndEndTime (temp);
+		if(commandError == COMMAND_ERROR.INVALID_DATE) {
+			feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
+			return createResult(taskListShop.getAllCurrentTasks(), feedback);
+		}
+		setTaskType(temp);
+		//store and update in memory
+		modifiedTaskInfo = temp;
+		modifiedTaskInfo.setRecent(true);
+		taskListShop.updateTask(modifiedTaskInfo, preModifiedTaskInfo);
+		taskView.swapView(modifiedTaskInfo, preModifiedTaskInfo);
 
-		if (preModifiedTaskInfo == null) {
-			feedback = String.format(MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_TO_MODIFY,taskName);
-			return createResult(taskListShop.getAllCurrentTasks(), feedback);	
-		} else {
-			TaskInfo temp = new TaskInfo(preModifiedTaskInfo);
-			hasNameChanged = modifyTaskName(temp);
-			hasPriorityChanged = modifyTaskPriority(temp);
-			COMMAND_ERROR commandError = modifyDateAndTime(temp);
-			if(commandError == COMMAND_ERROR.INVALID_DATE) {
-				feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
-				return createResult(taskListShop.getAllCurrentTasks(), feedback);
-			}
-			commandError = validateStartAndEndTime (temp);
-			if(commandError == COMMAND_ERROR.INVALID_DATE) {
-				feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
-				return createResult(taskListShop.getAllCurrentTasks(), feedback);
-			}
-			setTaskType(temp);
-			//store and update in memory
-			modifiedTaskInfo = temp;
-			modifiedTaskInfo.setRecent(true);
-			taskListShop.updateTask(modifiedTaskInfo, preModifiedTaskInfo);
-			taskView.swapView(modifiedTaskInfo, preModifiedTaskInfo);
-		} 
 
 		feedback = feedbackGenerator();
 		addCommandToHistory ();
