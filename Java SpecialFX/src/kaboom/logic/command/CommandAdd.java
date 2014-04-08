@@ -19,10 +19,10 @@ public class CommandAdd extends Command {
 	private final String MESSAGE_COMMAND_ADD_FAIL = "Oops! Fail to add <%1$s>... Error somewhere...";
 	private final String MESSAGE_COMMAND_ADD_FAIL_NO_NAME = "Oops! Task cannot be entered without a name Y_Y";
 	private final String MESSAGE_COMMAND_ADD_FAIL_STARTDATE_OVER_ENDDATE = "Oops! Task cannot end before it even started";
-	
+
 	DateAndTimeFormat datFormat;
 	TaskInfo taskInfo;
-	
+
 	public CommandAdd () {
 		commandType = COMMAND_TYPE.ADD;
 		keywordList = new KEYWORD_TYPE[] {
@@ -35,7 +35,7 @@ public class CommandAdd extends Command {
 		};
 		datFormat = DateAndTimeFormat.getInstance();
 	}
-	
+
 	/* 
 	 * Error handling (Prevent add):
 	 * -When there is no task name
@@ -50,11 +50,11 @@ public class CommandAdd extends Command {
 	 */
 	public Result execute() {
 		assert taskListShop != null;
-		
+
 		String commandFeedback = "";
-		
+
 		taskInfo = new TaskInfo();
-		
+
 		commandFeedback = saveTaskNameAndGetErrorMessage();
 		if(!commandFeedback.isEmpty()) {
 			return createResult(commandFeedback);
@@ -62,44 +62,44 @@ public class CommandAdd extends Command {
 
 		saveTaskPriority();
 
-//		commandFeedback = saveStartDateAndTime();
-//		if(!commandFeedback.isEmpty()) {
-//			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
-//		}
-//		
-//		commandFeedback = saveEndDateAndTime();
-//		if(!commandFeedback.isEmpty()) {
-//			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
-//		}
-//		
-//		commandFeedback = startAndEndTimeValidityAndSetTaskType ();
-//		if(!commandFeedback.isEmpty()) {
-//			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
-//		}
-		
+		//		commandFeedback = saveStartDateAndTime();
+		//		if(!commandFeedback.isEmpty()) {
+		//			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+		//		}
+		//		
+		//		commandFeedback = saveEndDateAndTime();
+		//		if(!commandFeedback.isEmpty()) {
+		//			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+		//		}
+		//		
+		//		commandFeedback = startAndEndTimeValidityAndSetTaskType ();
+		//		if(!commandFeedback.isEmpty()) {
+		//			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+		//		}
+
 		COMMAND_ERROR commandError = modifyDateAndTime(taskInfo);
 		if(commandError != COMMAND_ERROR.NIL) {
 			commandFeedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 			return createResult(commandFeedback);
 		}
-		
+
 		commandError = validateStartAndEndTime (taskInfo);
 		if(commandError != COMMAND_ERROR.NIL) {
 			commandFeedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 			return createResult(commandFeedback);
 		}
-		
+
 		//check wad type of task
-		
+
 		setTaskType(taskInfo);
-		
+
 		taskInfo.setRecent(true);
-		
+
 		DISPLAY_STATE stateToSet = DISPLAY_STATE.INVALID;
 		if (taskListShop.addTaskToList(taskInfo)) {
 			addCommandToHistory ();
 			commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
-			
+
 			if (taskInfo.getTaskType() == TASK_TYPE.FLOATING) {
 				stateToSet = DISPLAY_STATE.TIMELESS;
 			} else if (taskListShop.isTaskToday(taskInfo)) {
@@ -112,32 +112,30 @@ public class CommandAdd extends Command {
 		} else {
 			commandFeedback = String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
 		}
-		
+
 		return createResult(commandFeedback, stateToSet);
 	}
 
 	public boolean undo () {
-		String taskName = taskInfo.getTaskName();
-		
-		TaskInfo task = taskListShop.removeTaskByName(taskName);
-		
+		TaskInfo task = taskListShop.removeTask(taskInfo);
+
 		if (task == null)
 			return false;
 		else
 			return true;
 	}
-	
+
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
 		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
-		
+
 		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	//********************************* STORING METHODS **********************************************
 	private String saveTaskNameAndGetErrorMessage() {
 		String feedback = "";
@@ -149,7 +147,7 @@ public class CommandAdd extends Command {
 		}
 		return feedback;
 	}
-	
+
 	private void saveTaskPriority() {
 		//Default priority = 1
 		if (infoTable.get(KEYWORD_TYPE.PRIORITY) == null) {
@@ -158,13 +156,13 @@ public class CommandAdd extends Command {
 			taskInfo.setImportanceLevel(Integer.parseInt(infoTable.get(KEYWORD_TYPE.PRIORITY)));
 		}
 	}
-	
+
 	private COMMAND_ERROR modifyDateAndTime(TaskInfo temp) {
 		String startDate = datFormat.convertStringDateToDayMonthYearFormat(infoTable.get(KEYWORD_TYPE.START_DATE));
 		String startTime = datFormat.convertStringTimeTo24HourString(infoTable.get(KEYWORD_TYPE.START_TIME));
 		String endDate = datFormat.convertStringDateToDayMonthYearFormat(infoTable.get(KEYWORD_TYPE.END_DATE));
 		String endTime = datFormat.convertStringTimeTo24HourString(infoTable.get(KEYWORD_TYPE.END_TIME));
-		
+
 		if((startDate != null && !datFormat.isDateValid(startDate)) || (endDate != null && !datFormat.isDateValid(endDate))) {
 			return COMMAND_ERROR.INVALID_DATE;
 		}
@@ -177,17 +175,17 @@ public class CommandAdd extends Command {
 		boolean hasStartCal = (hasStartTime && hasStartDate);
 		boolean hasEndCal = (hasEndTime && hasEndDate);
 
-		
+
 		if(hasStartCal && hasEndCal) {
 			//save both start and end date 
 			Calendar startCal = datFormat.formatStringToCalendar(startDate, startTime);
 			Calendar endCal = datFormat.formatStringToCalendar(endDate, endTime);
 			temp.setStartDate(startCal);
 			temp.setEndDate(endCal);			
-			
+
 		} else if (hasStartCal && !hasEndCal) {
 			Calendar startCal = datFormat.formatStringToCalendar(startDate, startTime);
-			
+
 			if(hasEndTime) {
 				//set end date to start date (end time > start time) or 1 day after start date (end time <= start time)
 				Calendar endCal = datFormat.formatStringToCalendar(startDate, endTime);
@@ -196,7 +194,7 @@ public class CommandAdd extends Command {
 				} 
 				temp.setStartDate(startCal);
 				temp.setEndDate(endCal);
-				
+
 			} else if(hasEndDate) {
 				//set end time to same start time (if not the same date) or 1hr after start time(same date)
 				Calendar endCal = datFormat.formatStringToCalendar(endDate, startTime);
@@ -212,9 +210,9 @@ public class CommandAdd extends Command {
 				temp.setEndDate(endCal);
 			}
 		} else if (!hasStartCal && hasEndCal) {
-			
+
 			Calendar endCal = datFormat.formatStringToCalendar(endDate, endTime);
-			
+
 			if(hasStartTime) {
 				//set start date to same end date (start time before end time) or before end date (start time >= end time)
 				Calendar startCal = datFormat.formatStringToCalendar(endDate, startTime);
@@ -275,9 +273,9 @@ public class CommandAdd extends Command {
 				Calendar endCal = datFormat.formatStringToCalendar(startDate, "2359");
 				temp.setStartDate(startCal);
 				temp.setEndDate(endCal);
-				} else if (hasStartTime) {
+			} else if (hasStartTime) {
 				//set date to today and save start date and end date to 1 hour later
-					String today = datFormat.getDateToday2();
+				String today = datFormat.getDateToday2();
 				Calendar startCal = datFormat.formatStringToCalendar(today, startTime);
 				Calendar endCal = datFormat.addTimeToCalendar(startCal, 1, 0);
 				temp.setStartDate(startCal);
@@ -295,7 +293,7 @@ public class CommandAdd extends Command {
 		}
 		return COMMAND_ERROR.NIL;
 	}
-	
+
 	private COMMAND_ERROR validateStartAndEndTime (TaskInfo temp) {
 		if(temp.getStartDate() != null && temp.getEndDate() != null) {
 			if(!datFormat.isFirstDateBeforeSecondDate(temp.getStartDate(), temp.getEndDate())) {
@@ -304,7 +302,7 @@ public class CommandAdd extends Command {
 		}
 		return COMMAND_ERROR.NIL;
 	}
-	
+
 	private void setTaskType (TaskInfo temp) {
 		if (temp.getStartDate() != null && temp.getEndDate() !=null) {
 			temp.setTaskType(TASK_TYPE.TIMED);
@@ -314,5 +312,5 @@ public class CommandAdd extends Command {
 			temp.setTaskType(TASK_TYPE.DEADLINE);
 		}
 	}
-	
+
 }
