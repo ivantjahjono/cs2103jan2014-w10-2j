@@ -4,11 +4,11 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import kaboom.logic.DateAndTimeFormat;
 import kaboom.logic.FormatIdentify;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.KEYWORD_TYPE;
-
 import kaboom.ui.DISPLAY_STATE;
 import kaboom.ui.DisplayData;
 
@@ -73,8 +73,7 @@ public class CommandSearch extends Command {
 					}
 				}
 				else if (taskEndDate != null) {
-					if (taskEndDate.get(Calendar.DAY_OF_YEAR) == searchOnDate.get(Calendar.DAY_OF_YEAR) &&
-							taskEndDate.get(Calendar.YEAR) == searchOnDate.get(Calendar.YEAR)) {
+					if (DateAndTimeFormat.getInstance().isFirstDateBeforeSecondDate (taskEndDate, searchDate)) {
 						tasksFound.add(singleTask);
 					}
 				}

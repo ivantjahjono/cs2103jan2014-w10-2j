@@ -277,7 +277,13 @@ public class Command {
 	protected void saveTaskEndDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
 		DateAndTimeFormat datFormat = DateAndTimeFormat.getInstance();
 		String endDate = datFormat.convertStringDateToDayMonthYearFormat(infoHashes.get(KEYWORD_TYPE.END_DATE));
-		String endTime = "2359";
+		if(endDate == null) {
+			endDate = datFormat.getDateToday2();
+		}
+		String endTime = datFormat.convertStringTimeTo24HourString(infoHashes.get(KEYWORD_TYPE.END_TIME));
+		if(endTime == null || endTime.isEmpty()) {
+			endTime = "0000";
+		}
 		Calendar endDateAndTime = null;
 		try {
 			endDateAndTime = datFormat.formatStringToCalendar(endDate, endTime);
