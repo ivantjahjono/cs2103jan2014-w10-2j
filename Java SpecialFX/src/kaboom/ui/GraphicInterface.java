@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import kaboom.logic.TaskMasterKaboom;
@@ -19,7 +20,7 @@ import kaboom.logic.TaskMasterKaboom;
 public class GraphicInterface extends Application {
 	
 	private final int UPDATE_INTERVAL = 30;
-	private final int WINDOW_WIDTH = 700;
+	private final int WINDOW_WIDTH  = 700;
 	private final int WINDOW_HEIGHT = 700;
 	
 	Parent root;
@@ -54,6 +55,9 @@ public class GraphicInterface extends Application {
 		primaryStage.show();
 		
 		mainWindow.prepareTextfieldFocus();
+
+		Image ico = new Image(this.getClass().getResourceAsStream("img/taskmasterkaboom.png"));
+		primaryStage.getIcons().add(ico);
 		
 		updateTimeline = setupRunningUpdate();
 		initialiseAndStartUpdateService();
