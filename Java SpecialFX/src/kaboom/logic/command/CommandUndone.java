@@ -15,7 +15,6 @@ public class CommandUndone extends Command{
 	private final String MESSAGE_COMMAND_UNDONE_FAIL = "%1$s does not exist";
 
 	TaskInfo taskToBeModified;
-	TaskView taskView;
 	TaskInfo taskInfo = null;
 	
 	public CommandUndone() {
@@ -24,48 +23,59 @@ public class CommandUndone extends Command{
 				KEYWORD_TYPE.TASKID,
 				KEYWORD_TYPE.TASKNAME
 		};
-		taskView = TaskView.getInstance();
 	}
 
 	public Result execute() {
 		assert taskListShop != null;
-
-		String feedback = "";
-		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
-
-		int taskCount = taskListShop.numOfArchivedTasksWithSimilarNames(taskName);
-
-		if (isNumeric(taskName)) {
-			int index = Integer.parseInt(taskName)-1;
-			taskToBeModified = taskListShop.getArchivedTaskByID(index);
-			taskListShop.setUndoneByID(index);
-			taskView.deleteInView(taskToBeModified);
+		
+		Result errorResult = taskDetectionWithErrorFeedback();
+		if(errorResult != null) {
+			return errorResult;
+		} else {
+			taskToBeModified = getTask();
 		}
 
-		else if (taskCount > 1) {
-			Command search = new CommandSearch();
-			search.storeTaskInfo(infoTable);
-			return search.execute();  //No support for archive search yet
+		String feedback = MESSAGE_COMMAND_INVALID;
+		Result executionResult = createResult(taskListShop.getAllCurrentTasks(), feedback);
+		String taskName = taskToBeModified.getTaskName();
+
+		
+		if (!taskToBeModified.getDone()) {
+			feedback = String.format(MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE, taskName);
+			executionResult = createResult(taskListShop.getAllCurrentTasks(), feedback);
 		} else {
-			taskToBeModified = taskListShop.getTaskByName(taskName);
 			taskListShop.setUndoneByName(taskName);
 			taskView.deleteInView(taskToBeModified);
+			feedback = String.format(MESSAGE_COMMAND_UNDONE_SUCCESS, taskName);
+			executionResult = createResult(taskListShop.getAllCurrentTasks(), feedback);
 		}
+		
 
-		if (taskToBeModified == null) {
-			feedback = String.format(MESSAGE_COMMAND_UNDONE_FAIL, taskName);
-			return createResult(taskListShop.getAllCurrentTasks(), feedback);
-		}
+//		if (isNumeric(taskName)) {
+//			int index = Integer.parseInt(taskName)-1;
+//			taskToBeModified = taskListShop.getArchivedTaskByID(index);
+//			taskListShop.setUndoneByID(index);
+//			taskView.deleteInView(taskToBeModified);
+//		}
+//
+//		else if (taskCount > 1) {
+//			Command search = new CommandSearch();
+//			search.storeTaskInfo(infoTable);
+//			return search.execute();  //No support for archive search yet
+//		} else {
+//			taskToBeModified = taskListShop.getTaskByName(taskName);
+//
+//		}
+//
+//		if (taskToBeModified == null) {
+//			feedback = String.format(MESSAGE_COMMAND_UNDONE_FAIL, taskName);
+//			return createResult(taskListShop.getAllCurrentTasks(), feedback);
+//		}
 
-		if (taskToBeModified.getDone()) {
-			feedback = String.format(MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE, taskName);
-			return createResult(taskListShop.getAllCurrentTasks(), feedback);
-		}
 
 		taskToBeModified.setRecent(true);
-		feedback = String.format(MESSAGE_COMMAND_UNDONE_SUCCESS, taskName);
 		addCommandToHistory();
-		return createResult(taskListShop.getAllCurrentTasks(), feedback);
+		return executionResult;
 	}
 
 	public boolean undo() {
