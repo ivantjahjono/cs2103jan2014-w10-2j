@@ -43,7 +43,7 @@ public class CommandDelete extends Command {
 			taskToBeDeleted = getTask();
 		}
 		
-		taskListShop.removeTaskByName(taskToBeDeleted.getTaskName());
+		taskListShop.removeTask(taskToBeDeleted);
 		taskView.deleteInView(taskToBeDeleted);
 		commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskToBeDeleted.getTaskName());
 		addCommandToHistory ();

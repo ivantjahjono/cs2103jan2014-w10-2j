@@ -223,7 +223,7 @@ public class DateAndTimeFormat {
 	}
 	
 	public String timeFromCalendarToString (Calendar cal) {
-		String timeFormatString = "hhmm";
+		String timeFormatString = "HHmm";
 		SimpleDateFormat dayFormat = new SimpleDateFormat(timeFormatString);
 		
 		return dayFormat.format(cal.getTime());
