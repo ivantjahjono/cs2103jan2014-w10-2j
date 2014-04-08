@@ -265,6 +265,9 @@ public class Command {
 		DateAndTimeFormat datFormat = DateAndTimeFormat.getInstance();
 		String startDate = datFormat.convertStringDateToDayMonthYearFormat(infoHashes.get(KEYWORD_TYPE.START_DATE));
 		String startTime = datFormat.convertStringTimeTo24HourString(infoHashes.get(KEYWORD_TYPE.START_TIME));
+		if(startTime == null || startTime.isEmpty()) {
+			startTime = "2359";
+		}
 		Calendar startDateAndTime = null;
 		try {
 			startDateAndTime = datFormat.formatStringToCalendar(startDate, startTime);
@@ -277,7 +280,10 @@ public class Command {
 	protected void saveTaskEndDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
 		DateAndTimeFormat datFormat = DateAndTimeFormat.getInstance();
 		String endDate = datFormat.convertStringDateToDayMonthYearFormat(infoHashes.get(KEYWORD_TYPE.END_DATE));
-		String endTime = "2359";
+		String endTime = datFormat.convertStringTimeTo24HourString(infoHashes.get(KEYWORD_TYPE.END_TIME));
+		if(endTime == null || endTime.isEmpty()) {
+			endTime = "0000";
+		}
 		Calendar endDateAndTime = null;
 		try {
 			endDateAndTime = datFormat.formatStringToCalendar(endDate, endTime);
