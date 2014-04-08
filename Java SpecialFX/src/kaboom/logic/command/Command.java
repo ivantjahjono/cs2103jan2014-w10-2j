@@ -372,8 +372,7 @@ public class Command {
 		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
 		if (taskId != null) {
 			int taskIdInteger = Integer.parseInt(taskId);
-			int index = taskView.getIndexFromView(taskIdInteger-1);
-			return taskListShop.getTaskByID(index);
+			return taskView.getTaskFromViewByID(taskIdInteger-1);
 		}
 		return null;
 	}
@@ -381,7 +380,7 @@ public class Command {
 	protected TaskInfo getTaskWithTaskName() {
 		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 		if (taskName != null && !taskName.isEmpty()) {
-			return taskListShop.getTaskByName(taskName);
+			return taskView.getTaskFromViewByName(taskName);
 		}
 		return null;
 	}
