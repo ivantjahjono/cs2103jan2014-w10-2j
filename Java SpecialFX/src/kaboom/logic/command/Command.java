@@ -24,7 +24,7 @@ import kaboom.ui.TaskView;
  */
 
 public class Command {
-	protected final String MESSAGE_COMMAND_FAIL_INVALID_DATE = "Invalid date... Noob";
+	protected final String MESSAGE_COMMAND_FAIL_INVALID_DATE = "Oops! Did you check the calendar? The date you've entered is invalid";
 	protected final String MESSAGE_COMMAND_FAIL_NO_SUCH_TASK = "Trying to manipulate air";
 	protected final String MESSAGE_COMMAND_FAIL_NO_TASK_NAME = "Master Wugui says: 'My time has come to find the task name'";
 	protected final String MESSAGE_COMMAND_INVALID = "Invalid command!";

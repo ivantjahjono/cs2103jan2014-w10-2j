@@ -16,8 +16,8 @@ import kaboom.ui.TaskView;
 
 public class CommandModify extends Command {
 
-	private final String MESSAGE_COMMAND_MODIFY_SUCCESS = "Modify %1$s successful";
-	private final String MESSAGE_COMMAND_MODIFY_FAIL = "Fail to cast a spell on <%1$s>";
+	private final String MESSAGE_COMMAND_MODIFY_SUCCESS = "WOOT! Manipulated %1$s";
+	private final String MESSAGE_COMMAND_MODIFY_FAIL = "Oops! Fail to cast a spell on <%1$s>";
 //	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME = "Master Wugui says: 'My time has come to find the task name'";
 //	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_SUCH_TASK = "Trying to manipulate air";
 	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_TO_MODIFY = "<%1$s> does not exist...";
