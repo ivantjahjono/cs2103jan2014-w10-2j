@@ -8,7 +8,7 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
 import kaboom.logic.KEYWORD_TYPE;
-import kaboom.logic.TASK_TYPE;
+
 import kaboom.ui.DISPLAY_STATE;
 import kaboom.ui.DisplayData;
 
@@ -82,9 +82,7 @@ public class CommandSearch extends Command {
 
 		commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
 		Result commandResult = createResult(tasksFound, commandFeedback);
-		if (currentDisplayState != DISPLAY_STATE.ARCHIVE) {
-			commandResult.setDisplayState(DISPLAY_STATE.SEARCH);
-		}
+		commandResult.setDisplayState(DISPLAY_STATE.SEARCH);
 		taskView.setSearchView(tasksFound);
 
 		return commandResult; 
