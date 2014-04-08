@@ -63,6 +63,10 @@ public class TaskView {
 		}
 		return currentView;
 	}
+	
+	public Vector<TaskInfo> getCurrentView() {
+		return currentView;
+	}
 
 	public Vector<Integer> getCurrentViewID() {
 		return currentViewID;
