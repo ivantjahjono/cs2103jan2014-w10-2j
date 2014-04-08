@@ -161,6 +161,12 @@ public class TaskListShop {
 				return currentTaskList.remove(currentTaskList.indexOf(singleTask));
 			}
 		}
+		for (int i = 0; i < archivedTaskList.size(); i++) {
+			TaskInfo singleTask = archivedTaskList.get(i);
+			if (singleTask.equals(taskToDelete)) {
+				return archivedTaskList.remove(archivedTaskList.indexOf(singleTask));
+			}
+		}
 		return null;
 	}
 
