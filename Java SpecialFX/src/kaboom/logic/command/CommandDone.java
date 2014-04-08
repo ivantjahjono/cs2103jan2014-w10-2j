@@ -7,11 +7,10 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
-import kaboom.ui.TaskView;
 
 public class CommandDone extends Command{
 	private final String MESSAGE_COMMAND_DONE_SUCCESS = "Set %1$s to complete";
-	private final String MESSAGE_COMMAND_DONE_AlEADY_COMPLETED = "%1$s was completed";
+	private final String MESSAGE_COMMAND_DONE_AlEADY_COMPLETED = "%1$s was already completed";
 
 	TaskInfo taskToBeModified;
 
@@ -39,7 +38,8 @@ public class CommandDone extends Command{
 		if (taskToBeModified.getDone()) {
 			feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
 		} else {
-			taskListShop.setDoneByName(taskName);
+			taskToBeModified.setDone(true);
+			taskListShop.refreshTasks();  //Refresh to shift task to archive
 			taskView.deleteInSearchView(taskToBeModified);
 			feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
 		}
@@ -50,7 +50,8 @@ public class CommandDone extends Command{
 	}
 
 	public boolean undo() {
-		taskListShop.setLastToUndone();
+		taskToBeModified.setDone(false);
+		taskListShop.refreshTasks();  //Refresh to shift task to current
 		taskView.addToSearchView(taskToBeModified);
 		return true;
 	}
