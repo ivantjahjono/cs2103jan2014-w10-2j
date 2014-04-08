@@ -93,6 +93,8 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	// Container to keep the pages tabs 
 	@FXML private HBox 					pageTabContainer;
 		  private ArrayList<Rectangle> 	pagesTab;
+		  private final String NEXT_PAGE_KEYWORD = "next";
+		  private final String PREV_PAGE_KEYWORD = "prev";
 		  
 	// Help boxes
 	@FXML private Pane 	helpPane;
@@ -377,10 +379,12 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				newHeaderIndex = 4;
 				break;
 				
-			default:
+			case SEARCH:
 				newHeaderIndex = -1;
 				break;
 				
+			default:
+				return;
 		}
 		
 		switchToNewHeader(newHeaderIndex);
@@ -388,11 +392,11 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 
 	private void activatePageToggle(String command) {
 		switch (command) {
-			case "next page":
+			case NEXT_PAGE_KEYWORD:
 				uiData.goToNextPage();
 				break;
 				
-			case "prev page":
+			case PREV_PAGE_KEYWORD:
 				uiData.goToPreviousPage();
 				break;
 				
@@ -403,8 +407,8 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 
 	private boolean isPageToggle(String command) {
 		switch (command) {
-			case "next page":
-			case "prev page":
+			case NEXT_PAGE_KEYWORD:
+			case PREV_PAGE_KEYWORD:
 				return true;
 				
 			default:
