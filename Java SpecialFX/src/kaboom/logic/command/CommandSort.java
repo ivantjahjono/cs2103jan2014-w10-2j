@@ -45,7 +45,7 @@ public class CommandSort extends Command {
 		}
 
 		String commandFeedback = String.format(MESSAGE_COMMAND_SORT_SUCCESS, taskListShop.shopSize());
-		return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
+		return createResult(commandFeedback);
 	}
 	
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {

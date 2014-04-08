@@ -41,30 +41,24 @@ public class CommandClear extends Command {
 		}
 		
 		String commandFeedback = "";
-		Vector<TaskInfo> display = null;
 		
 		switch (clearType) {
 		case CLEAR_TYPE_ALL:
 			tasksCleared = taskListShop.getAllCurrentTasks();		
 			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
-			display = taskListShop.clearAllTasks();
 			addCommandToHistory ();
 			break;
 		case CLEAR_TYPE_CURRENT:
 			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NOT_IMPLEMENTED;
-			display = taskListShop.getAllCurrentTasks();
 			break;
 		case CLEAR_TYPE_EMPTY:
 			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE;
-			display = taskListShop.getAllCurrentTasks();
 			break;
 		default: 
 			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE;
-			display = taskListShop.getAllCurrentTasks();
 		}
 		
-		display = taskListShop.getAllCurrentTasks();
-		return createResult(display, commandFeedback);
+		return createResult(commandFeedback);
 	}
 	
 	public boolean undo () {
