@@ -312,6 +312,13 @@ public class TaskListShop {
 		logger.fine("All tasks cleared");
 		return vectorToReturn;
 	}
+	
+	public Vector<TaskInfo> clearAllArchivedTasks () {
+		archivedTaskList = new Vector<TaskInfo>();
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(archivedTaskList);
+		logger.fine("All archive tasks cleared");
+		return vectorToReturn;
+	}
 
 	public Vector<Integer> getCorrespondingID(Vector<TaskInfo> taskList) {
 		Vector<Integer> taskID = new Vector<Integer>();

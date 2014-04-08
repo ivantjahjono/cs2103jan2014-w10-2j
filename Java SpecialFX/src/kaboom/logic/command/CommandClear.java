@@ -14,10 +14,12 @@ public class CommandClear extends Command {
 	private final String CLEAR_TYPE_ALL = "all";
 	private final String CLEAR_TYPE_CURRENT = "current";
 	private final String CLEAR_TYPE_EMPTY = "";
+	private final String CLEAR_TYPE_ARCHIVE = "archive";
 	
 	private final String MESSAGE_COMMAND_CLEAR_SUCCESS = "1.. 2.. 3.. Pooof! Your schedule has gone with the wind";
-	private final String MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE = "1.. 2.. 3.. Pooof! Your schedule has gone with the wind";
-	private final String MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE = "please enter <clear all> to remove all tasks or <clear current> to remove current view";
+	private final String MESSAGE_COMMAND_CLEAR_ARCHIVE_SUCCESS = "3.. 2.. 1.. Pooof! Your archive has gone with the wind";
+	private final String MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE = "You trying to be funny?";
+//	private final String MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE = "please enter <clear all> to remove all tasks or <clear current> to remove current view";
 	private final String MESSAGE_COMMAND_CLEAR_FAIL_NOT_IMPLEMENTED = "LOL";
 	
 	Vector<TaskInfo> tasksCleared;
@@ -34,7 +36,7 @@ public class CommandClear extends Command {
 	public Result execute() {
 		assert taskListShop != null;
 		
-		clearType = infoTable.get(KEYWORD_TYPE.CLEARTYPE);
+		clearType = infoTable.get(KEYWORD_TYPE.CLEARTYPE).toLowerCase().trim();
 		
 		if(clearType == null || clearType.isEmpty()) {
 			clearType = CLEAR_TYPE_ALL;
@@ -46,13 +48,21 @@ public class CommandClear extends Command {
 		case CLEAR_TYPE_ALL:
 			tasksCleared = taskListShop.getAllCurrentTasks();		
 			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
+			taskListShop.clearAllTasks();
 			addCommandToHistory ();
 			break;
 		case CLEAR_TYPE_CURRENT:
 			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NOT_IMPLEMENTED;
 			break;
 		case CLEAR_TYPE_EMPTY:
-			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE;
+			//take as all
+			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
+//			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE;
+			taskListShop.clearAllTasks();
+			break;
+		case CLEAR_TYPE_ARCHIVE:
+			commandFeedback = MESSAGE_COMMAND_CLEAR_ARCHIVE_SUCCESS;
+			taskListShop.clearAllArchivedTasks ();
 			break;
 		default: 
 			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE;
