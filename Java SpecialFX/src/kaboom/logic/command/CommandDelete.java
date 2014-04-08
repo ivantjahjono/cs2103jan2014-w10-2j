@@ -7,27 +7,20 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
-import kaboom.ui.DISPLAY_STATE;
-import kaboom.ui.TaskView;
 
 
 public class CommandDelete extends Command {
 
-	private final String MESSAGE_COMMAND_DELETE_SUCCESS = "<%1$s> deleted. 1 less work to do :D";
-	private final String MESSAGE_COMMAND_DELETE_FAIL = "Aww... fail to delete <%1$s>.";
-	private final String MESSAGE_COMMAND_DELETE_INVALID = "Enter a taskname or task id, please ?";
-	private final String MESSAGE_COMMAND_DELETE_NO_SUCH_TASK = "<%1$s> does not exist...";
+	private final String MESSAGE_COMMAND_DELETE_SUCCESS = "<%s> deleted. 1 less work to do :D";
 
 	TaskInfo taskToBeDeleted;
-	TaskView taskView;
 
 	public CommandDelete () {
 		commandType = COMMAND_TYPE.DELETE;
 		keywordList = new KEYWORD_TYPE[] {
 				KEYWORD_TYPE.TASKID,
 				KEYWORD_TYPE.TASKNAME
-		};
-		taskView = TaskView.getInstance();  
+		}; 
 	}
 
 	public Result execute() {

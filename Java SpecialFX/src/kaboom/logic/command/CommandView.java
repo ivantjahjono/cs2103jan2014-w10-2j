@@ -6,10 +6,8 @@ import java.util.Vector;
 import kaboom.logic.FormatIdentify;
 import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.Result;
-import kaboom.logic.TaskInfo;
 import kaboom.storage.History;
 import kaboom.ui.DISPLAY_STATE;
-import kaboom.ui.TaskView;
 
 public class CommandView extends Command{
 	private final String KEYWORD_TODAY = "today";
