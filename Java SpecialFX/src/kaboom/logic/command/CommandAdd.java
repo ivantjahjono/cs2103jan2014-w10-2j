@@ -100,7 +100,15 @@ public class CommandAdd extends Command {
 			addCommandToHistory ();
 			commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
 			
-			stateToSet = getDisplayStateBasedOnTaskType(taskInfo.getTaskType());
+			if (taskInfo.getTaskType() == TASK_TYPE.FLOATING) {
+				stateToSet = DISPLAY_STATE.TIMELESS;
+			} else if (taskListShop.isTaskToday(taskInfo)) {
+				stateToSet =  DISPLAY_STATE.TODAY;
+			} else if (taskListShop.isFutureTask(taskInfo)){
+				stateToSet =  DISPLAY_STATE.FUTURE;
+			} else {
+				stateToSet =  DISPLAY_STATE.EXPIRED;
+			}
 		} else {
 			commandFeedback = String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
 		}

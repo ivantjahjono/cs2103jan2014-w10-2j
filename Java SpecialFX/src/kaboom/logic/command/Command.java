@@ -409,20 +409,4 @@ public class Command {
 		}
 		return count;
 	}
-
-	public DISPLAY_STATE getDisplayStateBasedOnTaskType(TASK_TYPE type) {
-		switch (type) {
-			case FLOATING:
-				return DISPLAY_STATE.TIMELESS;
-				
-			case DEADLINE:
-				return DISPLAY_STATE.TODAY;
-			
-			case TIMED:
-				return DISPLAY_STATE.TODAY;
-				
-			default:
-				return DISPLAY_STATE.INVALID;
-		}
-	}
 }
