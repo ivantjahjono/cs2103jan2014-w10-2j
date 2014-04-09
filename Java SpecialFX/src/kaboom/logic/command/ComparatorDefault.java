@@ -13,8 +13,9 @@ public class ComparatorDefault implements Comparator<TaskInfo> {
 		else if (task1.getEndDate() != null && task2.getEndDate() != null){
 			return task1.getEndDate().compareTo(task2.getEndDate());
 		}
-		else
-			return 0;
+		else {
+			return task2.getPriority() - task1.getPriority();
+		}
 	}
 
 }
