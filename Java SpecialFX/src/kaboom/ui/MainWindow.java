@@ -43,9 +43,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	// User interface elements
 			private Stage 		windowStage;
 	@FXML	private AnchorPane 	mainPane;
-	
-	// Data for the task table
-			private ObservableList<TaskInfoDisplay> data;
 			
 	@FXML 	private Label		todayWeekDay;
 	@FXML 	private Label		todayDate;
@@ -127,7 +124,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	public MainWindow () {
 		currentCommand = "";
 		
-		data = FXCollections.observableArrayList();
 		pagesTab = new ArrayList<Rectangle>();
 		
 		uiData = DisplayData.getInstance();
@@ -440,6 +436,9 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			case "help search":
 				return helpSearchPane;
 				
+			case "help close":
+				return currentActiveHelpPane;
+				
 			default:
 				return null;
 		}
@@ -454,6 +453,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			case "help complete":
 			case "help view":
 			case "help search":
+			case "help close":
 				return true;
 				
 			default:
@@ -461,17 +461,8 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		}
 	}
 
-	private void updateTaskTable() {
-		data.clear();
-		
+	private void updateTaskTable() {	
 		Vector<TaskInfoDisplay> taskList = uiData.getTaskDisplay();
-		
-//		for (int i = 0; i < taskList.size(); i++) {
-//			data.add(taskList.get(i));
-//		}
-//		taskDisplayTable.setItems(data);
-		
-		// Update the data
 		for (int i = 0; i < taskList.size(); i++) {
 			TaskUiContainer currentTaskContainer = taskUiList.get(i);
 			currentTaskContainer.updateWithTaskDisplay(taskList.get(i));
