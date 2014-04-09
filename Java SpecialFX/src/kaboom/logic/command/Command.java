@@ -51,6 +51,7 @@ public class Command {
 		displayData = DisplayData.getInstance();
 		keywordList = new KEYWORD_TYPE[0];
 		commandObjectTable = new Hashtable<KEYWORD_TYPE, Object>();
+		infoTable = new Hashtable<KEYWORD_TYPE, String>();
 		taskView = TaskView.getInstance();
 	}
 
