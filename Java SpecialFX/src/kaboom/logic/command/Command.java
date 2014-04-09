@@ -250,7 +250,7 @@ public class Command {
 	protected String saveTaskPriority(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
 		String taskPriority = infoHashes.get(KEYWORD_TYPE.PRIORITY);
 		if(taskPriority != null) {
-			task.setImportanceLevel(Integer.parseInt(taskPriority));
+			task.setPriority(Integer.parseInt(taskPriority));
 		}
 		return taskPriority;
 	}
