@@ -172,11 +172,11 @@ public class CommandModify extends Command {
 	
 	private boolean modifyTaskPriority(TaskInfo temp) {
 		String taskPriority = infoTable.get(KEYWORD_TYPE.PRIORITY);
-		int originalPriorityLevel = temp.getImportanceLevel();
+		int originalPriorityLevel = temp.getPriority();
 		if(taskPriority != null) {
 			int priorityLevelAfterChange = Integer.parseInt(taskPriority);
 			if (originalPriorityLevel != priorityLevelAfterChange) {
-				temp.setImportanceLevel (priorityLevelAfterChange);
+				temp.setPriority (priorityLevelAfterChange);
 				return true;
 			}
 		}
