@@ -151,9 +151,9 @@ public class CommandAdd extends Command {
 	private void saveTaskPriority() {
 		//Default priority = 1
 		if (infoTable.get(KEYWORD_TYPE.PRIORITY) == null) {
-			taskInfo.setImportanceLevel(1);
+			taskInfo.setPriority(1);
 		} else {
-			taskInfo.setImportanceLevel(Integer.parseInt(infoTable.get(KEYWORD_TYPE.PRIORITY)));
+			taskInfo.setPriority(Integer.parseInt(infoTable.get(KEYWORD_TYPE.PRIORITY)));
 		}
 	}
 

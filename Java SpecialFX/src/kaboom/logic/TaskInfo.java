@@ -10,7 +10,7 @@ public class TaskInfo {
 	Calendar startDate;
 	Calendar endDate;
 	
-	int importanceLevel;
+	int priority;
 	
 	boolean isExpired;
 	boolean isDone;
@@ -22,7 +22,7 @@ public class TaskInfo {
 		startDate = null;
 		endDate = null;
 		
-		importanceLevel = 1;
+		priority = 1;
 		isExpired = false;
 		isDone = false;
 		isRecent = false;
@@ -32,7 +32,7 @@ public class TaskInfo {
 		taskname = info.getTaskName();
 		startDate = info.getStartDate();
 		endDate = info.getEndDate();
-		importanceLevel = info.getImportanceLevel();
+		priority = info.getPriority();
 		isExpired = info.getExpiryFlag();
 		taskType = info.getTaskType();
 	}
@@ -57,8 +57,8 @@ public class TaskInfo {
 		endDate = date;
 	}
 	
-	public void setImportanceLevel (int level) { 
-		importanceLevel = level;
+	public void setPriority (int level) { 
+		priority = level;
 	}
 	
 	public void setExpiryFlag (boolean flag) { 
@@ -89,8 +89,8 @@ public class TaskInfo {
 		return endDate;
 	}
 	
-	public int getImportanceLevel () { 
-		return importanceLevel;
+	public int getPriority () { 
+		return priority;
 	}
 	
 	public boolean getExpiryFlag () { 
@@ -103,7 +103,7 @@ public class TaskInfo {
 	
 	public boolean isEmpty () {
 	
-		if (taskname == "" && startDate == null && endDate == null && importanceLevel == 0) {
+		if (taskname == "" && startDate == null && endDate == null && priority == 0) {
 			return true;
 		}		
 		
