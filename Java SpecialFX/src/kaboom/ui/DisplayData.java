@@ -26,6 +26,7 @@ public class DisplayData extends Observable {
 	static DisplayData instance;
 
 	TaskListShop 	taskListShop;
+	TaskView		taskView;
 
 	Vector<TaskInfoDisplay> tasksDataToDisplay;
 	Vector<FormatIdentify> 	formattingCommand;
@@ -56,8 +57,8 @@ public class DisplayData extends Observable {
 	}
 
 	private DisplayData () {
-		taskListShop = TaskListShop.getInstance();
-
+		taskListShop  	= TaskListShop.getInstance();
+		
 		tasksDataToDisplay = new Vector<TaskInfoDisplay>();
 		formattingCommand = new Vector<FormatIdentify>();
 		taskCountList = new Vector<Integer>();
@@ -108,7 +109,10 @@ public class DisplayData extends Observable {
 	 */
 	public void updateDisplayWithResult (Result commandResult) {
 		// TODO Hardcoded way of forcing to show to default if there is no tasks to display
-
+		if (taskView == null) {
+			taskView = TaskView.getInstance();
+		}
+		
 		// Update display state
 		DISPLAY_STATE stateChange = commandResult.getDisplayState();
 		if (stateChange != DISPLAY_STATE.INVALID) {
@@ -121,11 +125,22 @@ public class DisplayData extends Observable {
 
 		// Update header counters
 		updateTaskCountList ();
+		
+		// Is there any task in focus ?
+		TaskInfo taskToFocus = commandResult.getTaskToFocus();
+		int indexToGo = -1;
+		if (taskToFocus != null) {
+			indexToGo = taskView.getTaskPositionInView(taskToFocus);
+		}
 
 		if (commandResult.getGoToNextPage()) {
 			goToNextPage();
 		} else if (commandResult.getGoToPrevPage()) {
 			goToPreviousPage();
+		} else 
+
+		if (indexToGo != -1) {
+			currentPage = indexToGo/NUM_OF_TASK_PER_PAGE;
 		}
 
 		int maxPages = getMaxTaskDisplayPages(tasksDataToDisplay)-1;
