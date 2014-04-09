@@ -63,17 +63,18 @@ public class Command {
 	}
 
 	public Result execute() {
-		return createResult(MESSAGE_COMMAND_INVALID, DISPLAY_STATE.INVALID);
+		return createResult(MESSAGE_COMMAND_INVALID);
 	}
 	
 	protected Result createResult (String feedback) {
-		return createResult(feedback, DISPLAY_STATE.INVALID);
+		return createResult(feedback, DISPLAY_STATE.INVALID, null);
 	}
 
-	protected Result createResult (String feedback, DISPLAY_STATE displayState) {
+	protected Result createResult (String feedback, DISPLAY_STATE displayState, TaskInfo taskToFocus) {
 		Result commandResult = new Result();
 		commandResult.setFeedback(feedback);
 		commandResult.setDisplayState(displayState);
+		commandResult.setTaskToFocus(taskToFocus);
 
 		return commandResult;
 	}
