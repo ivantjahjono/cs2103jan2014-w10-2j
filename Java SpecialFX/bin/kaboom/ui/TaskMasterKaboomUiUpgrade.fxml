@@ -163,7 +163,7 @@
         <Image url="@img/MarkX.png" />
       </image>
     </ImageView>
-    <Label layoutX="14.0" layoutY="5.0" mouseTransparent="true" text="| TASK MASTER KABOOM V0.3" textFill="WHITE">
+    <Label layoutX="14.0" layoutY="5.0" mouseTransparent="true" text="| TASK MASTER KABOOM V0.4.1" textFill="WHITE">
       <font>
         <Font name="Segoe UI" size="12.0" fx:id="x14" />
       </font>
