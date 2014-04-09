@@ -288,17 +288,17 @@ public class DateAndTimeFormatTest {
 		assertEquals("2334", datFormat.convertStringTimeTo24HourString(timeString));
 	}
 	
-	@Test
-	public void convertDate () {
-		String timeString = "";
-		
-		timeString = "1pm";
-		assertEquals("07 04 14", datFormat.getNearestWeekdayFromToday(2));
-		
-		assertEquals("12 04 14", datFormat.getNearestWeekdayFromToday(7));
-		
-		assertEquals("10 04 14", datFormat.getNearestWeekdayFromToday(5));
-	}
+//	@Test
+//	public void convertDate () {
+//		String timeString = "";
+//		
+//		timeString = "1pm";
+//		assertEquals("07 04 14", datFormat.getNearestWeekdayFromToday(2));
+//		
+//		assertEquals("12 04 14", datFormat.getNearestWeekdayFromToday(7));
+//		
+//		assertEquals("10 04 14", datFormat.getNearestWeekdayFromToday(5));
+//	}
 	
 	@Test
 	public void convertDateStringToCalendar () {
