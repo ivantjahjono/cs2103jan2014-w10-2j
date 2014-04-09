@@ -125,7 +125,7 @@ public class Storage {
 				output.append(" " + delimiter);
 				output.append(" " + delimiter);
 			}
-			output.append(task.getImportanceLevel() + delimiter);
+			output.append(task.getPriority() + delimiter);
 			output.append(task.getExpiryFlag() + delimiter);
 			output.append(task.getDone() + delimiter);
 			writer.write(output.toString());
@@ -191,7 +191,7 @@ public class Storage {
 					task.setExpiryFlag(false);  //Floating tasks cannot expire
 				}
 
-				task.setImportanceLevel(Integer.parseInt(inputSplit[INDEX_IMPORTANCE_LEVEL]));
+				task.setPriority(Integer.parseInt(inputSplit[INDEX_IMPORTANCE_LEVEL]));
 				task.setExpiryFlag(Boolean.parseBoolean(inputSplit[INDEX_IS_EXPIRED]));
 				task.setDone(Boolean.parseBoolean(inputSplit[INDEX_IS_DONE]));
 
