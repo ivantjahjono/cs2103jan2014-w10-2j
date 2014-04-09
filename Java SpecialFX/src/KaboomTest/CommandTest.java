@@ -46,7 +46,7 @@ public class CommandTest {
 		task.setTaskType(TASK_TYPE.TIMED);
 		task.setStartDate(startDate);
 		task.setEndDate(endDate);
-		task.setImportanceLevel(3);
+		task.setPriority(3);
 	}
 	
 	

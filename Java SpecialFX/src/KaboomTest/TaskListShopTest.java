@@ -36,7 +36,7 @@ public class TaskListShopTest {
 		newTask.setTaskType(TASK_TYPE.FLOATING);
 		newTask.setStartDate(startDate);
 		newTask.setEndDate(endDate);
-		newTask.setImportanceLevel(3);
+		newTask.setPriority(3);
 	}
 	
 	public void oldTaskInfo(TaskInfo oldTask) {
@@ -49,7 +49,7 @@ public class TaskListShopTest {
 		oldTask.setTaskType(TASK_TYPE.TIMED);
 		oldTask.setStartDate(startDate);
 		oldTask.setEndDate(endDate);
-		oldTask.setImportanceLevel(3);
+		oldTask.setPriority(3);
 	}
 
 	@Test
