@@ -17,8 +17,8 @@ public class TaskView {
 
 	private TaskView() {
 		taskListShop = TaskListShop.getInstance();
-		currentView = taskListShop.getToday();
-		currentViewID = taskListShop.getCorrespondingID(currentView);
+		//currentView = taskListShop.getToday();
+		//currentViewID = taskListShop.getCorrespondingID(currentView);
 		searchView = new Vector<TaskInfo>();
 		displayData = DisplayData.getInstance();
 	}
@@ -124,6 +124,10 @@ public class TaskView {
 				searchView.set(i, newTask);
 			}
 		}
+	}
+	
+	public int getTaskPositionInView (TaskInfo taskToSearch) {
+		return currentView.indexOf(taskToSearch);
 	}
 
 	private void setCurrentView(Vector<TaskInfo> taskList) {
