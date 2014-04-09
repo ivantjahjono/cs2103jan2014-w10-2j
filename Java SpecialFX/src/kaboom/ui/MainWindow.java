@@ -229,22 +229,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		return command.equals("exit");
 	}
 
-	private void switchToNewHeader(int switchIndexResult) {
-		// Is it the same label activated ?
-		if (switchIndexResult == currentLabelIndex) {
-			return;
-		}
-		
-		if (switchIndexResult == -1) {
-			previousLabelIndex = currentLabelIndex;
-			setHeaderLabelToNormal(labelList.get(previousLabelIndex));
-		} else {
-			previousLabelIndex = currentLabelIndex;
-			currentLabelIndex = switchIndexResult;
-			switchMainHeaderHighlight(previousLabelIndex, currentLabelIndex);
-		}
-	}
-
 	private void updateDisplay() {
 		updateHeaderDateTime();
 		updateTaskTable();
@@ -623,38 +607,8 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		initialX = mouseEvent.getSceneX();
 		initialY = mouseEvent.getSceneY();
 	}
-	
-	@FXML
-	private void onWindowKeyPressed (KeyEvent keyEvent) {
-		//System.out.println("Key pressed: " + keyEvent.getText());
-		
-		if (!keyEvent.isControlDown()) {
-			return;
-		}
-		
-		previousLabelIndex = currentLabelIndex;
-		switch(keyEvent.getCode()) {
-			case LEFT:
-				currentLabelIndex--;
-				
-				if (currentLabelIndex < 0) {
-					currentLabelIndex = labelList.size()-1;
-				}
-				break;
-				
-			case RIGHT:
-				currentLabelIndex++;
-				currentLabelIndex %= labelList.size();
-				break;
-				
-			default:
-				break;
-		}
-		
-		setHeaderLabelToNormal(labelList.get(previousLabelIndex));
-		setHeaderLabelToSelected(labelList.get(currentLabelIndex));
-	}
-	
+
+// Header manipulation
 	@FXML
 	private void onHeaderMouseClicked (MouseEvent mouseEvent) {
 		Node nodePressed = (Node)mouseEvent.getSource();
@@ -692,10 +646,23 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		
 		applicationController.processCommand(command);
 	}
-
-	private void switchMainHeaderHighlight(int prevIndex, int currIndex) {
-		setHeaderLabelToNormal(labelList.get(prevIndex));
-		setHeaderLabelToSelected(labelList.get(currIndex));
+	
+	private void switchToNewHeader(int switchIndexResult) {
+		// Is it the same label activated ?
+		if (switchIndexResult == currentLabelIndex) {
+			return;
+		}
+		
+		previousLabelIndex = currentLabelIndex;
+		currentLabelIndex = switchIndexResult;
+		if (switchIndexResult == -1) {
+			setHeaderLabelToNormal(labelList.get(previousLabelIndex));
+		} else if (previousLabelIndex == -1) { 
+			setHeaderLabelToSelected(labelList.get(currentLabelIndex));
+		} else {
+			setHeaderLabelToNormal(labelList.get(previousLabelIndex));
+			setHeaderLabelToSelected(labelList.get(currentLabelIndex));
+		}
 	}
 	
 	private void setHeaderLabelToNormal (Label labelToChange) {
