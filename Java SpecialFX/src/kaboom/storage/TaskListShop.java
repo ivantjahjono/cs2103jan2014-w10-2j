@@ -1,3 +1,4 @@
+//@author A0096670W
 package kaboom.storage;
 
 import java.util.Calendar;
@@ -125,6 +126,7 @@ public class TaskListShop {
 				returnVector.add(singleTask);
 			}
 		}
+		Collections.sort(returnVector, new ComparatorPriority());
 		return returnVector;
 	}
 
