@@ -128,6 +128,7 @@
                 <Image url="@img/CaretRight.png" />
               </image>
             </ImageView>
+            <Label fx:id="pageNumber" alignment="CENTER_RIGHT" layoutX="491.0" layoutY="9.0" prefWidth="80.0" text="Page 1 - 2" textAlignment="RIGHT" />
           </children>
         </Pane>
         <Group id="Group" layoutX="10.0" layoutY="15.0" scaleX="1.0" scaleY="1.0">
