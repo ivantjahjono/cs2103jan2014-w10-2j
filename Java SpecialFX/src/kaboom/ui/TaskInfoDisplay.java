@@ -1,10 +1,15 @@
-package kaboom.logic;
+//@author A0099175N
+
+package kaboom.ui;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import kaboom.logic.DateAndTimeFormat;
+import kaboom.logic.TASK_TYPE;
+import kaboom.logic.TaskInfo;
 
 public class TaskInfoDisplay {
 	private SimpleIntegerProperty taskId;

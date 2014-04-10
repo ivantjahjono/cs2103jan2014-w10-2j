@@ -1,3 +1,5 @@
+//@author A0099175N
+
 package kaboom.ui;
 
 import java.io.IOException;
@@ -27,13 +29,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.RectangleBuilder;
 import javafx.stage.Stage;
+
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import kaboom.logic.FormatIdentify;
-import kaboom.logic.TaskInfoDisplay;
 import kaboom.logic.TaskMasterKaboom;
 
 public class MainWindow implements javafx.fxml.Initializable, Observer {	
