@@ -1,3 +1,5 @@
+//@author A0099175N
+
 package kaboom.ui;
 
 import java.util.Observable;
@@ -7,7 +9,6 @@ import kaboom.logic.DateAndTimeFormat;
 import kaboom.logic.FormatIdentify;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
-import kaboom.logic.TaskInfoDisplay;
 import kaboom.storage.TaskListShop;
 
 /**
