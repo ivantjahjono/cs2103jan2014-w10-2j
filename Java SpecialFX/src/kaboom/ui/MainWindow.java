@@ -88,6 +88,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	@FXML private HBox 			commandFormatFeedback;
 	
 	// Container to keep the pages tabs 
+	@FXML private Label 				pageNumber;
 	@FXML private HBox 					pageTabContainer;
 		  private ArrayList<Rectangle> 	pagesTab;
 		  private final String NEXT_PAGE_KEYWORD = "next";
@@ -234,6 +235,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		updateHeaderTaskCount();
 		
 		updatePagesTab();
+		updatePageNumber();
 		
 		updateCommandFormat();
 	}
@@ -705,6 +707,15 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		resizePageTabToMaxPages(maxTabs);
 		updatePageTabStyles();
 		refreshPageTabContainerWithNewPageTabs();
+	}
+	
+	private void updatePageNumber() {
+		// TODO Auto-generated method stub
+		int totalPages = uiData.getMaxTaskDisplayPagesForCurrentView();
+		int currentPage = uiData.getCurrentPage()+1;
+		
+		String pageString = String.format("Pg %d - %d", currentPage, totalPages);
+		pageNumber.setText(pageString);
 	}
 	
 	private Rectangle createPageTabRectangle() {
