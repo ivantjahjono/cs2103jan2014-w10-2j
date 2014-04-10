@@ -18,10 +18,11 @@ import kaboom.logic.TaskMasterKaboom;
 
 
 public class GraphicInterface extends Application {
-	
 	private final int UPDATE_INTERVAL = 30;
 	private final int WINDOW_WIDTH  = 700;
 	private final int WINDOW_HEIGHT = 700;
+	
+	private final String APPLICATION_NAME = "Task Master Kaboom";
 	
 	Parent root;
 	MainWindow mainWindow;
@@ -56,11 +57,16 @@ public class GraphicInterface extends Application {
 		
 		mainWindow.prepareTextfieldFocus();
 
-		Image ico = new Image(this.getClass().getResourceAsStream("img/taskmasterkaboom.png"));
-		primaryStage.getIcons().add(ico);
+		updateApplicationIconAndTitle(primaryStage);
 		
 		updateTimeline = setupRunningUpdate();
 		initialiseAndStartUpdateService();
+	}
+
+	private void updateApplicationIconAndTitle(Stage primaryStage) {
+		Image ico = new Image(this.getClass().getResourceAsStream("img/taskmasterkaboom.png"));
+		primaryStage.getIcons().add(ico);
+		primaryStage.setTitle(APPLICATION_NAME);
 	}
 
 	private void initialiseAndStartUpdateService() {
