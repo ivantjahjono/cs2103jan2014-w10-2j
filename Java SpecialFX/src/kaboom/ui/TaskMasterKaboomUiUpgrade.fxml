@@ -181,7 +181,7 @@
             <Font size="16.0" fx:id="x1" />
           </font>
           <labelFor>
-            <TextField fx:id="commandTextInput" disable="false" layoutX="11.0" layoutY="603.0" onAction="#onTextfieldAction" onKeyReleased="#onTextfieldKeyReleased" prefWidth="572.0" promptText="Please enter a command" styleClass="text-field-correct" text="" />
+            <TextField fx:id="commandTextInput" disable="false" layoutX="11.0" layoutY="603.0" onAction="#onTextfieldAction" onKeyPressed="#onTextfieldKeyPressed" onKeyReleased="#onTextfieldKeyReleased" prefWidth="572.0" promptText="Please enter a command" styleClass="text-field-correct" text="" />
           </labelFor>
         </Label>
       </children>

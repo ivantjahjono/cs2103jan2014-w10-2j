@@ -12,8 +12,6 @@ import java.util.ResourceBundle;
 import java.util.Vector;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -494,30 +492,57 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		currentCommandIndex = commandsEnteredList.size();
 	}
 	
-	private void recallPreviousCommand () {
+	private boolean recallPreviousCommand () {
 		if (currentCommandIndex > 0) {
 			currentCommandIndex--;
 			commandTextInput.setText(commandsEnteredList.get(currentCommandIndex));
+			
+			return true;
 		}
+		return false;
 	}
 	
-	private void recallStoredTypedCommand () {
+	private boolean recallStoredTypedCommand () {
 		if (currentCommandIndex < commandsEnteredList.size()-1) {
 			currentCommandIndex++;
 			commandTextInput.setText(commandsEnteredList.get(currentCommandIndex));
-		} else {
+			
+			return true;
+		} else if (currentCommandIndex < commandsEnteredList.size()){
 			currentCommandIndex =  commandsEnteredList.size();
 			commandTextInput.setText(currentCommand);
+			
+			return true;
 		}
+		
+		return false;
 	}
 	
 	private void setTextfieldCursorToLast () {
 		commandTextInput.positionCaret(commandTextInput.getText().length());
 	}
+	
+	@FXML
+	private void onTextfieldKeyPressed (KeyEvent keyEvent) {
+		switch(keyEvent.getCode()) {
+			case Z:
+				if (keyEvent.isControlDown()) {
+					applicationController.processCommand("undo");
+				}
+				break;
+				
+			case UP:
+			case DOWN:
+				keyEvent.consume();
+				break;
+				
+			default:
+				break;
+		}
+	}
 
 	@FXML
 	private void onTextfieldKeyReleased (KeyEvent keyEvent) {
-		//System.out.println("Key pressed: " + keyEvent.getText());
 		boolean processResult = false;
 		
 		switch(keyEvent.getCode()) {
@@ -527,14 +552,16 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				}
 				
 				loggerUnit.log(Level.FINE, "Recalling previous command.");
-				recallPreviousCommand();
-				setTextfieldCursorToLast();
+				if (recallPreviousCommand()) {
+					setTextfieldCursorToLast();
+				}
 				break;
 				
 			case DOWN:
 				loggerUnit.log(Level.FINE, "Recalling next command.");
-				recallStoredTypedCommand();
-				setTextfieldCursorToLast();
+				if (recallStoredTypedCommand()) {
+					setTextfieldCursorToLast();
+				}
 				break;
 				
 			case ESCAPE:
@@ -591,8 +618,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	
 	@FXML
 	private void onWindowMouseDrag (MouseEvent mouseEvent) {
-		//System.out.printf("[%f, %f]\n", mouseEvent.getSceneX(), mouseEvent.getSceneY());
-		
 		windowStage.setX(mouseEvent.getScreenX() - initialX);
 		windowStage.setY(mouseEvent.getScreenY() - initialY);
 	}
