@@ -75,7 +75,7 @@ public class TaskInfoDisplay {
 			startDate.set(dueTimeToDisplay);
 		}
 		
-		setImportanceLevel(infoToUpdateFrom.getImportanceLevel());
+		setImportanceLevel(infoToUpdateFrom.getPriority());
 		
 		setExpiryFlag(infoToUpdateFrom.getExpiryFlag());
 		setDoneFlag(infoToUpdateFrom.getDone());
