@@ -41,8 +41,9 @@ public class DisplayData extends Observable {
 	String currentDate;
 	String currentTime;
 
-	DISPLAY_STATE currentDisplayState;
-
+	DISPLAY_STATE 	currentDisplayState;
+	HELP_STATE 		currentHelpState;
+	
 	/**
 	 * Returns a DisplayData instance of the class.
 	 * <p>
@@ -68,6 +69,7 @@ public class DisplayData extends Observable {
 		userFeedbackMessage = "";
 		currentPage = 0;
 		currentDisplayState = DISPLAY_STATE.TODAY;
+		currentHelpState =  HELP_STATE.CLOSE;
 	}
 
 	private void updateTaskCountList() {
@@ -119,6 +121,17 @@ public class DisplayData extends Observable {
 		DISPLAY_STATE stateChange = commandResult.getDisplayState();
 		if (stateChange != DISPLAY_STATE.INVALID) {
 			currentDisplayState = stateChange; 
+		}
+		
+		// Update help state
+		HELP_STATE helpStateChange = commandResult.getHelpState();
+		if (helpStateChange != HELP_STATE.INVALID) {
+			
+			if (currentHelpState == helpStateChange) {
+				currentHelpState = HELP_STATE.CLOSE;
+			} else {
+				currentHelpState = helpStateChange; 
+			}
 		}
 
 		// Pull data from task view class
@@ -290,6 +303,10 @@ public class DisplayData extends Observable {
 
 	public DISPLAY_STATE getCurrentDisplayState() {
 		return currentDisplayState;
+	}
+	
+	public HELP_STATE getCurrentHelpState() {
+		return currentHelpState;
 	}
 
 	public void setFormatDisplay (Vector<FormatIdentify> formatList) {
