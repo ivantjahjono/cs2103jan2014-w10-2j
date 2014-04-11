@@ -3,7 +3,9 @@
 package kaboom.logic;
 
 import java.util.Vector;
+
 import kaboom.ui.DISPLAY_STATE;
+import kaboom.ui.HELP_STATE;
 
 
 public class Result {
@@ -15,7 +17,8 @@ public class Result {
 	boolean isGoToNextPage;
 	boolean isGoToPreviousPage;
 	
-	DISPLAY_STATE stateToChangeTo;
+	DISPLAY_STATE 	stateToChangeTo;
+	HELP_STATE		helpStateToChangeTo;
 	
 	public Result () {
 		feedback = "";
@@ -23,6 +26,7 @@ public class Result {
 		isGoToNextPage = false;
 		isGoToPreviousPage = false;
 		stateToChangeTo = DISPLAY_STATE.INVALID;
+		helpStateToChangeTo = HELP_STATE.INVALID;
 	}
 	
 	public void setTasksToDisplay (Vector<TaskInfo> taskList) {
@@ -49,6 +53,10 @@ public class Result {
 		stateToChangeTo = newState;
 	}
 	
+	public void setHelpState (HELP_STATE newState) {
+		helpStateToChangeTo = newState;
+	}
+	
 	public Vector<TaskInfo> getTasksToDisplay () {
 		return taskToDisplayList;
 	}
@@ -71,5 +79,9 @@ public class Result {
 	
 	public DISPLAY_STATE getDisplayState () {
 		return stateToChangeTo;	
+	}
+	
+	public HELP_STATE getHelpState () {
+		return helpStateToChangeTo;	
 	}
 }
