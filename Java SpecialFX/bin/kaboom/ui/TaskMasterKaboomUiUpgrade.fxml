@@ -247,7 +247,7 @@
         </Pane>
       </children>
     </AnchorPane>
-    <Pane fx:id="helpPane" layoutX="16.0" layoutY="72.0" prefHeight="291.0" prefWidth="567.0" visible="false">
+    <Pane fx:id="helpPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help" />
@@ -309,7 +309,7 @@
         </VBox>
       </children>
     </Pane>
-    <Pane id="helpadd" fx:id="helpAddPane" layoutX="16.0" layoutY="72.0" prefHeight="290.49609375" prefWidth="567.0" visible="false">
+    <Pane id="helpadd" fx:id="helpAddPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help Add" />
@@ -396,7 +396,7 @@
         </HBox>
       </children>
     </Pane>
-    <Pane id="helpadd" fx:id="helpDeletePane" layoutX="16.0" layoutY="72.0" prefHeight="290.49609375" prefWidth="567.0" visible="false">
+    <Pane id="helpadd" fx:id="helpDeletePane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help Delete" />
@@ -430,7 +430,7 @@
         </HBox>
       </children>
     </Pane>
-    <Pane id="helpadd" fx:id="helpModifyPane" layoutX="16.0" layoutY="72.0" prefHeight="290.49609375" prefWidth="567.0" visible="false">
+    <Pane id="helpadd" fx:id="helpModifyPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help Modify" />
@@ -489,7 +489,7 @@
         </HBox>
       </children>
     </Pane>
-    <Pane id="helpadd" fx:id="helpCompletePane" layoutX="16.0" layoutY="72.0" prefHeight="290.49609375" prefWidth="567.0" visible="false">
+    <Pane id="helpadd" fx:id="helpCompletePane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help Complete" />
@@ -544,7 +544,7 @@
         </HBox>
       </children>
     </Pane>
-    <Pane id="helpadd" fx:id="helpViewPane" layoutX="16.0" layoutY="72.0" prefHeight="290.49609375" prefWidth="567.0" visible="false">
+    <Pane id="helpadd" fx:id="helpViewPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="6.0" text="Help View" />
@@ -599,7 +599,7 @@
         </HBox>
       </children>
     </Pane>
-    <Pane id="helpadd" fx:id="helpSearchPane" layoutX="16.0" layoutY="72.0" prefHeight="290.49609375" prefWidth="567.0" visible="false">
+    <Pane id="helpadd" fx:id="helpSearchPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="6.0" text="Help Search" />
