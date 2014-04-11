@@ -10,6 +10,7 @@ import kaboom.logic.FormatIdentify;
 import kaboom.logic.Result;
 import kaboom.logic.TaskInfo;
 import kaboom.storage.TaskListShop;
+import kaboom.storage.TaskView;
 
 /**
  * Returns a vector of TaskInfoDisplay which contains all the 

@@ -1,11 +1,12 @@
-//@author A0099175N
+//@author A0096670W
 
-package kaboom.ui;
+package kaboom.storage;
 
 import java.util.Vector;
 
 import kaboom.logic.TaskInfo;
-import kaboom.storage.TaskListShop;
+import kaboom.ui.DISPLAY_STATE;
+import kaboom.ui.DisplayData;
 
 public class TaskView {
 
