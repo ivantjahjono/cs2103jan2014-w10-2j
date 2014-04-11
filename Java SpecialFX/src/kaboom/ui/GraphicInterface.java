@@ -1,3 +1,5 @@
+//@author A0099175N
+
 package kaboom.ui;
 
 import javafx.animation.Animation;
@@ -12,7 +14,6 @@ import javafx.stage.StageStyle;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.text.Font;
 import javafx.util.Duration;
 import kaboom.logic.TaskMasterKaboom;
 
