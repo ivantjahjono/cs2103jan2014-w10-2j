@@ -102,6 +102,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	@FXML private Pane 	helpCompletePane;
 	@FXML private Pane 	helpViewPane;
 	@FXML private Pane 	helpSearchPane;
+		  private Pane 	activeHelpPanel;
 	
 	private Pane 	currentActiveHelpPane;
 	
@@ -205,8 +206,8 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		// Check if need to switch header
 		if (isPageToggle(command)) {
 			activatePageToggle(command);
-		} else if (isHelpCommand(command)) {
-			activateHelpPane(command);
+//		} else if (isHelpCommand(command)) {
+//			activateHelpPane(command);
 		} else {
 			applicationController.processCommand(command);
 		}
@@ -233,6 +234,8 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		updatePageNumber();
 		
 		updateCommandFormat();
+		
+		updateHelpPanel();
 	}
 
 	private void updateHeaderDateTime() {
@@ -307,6 +310,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				case MODIFIED_TASKNAME:
 				case DATE:
 				case CLEARTYPE:
+				case HELP:
 					newLabel.getStyleClass().add("parseCommandName");
 					break;
 					
@@ -806,5 +810,54 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	private void changeStatusIndicatorStyle (String oldStyle, String newStyle) {
 		commandTextInput.getStyleClass().removeAll(Collections.singleton(oldStyle));
 		commandTextInput.getStyleClass().add(newStyle);
+	}
+	
+	private void updateHelpPanel() {		
+		// Get current status for help panel
+		HELP_STATE currentHelpState = uiData.getCurrentHelpState();
+		
+		// Close current panel
+		if (activeHelpPanel != null) {
+			activeHelpPanel.setVisible(false);
+		}
+		
+		// Open the new panel
+		switch (currentHelpState) {
+			case MAIN:
+				activeHelpPanel = helpPane;
+				break;
+				
+			case ADD:
+				activeHelpPanel = helpAddPane;
+				break;
+				
+			case DELETE:
+				activeHelpPanel = helpDeletePane;
+				break;
+				
+			case MODIFY:
+				activeHelpPanel = helpModifyPane;
+				break;
+				
+			case COMPLETE:
+				activeHelpPanel = helpCompletePane;
+				break;
+				
+			case SEARCH:
+				activeHelpPanel = helpSearchPane;
+				break;
+				
+			case VIEW:
+				activeHelpPanel = helpViewPane;
+				break;
+				
+			default:
+				activeHelpPanel = null;
+				break;
+		}
+		
+		if (activeHelpPanel != null) {
+			activeHelpPanel.setVisible(true);
+		}
 	}
 }
