@@ -5,6 +5,7 @@ package kaboom.storage;
 import java.util.Vector;
 
 import kaboom.logic.TaskInfo;
+import kaboom.storage.TaskListShop;
 import kaboom.ui.DISPLAY_STATE;
 import kaboom.ui.DisplayData;
 
@@ -12,16 +13,16 @@ public class TaskView {
 
 	private static TaskView instance = null;
 
-	private Vector<TaskInfo> currentView;  //Current view
-	private Vector<TaskInfo> searchView;  //Vector for searches
+	private Vector<TaskInfo> currentView; 	//Current view
+	private Vector<TaskInfo> searchView;  	//Vector for searches
 	private Vector<Integer> currentViewID;  //Vector for position of viewing tasks in actual vector
 	private TaskListShop taskListShop;
 	private DisplayData displayData;
 
-	public TaskView() {
+	private TaskView() {
 		taskListShop = TaskListShop.getInstance();
-		currentView = taskListShop.getToday();
-		currentViewID = taskListShop.getCorrespondingID(currentView);
+		//currentView = taskListShop.getToday();
+		//currentViewID = taskListShop.getCorrespondingID(currentView);
 		searchView = new Vector<TaskInfo>();
 		displayData = DisplayData.getInstance();
 	}
@@ -64,6 +65,7 @@ public class TaskView {
 			System.out.println("Encountered an invalid view!");
 			break;
 		}
+		
 		return currentView;
 	}
 
@@ -126,6 +128,10 @@ public class TaskView {
 				searchView.set(i, newTask);
 			}
 		}
+	}
+	
+	public int getTaskPositionInView (TaskInfo taskToSearch) {
+		return currentView.indexOf(taskToSearch);
 	}
 
 	private void setCurrentView(Vector<TaskInfo> taskList) {
