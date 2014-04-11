@@ -126,7 +126,6 @@ public class DisplayData extends Observable {
 		// Update help state
 		HELP_STATE helpStateChange = commandResult.getHelpState();
 		if (helpStateChange != HELP_STATE.INVALID) {
-			
 			if (currentHelpState == helpStateChange) {
 				currentHelpState = HELP_STATE.CLOSE;
 			} else {
@@ -299,6 +298,14 @@ public class DisplayData extends Observable {
 
 		setChanged();
 		notifyObservers();
+	}
+	
+	public boolean goToPage (int pageNumber) {
+		if (pageNumber > getMaxTaskDisplayPagesForCurrentView()) {
+			return false;
+		}
+		currentPage = pageNumber;
+		return true;
 	}
 
 	public DISPLAY_STATE getCurrentDisplayState() {
