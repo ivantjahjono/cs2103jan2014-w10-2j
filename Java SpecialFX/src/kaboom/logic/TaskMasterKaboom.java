@@ -26,12 +26,10 @@ public class TaskMasterKaboom {
 	
 	private DisplayData 	guiDisplayData;
 	private Storage 		fileStorage;
-	private History 		commandHistory;
 	
 	static TaskMasterKaboom instance;
 	
 	private TaskMasterKaboom () {
-		commandHistory = History.getInstance();
 	}
 	
 	public static TaskMasterKaboom getInstance () {
