@@ -1,3 +1,5 @@
+//@author A0073731J
+
 package kaboom.logic.command;
 
 import java.util.Calendar;
@@ -92,7 +94,6 @@ public class CommandAdd extends Command {
 		//check wad type of task
 
 		setTaskType(taskInfo);
-
 		taskInfo.setRecent(true);
 
 		DISPLAY_STATE stateToSet = DISPLAY_STATE.INVALID;
@@ -111,9 +112,10 @@ public class CommandAdd extends Command {
 			}
 		} else {
 			commandFeedback = String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
+			taskInfo = null;
 		}
 
-		return createResult(commandFeedback, stateToSet);
+		return createResult(commandFeedback, stateToSet, taskInfo);
 	}
 
 	public boolean undo () {

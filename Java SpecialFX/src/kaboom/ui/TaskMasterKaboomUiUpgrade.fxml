@@ -128,6 +128,7 @@
                 <Image url="@img/CaretRight.png" />
               </image>
             </ImageView>
+            <Label fx:id="pageNumber" alignment="CENTER_RIGHT" layoutX="491.0" layoutY="9.0" prefWidth="80.0" text="Page 1 - 2" textAlignment="RIGHT" />
           </children>
         </Pane>
         <Group id="Group" layoutX="10.0" layoutY="15.0" scaleX="1.0" scaleY="1.0">
@@ -163,7 +164,7 @@
         <Image url="@img/MarkX.png" />
       </image>
     </ImageView>
-    <Label layoutX="14.0" layoutY="5.0" mouseTransparent="true" text="| TASK MASTER KABOOM V0.3" textFill="WHITE">
+    <Label layoutX="14.0" layoutY="5.0" mouseTransparent="true" text="| TASK MASTER KABOOM V0.4.1" textFill="WHITE">
       <font>
         <Font name="Segoe UI" size="12.0" fx:id="x14" />
       </font>
@@ -180,7 +181,7 @@
             <Font size="16.0" fx:id="x1" />
           </font>
           <labelFor>
-            <TextField fx:id="commandTextInput" disable="false" layoutX="11.0" layoutY="603.0" onAction="#onTextfieldAction" onKeyReleased="#onTextfieldKeyReleased" prefWidth="572.0" promptText="Please enter a command" styleClass="text-field-correct" text="" />
+            <TextField fx:id="commandTextInput" disable="false" layoutX="11.0" layoutY="603.0" onAction="#onTextfieldAction" onKeyPressed="#onTextfieldKeyPressed" onKeyReleased="#onTextfieldKeyReleased" prefWidth="572.0" promptText="Please enter a command" styleClass="text-field-correct" text="" />
           </labelFor>
         </Label>
       </children>
@@ -246,7 +247,7 @@
         </Pane>
       </children>
     </AnchorPane>
-    <Pane fx:id="helpPane" layoutX="16.0" layoutY="72.0" prefHeight="291.0" prefWidth="567.0" visible="false">
+    <Pane fx:id="helpPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help" />
@@ -308,7 +309,7 @@
         </VBox>
       </children>
     </Pane>
-    <Pane id="helpadd" fx:id="helpAddPane" layoutX="16.0" layoutY="72.0" prefHeight="290.49609375" prefWidth="567.0" visible="false">
+    <Pane id="helpadd" fx:id="helpAddPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help Add" />
@@ -373,7 +374,7 @@
             <Label styleClass="parseCommandPriority" text="&lt;priority&gt;" />
           </children>
         </HBox>
-        <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="246.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
+        <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="256.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
           <children>
             <Label font="$x12" text="Supported Time format:" />
             <Label styleClass="parseCommandName" text="8pm," />
@@ -383,19 +384,19 @@
             <Label styleClass="parseCommandName" text="20:00" />
           </children>
         </HBox>
-        <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="264.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
+        <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="278.0" prefHeight="26.601662499997474" prefWidth="411.0" spacing="10.0">
           <children>
             <Label font="$x12" text="Supported Date format:" />
             <Label styleClass="parseCommandName" text="today," />
             <Label text="" />
             <Label text="12.05.16," />
             <Label styleClass="parseCommandName" text="12/05/16," />
-            <Label styleClass="parseCommandName" text="Weekday names" />
+            <Label styleClass="parseCommandName" text="Monday - Sunday" />
           </children>
         </HBox>
       </children>
     </Pane>
-    <Pane id="helpadd" fx:id="helpDeletePane" layoutX="16.0" layoutY="72.0" prefHeight="290.49609375" prefWidth="567.0" visible="false">
+    <Pane id="helpadd" fx:id="helpDeletePane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help Delete" />
@@ -429,7 +430,7 @@
         </HBox>
       </children>
     </Pane>
-    <Pane id="helpadd" fx:id="helpModifyPane" layoutX="16.0" layoutY="72.0" prefHeight="290.49609375" prefWidth="567.0" visible="false">
+    <Pane id="helpadd" fx:id="helpModifyPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help Modify" />
@@ -461,7 +462,6 @@
             <Label styleClass="parseCommandPriority" text="***" />
           </children>
         </HBox>
-        <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="176.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0" />
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="114.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
@@ -486,9 +486,29 @@
             <Label styleClass="parseCommandPriority" text="by 7pm" />
           </children>
         </HBox>
+        <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="189.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
+          <children>
+            <Label font="$x12" text="Supported Time format:" />
+            <Label styleClass="parseCommandName" text="8pm," />
+            <Label text="" />
+            <Label text="8:00pm," />
+            <Label styleClass="parseCommandName" text="2000," />
+            <Label styleClass="parseCommandName" text="20:00" />
+          </children>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="211.0" prefHeight="26.601662499997474" prefWidth="411.0" spacing="10.0">
+          <children>
+            <Label font="$x12" text="Supported Date format:" />
+            <Label styleClass="parseCommandName" text="today," />
+            <Label text="" />
+            <Label text="12.05.16," />
+            <Label styleClass="parseCommandName" text="12/05/16," />
+            <Label styleClass="parseCommandName" text="Monday - Sunday" />
+          </children>
+        </HBox>
       </children>
     </Pane>
-    <Pane id="helpadd" fx:id="helpCompletePane" layoutX="16.0" layoutY="72.0" prefHeight="290.49609375" prefWidth="567.0" visible="false">
+    <Pane id="helpadd" fx:id="helpCompletePane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help Complete" />
@@ -543,7 +563,7 @@
         </HBox>
       </children>
     </Pane>
-    <Pane id="helpadd" fx:id="helpViewPane" layoutX="16.0" layoutY="72.0" prefHeight="290.49609375" prefWidth="567.0" visible="false">
+    <Pane id="helpadd" fx:id="helpViewPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="6.0" text="Help View" />
@@ -572,21 +592,21 @@
           <children>
             <Label text="E.g." />
             <Label styleClass="parseCommandTypeName" text="view" />
-            <Label styleClass="parseCommandName" text="timeless" />
+            <Label styleClass="parseCommandName" text="future" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="141.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
             <Label styleClass="parseCommandTypeName" text="view" />
-            <Label styleClass="parseCommandName" text="expired" />
+            <Label styleClass="parseCommandName" text="timeless" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="162.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
             <Label styleClass="parseCommandTypeName" text="view" />
-            <Label styleClass="parseCommandName" text="search" />
+            <Label styleClass="parseCommandName" text="expired" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="183.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
@@ -598,7 +618,7 @@
         </HBox>
       </children>
     </Pane>
-    <Pane id="helpadd" fx:id="helpSearchPane" layoutX="16.0" layoutY="72.0" prefHeight="290.49609375" prefWidth="567.0" visible="false">
+    <Pane id="helpadd" fx:id="helpSearchPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="6.0" text="Help Search" />
@@ -623,25 +643,32 @@
             <Label styleClass="parseCommandName" text="Hello" />
           </children>
         </HBox>
-        <Label font="$x1" layoutX="20.0" layoutY="126.0" text="Search by date:" />
-        <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="145.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
+        <Label font="$x1" layoutX="20.0" layoutY="136.0" text="Search by date:" />
+        <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="155.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
+          <children>
+            <Label styleClass="parseCommandTypeName" text="search" />
+            <Label styleClass="parseCommandName" text="&lt;end date&gt;" />
+          </children>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="172.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
+          <children>
+            <Label text="E.g." />
+            <Label styleClass="parseCommandTypeName" text="search" />
+            <Label styleClass="parseCommandName" text="by 12/06/14" />
+          </children>
+        </HBox>
+        <Label font="$x1" layoutX="20.0" layoutY="209.0" text="Search on date:" />
+        <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="228.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
           <children>
             <Label styleClass="parseCommandTypeName" text="search" />
             <Label styleClass="parseCommandName" text="&lt;date&gt;" />
           </children>
         </HBox>
-        <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="163.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
+        <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="245.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
             <Label styleClass="parseCommandTypeName" text="search" />
-            <Label styleClass="parseCommandName" text="251205" />
-          </children>
-        </HBox>
-        <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="182.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
-          <children>
-            <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="search" />
-            <Label styleClass="parseCommandName" text="by 120614" />
+            <Label styleClass="parseCommandName" text="12/06/14" />
           </children>
         </HBox>
       </children>

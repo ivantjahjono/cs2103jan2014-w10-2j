@@ -1,3 +1,4 @@
+//@author A0073731J
 package kaboom.logic.command;
 
 import java.util.Calendar;
@@ -16,9 +17,9 @@ import kaboom.logic.TaskInfo;
 import kaboom.logic.TextParser;
 import kaboom.storage.History;
 import kaboom.storage.TaskListShop;
+import kaboom.storage.TaskView;
 import kaboom.ui.DISPLAY_STATE;
 import kaboom.ui.DisplayData;
-import kaboom.ui.TaskView;
 
 /* 
  ** Purpose: 
@@ -51,6 +52,7 @@ public class Command {
 		displayData = DisplayData.getInstance();
 		keywordList = new KEYWORD_TYPE[0];
 		commandObjectTable = new Hashtable<KEYWORD_TYPE, Object>();
+		infoTable = new Hashtable<KEYWORD_TYPE, String>();
 		taskView = TaskView.getInstance();
 	}
 
@@ -63,17 +65,18 @@ public class Command {
 	}
 
 	public Result execute() {
-		return createResult(MESSAGE_COMMAND_INVALID, DISPLAY_STATE.INVALID);
+		return createResult(MESSAGE_COMMAND_INVALID);
 	}
 	
 	protected Result createResult (String feedback) {
-		return createResult(feedback, DISPLAY_STATE.INVALID);
+		return createResult(feedback, DISPLAY_STATE.INVALID, null);
 	}
 
-	protected Result createResult (String feedback, DISPLAY_STATE displayState) {
+	protected Result createResult (String feedback, DISPLAY_STATE displayState, TaskInfo taskToFocus) {
 		Result commandResult = new Result();
 		commandResult.setFeedback(feedback);
 		commandResult.setDisplayState(displayState);
+		commandResult.setTaskToFocus(taskToFocus);
 
 		return commandResult;
 	}

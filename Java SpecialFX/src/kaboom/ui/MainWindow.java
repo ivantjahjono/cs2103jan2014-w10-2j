@@ -1,3 +1,5 @@
+//@author A0099175N
+
 package kaboom.ui;
 
 import java.io.IOException;
@@ -10,8 +12,6 @@ import java.util.ResourceBundle;
 import java.util.Vector;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -27,13 +27,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.RectangleBuilder;
 import javafx.stage.Stage;
+
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import kaboom.logic.FormatIdentify;
-import kaboom.logic.TaskInfoDisplay;
 import kaboom.logic.TaskMasterKaboom;
 
 public class MainWindow implements javafx.fxml.Initializable, Observer {	
@@ -43,9 +43,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	// User interface elements
 			private Stage 		windowStage;
 	@FXML	private AnchorPane 	mainPane;
-	
-	// Data for the task table
-			private ObservableList<TaskInfoDisplay> data;
 			
 	@FXML 	private Label		todayWeekDay;
 	@FXML 	private Label		todayDate;
@@ -91,6 +88,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	@FXML private HBox 			commandFormatFeedback;
 	
 	// Container to keep the pages tabs 
+	@FXML private Label 				pageNumber;
 	@FXML private HBox 					pageTabContainer;
 		  private ArrayList<Rectangle> 	pagesTab;
 		  private final String NEXT_PAGE_KEYWORD = "next";
@@ -108,9 +106,9 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	private Pane 	currentActiveHelpPane;
 	
 	// Tracks previous commands
-	private String currentCommand;
-	private Vector<String> commandsEnteredList;
-	private int currentCommandIndex;
+	private String 			currentCommand;
+	private Vector<String> 	commandsEnteredList;
+	private int 			currentCommandIndex;
 	
 	// Used in tracking window dragging
 	private double initialX;
@@ -122,12 +120,11 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	
 	// Logging unit and file handler for output
 	private final static Logger loggerUnit = Logger.getLogger(MainWindow.class.getName());
-	private static FileHandler fh;
+	private static FileHandler 	fh;
 	
 	public MainWindow () {
 		currentCommand = "";
 		
-		data = FXCollections.observableArrayList();
 		pagesTab = new ArrayList<Rectangle>();
 		
 		uiData = DisplayData.getInstance();
@@ -155,9 +152,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			taskUiList.add(tempTaskUi);
 		}
 		
-		// Disable column reordering
-		//disableTableColumnReordering();
-		
 		mainPane.getStyleClass().add("root");
 		
 		labelList.add(header_today);
@@ -178,10 +172,8 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		try {
 			fh = new FileHandler("KaboomUI.log", false);
 		} catch (SecurityException e) {
-			// TODO find ways to handle exceptions
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -238,12 +230,12 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		updateHeaderTaskCount();
 		
 		updatePagesTab();
+		updatePageNumber();
 		
 		updateCommandFormat();
 	}
 
 	private void updateHeaderDateTime() {
-		// TODO Auto-generated method stub
 		todayWeekDay.setText(uiData.getCurrentWeekDay());
 		todayDate.setText(uiData.getCurrentDate());
 		todayTime.setText(uiData.getCurrentTime());
@@ -310,6 +302,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 					break;
 					
 				case TASKNAME:
+				case TASKID:
 				case VIEWTYPE:
 				case MODIFIED_TASKNAME:
 				case DATE:
@@ -440,6 +433,9 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			case "help search":
 				return helpSearchPane;
 				
+			case "help close":
+				return currentActiveHelpPane;
+				
 			default:
 				return null;
 		}
@@ -454,6 +450,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			case "help complete":
 			case "help view":
 			case "help search":
+			case "help close":
 				return true;
 				
 			default:
@@ -461,17 +458,8 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		}
 	}
 
-	private void updateTaskTable() {
-		data.clear();
-		
+	private void updateTaskTable() {	
 		Vector<TaskInfoDisplay> taskList = uiData.getTaskDisplay();
-		
-//		for (int i = 0; i < taskList.size(); i++) {
-//			data.add(taskList.get(i));
-//		}
-//		taskDisplayTable.setItems(data);
-		
-		// Update the data
 		for (int i = 0; i < taskList.size(); i++) {
 			TaskUiContainer currentTaskContainer = taskUiList.get(i);
 			currentTaskContainer.updateWithTaskDisplay(taskList.get(i));
@@ -499,30 +487,57 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		currentCommandIndex = commandsEnteredList.size();
 	}
 	
-	private void recallPreviousCommand () {
+	private boolean recallPreviousCommand () {
 		if (currentCommandIndex > 0) {
 			currentCommandIndex--;
 			commandTextInput.setText(commandsEnteredList.get(currentCommandIndex));
+			
+			return true;
 		}
+		return false;
 	}
 	
-	private void recallStoredTypedCommand () {
+	private boolean recallStoredTypedCommand () {
 		if (currentCommandIndex < commandsEnteredList.size()-1) {
 			currentCommandIndex++;
 			commandTextInput.setText(commandsEnteredList.get(currentCommandIndex));
-		} else {
+			
+			return true;
+		} else if (currentCommandIndex < commandsEnteredList.size()){
 			currentCommandIndex =  commandsEnteredList.size();
 			commandTextInput.setText(currentCommand);
+			
+			return true;
 		}
+		
+		return false;
 	}
 	
 	private void setTextfieldCursorToLast () {
 		commandTextInput.positionCaret(commandTextInput.getText().length());
 	}
+	
+	@FXML
+	private void onTextfieldKeyPressed (KeyEvent keyEvent) {
+		switch(keyEvent.getCode()) {
+			case Z:
+				if (keyEvent.isControlDown()) {
+					applicationController.processCommand("undo");
+				}
+				break;
+				
+			case UP:
+			case DOWN:
+				keyEvent.consume();
+				break;
+				
+			default:
+				break;
+		}
+	}
 
 	@FXML
 	private void onTextfieldKeyReleased (KeyEvent keyEvent) {
-		//System.out.println("Key pressed: " + keyEvent.getText());
 		boolean processResult = false;
 		
 		switch(keyEvent.getCode()) {
@@ -532,14 +547,16 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				}
 				
 				loggerUnit.log(Level.FINE, "Recalling previous command.");
-				recallPreviousCommand();
-				setTextfieldCursorToLast();
+				if (recallPreviousCommand()) {
+					setTextfieldCursorToLast();
+				}
 				break;
 				
 			case DOWN:
 				loggerUnit.log(Level.FINE, "Recalling next command.");
-				recallStoredTypedCommand();
-				setTextfieldCursorToLast();
+				if (recallStoredTypedCommand()) {
+					setTextfieldCursorToLast();
+				}
 				break;
 				
 			case ESCAPE:
@@ -596,8 +613,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	
 	@FXML
 	private void onWindowMouseDrag (MouseEvent mouseEvent) {
-		//System.out.printf("[%f, %f]\n", mouseEvent.getSceneX(), mouseEvent.getSceneY());
-		
 		windowStage.setX(mouseEvent.getScreenX() - initialX);
 		windowStage.setY(mouseEvent.getScreenY() - initialY);
 	}
@@ -614,7 +629,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		Node nodePressed = (Node)mouseEvent.getSource();
 		
 		loggerUnit.log(Level.FINE, nodePressed.getId()+" header clicked.");
-		// TODO need to activate the view command without creating string.
 		activateHeaderBasedOnName(nodePressed.getId());
 	}
 
@@ -714,6 +728,14 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		resizePageTabToMaxPages(maxTabs);
 		updatePageTabStyles();
 		refreshPageTabContainerWithNewPageTabs();
+	}
+	
+	private void updatePageNumber() {
+		int totalPages = uiData.getMaxTaskDisplayPagesForCurrentView();
+		int currentPage = uiData.getCurrentPage()+1;
+		
+		String pageString = String.format("Pg %d - %d", currentPage, totalPages);
+		pageNumber.setText(pageString);
 	}
 	
 	private Rectangle createPageTabRectangle() {

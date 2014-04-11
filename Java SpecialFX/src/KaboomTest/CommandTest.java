@@ -1,3 +1,4 @@
+//@author A0073731J
 package KaboomTest;
 
 import static org.junit.Assert.*;
@@ -100,36 +101,29 @@ public class CommandTest {
 		assertEquals("Invalid View Mode", com.execute().getFeedback());
 		
 		//Valid ViewTypes
-//		com.setDisplayState(DISPLAY_STATE.TODAY);
-//		com.setTaskInfo(task);
-//		assertEquals("Viewing all the tasks for today", com.execute().getFeedback());
-//		
-//		com.setDisplayState(DISPLAY_STATE.TIMELESS);
-//		com.setTaskInfo(task);
-//		assertEquals("Viewing timeless tasks", com.execute().getFeedback());
-//		
-//		com.setDisplayState(DISPLAY_STATE.EXPIRED);
-//		com.setTaskInfo(task);
-//		assertEquals("Viewing expired tasks", com.execute().getFeedback());
-//		
-//		//Boundary 
-//		//To be discussed whether to accept or no
-//		currentCommand = CommandFactory.createCommand(viewString+" today ");
-//		com.setTaskInfo(task);
-//		assertEquals("Viewing all the tasks for today", currentCommand.execute().getFeedback());
-//		
-//		currentCommand = CommandFactory.createCommand(viewString+" today");
-//		com.setTaskInfo(task);
-//		assertEquals("Viewing all the tasks for today", currentCommand.execute().getFeedback());
-//		
-//		currentCommand = CommandFactory.createCommand(viewString+" today 123");
-//		com.setTaskInfo(task);
-//		assertEquals("Invalid View Mode", currentCommand.execute().getFeedback());
-//		
-//		//Invalid Types
-//		currentCommand = CommandFactory.createCommand(viewString+" todays");
-//		com.setTaskInfo(task);
-//		assertEquals("Invalid View Mode", currentCommand.execute().getFeedback());
+		com.setDisplayState(DISPLAY_STATE.TODAY);
+		assertEquals("Viewing all the tasks for today", com.execute().getFeedback());
+		
+		com.setDisplayState(DISPLAY_STATE.TIMELESS);
+		assertEquals("Viewing timeless tasks", com.execute().getFeedback());
+		
+		com.setDisplayState(DISPLAY_STATE.EXPIRED);
+		assertEquals("Viewing expired tasks", com.execute().getFeedback());
+		
+		//Boundary 
+		//To be discussed whether to accept or no
+		currentCommand = CommandFactory.createCommand(viewString+" today ");
+		assertEquals("Viewing all the tasks for today", currentCommand.execute().getFeedback());
+		
+		currentCommand = CommandFactory.createCommand(viewString+" today");
+		assertEquals("Viewing all the tasks for today", currentCommand.execute().getFeedback());
+		
+		currentCommand = CommandFactory.createCommand(viewString+" today 123");
+		assertEquals("Invalid View Mode", currentCommand.execute().getFeedback());
+		
+		//Invalid Types
+		currentCommand = CommandFactory.createCommand(viewString+" todays");
+		assertEquals("Invalid View Mode", currentCommand.execute().getFeedback());
 		}
 	
 }
