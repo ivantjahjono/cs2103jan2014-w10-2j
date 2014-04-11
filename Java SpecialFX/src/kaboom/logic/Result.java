@@ -1,15 +1,11 @@
+//@author A0073731J
+
 package kaboom.logic;
 
 import java.util.Vector;
 
 import kaboom.ui.DISPLAY_STATE;
 
-
-// TODO
-// 1) Have to include information to somehow inform GUI to go to next or previous or first page or last page
-//    of task display.
-// 2) If the taskToDisplayList is null, does it mean that it has nothing to show or remain to stick
-//    to what it is showing now ?
 
 public class Result {
 	Vector<TaskInfo> taskToDisplayList;
