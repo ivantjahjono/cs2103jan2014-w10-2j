@@ -1,4 +1,4 @@
-//@author A0073731J
+//@author A0096670W
 
 package kaboom.logic.command;
 
