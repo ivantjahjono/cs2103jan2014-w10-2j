@@ -530,6 +530,16 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				}
 				break;
 				
+			case H:
+				if (keyEvent.isControlDown()) {
+					if (activeHelpPanel == null) {
+						applicationController.processCommand("help");
+					} else {
+						applicationController.processCommand("help close");
+					}
+				}
+				break;
+				
 			case UP:
 			case DOWN:
 				keyEvent.consume();
