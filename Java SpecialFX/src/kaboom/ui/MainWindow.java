@@ -106,9 +106,9 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	private Pane 	currentActiveHelpPane;
 	
 	// Tracks previous commands
-	private String currentCommand;
-	private Vector<String> commandsEnteredList;
-	private int currentCommandIndex;
+	private String 			currentCommand;
+	private Vector<String> 	commandsEnteredList;
+	private int 			currentCommandIndex;
 	
 	// Used in tracking window dragging
 	private double initialX;
@@ -120,7 +120,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	
 	// Logging unit and file handler for output
 	private final static Logger loggerUnit = Logger.getLogger(MainWindow.class.getName());
-	private static FileHandler fh;
+	private static FileHandler 	fh;
 	
 	public MainWindow () {
 		currentCommand = "";
@@ -152,9 +152,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			taskUiList.add(tempTaskUi);
 		}
 		
-		// Disable column reordering
-		//disableTableColumnReordering();
-		
 		mainPane.getStyleClass().add("root");
 		
 		labelList.add(header_today);
@@ -175,10 +172,8 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		try {
 			fh = new FileHandler("KaboomUI.log", false);
 		} catch (SecurityException e) {
-			// TODO find ways to handle exceptions
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -241,7 +236,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	}
 
 	private void updateHeaderDateTime() {
-		// TODO Auto-generated method stub
 		todayWeekDay.setText(uiData.getCurrentWeekDay());
 		todayDate.setText(uiData.getCurrentDate());
 		todayTime.setText(uiData.getCurrentTime());
@@ -308,6 +302,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 					break;
 					
 				case TASKNAME:
+				case TASKID:
 				case VIEWTYPE:
 				case MODIFIED_TASKNAME:
 				case DATE:
@@ -634,7 +629,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		Node nodePressed = (Node)mouseEvent.getSource();
 		
 		loggerUnit.log(Level.FINE, nodePressed.getId()+" header clicked.");
-		// TODO need to activate the view command without creating string.
 		activateHeaderBasedOnName(nodePressed.getId());
 	}
 
@@ -737,7 +731,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	}
 	
 	private void updatePageNumber() {
-		// TODO Auto-generated method stub
 		int totalPages = uiData.getMaxTaskDisplayPagesForCurrentView();
 		int currentPage = uiData.getCurrentPage()+1;
 		
