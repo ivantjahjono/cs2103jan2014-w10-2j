@@ -17,7 +17,7 @@ public class TextParser {
 	private final String KEYWORD_DATEONLY = "^";
 	private final String KEYWORD_CLEAR = "^(all|current|archive)";
 	private final String KEYWORD_VIEW = "^(today|future|timeless|expired|archive)";
-	private final String KEYWORD_HELP = "^(add|delete|modify|complete|search|view)";
+	private final String KEYWORD_HELP = "^(add|delete|modify|complete|search|view|close)";
 	
 	private final String TIME_REGEX = "\\s*(([0-9]|0[0-9]|1[0-9]|2[0-3])([\\s?:\\s?]?[0-5][0-9])?|([0-9]|0[1-9]|1[0-2])(([\\s?:\\s?]?[0-5][0-9])?(am|pm)))(\\s|$)";
 	private final String DATE_REGEX = "\\s*\\d{1,2}[\\/\\.]\\d{2}[\\/\\.]\\d{2}(\\s|$)";
@@ -388,6 +388,10 @@ public class TextParser {
 				result = extractTaskId(userInput,taskInformationTable);
 				break;
 				
+			case HELP:
+				result = extractHelpType(userInput,taskInformationTable);
+				break;
+				
 			default:
 				break;
 			}
@@ -484,6 +488,22 @@ public class TextParser {
 		
 		String extractedClearString = userInput.substring(startIndex, endIndex).trim();
 		taskInformationTable.put(KEYWORD_TYPE.CLEARTYPE, extractedClearString);
+
+		return extractedClearString;
+	}
+	
+	private String extractHelpType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
+		ArrayList<Integer> matchList = searchForPatternMatch(userInput, KEYWORD_HELP);
+		
+		if (matchList.size() < 2) {
+			return "";
+		}
+		
+		int endIndex = matchList.get(matchList.size()-1);
+		int startIndex = matchList.get(matchList.size()-2);
+		
+		String extractedClearString = userInput.substring(startIndex, endIndex).trim();
+		taskInformationTable.put(KEYWORD_TYPE.HELP, extractedClearString);
 
 		return extractedClearString;
 	}
