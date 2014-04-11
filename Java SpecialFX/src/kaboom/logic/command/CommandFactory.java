@@ -42,7 +42,8 @@ public class CommandFactory {
 	}
 	
 	
-	private static COMMAND_TYPE determineCommandType(String commandWord) {		
+	private static COMMAND_TYPE determineCommandType(String commandWord) {
+		commandWord = commandWord.toLowerCase();
 		switch(commandWord) {
 			case KEYWORD_COMMAND_ADD:
 				return COMMAND_TYPE.ADD;
