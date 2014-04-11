@@ -9,15 +9,16 @@ import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.TextParser;
 
 public class CommandFactory {
-	private static final String KEYWORD_COMMAND_ADD = "add";
-	private static final String KEYWORD_COMMAND_DELETE = "delete";
-	private static final String KEYWORD_COMMAND_MODIFY = "modify";
-	private static final String KEYWORD_COMMAND_SEARCH = "search";
-	private static final String KEYWORD_COMMAND_CLEAR = "clear";
-	private static final String KEYWORD_COMMAND_VIEW = "view";
-	private static final String KEYWORD_COMMAND_UNDO = "undo";
-	private static final String KEYWORD_COMMAND_DONE = "boom";
-	private static final String KEYWORD_COMMAND_UNDONE = "unboom";
+	private static final String KEYWORD_COMMAND_ADD 	= "add";
+	private static final String KEYWORD_COMMAND_DELETE 	= "delete";
+	private static final String KEYWORD_COMMAND_MODIFY 	= "modify";
+	private static final String KEYWORD_COMMAND_SEARCH 	= "search";
+	private static final String KEYWORD_COMMAND_CLEAR 	= "clear";
+	private static final String KEYWORD_COMMAND_VIEW 	= "view";
+	private static final String KEYWORD_COMMAND_UNDO 	= "undo";
+	private static final String KEYWORD_COMMAND_DONE 	= "boom";
+	private static final String KEYWORD_COMMAND_UNDONE 	= "unboom";
+	private static final String KEYWORD_COMMAND_HELP 	= "help";
 	
 	private static TextParser textParser = TextParser.getInstance();
 	
@@ -41,7 +42,6 @@ public class CommandFactory {
 		return commandToExecute;
 	}
 	
-	
 	private static COMMAND_TYPE determineCommandType(String commandWord) {
 		commandWord = commandWord.toLowerCase();
 		switch(commandWord) {
@@ -63,6 +63,8 @@ public class CommandFactory {
 				return COMMAND_TYPE.DONE;
 			case KEYWORD_COMMAND_UNDONE:
 				return COMMAND_TYPE.UNDONE;
+			case KEYWORD_COMMAND_HELP:
+				return COMMAND_TYPE.HELP;
 			default:
 				return COMMAND_TYPE.INVALID;
 		}
@@ -106,6 +108,10 @@ public class CommandFactory {
 				
 			case UNDONE:
 				newlyCreatedCommand = new CommandUndone();
+				break;
+				
+			case HELP:
+				newlyCreatedCommand = new CommandHelp();
 				break;
 				
 			default:
