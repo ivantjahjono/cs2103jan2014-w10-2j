@@ -1,14 +1,17 @@
-package kaboom.logic;
+//@author A0099175N
+
+package kaboom.ui;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import kaboom.logic.DateAndTimeFormat;
+import kaboom.logic.TASK_TYPE;
+import kaboom.logic.TaskInfo;
 
 public class TaskInfoDisplay {
-	// TODO clean up magic strings
-	
 	private SimpleIntegerProperty taskId;
 	private SimpleStringProperty taskName;
 	
@@ -83,15 +86,11 @@ public class TaskInfoDisplay {
 		if (dateTimeFormat.isToday(timeDate)) {
 			return fullTimeFormat.format(timeDate.getTime());
 		} else if (dateTimeFormat.isThisWeek(timeDate)) {
-			return fullTimeFormat.format(timeDate.getTime()) +  ", " + dayOnlyFormat.format(timeDate.getTime());
+			return fullTimeFormat.format(timeDate.getTime()) + ", " + dayOnlyFormat.format(timeDate.getTime());
 		} else if (dateTimeFormat.isThisYear(timeDate)) {
-			return fullTimeFormat.format(timeDate.getTime()) + ", " +
-					dayMonthFormat.format(timeDate.getTime())  +
-					" (" + dayOnlyFormat.format(timeDate.getTime()) + ")"; 
+			return fullTimeFormat.format(timeDate.getTime()) + ", " + dayMonthFormat.format(timeDate.getTime());
 		} else {
-			return fullTimeFormat.format(timeDate.getTime()) + ", " + 
-					fullDateFormat.format(timeDate.getTime()) +
-					" (" + dayOnlyFormat.format(timeDate.getTime()) + ")";
+			return fullTimeFormat.format(timeDate.getTime()) + ", " + fullDateFormat.format(timeDate.getTime());
 		}
 	}
 

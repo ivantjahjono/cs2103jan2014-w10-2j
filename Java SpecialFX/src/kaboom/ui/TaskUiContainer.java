@@ -1,3 +1,5 @@
+//@author A0099175N
+
 package kaboom.ui;
 
 import java.util.Collections;
@@ -5,7 +7,6 @@ import java.util.Collections;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
-import kaboom.logic.TaskInfoDisplay;
 
 public class TaskUiContainer {
  	private Pane 		task;

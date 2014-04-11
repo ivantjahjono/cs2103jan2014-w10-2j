@@ -1,3 +1,4 @@
+//@author A0096670W
 package kaboom.logic.command;
 
 import java.util.Calendar;
@@ -74,7 +75,7 @@ public class CommandSearch extends Command {
 		String commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
 		taskView.setSearchView(tasksFound);
 
-		return createResult(commandFeedback, DISPLAY_STATE.SEARCH); 
+		return createResult(commandFeedback, DISPLAY_STATE.SEARCH, null); 
 	}
 
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
