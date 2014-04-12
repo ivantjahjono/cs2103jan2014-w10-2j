@@ -97,7 +97,7 @@ public class CommandAdd extends Command {
 		taskInfo.setRecent(true);
 
 		DISPLAY_STATE stateToSet = DISPLAY_STATE.INVALID;
-		if (taskListShop.addTaskToList(taskInfo)) {
+		if (taskView.addTask(taskInfo)) {
 			addCommandToHistory ();
 			commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
 
@@ -119,12 +119,7 @@ public class CommandAdd extends Command {
 	}
 
 	public boolean undo () {
-		TaskInfo task = taskListShop.removeTask(taskInfo);
-
-		if (task == null)
-			return false;
-		else
-			return true;
+		return taskView.removeTask(taskInfo);
 	}
 
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
