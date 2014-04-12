@@ -15,6 +15,7 @@ public class TaskView {
 	private Vector<TaskInfo> currentView; 	//Current view
 	private Vector<TaskInfo> searchView;  	//Vector for searches
 	private Vector<Integer> currentViewID;  //Vector for position of viewing tasks in actual vector
+	Vector<Integer> tasksCount;
 	private TaskDepository taskListShop;
 	private DisplayData displayData;
 
@@ -24,6 +25,7 @@ public class TaskView {
 		//currentViewID = taskListShop.getCorrespondingID(currentView);
 		searchView = new Vector<TaskInfo>();
 		displayData = DisplayData.getInstance();
+		tasksCount = new Vector<Integer>();
 	}
 
 	public static TaskView getInstance () {
@@ -31,6 +33,18 @@ public class TaskView {
 			instance = new TaskView();
 		}
 		return instance;
+	}
+	
+	public Vector<Integer> getTasksCount() {
+		tasksCount.clear();
+		
+		tasksCount.add(taskListShop.getToday().size());
+		tasksCount.add(taskListShop.getFutureTasks().size());
+		tasksCount.add(taskListShop.getFloatingTasks().size());
+		tasksCount.add(taskListShop.getExpiredTasks().size());
+		tasksCount.add(taskListShop.getAllArchivedTasks().size());
+		
+		return tasksCount;
 	}
 
 	public Vector<TaskInfo> setAndGetView(DISPLAY_STATE displayState) {
