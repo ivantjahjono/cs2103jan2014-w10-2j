@@ -79,6 +79,7 @@ public class CommandClear extends Command {
 		default: 
 			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE;
 		}
+		taskView.clearSearchView();
 		
 		return createResult(commandFeedback);
 	}
