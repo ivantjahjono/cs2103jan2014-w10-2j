@@ -39,7 +39,7 @@ public class CommandSearch extends Command {
 		Vector<TaskInfo> listToSearch;
 
 		if (searchByDate != null || searchOnDate != null) {
-			listToSearch = taskView.getAllCurrentTasks();
+			listToSearch = taskView.getAllPresentTasks();
 		} else {
 			listToSearch = taskView.getCurrentView();
 		}
