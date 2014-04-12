@@ -138,13 +138,13 @@ public class TaskView {
 		return isAdded;
 	}
 	
-	public TaskInfo removeTask(TaskInfo task) {
+	public boolean removeTask(TaskInfo task) {
 		TaskInfo removedTask = taskListShop.removeTask(task);
 		deleteInSearchView(task);
-		if (removedTask != null) {
-			return task;
+		if (removedTask == null) {
+			return false;
 		} else {
-			return null;
+			return true;
 		}
 	}
 	
