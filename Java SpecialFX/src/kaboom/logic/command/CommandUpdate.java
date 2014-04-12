@@ -6,7 +6,7 @@ import kaboom.shared.Result;
 
 public class CommandUpdate extends Command {
 	public Result execute() {
-		taskListShop.refreshTasks();
+		taskView.refreshTasks();
 		
 		return createResult(null);
 	}
