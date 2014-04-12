@@ -35,7 +35,7 @@ public class TaskView {
 		return instance;
 	}
 	
-	public Vector<Integer> getTasksCount() {
+	public Vector<Integer> getTasksCountList() {
 		tasksCount.clear();
 		
 		tasksCount.add(taskListShop.getToday().size());
