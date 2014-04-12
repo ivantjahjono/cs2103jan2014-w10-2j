@@ -9,9 +9,8 @@ import kaboom.logic.command.CommandFactory;
 import kaboom.logic.command.CommandUpdate;
 import kaboom.shared.FormatIdentify;
 import kaboom.shared.Result;
-import kaboom.storage.History;
 import kaboom.storage.Storage;
-import kaboom.storage.TaskDepository;
+import kaboom.storage.TaskView;
 import kaboom.ui.DisplayData;
 
 
@@ -148,4 +147,7 @@ public class TaskMasterKaboom {
 		guiDisplayData.updateDisplayWithResult(commandResult);
 	}
 	
+	public Vector<Integer> updateTaskCount() {
+		return TaskView.getInstance().getTasksCount();
+	}
 }
