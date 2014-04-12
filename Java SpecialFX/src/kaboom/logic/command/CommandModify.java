@@ -101,8 +101,7 @@ public class CommandModify extends Command {
 		//store and update in memory
 		modifiedTaskInfo = temp;
 		modifiedTaskInfo.setRecent(true);
-		taskListShop.updateTask(modifiedTaskInfo, preModifiedTaskInfo);
-		taskView.updateInSearchView(modifiedTaskInfo, preModifiedTaskInfo);
+		taskView.updateTask(modifiedTaskInfo, preModifiedTaskInfo);
 		
 		feedback = feedbackGenerator();
 		addCommandToHistory ();
@@ -111,8 +110,7 @@ public class CommandModify extends Command {
 
 	public boolean undo () {
 		System.out.println(preModifiedTaskInfo.getTaskName()+" > "+ modifiedTaskInfo.getTaskName());
-		TaskDepository.getInstance().updateTask(preModifiedTaskInfo, modifiedTaskInfo);
-		taskView.updateInSearchView(preModifiedTaskInfo,  modifiedTaskInfo);
+		taskView.updateTask(preModifiedTaskInfo, modifiedTaskInfo);
 		return true;
 	}
 
