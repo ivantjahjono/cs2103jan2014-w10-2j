@@ -149,7 +149,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		for (int i = 0; i < maxTaskToDisplay; i++) {
 			tempTaskUi = new TaskUiContainer();
 			taskListContainer.getChildren().add(tempTaskUi.getPaneContainer());
-			
 			taskUiList.add(tempTaskUi);
 		}
 		
@@ -203,16 +202,12 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			return;
 		}
 		
-		// Check if need to switch header
 		if (isPageToggle(command)) {
 			activatePageToggle(command);
-//		} else if (isHelpCommand(command)) {
-//			activateHelpPane(command);
 		} else {
 			applicationController.processCommand(command);
 		}
 		
-		// Store the command entered
 		storeCommandEntered(command);
 		
 		commandTextInput.setText("");
@@ -220,6 +215,32 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 
 	private boolean isExitCommand(String command) {
 		return command.equals("exit");
+	}
+	
+	private void activatePageToggle(String command) {
+		switch (command) {
+			case NEXT_PAGE_KEYWORD:
+				uiData.goToNextPage();
+				break;
+				
+			case PREV_PAGE_KEYWORD:
+				uiData.goToPreviousPage();
+				break;
+				
+			default:
+				break;
+		}
+	}
+
+	private boolean isPageToggle(String command) {
+		switch (command) {
+			case NEXT_PAGE_KEYWORD:
+			case PREV_PAGE_KEYWORD:
+				return true;
+				
+			default:
+				return false;
+		}
 	}
 
 	private void updateDisplay() {
@@ -237,106 +258,32 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		
 		updateHelpPanel();
 	}
-
+	
 	private void updateHeaderDateTime() {
 		todayWeekDay.setText(uiData.getCurrentWeekDay());
 		todayDate.setText(uiData.getCurrentDate());
 		todayTime.setText(uiData.getCurrentTime());
 	}
-
-	private void updateHeaderTaskCount() {
-		Vector<Integer> taskCountList = uiData.getTaskCountList();
-		for (int i = 0; i < taskCountList.size(); i++) {
-			String countString = "" + taskCountList.get(i);
-			
-			switch (i) {
-				case 0:
-					header_today_count.setText(countString);
-					break;
-					
-				case 1:
-					header_future_count.setText(countString);
-					break;
-					
-				case 2:
-					header_timeless_count.setText(countString);
-					break;
-					
-				case 3:
-					header_expired_count.setText(countString);
-					break;
-					
-				case 4:
-					header_archive_count.setText(countString);
-					break;
-			}
+	
+	private void updateTaskTable() {	
+		Vector<TaskInfoDisplay> taskList = uiData.getTaskDisplay();
+		for (int i = 0; i < taskList.size(); i++) {
+			TaskUiContainer currentTaskContainer = taskUiList.get(i);
+			currentTaskContainer.updateWithTaskDisplay(taskList.get(i));
+			currentTaskContainer.setVisibleFlag(true);
+		}
+		
+		for (int i = taskList.size(); i < taskUiList.size(); i++) {
+			TaskUiContainer currentTaskContainer = taskUiList.get(i);
+			currentTaskContainer.setVisibleFlag(false);
 		}
 	}
-
-	private void updateCommandFormat() {
-		Label newLabel;
-		
-		// TODO
-		if (commandFormatFeedback.getChildren() != null) {
-			commandFormatFeedback.getChildren().clear();
-		}
-		
-		// get the text
-		String textToFormat = "";
-		
-		// Get list from uidata
-		Vector<FormatIdentify> list = uiData.getFormatDisplay();
-		
-		// loop through the list
-		for (int i = 0; i < list.size(); i++) {
-			FormatIdentify currentInfo = list.get(i);
-			
-			if (currentInfo.getCommandStringFormat().equals("")) {
-				continue;
-			}
-			
-			textToFormat = currentInfo.getCommandStringFormat() + " ";	// Extra space is needed to separate each parsing info
-			newLabel = new Label();
-			newLabel.setText(textToFormat);
-			
-			switch (currentInfo.getType()) {
-				case COMMAND:
-					newLabel.getStyleClass().add("parseCommandTypeName");
-					break;
-					
-				case TASKNAME:
-				case TASKID:
-				case VIEWTYPE:
-				case MODIFIED_TASKNAME:
-				case DATE:
-				case CLEARTYPE:
-				case HELP:
-					newLabel.getStyleClass().add("parseCommandName");
-					break;
-					
-				case START_DATE:
-				case START_TIME:
-					newLabel.getStyleClass().add("parseCommandStartDate");
-					break;
-					
-				case END_DATE:
-				case END_TIME:
-					newLabel.getStyleClass().add("parseCommandEndDate");
-					break;
-					
-				case PRIORITY:
-					newLabel.getStyleClass().add("parseCommandPriority");
-					break;
-					
-				default:
-					newLabel.getStyleClass().add("parseCommandInvalid");
-					break;
-			}
-			
-			commandFormatFeedback.getChildren().add(newLabel);
-		}
+	
+	private void updateFeedbackMessage() {
+		String feedback = uiData.getFeedbackMessage();
+		feedbackText.setText(feedback);
 	}
-
+	
 	private void updateHeader() {
 		DISPLAY_STATE newDisplayState = uiData.getCurrentDisplayState();
 		
@@ -372,50 +319,214 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		
 		switchToNewHeader(newHeaderIndex);
 	}
-
-	private void activatePageToggle(String command) {
-		switch (command) {
-			case NEXT_PAGE_KEYWORD:
-				uiData.goToNextPage();
-				break;
-				
-			case PREV_PAGE_KEYWORD:
-				uiData.goToPreviousPage();
-				break;
-				
-			default:
-				break;
-		}
-	}
-
-	private boolean isPageToggle(String command) {
-		switch (command) {
-			case NEXT_PAGE_KEYWORD:
-			case PREV_PAGE_KEYWORD:
-				return true;
-				
-			default:
-				return false;
-		}
-	}
-
-	private void updateTaskTable() {	
-		Vector<TaskInfoDisplay> taskList = uiData.getTaskDisplay();
-		for (int i = 0; i < taskList.size(); i++) {
-			TaskUiContainer currentTaskContainer = taskUiList.get(i);
-			currentTaskContainer.updateWithTaskDisplay(taskList.get(i));
-			currentTaskContainer.setVisibleFlag(true);
-		}
-		
-		for (int i = taskList.size(); i < taskUiList.size(); i++) {
-			TaskUiContainer currentTaskContainer = taskUiList.get(i);
-			currentTaskContainer.setVisibleFlag(false);
+	
+	private void updateHeaderTaskCount() {
+		Vector<Integer> taskCountList = uiData.getTaskCountList();
+		for (int i = 0; i < taskCountList.size(); i++) {
+			String countString = "" + taskCountList.get(i);
+			
+			switch (i) {
+				case 0:
+					header_today_count.setText(countString);
+					break;
+					
+				case 1:
+					header_future_count.setText(countString);
+					break;
+					
+				case 2:
+					header_timeless_count.setText(countString);
+					break;
+					
+				case 3:
+					header_expired_count.setText(countString);
+					break;
+					
+				case 4:
+					header_archive_count.setText(countString);
+					break;
+			}
 		}
 	}
 	
-	private void updateFeedbackMessage() {
-		String feedback = uiData.getFeedbackMessage();
-		feedbackText.setText(feedback);
+	private void updatePagesTab() {
+		int maxPages = uiData.getMaxTaskDisplayPagesForCurrentView();
+		int maxTabs = maxPages;
+		
+		if (maxTabs > MAX_TABS) {
+			maxTabs = MAX_TABS;
+		}
+		
+		resizePageTabToMaxPages(maxTabs);
+		updatePageTabStyles();
+		refreshPageTabContainerWithNewPageTabs();
+	}
+	
+	private Rectangle createPageTabRectangle() {
+		@SuppressWarnings("rawtypes")
+		RectangleBuilder pageTabBuilder = RectangleBuilder.create()
+			    .x(100).y(100)
+			    .width(25).height(5)
+			    .styleClass("pagesOn");
+		
+		Rectangle rect1 = pageTabBuilder.build();
+		return rect1;
+	}
+
+	private void updatePageTabStyles() {
+		int currentTabPage = uiData.getCurrentPage()%MAX_TABS;
+		for (int i = 0; i < pagesTab.size(); i++) {
+			
+			Rectangle currentTab = pagesTab.get(i);
+			currentTab.getStyleClass().removeAll(Collections.singleton("pagesOn"));
+			currentTab.getStyleClass().removeAll(Collections.singleton("pagesOff"));
+			
+			if (i == currentTabPage) {
+				pagesTab.get(i).getStyleClass().add("pagesOn");
+			} else {
+				pagesTab.get(i).getStyleClass().add("pagesOff");
+			}
+		}
+	}
+
+	private void resizePageTabToMaxPages(int maxTab) {
+		if (pagesTab.size() < maxTab) {
+			int tabsToCreate = maxTab - pagesTab.size();
+			for (int i = 0; i < tabsToCreate; i++) {
+				pagesTab.add(createPageTabRectangle());
+			}
+		} else if (pagesTab.size() > maxTab ) {
+			int tabsToDelete = pagesTab.size() - maxTab;
+			for (int i = 0; i < tabsToDelete; i++) {
+				pagesTab.remove(pagesTab.size()-1);
+			}
+		}
+	}
+	
+	private void refreshPageTabContainerWithNewPageTabs() {
+		pageTabContainer.getChildren().clear();
+		pageTabContainer.getChildren().addAll(pagesTab);
+	}
+	
+	private void updatePageNumber() {
+		int totalPages = uiData.getMaxTaskDisplayPagesForCurrentView();
+		int currentPage = uiData.getCurrentPage()+1;
+		
+		String pageString = String.format("Pg %d - %d", currentPage, totalPages);
+		pageNumber.setText(pageString);
+	}
+	
+	private void updateCommandFormat() {
+		Label newLabel;
+		
+		if (commandFormatFeedback.getChildren() != null) {
+			commandFormatFeedback.getChildren().clear();
+		}
+		
+		String textToFormat = "";
+		Vector<FormatIdentify> list = uiData.getFormatDisplay();
+		
+		for (int i = 0; i < list.size(); i++) {
+			FormatIdentify currentInfo = list.get(i);
+			
+			if (currentInfo.getCommandStringFormat().equals("")) {
+				continue;
+			}
+			
+			textToFormat = currentInfo.getCommandStringFormat() + " ";
+			newLabel = new Label();
+			newLabel.setText(textToFormat);
+			
+			setStyleBasedOnKeywordType(newLabel, currentInfo);
+			
+			commandFormatFeedback.getChildren().add(newLabel);
+		}
+	}
+
+	private void setStyleBasedOnKeywordType(Label newLabel,
+			FormatIdentify currentInfo) {
+		switch (currentInfo.getType()) {
+			case COMMAND:
+				newLabel.getStyleClass().add("parseCommandTypeName");
+				break;
+				
+			case TASKNAME:
+			case TASKID:
+			case VIEWTYPE:
+			case MODIFIED_TASKNAME:
+			case DATE:
+			case CLEARTYPE:
+			case HELP:
+				newLabel.getStyleClass().add("parseCommandName");
+				break;
+				
+			case START_DATE:
+			case START_TIME:
+				newLabel.getStyleClass().add("parseCommandStartDate");
+				break;
+				
+			case END_DATE:
+			case END_TIME:
+				newLabel.getStyleClass().add("parseCommandEndDate");
+				break;
+				
+			case PRIORITY:
+				newLabel.getStyleClass().add("parseCommandPriority");
+				break;
+				
+			default:
+				newLabel.getStyleClass().add("parseCommandInvalid");
+				break;
+		}
+	}
+	
+	private void updateHelpPanel() {		
+		// Get current status for help panel
+		HELP_STATE currentHelpState = uiData.getCurrentHelpState();
+		
+		// Close current panel
+		if (activeHelpPanel != null) {
+			activeHelpPanel.setVisible(false);
+		}
+		
+		// Open the new panel
+		switch (currentHelpState) {
+			case MAIN:
+				activeHelpPanel = helpPane;
+				break;
+				
+			case ADD:
+				activeHelpPanel = helpAddPane;
+				break;
+				
+			case DELETE:
+				activeHelpPanel = helpDeletePane;
+				break;
+				
+			case MODIFY:
+				activeHelpPanel = helpModifyPane;
+				break;
+				
+			case COMPLETE:
+				activeHelpPanel = helpCompletePane;
+				break;
+				
+			case SEARCH:
+				activeHelpPanel = helpSearchPane;
+				break;
+				
+			case VIEW:
+				activeHelpPanel = helpViewPane;
+				break;
+				
+			default:
+				activeHelpPanel = null;
+				break;
+		}
+		
+		if (activeHelpPanel != null) {
+			activeHelpPanel.setVisible(true);
+		}
 	}
 	
 	private void storeCommandEntered(String command) {
@@ -452,10 +563,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		}
 		
 		return false;
-	}
-	
-	private void setTextfieldCursorToLast () {
-		commandTextInput.positionCaret(commandTextInput.getText().length());
 	}
 	
 	@FXML
@@ -547,6 +654,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				String command = commandTextInput.getText();
 				if (isPageToggle(command) || isExitCommand(command)) {
 					processResult = true;
+					commandFormatFeedback.getChildren().clear();
 				} else {
 					processResult = applicationController.processSyntax(command);
 				}
@@ -554,6 +662,10 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				updateCommandStatusIndicator(processResult);
 				break;
 		}
+	}
+	
+	private void setTextfieldCursorToLast () {
+		commandTextInput.positionCaret(commandTextInput.getText().length());
 	}
 	
 	@FXML
@@ -668,73 +780,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 		updateDisplay();
 	}
 
-	private void updatePagesTab() {
-		int maxPages = uiData.getMaxTaskDisplayPagesForCurrentView();
-		int maxTabs = maxPages;
-		
-		if (maxTabs > MAX_TABS) {
-			maxTabs = MAX_TABS;
-		}
-		
-		resizePageTabToMaxPages(maxTabs);
-		updatePageTabStyles();
-		refreshPageTabContainerWithNewPageTabs();
-	}
-	
-	private void updatePageNumber() {
-		int totalPages = uiData.getMaxTaskDisplayPagesForCurrentView();
-		int currentPage = uiData.getCurrentPage()+1;
-		
-		String pageString = String.format("Pg %d - %d", currentPage, totalPages);
-		pageNumber.setText(pageString);
-	}
-	
-	private Rectangle createPageTabRectangle() {
-		@SuppressWarnings("rawtypes")
-		RectangleBuilder pageTabBuilder = RectangleBuilder.create()
-			    .x(100).y(100)
-			    .width(25).height(5)
-			    .styleClass("pagesOn");
-		
-		Rectangle rect1 = pageTabBuilder.build();
-		return rect1;
-	}
-
-	private void updatePageTabStyles() {
-		int currentTabPage = uiData.getCurrentPage()%MAX_TABS;
-		for (int i = 0; i < pagesTab.size(); i++) {
-			
-			Rectangle currentTab = pagesTab.get(i);
-			currentTab.getStyleClass().removeAll(Collections.singleton("pagesOn"));
-			currentTab.getStyleClass().removeAll(Collections.singleton("pagesOff"));
-			
-			if (i == currentTabPage) {
-				pagesTab.get(i).getStyleClass().add("pagesOn");
-			} else {
-				pagesTab.get(i).getStyleClass().add("pagesOff");
-			}
-		}
-	}
-
-	private void resizePageTabToMaxPages(int maxTab) {
-		if (pagesTab.size() < maxTab) {
-			int tabsToCreate = maxTab - pagesTab.size();
-			for (int i = 0; i < tabsToCreate; i++) {
-				pagesTab.add(createPageTabRectangle());
-			}
-		} else if (pagesTab.size() > maxTab ) {
-			int tabsToDelete = pagesTab.size() - maxTab;
-			for (int i = 0; i < tabsToDelete; i++) {
-				pagesTab.remove(pagesTab.size()-1);
-			}
-		}
-	}
-	
-	private void refreshPageTabContainerWithNewPageTabs() {
-		pageTabContainer.getChildren().clear();
-		pageTabContainer.getChildren().addAll(pagesTab);
-	}
-
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		updateDisplay();
@@ -758,54 +803,5 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	private void changeStatusIndicatorStyle (String oldStyle, String newStyle) {
 		commandTextInput.getStyleClass().removeAll(Collections.singleton(oldStyle));
 		commandTextInput.getStyleClass().add(newStyle);
-	}
-	
-	private void updateHelpPanel() {		
-		// Get current status for help panel
-		HELP_STATE currentHelpState = uiData.getCurrentHelpState();
-		
-		// Close current panel
-		if (activeHelpPanel != null) {
-			activeHelpPanel.setVisible(false);
-		}
-		
-		// Open the new panel
-		switch (currentHelpState) {
-			case MAIN:
-				activeHelpPanel = helpPane;
-				break;
-				
-			case ADD:
-				activeHelpPanel = helpAddPane;
-				break;
-				
-			case DELETE:
-				activeHelpPanel = helpDeletePane;
-				break;
-				
-			case MODIFY:
-				activeHelpPanel = helpModifyPane;
-				break;
-				
-			case COMPLETE:
-				activeHelpPanel = helpCompletePane;
-				break;
-				
-			case SEARCH:
-				activeHelpPanel = helpSearchPane;
-				break;
-				
-			case VIEW:
-				activeHelpPanel = helpViewPane;
-				break;
-				
-			default:
-				activeHelpPanel = null;
-				break;
-		}
-		
-		if (activeHelpPanel != null) {
-			activeHelpPanel.setVisible(true);
-		}
 	}
 }
