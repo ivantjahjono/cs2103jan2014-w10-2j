@@ -28,6 +28,8 @@ public class TaskInfoDisplay {
 	SimpleDateFormat dayMonthFormat = new SimpleDateFormat("dd MMM");
 	SimpleDateFormat dayOnlyFormat = new SimpleDateFormat("EEE");
 	
+	private String DEADLINE_START_STRING = "Due by ";
+	
 	public TaskInfoDisplay () {
 		taskId 			= 0;
 		taskName 		= "No taskname available";
@@ -60,13 +62,11 @@ public class TaskInfoDisplay {
 
 	private void updateTimeFormatDisplayForDeadlineTasks(TaskInfo infoToUpdateFrom) {
 		Calendar dueTime = infoToUpdateFrom.getEndDate();
-		String dueTimeToDisplay = "Due by " + convertDateTimeFormatBasedOnTime(dueTime);
+		String dueTimeToDisplay = DEADLINE_START_STRING + convertDateTimeFormatBasedOnTime(dueTime);
 		startDate = dueTimeToDisplay;
 	}
 
 	private void updateTimeFormatDisplayForTimedTasks(TaskInfo infoToUpdateFrom) {
-		setStartTime(infoToUpdateFrom.getStartDate());
-		
 		Calendar startTime 	= infoToUpdateFrom.getStartDate();
 		Calendar endTime 	= infoToUpdateFrom.getEndDate();
 
@@ -74,13 +74,18 @@ public class TaskInfoDisplay {
 		String endToDisplay = " to " + convertDateTimeFormatBasedOnTime(endTime);
 		
 		if (dateTimeFormat.isSameDay(startTime, endTime)) {
-			int index = startToDisplay.indexOf(",");
-			if (index > 0) {
-				startToDisplay = startToDisplay.substring(0, index);
-			}
+			startToDisplay = removeFirstWeekdayType(startToDisplay);
 		}
 		
 		startDate = startToDisplay+endToDisplay;
+	}
+
+	private String removeFirstWeekdayType(String startToDisplay) {
+		int index = startToDisplay.indexOf(",");
+		if (index > 0) {
+			startToDisplay = startToDisplay.substring(0, index);
+		}
+		return startToDisplay;
 	}
 	
 	private String convertDateTimeFormatBasedOnTime(Calendar timeDate) {
@@ -101,22 +106,6 @@ public class TaskInfoDisplay {
 	
 	public void setTaskName (String name) {
 		taskName = name;
-	}
-	
-	public void setStartTime (Calendar time) {
-		if (time != null) {
-			SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma");
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
-			startDate = timeFormat.format(time.getTime()) + "\t" + dateFormat.format(time.getTime());
-		}
-	}
-	
-	public void setEndTime (Calendar time) {
-		if (time != null) {
-			SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma");
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
-			endDate = timeFormat.format(time.getTime()) + "\t" + dateFormat.format(time.getTime());
-		}
 	}
 	
 	public void setImportanceLevel (int level) {
