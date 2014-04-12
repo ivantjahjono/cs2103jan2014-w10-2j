@@ -55,7 +55,7 @@ public class CommandClear extends Command {
 			tasksCleared = taskListShop.getAllCurrentTasks();
 			archiveTasksCleared = taskListShop.getAllArchivedTasks();
 			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
-			taskListShop.clearAllTasks();
+			taskListShop.clearAllCurrentTasks();
 			taskListShop.clearAllArchivedTasks();
 			addCommandToHistory ();
 			break;
@@ -67,7 +67,7 @@ public class CommandClear extends Command {
 			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
 			tasksCleared = taskListShop.getAllCurrentTasks();
 //			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE;
-			taskListShop.clearAllTasks();
+			taskListShop.clearAllCurrentTasks();
 			addCommandToHistory ();
 			break;
 		case CLEAR_TYPE_ARCHIVE:
