@@ -126,6 +126,40 @@ public class TaskView {
 		return currentView.indexOf(taskToSearch);
 	}
 	
+	public void addTask(TaskInfo task) {
+		taskListShop.addTaskToList(task);
+		addToSearchView(task);
+	}
+	
+	public void deleteTask(TaskInfo task) {
+		taskListShop.removeTask(task);
+		deleteInSearchView(task);
+	}
+	
+	public void updateTask(TaskInfo newTask, TaskInfo oldTask) {
+		taskListShop.updateTask(newTask, oldTask);
+		updateInSearchView(newTask, oldTask);
+	}
+	
+	public void doneTask(TaskInfo task) {
+		//add assertion here
+		task.setDone(true);
+		task.setExpiryFlag(false);
+		taskListShop.refreshTasks();  //Refresh to shift task to archive
+		deleteInSearchView(task);
+	}
+	
+	public void undoneTask(TaskInfo task) {
+		//add assertion here
+		task.setDone(false);
+		taskListShop.refreshTasks();  //Refresh to shift task to archive
+		addToSearchView(task);
+	}
+	
+	public void refreshTasks() {
+		taskListShop.refreshTasks();
+	}
+	
 	public void addToSearchView(TaskInfo task) {
 		searchView.add(task);
 	}
