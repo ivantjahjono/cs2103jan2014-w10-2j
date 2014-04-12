@@ -40,10 +40,7 @@ public class CommandDone extends Command{
 		if (taskToBeModified.getDone()) {
 			feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
 		} else {
-			taskToBeModified.setDone(true);
-			taskToBeModified.setExpiryFlag(false);
-			taskListShop.refreshTasks();  //Refresh to shift task to archive
-			taskView.deleteInSearchView(taskToBeModified);
+			taskView.doneTask(taskToBeModified);
 			feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
 		}
 		
@@ -54,7 +51,7 @@ public class CommandDone extends Command{
 
 	public boolean undo() {
 		taskToBeModified.setDone(false);
-		taskListShop.refreshTasks();  //Refresh to shift task to current
+		//taskView.refreshTasks();  //Refresh to shift task to current
 		taskView.addToSearchView(taskToBeModified);
 		return true;
 	}
