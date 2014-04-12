@@ -12,26 +12,16 @@ import kaboom.shared.FormatIdentify;
 import kaboom.shared.HELP_STATE;
 import kaboom.shared.Result;
 import kaboom.shared.TaskInfo;
-import kaboom.storage.TaskDepository;
-import kaboom.storage.TaskView;
 
 /**
- * Returns a vector of TaskInfoDisplay which contains all the 
- * tasks that is displayed.
- * <p>
  * This Singleton class contains all the information that User Interface
  * needs to display. It holds all the tasks, command feedback,
  * current page the UI is on.
  */
 public class DisplayData extends Observable {
-	// TODO clean up methods
-
 	final int NUM_OF_TASK_PER_PAGE = 10;
 
 	static DisplayData instance;
-
-//	TaskDepository 	taskListShop;
-//	TaskView		taskView;
 
 	Vector<TaskInfoDisplay> tasksDataToDisplay;
 	Vector<FormatIdentify> 	formattingCommand;
@@ -63,8 +53,6 @@ public class DisplayData extends Observable {
 	}
 
 	private DisplayData () {
-//		taskListShop  	= TaskDepository.getInstance();
-		
 		tasksDataToDisplay = new Vector<TaskInfoDisplay>();
 		formattingCommand = new Vector<FormatIdentify>();
 		taskCountList = new Vector<Integer>();
@@ -76,36 +64,7 @@ public class DisplayData extends Observable {
 	}
 
 	private void updateTaskCountList() {
-		//TODO
 		taskCountList = TaskMasterKaboom.getInstance().updateTaskCount();
-//		taskCountList.clear();
-//		for (int i = 0; i < 6; i++) {
-//			int currentCount = 0;
-//
-//			switch (i) {
-//			case 0:
-//				currentCount = taskListShop.getToday().size();
-//				break;
-//				
-//			case 1:
-//				currentCount = taskListShop.getFutureTasks().size();
-//				break;
-//
-//			case 2:
-//				currentCount = taskListShop.getFloatingTasks().size();
-//				break;
-//
-//			case 3:
-//				currentCount = taskListShop.getExpiredTasks().size();
-//				break;
-//
-//			case 4:
-//				currentCount = taskListShop.getAllArchivedTasks().size();
-//				break;
-//
-//			}
-//			taskCountList.add(currentCount);
-//		}
 	}
 
 	/**
@@ -115,35 +74,14 @@ public class DisplayData extends Observable {
 	 *  @param commandResult information of the command that is executed
 	 */
 	public void updateDisplayWithResult (Result commandResult) {
-		// TODO Hardcoded way of forcing to show to default if there is no tasks to display
-//		if (taskView == null) {
-//			taskView = TaskView.getInstance();
-//		}
-		
-		// Update display state
-		DISPLAY_STATE stateChange = commandResult.getDisplayState();
-		if (stateChange != DISPLAY_STATE.INVALID) {
-			currentDisplayState = stateChange; 
-		}
-		
-		// Update help state
-		HELP_STATE helpStateChange = commandResult.getHelpState();
-		if (helpStateChange != HELP_STATE.INVALID) {
-			if (currentHelpState == helpStateChange) {
-				currentHelpState = HELP_STATE.CLOSE;
-			} else {
-				currentHelpState = helpStateChange; 
-			}
-		}
+		updateDisplayStateBasedOnResult(commandResult);
+		updateHelpPanelStateBasedOnResult(commandResult);
 
-		// Pull data from task view class
 		extractTasksBasedOnDisplayState(currentDisplayState);
 		setFeedbackMessage(commandResult.getFeedback());
 
-		// Update header counters
-		updateTaskCountList ();
+		updateTaskCountList();
 		
-		// Is there any task in focus ?
 		TaskInfo taskToFocus = commandResult.getTaskToFocus();
 		int indexToGo = -1;
 		if (taskToFocus != null) {
@@ -161,7 +99,7 @@ public class DisplayData extends Observable {
 		}
 
 		int maxPages = getMaxTaskDisplayPages(tasksDataToDisplay)-1;
-		if (currentPage > maxPages) {
+		if (isMoreThanMaxPage(maxPages)) {
 			currentPage = maxPages;
 		}
 		
@@ -172,13 +110,31 @@ public class DisplayData extends Observable {
 		setChanged();
 		notifyObservers();
 	}
+
+	private void updateHelpPanelStateBasedOnResult(Result commandResult) {
+		HELP_STATE helpStateChange = commandResult.getHelpState();
+		if (helpStateChange != HELP_STATE.INVALID) {
+			if (currentHelpState == helpStateChange) {
+				currentHelpState = HELP_STATE.CLOSE;
+			} else {
+				currentHelpState = helpStateChange; 
+			}
+		}
+	}
+
+	private void updateDisplayStateBasedOnResult(Result commandResult) {
+		DISPLAY_STATE stateChange = commandResult.getDisplayState();
+		if (stateChange != DISPLAY_STATE.INVALID) {
+			currentDisplayState = stateChange; 
+		}
+	}
 	
 	public void updateDisplayWithResult () {
 		extractTasksBasedOnDisplayState(currentDisplayState);
 		updateTaskCountList ();
 		
 		int maxPages = getMaxTaskDisplayPages(tasksDataToDisplay)-1;
-		if (currentPage > maxPages) {
+		if (isMoreThanMaxPage(maxPages)) {
 			currentPage = maxPages;
 		}
 		
@@ -188,19 +144,6 @@ public class DisplayData extends Observable {
 
 	private void extractTasksBasedOnDisplayState(DISPLAY_STATE displayState) {
 		setTaskDisplayToThese(TaskMasterKaboom.getInstance().setAndGetView(displayState), tasksDataToDisplay);
-	}
-
-	/**
-	 * Returns a vector of TaskInfoDisplay which contains all the 
-	 * tasks that is displayed.
-	 * <p>
-	 * This method always return DisplayData. The instance will be
-	 * created when it is first called. Subsequent calls will return
-	 * the first created instance.
-	 *
-	 */
-	public Vector<TaskInfoDisplay> getAllTaskDisplayInfo () {
-		return tasksDataToDisplay;
 	}
 
 	/**
@@ -286,12 +229,16 @@ public class DisplayData extends Observable {
 		currentPage++;
 
 		int maxPage = getMaxTaskDisplayPagesForCurrentView()-1;
-		if (currentPage > maxPage) {
+		if (isMoreThanMaxPage(maxPage)) {
 			currentPage = maxPage;
 		}
 
 		setChanged();
 		notifyObservers();
+	}
+
+	private boolean isMoreThanMaxPage(int maxPage) {
+		return currentPage > maxPage;
 	}
 
 	public void goToPreviousPage () {
