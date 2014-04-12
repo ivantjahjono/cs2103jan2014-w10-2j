@@ -4,9 +4,8 @@ package kaboom.storage;
 
 import java.util.Vector;
 
-import kaboom.logic.TaskInfo;
-import kaboom.storage.TaskListShop;
-import kaboom.ui.DISPLAY_STATE;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.TaskInfo;
 import kaboom.ui.DisplayData;
 
 public class TaskView {

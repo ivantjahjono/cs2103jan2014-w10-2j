@@ -5,8 +5,8 @@ package kaboom.logic.command;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.TextParser;
+import kaboom.shared.KEYWORD_TYPE;
 
 public class CommandFactory {
 	private static final String KEYWORD_COMMAND_ADD 	= "add";

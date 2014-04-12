@@ -3,10 +3,10 @@ package kaboom.logic;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import kaboom.shared.KEYWORD_TYPE;
 
 public class TextParser {
 	private final String KEYWORD_STARTTIME = "(at|from)\\s";
@@ -287,38 +287,6 @@ public class TextParser {
 	    }
 	    
 	    return matchList;
-	}
-	
-	public Queue<KeytypeIndexPair> getKeywordsInAscendingOrder(String[] tokenisedString) {
-		Queue<KeytypeIndexPair> queue = new LinkedList<KeytypeIndexPair>();
-		
-		for (int i = 0; i < tokenisedString.length; i++) {
-			KeytypeIndexPair currentPair = null;
-			
-			switch (tokenisedString[i]) {
-				case KEYWORD_MODIFY:
-					currentPair = new KeytypeIndexPair(KEYWORD_TYPE.MODIFIED_TASKNAME, i);
-					break;
-					
-				case KEYWORD_STARTTIME:
-					currentPair = new KeytypeIndexPair(KEYWORD_TYPE.START_TIME, i);
-					break;
-					
-				case KEYWORD_ENDTIME:
-					currentPair = new KeytypeIndexPair(KEYWORD_TYPE.END_TIME, i);
-					break;
-					
-				case KEYWORD_DATE:
-					currentPair = new KeytypeIndexPair(KEYWORD_TYPE.DATE, i);
-					break;
-			}
-			
-			if (currentPair != null) {
-				queue.add(currentPair);
-			}
-		}
-		
-		return queue;
 	}
 	
 	public Hashtable<KEYWORD_TYPE, String> testExtractList(String userInput, KEYWORD_TYPE[] list) {

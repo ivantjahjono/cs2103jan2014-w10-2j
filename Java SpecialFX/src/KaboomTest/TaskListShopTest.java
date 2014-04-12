@@ -6,8 +6,8 @@ import static org.junit.Assert.*;
 
 import java.util.Calendar;
 
-import kaboom.logic.TASK_TYPE;
-import kaboom.logic.TaskInfo;
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
 import kaboom.storage.TaskListShop;
 
 import org.junit.Before;

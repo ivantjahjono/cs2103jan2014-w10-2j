@@ -5,8 +5,7 @@ import static org.junit.Assert.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import kaboom.logic.DateAndTimeFormat;
-import kaboom.logic.InvalidDateAndTimeException;
+import kaboom.shared.DateAndTimeFormat;
 
 import org.junit.Test;
 

@@ -2,7 +2,7 @@
 
 package kaboom.logic.command;
 
-import kaboom.logic.Result;
+import kaboom.shared.Result;
 
 public class CommandUpdate extends Command {
 	public Result execute() {
