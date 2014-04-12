@@ -189,6 +189,7 @@ public class TaskView {
 		task.setDone(true);
 		taskListShop.refreshTasks();  //Refresh to shift task to archive
 		deleteInSearchView(task);
+		task.setRecent(true);
 	}
 	
 	public void undoneTask(TaskInfo task) {
@@ -196,6 +197,7 @@ public class TaskView {
 		task.setDone(false);
 		taskListShop.refreshTasks();  //Refresh to shift task to archive
 		addToSearchView(task);
+		task.setRecent(true);
 	}
 	
 	public void clearPresentTasks() {
