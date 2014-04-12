@@ -17,6 +17,8 @@ public class CommandHelp extends Command {
 	private final String HELP_TYPE_SEARCH 	= "search";
 	private final String HELP_TYPE_VIEW 	= "view";
 	private final String HELP_TYPE_CLOSE 	= "close";
+	
+	private final String HELP_INVALID_COMMAND = "Invalid help command!";
 		
 	public CommandHelp () {
 		commandType = COMMAND_TYPE.HELP;
@@ -28,57 +30,56 @@ public class CommandHelp extends Command {
 	public Result execute() {
 		assert taskListShop != null;
 		
-		// Read from hashtable
+		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return createResult(HELP_INVALID_COMMAND);
+		}
+		
 		String helpType = infoTable.get(KEYWORD_TYPE.HELP);
 		HELP_STATE helpState = HELP_STATE.INVALID;
 		
-		if (helpType == null)  {
-			helpState = HELP_STATE.MAIN;
-		} else {		
-			// convert to help type
-			switch (helpType) {
-				case HELP_TYPE_ADD:
-					helpState = HELP_STATE.ADD;
-					break;
-					
-				case HELP_TYPE_DELETE:
-					helpState = HELP_STATE.DELETE;
-					break;
-					
-				case HELP_TYPE_MODIFY:
-					helpState = HELP_STATE.MODIFY;
-					break;
-					
-				case HELP_TYPE_COMPLETE:
-					helpState = HELP_STATE.COMPLETE;
-					break;
-					
-				case HELP_TYPE_SEARCH:
-					helpState = HELP_STATE.SEARCH;
-					break;
-					
-				case HELP_TYPE_VIEW:
-					helpState = HELP_STATE.VIEW;
-					break;
-					
-				case HELP_TYPE_CLOSE:
-					helpState = HELP_STATE.CLOSE;
-					break;
-					
-				default:
-					break;
-			}
-		}
+		helpState = getHelpStateBasedOnKeywords(helpType);
 		
 		Result currentResult = createResult("");
 		currentResult.setHelpState(helpState);
 		
 		return currentResult;
 	}
+
+	private HELP_STATE getHelpStateBasedOnKeywords(String helpType) {
+		if (helpType == null)  {
+			return HELP_STATE.MAIN;
+		} else {
+			// convert to help type
+			switch (helpType) {
+				case HELP_TYPE_ADD:
+					return HELP_STATE.ADD;
+					
+				case HELP_TYPE_DELETE:
+					return HELP_STATE.DELETE;
+					
+				case HELP_TYPE_MODIFY:
+					return HELP_STATE.MODIFY;
+					
+				case HELP_TYPE_COMPLETE:
+					return HELP_STATE.COMPLETE;
+					
+				case HELP_TYPE_SEARCH:
+					return HELP_STATE.SEARCH;
+					
+				case HELP_TYPE_VIEW:
+					return HELP_STATE.VIEW;
+					
+				case HELP_TYPE_CLOSE:
+					return HELP_STATE.CLOSE;
+					
+				default:
+					return null;
+			}
+		}
+	}
 	
 	public boolean undo () {
 		boolean isUndoSuccessful = false;
-		
 		return isUndoSuccessful;
 	}
 	
