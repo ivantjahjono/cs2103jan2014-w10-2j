@@ -168,17 +168,6 @@ public class TaskDepository {
 		return null;
 	}
 
-	public TaskInfo removeTaskByName (String taskName) {
-		//Assumes that there is only one task with the same name
-		for (int i = 0; i < currentTaskList.size(); i++) {
-			TaskInfo singleTask = currentTaskList.get(i);
-			if (singleTask.getTaskName().contains(taskName)) {
-				return currentTaskList.remove(currentTaskList.indexOf(singleTask));
-			}
-		}
-		return null;
-	}
-
 	//This function refreshes all the tasks in the vector to check
 	//whether it has expired and set to true if it has expired.
 	//Sets to false if the task has not expired
