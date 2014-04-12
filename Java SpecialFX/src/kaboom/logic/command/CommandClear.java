@@ -52,11 +52,11 @@ public class CommandClear extends Command {
 		
 		switch (clearType) {
 		case CLEAR_TYPE_ALL:
-			tasksCleared = taskListShop.getAllCurrentTasks();
-			archiveTasksCleared = taskListShop.getAllArchivedTasks();
+			tasksCleared = taskView.getAllCurrentTasks();
+			archiveTasksCleared = taskView.getAllArchivedTasks();
 			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
-			taskListShop.clearAllCurrentTasks();
-			taskListShop.clearAllArchivedTasks();
+			taskView.clearCurrentTasks();
+			taskView.clearArchivedTasks();
 			addCommandToHistory ();
 			break;
 		case CLEAR_TYPE_CURRENT:
@@ -65,15 +65,15 @@ public class CommandClear extends Command {
 		case CLEAR_TYPE_EMPTY:
 			//take as all
 			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
-			tasksCleared = taskListShop.getAllCurrentTasks();
+			tasksCleared = taskView.getAllCurrentTasks();
 //			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE;
-			taskListShop.clearAllCurrentTasks();
+			taskView.clearCurrentTasks();
 			addCommandToHistory ();
 			break;
 		case CLEAR_TYPE_ARCHIVE:
 			commandFeedback = MESSAGE_COMMAND_CLEAR_ARCHIVE_SUCCESS;
-			archiveTasksCleared = taskListShop.getAllArchivedTasks();
-			taskListShop.clearAllArchivedTasks ();
+			archiveTasksCleared = taskView.getAllArchivedTasks();
+			taskView.clearArchivedTasks ();
 			addCommandToHistory ();
 			break;
 		default: 
@@ -89,7 +89,7 @@ public class CommandClear extends Command {
 
 		if(tasksCleared != null) {
 			for (int i = 0; i < tasksCleared.size(); i++) {
-				taskListShop.addTaskToList(tasksCleared.get(i));
+				taskView.addTask(tasksCleared.get(i));
 			}
 			if (tasksCleared.size() == taskListShop.shopSize()) {
 				isUndoSuccessful = true;
@@ -100,7 +100,7 @@ public class CommandClear extends Command {
 		
 		if(archiveTasksCleared != null) {
 			for (int i = 0; i < archiveTasksCleared.size(); i++) {
-				taskListShop.addTaskToArchivedList(archiveTasksCleared.get(i));
+				taskView.addArchivedTask(archiveTasksCleared.get(i));
 			}
 			if (archiveTasksCleared.size() == taskListShop.archiveShopSize()) {
 				isUndoSuccessful = true;
