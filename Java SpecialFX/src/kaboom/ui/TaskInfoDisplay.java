@@ -4,25 +4,22 @@ package kaboom.ui;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import kaboom.shared.DateAndTimeFormat;
 import kaboom.shared.TASK_TYPE;
 import kaboom.shared.TaskInfo;
 
 public class TaskInfoDisplay {
-	private SimpleIntegerProperty taskId;
-	private SimpleStringProperty taskName;
+	private int taskId;
+	private String taskName;
 	
-	private SimpleStringProperty startDate;
-	private SimpleStringProperty endDate;
+	private String startDate;
+	private String endDate;
 	
-	private SimpleStringProperty importanceLevel;
+	private String importanceLevel;
 	
-	private SimpleBooleanProperty isExpired;
-	private SimpleBooleanProperty isDone;
-	private SimpleBooleanProperty isRecent;
+	private boolean isExpired;
+	private boolean isDone;
+	private boolean isRecent;
 	
 	private DateAndTimeFormat dateTimeFormat;
 	
@@ -32,14 +29,14 @@ public class TaskInfoDisplay {
 	SimpleDateFormat dayOnlyFormat = new SimpleDateFormat("EEE");
 	
 	public TaskInfoDisplay () {
-		taskId = new SimpleIntegerProperty(0);
-		taskName = new SimpleStringProperty("No taskname available");;
-		startDate = new SimpleStringProperty("-");
-		endDate = new SimpleStringProperty("-");
-		importanceLevel = new SimpleStringProperty("");
-		isExpired = new SimpleBooleanProperty(false);
-		isDone = new SimpleBooleanProperty(false);
-		isRecent = new SimpleBooleanProperty(false);
+		taskId 			= 0;
+		taskName 		= "No taskname available";
+		startDate 		= "-";
+		endDate 		= "-";
+		importanceLevel = "";
+		isExpired 	= false;
+		isDone 		= false;
+		isRecent 	= false;
 		
 		dateTimeFormat = DateAndTimeFormat.getInstance();
 	}
@@ -49,30 +46,9 @@ public class TaskInfoDisplay {
 		
 		TASK_TYPE currentTaskType = infoToUpdateFrom.getTaskType();
 		if (currentTaskType== TASK_TYPE.TIMED) {
-			// Set time from ?? to ??
-			setStartTime(infoToUpdateFrom.getStartDate());
-			
-			Calendar startTime = infoToUpdateFrom.getStartDate();
-			Calendar endTime = infoToUpdateFrom.getEndDate();
-
-			String startToDisplay = "From " + convertDateTimeFormatBasedOnTime(startTime);
-			String endToDisplay = " to " + convertDateTimeFormatBasedOnTime(endTime);
-			
-			if (dateTimeFormat.isSameDay(startTime, endTime)) {
-				// Remove the first day declaration
-				int index = startToDisplay.indexOf(",");
-				if (index > 0) {
-					startToDisplay = startToDisplay.substring(0, index);
-				}
-			}
-			
-			startDate.set(startToDisplay+endToDisplay);
+			updateTimeFormatDisplayForTimedTasks(infoToUpdateFrom);
 		} else if (currentTaskType == TASK_TYPE.DEADLINE) {
-			// Due by ??
-			
-			Calendar dueTime = infoToUpdateFrom.getEndDate();
-			String dueTimeToDisplay = "Due by " + convertDateTimeFormatBasedOnTime(dueTime);
-			startDate.set(dueTimeToDisplay);
+			updateTimeFormatDisplayForDeadlineTasks(infoToUpdateFrom);
 		}
 		
 		setImportanceLevel(infoToUpdateFrom.getPriority());
@@ -81,10 +57,35 @@ public class TaskInfoDisplay {
 		setDoneFlag(infoToUpdateFrom.getDone());
 		setRecentFlag(infoToUpdateFrom.isRecent());
 	}
+
+	private void updateTimeFormatDisplayForDeadlineTasks(TaskInfo infoToUpdateFrom) {
+		Calendar dueTime = infoToUpdateFrom.getEndDate();
+		String dueTimeToDisplay = "Due by " + convertDateTimeFormatBasedOnTime(dueTime);
+		startDate = dueTimeToDisplay;
+	}
+
+	private void updateTimeFormatDisplayForTimedTasks(TaskInfo infoToUpdateFrom) {
+		setStartTime(infoToUpdateFrom.getStartDate());
+		
+		Calendar startTime 	= infoToUpdateFrom.getStartDate();
+		Calendar endTime 	= infoToUpdateFrom.getEndDate();
+
+		String startToDisplay = "From " + convertDateTimeFormatBasedOnTime(startTime);
+		String endToDisplay = " to " + convertDateTimeFormatBasedOnTime(endTime);
+		
+		if (dateTimeFormat.isSameDay(startTime, endTime)) {
+			int index = startToDisplay.indexOf(",");
+			if (index > 0) {
+				startToDisplay = startToDisplay.substring(0, index);
+			}
+		}
+		
+		startDate = startToDisplay+endToDisplay;
+	}
 	
 	private String convertDateTimeFormatBasedOnTime(Calendar timeDate) {
 		if (dateTimeFormat.isToday(timeDate)) {
-			return fullTimeFormat.format(timeDate.getTime());
+			return fullTimeFormat.format(timeDate.getTime()) + ", Today";
 		} else if (dateTimeFormat.isThisWeek(timeDate)) {
 			return fullTimeFormat.format(timeDate.getTime()) + ", " + dayOnlyFormat.format(timeDate.getTime());
 		} else if (dateTimeFormat.isThisYear(timeDate)) {
@@ -95,18 +96,18 @@ public class TaskInfoDisplay {
 	}
 
 	public void setTaskId (int id) {
-		taskId.set(id);
+		taskId = id;
 	}
 	
 	public void setTaskName (String name) {
-		taskName.set(name);
+		taskName = name;
 	}
 	
 	public void setStartTime (Calendar time) {
 		if (time != null) {
 			SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma");
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
-			startDate.set(timeFormat.format(time.getTime()) + "\t" + dateFormat.format(time.getTime()));
+			startDate = timeFormat.format(time.getTime()) + "\t" + dateFormat.format(time.getTime());
 		}
 	}
 	
@@ -114,62 +115,62 @@ public class TaskInfoDisplay {
 		if (time != null) {
 			SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma");
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
-			endDate.set(timeFormat.format(time.getTime()) + "\t" + dateFormat.format(time.getTime()));
+			endDate = timeFormat.format(time.getTime()) + "\t" + dateFormat.format(time.getTime());
 		}
 	}
 	
 	public void setImportanceLevel (int level) {
 		if (level == 0) {
-			importanceLevel.set("");
+			importanceLevel = "";
 		} else {
 			for (int i = 0; i < level; i++) {
-				importanceLevel.set(importanceLevel.getValue() + "*");
+				importanceLevel = importanceLevel + "*";
 			}
 		}
 	}
 	
 	public void setExpiryFlag (boolean flag) {
-		isExpired.set(flag);
+		isExpired = flag;
 	}
 	
 	public void setDoneFlag (boolean flag) {
-		isDone.set(flag);
+		isDone = flag;
 	}
 	
 	public void setRecentFlag (boolean flag) {
-		isRecent.set(flag);
+		isRecent = flag;
 	}
 	
 	public int getTaskId () {
-		return taskId.get();
+		return taskId;
 	}
 	
 	public String getTaskName () {
-		return taskName.get();
+		return taskName;
 	}
 	
 	public String getStartDate () {
-		return startDate.get();
+		return startDate;
 	}
 	
 	public String getEndDate () {
-		return endDate.get();
+		return endDate;
 	}
 	
 	public String getImportanceLevel () {
-		return importanceLevel.get();
+		return importanceLevel;
 	}
 	
 	public boolean isExpired () {
-		return isExpired.get();
+		return isExpired;
 	}
 	
 	public boolean isDone () {
-		return isDone.get();
+		return isDone;
 	}
 	
 	public boolean isRecent () {
-		return isRecent.get();
+		return isRecent;
 	}
 }
 
