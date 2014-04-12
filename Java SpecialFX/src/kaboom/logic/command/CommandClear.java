@@ -99,7 +99,7 @@ public class CommandClear extends Command {
 		
 		if(archiveTasksCleared != null) {
 			for (int i = 0; i < archiveTasksCleared.size(); i++) {
-				taskListShop.addTaskToList(archiveTasksCleared.get(i));
+				taskListShop.addTaskToArchivedList(archiveTasksCleared.get(i));
 			}
 			if (archiveTasksCleared.size() == taskListShop.archiveShopSize()) {
 				isUndoSuccessful = true;
