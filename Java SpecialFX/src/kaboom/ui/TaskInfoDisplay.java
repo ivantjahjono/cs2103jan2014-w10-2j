@@ -7,9 +7,9 @@ import java.util.Calendar;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import kaboom.logic.DateAndTimeFormat;
-import kaboom.logic.TASK_TYPE;
-import kaboom.logic.TaskInfo;
+import kaboom.shared.DateAndTimeFormat;
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
 
 public class TaskInfoDisplay {
 	private SimpleIntegerProperty taskId;

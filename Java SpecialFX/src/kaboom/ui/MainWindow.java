@@ -33,8 +33,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import kaboom.logic.FormatIdentify;
 import kaboom.logic.TaskMasterKaboom;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.HELP_STATE;
 
 public class MainWindow implements javafx.fxml.Initializable, Observer {	
 	private final int MAX_TABS = 5;

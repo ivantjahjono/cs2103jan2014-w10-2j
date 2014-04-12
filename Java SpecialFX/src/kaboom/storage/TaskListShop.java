@@ -6,14 +6,14 @@ import java.util.Collections;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import kaboom.logic.KEYWORD_TYPE;
-import kaboom.logic.TaskInfo;
-import kaboom.logic.TASK_TYPE;
-import kaboom.logic.command.ComparatorDefault;
-import kaboom.logic.command.ComparatorEndDate;
-import kaboom.logic.command.ComparatorName;
-import kaboom.logic.command.ComparatorPriority;
-import kaboom.logic.command.ComparatorStartDate;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
+import kaboom.shared.comparators.ComparatorDefault;
+import kaboom.shared.comparators.ComparatorEndDate;
+import kaboom.shared.comparators.ComparatorName;
+import kaboom.shared.comparators.ComparatorPriority;
+import kaboom.shared.comparators.ComparatorStartDate;
 
 public class TaskListShop {
 

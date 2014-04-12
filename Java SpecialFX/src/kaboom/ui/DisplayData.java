@@ -5,10 +5,12 @@ package kaboom.ui;
 import java.util.Observable;
 import java.util.Vector;
 
-import kaboom.logic.DateAndTimeFormat;
-import kaboom.logic.FormatIdentify;
-import kaboom.logic.Result;
-import kaboom.logic.TaskInfo;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.DateAndTimeFormat;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.HELP_STATE;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
 import kaboom.storage.TaskListShop;
 import kaboom.storage.TaskView;
 

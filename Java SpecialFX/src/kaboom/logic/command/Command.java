@@ -7,18 +7,18 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import kaboom.logic.DateAndTimeFormat;
-import kaboom.logic.FormatIdentify;
-import kaboom.logic.FormatIdentifyComparator;
-import kaboom.logic.KEYWORD_TYPE;
-import kaboom.logic.Result;
-import kaboom.logic.TASK_TYPE;
-import kaboom.logic.TaskInfo;
 import kaboom.logic.TextParser;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.DateAndTimeFormat;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
+import kaboom.shared.comparators.FormatIdentifyComparator;
 import kaboom.storage.History;
 import kaboom.storage.TaskListShop;
 import kaboom.storage.TaskView;
-import kaboom.ui.DISPLAY_STATE;
 import kaboom.ui.DisplayData;
 
 /* 

@@ -5,18 +5,18 @@ import static org.junit.Assert.*;
 
 import java.util.Calendar;
 
-import kaboom.logic.DateAndTimeFormat;
-import kaboom.logic.TASK_TYPE;
-import kaboom.logic.TaskInfo;
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandAdd;
 import kaboom.logic.command.CommandDelete;
 import kaboom.logic.command.CommandFactory;
 import kaboom.logic.command.CommandModify;
 import kaboom.logic.command.CommandView;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.DateAndTimeFormat;
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
 import kaboom.storage.Storage;
 import kaboom.storage.TaskListShop;
-import kaboom.ui.DISPLAY_STATE;
 
 import org.junit.Before;
 import org.junit.Test;

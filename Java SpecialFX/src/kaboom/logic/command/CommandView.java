@@ -4,11 +4,11 @@ package kaboom.logic.command;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import kaboom.logic.FormatIdentify;
-import kaboom.logic.KEYWORD_TYPE;
-import kaboom.logic.Result;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
 import kaboom.storage.History;
-import kaboom.ui.DISPLAY_STATE;
 
 public class CommandView extends Command{
 	private final String KEYWORD_TODAY = "today";

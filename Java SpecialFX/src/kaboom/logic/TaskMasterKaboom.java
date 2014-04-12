@@ -7,6 +7,8 @@ import kaboom.logic.command.COMMAND_TYPE;
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandFactory;
 import kaboom.logic.command.CommandUpdate;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.Result;
 import kaboom.storage.History;
 import kaboom.storage.Storage;
 import kaboom.storage.TaskListShop;

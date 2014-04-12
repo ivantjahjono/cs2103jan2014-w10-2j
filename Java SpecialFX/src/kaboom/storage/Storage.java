@@ -1,6 +1,8 @@
 //@author A0096670W
 package kaboom.storage;
 
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
 import kaboom.storage.TaskListShop;
 
 import java.util.Scanner;
@@ -13,9 +15,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
-
-import kaboom.logic.TASK_TYPE;
-import kaboom.logic.TaskInfo;
 
 
 public class Storage {

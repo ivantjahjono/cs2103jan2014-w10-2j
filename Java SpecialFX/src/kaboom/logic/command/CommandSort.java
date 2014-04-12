@@ -3,10 +3,10 @@ package kaboom.logic.command;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import kaboom.logic.FormatIdentify;
-import kaboom.logic.KEYWORD_TYPE;
-import kaboom.logic.Result;
-import kaboom.logic.TaskInfo;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
 
 public class CommandSort extends Command {
 
