@@ -107,7 +107,7 @@ public class TaskView {
 	
 	public TaskInfo getTaskFromViewByName(String searchName) {
 		for (int i = 0; i < currentView.size(); i++) {
-			if (currentView.get(i).getTaskName().equals(searchName)) {
+			if (currentView.get(i).getTaskName().contains(searchName)) {
 				return currentView.get(i);
 			}
 		}
@@ -124,6 +124,55 @@ public class TaskView {
 	
 	public int getTaskPositionInView (TaskInfo taskToSearch) {
 		return currentView.indexOf(taskToSearch);
+	}
+	
+	public Vector<TaskInfo> getAllCurrentTasks() {
+		return taskListShop.getAllCurrentTasks();
+	}
+	
+	public void addTask(TaskInfo task) {
+		taskListShop.addTaskToList(task);
+		taskListShop.refreshTasks();
+		//addToSearchView(task);
+	}
+	
+	public void deleteTask(TaskInfo task) {
+		taskListShop.removeTask(task);
+		deleteInSearchView(task);
+	}
+	
+	public void updateTask(TaskInfo newTask, TaskInfo oldTask) {
+		taskListShop.updateTask(newTask, oldTask);
+		updateInSearchView(newTask, oldTask);
+	}
+	
+	public void doneTask(TaskInfo task) {
+		//add assertion here
+		task.setDone(true);
+		task.setExpiryFlag(false);
+		taskListShop.refreshTasks();  //Refresh to shift task to archive
+		deleteInSearchView(task);
+	}
+	
+	public void undoneTask(TaskInfo task) {
+		//add assertion here
+		task.setDone(false);
+		taskListShop.refreshTasks();  //Refresh to shift task to archive
+		addToSearchView(task);
+	}
+	
+	public void clearCurrentTasks() {
+		taskListShop.clearAllCurrentTasks();
+		clearSearchView();
+	}
+	
+	public void clearArchivedTasks() {
+		taskListShop.clearAllArchivedTasks();
+		clearSearchView();
+	}
+	
+	public void refreshTasks() {
+		taskListShop.refreshTasks();
 	}
 	
 	public void addToSearchView(TaskInfo task) {
@@ -145,6 +194,10 @@ public class TaskView {
 				searchView.set(i, newTask);
 			}
 		}
+	}
+	
+	public void clearSearchView() {
+		searchView.clear();
 	}
 
 	private void setCurrentView(Vector<TaskInfo> taskList) {
