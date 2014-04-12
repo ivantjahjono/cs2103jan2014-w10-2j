@@ -167,6 +167,8 @@ public class Storage {
 					startDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(inputSplit[INDEX_START_DAY]));
 					startDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputSplit[INDEX_START_HOUR]));
 					startDate.set(Calendar.MINUTE, Integer.parseInt(inputSplit[INDEX_START_MINUTE]));
+					startDate.set(Calendar.SECOND, 0);
+					startDate.set(Calendar.MILLISECOND, 0);
 				}
 				task.setStartDate(startDate);
 
@@ -181,6 +183,8 @@ public class Storage {
 					endDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(inputSplit[INDEX_END_DAY]));
 					endDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputSplit[INDEX_END_HOUR]));
 					endDate.set(Calendar.MINUTE, Integer.parseInt(inputSplit[INDEX_END_MINUTE]));
+					endDate.set(Calendar.SECOND, 0);
+					endDate.set(Calendar.MILLISECOND, 0);
 				}
 				task.setEndDate(endDate);
 

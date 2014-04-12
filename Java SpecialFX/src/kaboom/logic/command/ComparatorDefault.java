@@ -16,7 +16,11 @@ public class ComparatorDefault implements Comparator<TaskInfo> {
 			return compareValue;
 		}
 		
-		if (task1.getStartDate() != null && task2.getEndDate() != null) {
+		if (task1.getStartDate() != null && task2.getStartDate() == null) {
+			return -1;
+		}
+		
+		if (task1.getStartDate() == null && task2.getStartDate() != null) {
 			return 1;
 		}
 		
