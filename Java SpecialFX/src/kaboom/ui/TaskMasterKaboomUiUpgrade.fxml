@@ -249,7 +249,7 @@
     </AnchorPane>
     <Pane fx:id="helpPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
-        <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
+        <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="447.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help" />
         <VBox layoutX="52.0" layoutY="32.0" prefHeight="237.0" prefWidth="487.0">
           <children>
@@ -311,7 +311,7 @@
     </Pane>
     <Pane id="helpadd" fx:id="helpAddPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
-        <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
+        <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="447.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help Add" />
         <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="27.0" prefHeight="26.601662499997474" prefWidth="543.0" spacing="10.0">
           <children>
@@ -398,7 +398,7 @@
     </Pane>
     <Pane id="helpadd" fx:id="helpDeletePane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
-        <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
+        <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="447.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help Delete" />
         <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="27.0" prefHeight="26.6015625" prefWidth="543.0" spacing="10.0">
           <children>
@@ -432,7 +432,7 @@
     </Pane>
     <Pane id="helpadd" fx:id="helpModifyPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
-        <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
+        <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="447.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help Modify" />
         <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="27.0" prefHeight="26.601662499997474" prefWidth="543.0" spacing="10.0">
           <children>
@@ -510,7 +510,7 @@
     </Pane>
     <Pane id="helpadd" fx:id="helpCompletePane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
-        <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
+        <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="447.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help Complete" />
         <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="27.0" prefHeight="26.601662499997474" prefWidth="543.0" spacing="10.0">
           <children>
@@ -565,7 +565,7 @@
     </Pane>
     <Pane id="helpadd" fx:id="helpViewPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
-        <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
+        <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="447.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="6.0" text="Help View" />
         <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="33.0" prefHeight="26.6015625" prefWidth="543.0" spacing="10.0">
           <children>
@@ -620,7 +620,7 @@
     </Pane>
     <Pane id="helpadd" fx:id="helpSearchPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
       <children>
-        <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="289.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
+        <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="447.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="6.0" text="Help Search" />
         <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="33.0" prefHeight="26.6015625" prefWidth="543.0" spacing="10.0">
           <children>
