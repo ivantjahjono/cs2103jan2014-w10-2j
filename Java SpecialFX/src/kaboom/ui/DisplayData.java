@@ -116,9 +116,9 @@ public class DisplayData extends Observable {
 	 */
 	public void updateDisplayWithResult (Result commandResult) {
 		// TODO Hardcoded way of forcing to show to default if there is no tasks to display
-		if (taskView == null) {
-			taskView = TaskView.getInstance();
-		}
+//		if (taskView == null) {
+//			taskView = TaskView.getInstance();
+//		}
 		
 		// Update display state
 		DISPLAY_STATE stateChange = commandResult.getDisplayState();
@@ -147,7 +147,7 @@ public class DisplayData extends Observable {
 		TaskInfo taskToFocus = commandResult.getTaskToFocus();
 		int indexToGo = -1;
 		if (taskToFocus != null) {
-			indexToGo = taskView.getTaskPositionInView(taskToFocus);
+			indexToGo = TaskMasterKaboom.getInstance().indexToGoTo(taskToFocus); /*taskView.getTaskPositionInView(taskToFocus);*/
 		}
 
 		if (commandResult.getGoToNextPage()) {
