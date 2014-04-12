@@ -11,7 +11,7 @@ import kaboom.shared.FormatIdentify;
 import kaboom.shared.Result;
 import kaboom.storage.History;
 import kaboom.storage.Storage;
-import kaboom.storage.TaskListShop;
+import kaboom.storage.TaskDepository;
 import kaboom.ui.DisplayData;
 
 

@@ -15,11 +15,11 @@ public class TaskView {
 	private Vector<TaskInfo> currentView; 	//Current view
 	private Vector<TaskInfo> searchView;  	//Vector for searches
 	private Vector<Integer> currentViewID;  //Vector for position of viewing tasks in actual vector
-	private TaskListShop taskListShop;
+	private TaskDepository taskListShop;
 	private DisplayData displayData;
 
 	private TaskView() {
-		taskListShop = TaskListShop.getInstance();
+		taskListShop = TaskDepository.getInstance();
 		//currentView = taskListShop.getToday();
 		//currentViewID = taskListShop.getCorrespondingID(currentView);
 		searchView = new Vector<TaskInfo>();
