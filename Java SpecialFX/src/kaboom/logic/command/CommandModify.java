@@ -12,7 +12,7 @@ import kaboom.shared.KEYWORD_TYPE;
 import kaboom.shared.Result;
 import kaboom.shared.TASK_TYPE;
 import kaboom.shared.TaskInfo;
-import kaboom.storage.TaskListShop;
+import kaboom.storage.TaskDepository;
 import kaboom.storage.TaskView;
 
 
@@ -111,7 +111,7 @@ public class CommandModify extends Command {
 
 	public boolean undo () {
 		System.out.println(preModifiedTaskInfo.getTaskName()+" > "+ modifiedTaskInfo.getTaskName());
-		TaskListShop.getInstance().updateTask(preModifiedTaskInfo, modifiedTaskInfo);
+		TaskDepository.getInstance().updateTask(preModifiedTaskInfo, modifiedTaskInfo);
 		taskView.updateInSearchView(preModifiedTaskInfo,  modifiedTaskInfo);
 		return true;
 	}

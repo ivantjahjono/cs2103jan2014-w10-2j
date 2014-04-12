@@ -8,20 +8,20 @@ import java.util.Calendar;
 
 import kaboom.shared.TASK_TYPE;
 import kaboom.shared.TaskInfo;
-import kaboom.storage.TaskListShop;
+import kaboom.storage.TaskDepository;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class TaskListShopTest {
 
-	TaskListShop allTasks;
+	TaskDepository allTasks;
 	TaskInfo newTask;
 	TaskInfo oldTask;
 
 	@Before
 	public void initialize() {
-		allTasks = TaskListShop.getInstance();
+		allTasks = TaskDepository.getInstance();
 		newTask = new TaskInfo();
 		oldTask = new TaskInfo();
 		newTaskInfo(newTask);

@@ -16,7 +16,7 @@ import kaboom.shared.DateAndTimeFormat;
 import kaboom.shared.TASK_TYPE;
 import kaboom.shared.TaskInfo;
 import kaboom.storage.Storage;
-import kaboom.storage.TaskListShop;
+import kaboom.storage.TaskDepository;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,14 +24,14 @@ import org.junit.Test;
 public class CommandTest {
 	TaskInfo task;
 	Storage fileStorage;
-	TaskListShop shop;
+	TaskDepository shop;
 	DateAndTimeFormat date;
 	
 	@Before
 	public void initialise() {
 //		fileStorage = new Storage("BOOMTEST.dat");
 //		fileStorage.load();
-		shop = TaskListShop.getInstance();
+		shop = TaskDepository.getInstance();
 		task = new TaskInfo();
 		taskInfoUpdate(task);
 		date = DateAndTimeFormat.getInstance();

@@ -11,7 +11,7 @@ import kaboom.shared.FormatIdentify;
 import kaboom.shared.HELP_STATE;
 import kaboom.shared.Result;
 import kaboom.shared.TaskInfo;
-import kaboom.storage.TaskListShop;
+import kaboom.storage.TaskDepository;
 import kaboom.storage.TaskView;
 
 /**
@@ -29,7 +29,7 @@ public class DisplayData extends Observable {
 
 	static DisplayData instance;
 
-	TaskListShop 	taskListShop;
+	TaskDepository 	taskListShop;
 	TaskView		taskView;
 
 	Vector<TaskInfoDisplay> tasksDataToDisplay;
@@ -62,7 +62,7 @@ public class DisplayData extends Observable {
 	}
 
 	private DisplayData () {
-		taskListShop  	= TaskListShop.getInstance();
+		taskListShop  	= TaskDepository.getInstance();
 		
 		tasksDataToDisplay = new Vector<TaskInfoDisplay>();
 		formattingCommand = new Vector<FormatIdentify>();
