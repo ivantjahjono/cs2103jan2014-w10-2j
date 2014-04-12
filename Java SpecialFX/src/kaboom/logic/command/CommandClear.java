@@ -91,7 +91,7 @@ public class CommandClear extends Command {
 			for (int i = 0; i < tasksCleared.size(); i++) {
 				taskView.addTask(tasksCleared.get(i));
 			}
-			if (tasksCleared.size() == taskListShop.shopSize()) {
+			if (tasksCleared.size() == taskView.presentTaskCount()) {
 				isUndoSuccessful = true;
 			} else {
 				isUndoSuccessful = false;
@@ -102,7 +102,7 @@ public class CommandClear extends Command {
 			for (int i = 0; i < archiveTasksCleared.size(); i++) {
 				taskView.addArchivedTask(archiveTasksCleared.get(i));
 			}
-			if (archiveTasksCleared.size() == taskListShop.archiveShopSize()) {
+			if (archiveTasksCleared.size() == taskView.archiveTaskCount()) {
 				isUndoSuccessful = true;
 			} else {
 				isUndoSuccessful = false;

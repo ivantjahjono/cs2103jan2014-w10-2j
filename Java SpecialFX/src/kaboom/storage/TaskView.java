@@ -134,6 +134,14 @@ public class TaskView {
 		return taskListShop.getAllArchivedTasks();
 	}
 	
+	public int presentTaskCount() {
+		return taskListShop.shopSize();
+	}
+	
+	public int archiveTaskCount(){
+		return taskListShop.archiveShopSize();
+	}
+	
 	public boolean addTask(TaskInfo task) {
 		//Check if task is archived or current and add to the proper list
 		boolean isAdded = taskListShop.addTaskToList(task);
