@@ -51,7 +51,7 @@ public class CommandDone extends Command{
 
 	public boolean undo() {
 		taskToBeModified.setDone(false);
-		//taskView.refreshTasks();  //Refresh to shift task to current
+		taskView.refreshTasks();  //Refresh to shift task to current
 		taskView.addToSearchView(taskToBeModified);
 		return true;
 	}

@@ -33,7 +33,6 @@ public class CommandUndo extends Command{
 			return createResult(feedback);
 		}
 		
-		taskView.refreshTasks();
 		feedback = MESSAGE_COMMAND_UNDO_FAIL;
 		return createResult(feedback);
 	}
