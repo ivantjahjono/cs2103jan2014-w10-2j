@@ -596,8 +596,11 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 
 	@FXML
 	private void onTextfieldKeyReleased (KeyEvent keyEvent) {
+		activateProcessBasedKeyPressed(keyEvent);
+	}
+
+	private void activateProcessBasedKeyPressed(KeyEvent keyEvent) {
 		boolean processResult = false;
-		
 		switch(keyEvent.getCode()) {
 			case UP:
 				if (commandsEnteredList.size() < currentCommandIndex+1) {
@@ -725,7 +728,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	}
 	
 	private void switchToNewHeader(int switchIndexResult) {
-		// Is it the same label activated ?
 		if (switchIndexResult == currentLabelIndex) {
 			return;
 		}
