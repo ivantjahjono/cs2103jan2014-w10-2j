@@ -52,10 +52,10 @@ public class CommandClear extends Command {
 		
 		switch (clearType) {
 		case CLEAR_TYPE_ALL:
-			tasksCleared = taskView.getAllCurrentTasks();
+			tasksCleared = taskView.getAllPresentTasks();
 			archiveTasksCleared = taskView.getAllArchivedTasks();
 			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
-			taskView.clearCurrentTasks();
+			taskView.clearPresentTasks();
 			taskView.clearArchivedTasks();
 			addCommandToHistory ();
 			break;
@@ -65,9 +65,9 @@ public class CommandClear extends Command {
 		case CLEAR_TYPE_EMPTY:
 			//take as all
 			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
-			tasksCleared = taskView.getAllCurrentTasks();
+			tasksCleared = taskView.getAllPresentTasks();
 //			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE;
-			taskView.clearCurrentTasks();
+			taskView.clearPresentTasks();
 			addCommandToHistory ();
 			break;
 		case CLEAR_TYPE_ARCHIVE:
