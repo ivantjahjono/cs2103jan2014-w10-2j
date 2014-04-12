@@ -224,7 +224,7 @@ public class TaskDepository {
 		Collections.sort(currentTaskList, new ComparatorDefault());
 	}
 
-	public Vector<TaskInfo> clearAllTasks () {
+	public Vector<TaskInfo> clearAllCurrentTasks () {
 		currentTaskList = new Vector<TaskInfo>();
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(currentTaskList);
 		logger.fine("All tasks cleared");
@@ -296,5 +296,9 @@ public class TaskDepository {
 
 	public int shopSize () {
 		return currentTaskList.size();
+	}
+	
+	public int archiveShopSize() {
+		return archivedTaskList.size();
 	}
 }
