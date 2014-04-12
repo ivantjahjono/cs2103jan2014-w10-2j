@@ -18,6 +18,9 @@ public class TaskView {
 	private Vector<Integer> tasksCount;
 	private TaskDepository taskListShop;
 	private DisplayData displayData;
+	
+	private Storage fileStorage;
+	private final String FILENAME;
 
 	private TaskView() {
 		taskListShop = TaskDepository.getInstance();
@@ -26,6 +29,8 @@ public class TaskView {
 		searchView = new Vector<TaskInfo>();
 		displayData = DisplayData.getInstance();
 		tasksCount = new Vector<Integer>();
+		FILENAME = "KABOOM_FILE.dat";
+		fileStorage = new Storage(FILENAME);
 	}
 
 	public static TaskView getInstance () {
@@ -81,6 +86,11 @@ public class TaskView {
 		
 		return currentView;
 	}
+	
+	private void setCurrentView(Vector<TaskInfo> taskList) {
+		currentView = taskList;
+		currentViewID = taskListShop.getCorrespondingID(taskList);
+	}	
 
 	public Vector<TaskInfo> getCurrentView() {
 		return currentView;
@@ -226,9 +236,12 @@ public class TaskView {
 	public void clearSearchView() {
 		searchView.clear();
 	}
-
-	private void setCurrentView(Vector<TaskInfo> taskList) {
-		currentView = taskList;
-		currentViewID = taskListShop.getCorrespondingID(taskList);
+	
+	public void store() {
+		fileStorage.store();
+	}
+	
+	public void load() {
+		fileStorage.load();
 	}
 }
