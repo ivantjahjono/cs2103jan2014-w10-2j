@@ -24,6 +24,8 @@ public class GraphicInterface extends Application {
 	private final int WINDOW_HEIGHT = 700;
 	
 	private final String APPLICATION_NAME = "Task Master Kaboom";
+	private final String ICON_FILENAME = "img/taskmasterkaboom.png";
+	private final String FXML_FILENAME = "TaskMasterKaboomUiUpgrade.fxml";
 	
 	Parent root;
 	MainWindow mainWindow;
@@ -38,7 +40,7 @@ public class GraphicInterface extends Application {
 	public void start(Stage primaryStage) {
 		FXMLLoader loader = null;
 		try {
-			loader = new FXMLLoader(getClass().getResource("TaskMasterKaboomUiUpgrade.fxml"));
+			loader = new FXMLLoader(getClass().getResource(FXML_FILENAME));
 			root = (Parent)(loader.load());
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -49,12 +51,7 @@ public class GraphicInterface extends Application {
 		
 		Scene scene = new Scene(root);
 		scene.setFill(null);
-		primaryStage.setScene(scene);
-		primaryStage.setResizable(false);
-		primaryStage.initStyle(StageStyle.TRANSPARENT);
-		primaryStage.setWidth(WINDOW_WIDTH);
-		primaryStage.setHeight(WINDOW_HEIGHT);
-		primaryStage.show();
+		setupStage(primaryStage, scene);
 		
 		mainWindow.prepareTextfieldFocus();
 
@@ -64,8 +61,17 @@ public class GraphicInterface extends Application {
 		initialiseAndStartUpdateService();
 	}
 
+	private void setupStage(Stage primaryStage, Scene scene) {
+		primaryStage.setScene(scene);
+		primaryStage.setResizable(false);
+		primaryStage.initStyle(StageStyle.TRANSPARENT);
+		primaryStage.setWidth(WINDOW_WIDTH);
+		primaryStage.setHeight(WINDOW_HEIGHT);
+		primaryStage.show();
+	}
+
 	private void updateApplicationIconAndTitle(Stage primaryStage) {
-		Image ico = new Image(this.getClass().getResourceAsStream("img/taskmasterkaboom.png"));
+		Image ico = new Image(this.getClass().getResourceAsStream(ICON_FILENAME));
 		primaryStage.getIcons().add(ico);
 		primaryStage.setTitle(APPLICATION_NAME);
 	}
@@ -81,9 +87,7 @@ public class GraphicInterface extends Application {
 	    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(UPDATE_INTERVAL), new EventHandler<ActionEvent>() {
 	    	@Override
 			public void handle(ActionEvent event) {
-	    		counter++;
 	    		controllerInstance.updateTaskList();
-	    		mainWindow.updateCounter(counter);
 	    	}
 	    }));
 		return timeline;
