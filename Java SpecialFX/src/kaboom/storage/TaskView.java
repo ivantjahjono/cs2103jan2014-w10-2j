@@ -1,12 +1,21 @@
 //@author A0096670W
 
+/**
+ * TaskManager class is the intermediary between logic and storage.
+ * Any manipulations of tasks (such as addition, deletion, updating)
+ * must use this class instead of accessing it from the TaskDepository. 
+ * 
+ * This class is also responsible for the "dynamic" IDs of the tasks.
+ * (Such as the task ID being different while under different views 
+ * but referring to the same object.)
+ */
+
 package kaboom.storage;
 
 import java.util.Vector;
 
 import kaboom.shared.DISPLAY_STATE;
 import kaboom.shared.TaskInfo;
-import kaboom.ui.DisplayData;
 
 public class TaskView {
 
@@ -17,7 +26,6 @@ public class TaskView {
 	private Vector<Integer> currentViewID;  //Vector for position of viewing tasks in actual vector
 	private Vector<Integer> tasksCount;
 	private TaskDepository taskListShop;
-	private DisplayData displayData;
 	
 	private Storage fileStorage;
 	private final String FILENAME;
@@ -27,7 +35,6 @@ public class TaskView {
 		//currentView = taskListShop.getToday();
 		//currentViewID = taskListShop.getCorrespondingID(currentView);
 		searchView = new Vector<TaskInfo>();
-		displayData = DisplayData.getInstance();
 		tasksCount = new Vector<Integer>();
 		FILENAME = "KABOOM_FILE.dat";
 		fileStorage = new Storage(FILENAME);
@@ -108,12 +115,6 @@ public class TaskView {
 	public Vector<TaskInfo> getSearchView() {
 		return searchView;
 	}
-
-	//Precondition: The index already has offset applied
-	//i.e. index starts from 0
-	public int getIndexFromView(int index) {
-		return currentViewID.get(index);
-	}
 	
 	public TaskInfo getTaskFromViewByName(String searchName) {
 		for (int i = 0; i < currentView.size(); i++) {
@@ -148,7 +149,7 @@ public class TaskView {
 		return taskListShop.shopSize();
 	}
 	
-	public int archiveTaskCount(){
+	public int archiveTaskCount() {
 		return taskListShop.archiveShopSize();
 	}
 	
@@ -196,7 +197,7 @@ public class TaskView {
 		//add assertion here that the task is done already
 		task.setDone(false);
 		taskListShop.refreshTasks();  //Refresh to shift task to archive
-		addToSearchView(task);
+		deleteInSearchView(task);
 		task.setRecent(true);
 	}
 	
@@ -228,8 +229,7 @@ public class TaskView {
 
 	public void updateInSearchView(TaskInfo newTask, TaskInfo oldTask) {
 		for (int i = 0; i < searchView.size(); i++) {
-			if (searchView.get(i).equals(oldTask) 
-					&& displayData.getCurrentDisplayState() == DISPLAY_STATE.SEARCH) {
+			if (searchView.get(i).equals(oldTask)) {
 				searchView.set(i, newTask);
 			}
 		}
