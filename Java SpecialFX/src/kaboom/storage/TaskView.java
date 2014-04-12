@@ -142,6 +142,14 @@ public class TaskView {
 		return isAdded;
 	}
 	
+	public boolean addArchivedTask(TaskInfo task) {
+		//Check if task is archived or current and add to the proper list
+		boolean isAdded = taskListShop.addTaskToArchivedList(task);
+		taskListShop.refreshTasks();
+		addToSearchView(task);
+		return isAdded;
+	}
+	
 	public boolean removeTask(TaskInfo task) {
 		TaskInfo removedTask = taskListShop.removeTask(task);
 		deleteInSearchView(task);
