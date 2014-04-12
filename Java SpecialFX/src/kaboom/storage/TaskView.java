@@ -184,15 +184,15 @@ public class TaskView {
 	}
 	
 	public void doneTask(TaskInfo task) {
-		//add assertion here
-		task.setDone(true);
+		//add assertion here that the task is not done yet
 		task.setExpiryFlag(false);
+		task.setDone(true);
 		taskListShop.refreshTasks();  //Refresh to shift task to archive
 		deleteInSearchView(task);
 	}
 	
 	public void undoneTask(TaskInfo task) {
-		//add assertion here
+		//add assertion here that the task is done already
 		task.setDone(false);
 		taskListShop.refreshTasks();  //Refresh to shift task to archive
 		addToSearchView(task);
