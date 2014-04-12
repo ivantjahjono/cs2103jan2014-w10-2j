@@ -5,10 +5,10 @@ package kaboom.logic.command;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import kaboom.logic.FormatIdentify;
-import kaboom.logic.KEYWORD_TYPE;
-import kaboom.logic.Result;
-import kaboom.logic.TaskInfo;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
 
 
 public class CommandClear extends Command {
@@ -25,6 +25,8 @@ public class CommandClear extends Command {
 	private final String MESSAGE_COMMAND_CLEAR_FAIL_NOT_IMPLEMENTED = "LOL";
 	
 	Vector<TaskInfo> tasksCleared;
+	Vector<TaskInfo> archiveTasksCleared;
+	
 	String clearType;
 		
 	public CommandClear () {
@@ -38,19 +40,23 @@ public class CommandClear extends Command {
 	public Result execute() {
 		assert taskListShop != null;
 		
-		clearType = infoTable.get(KEYWORD_TYPE.CLEARTYPE).toLowerCase().trim();
+		clearType = infoTable.get(KEYWORD_TYPE.CLEARTYPE);
 		
 		if(clearType == null || clearType.isEmpty()) {
-			clearType = CLEAR_TYPE_ALL;
+			clearType = CLEAR_TYPE_EMPTY;
+		} else {
+			clearType = clearType.toLowerCase().trim();
 		}
 		
 		String commandFeedback = "";
 		
 		switch (clearType) {
 		case CLEAR_TYPE_ALL:
-			tasksCleared = taskListShop.getAllCurrentTasks();		
+			tasksCleared = taskView.getAllCurrentTasks();
+			archiveTasksCleared = taskView.getAllArchivedTasks();
 			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
-			taskListShop.clearAllTasks();
+			taskView.clearCurrentTasks();
+			taskView.clearArchivedTasks();
 			addCommandToHistory ();
 			break;
 		case CLEAR_TYPE_CURRENT:
@@ -59,16 +65,21 @@ public class CommandClear extends Command {
 		case CLEAR_TYPE_EMPTY:
 			//take as all
 			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
+			tasksCleared = taskView.getAllCurrentTasks();
 //			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE;
-			taskListShop.clearAllTasks();
+			taskView.clearCurrentTasks();
+			addCommandToHistory ();
 			break;
 		case CLEAR_TYPE_ARCHIVE:
 			commandFeedback = MESSAGE_COMMAND_CLEAR_ARCHIVE_SUCCESS;
-			taskListShop.clearAllArchivedTasks ();
+			archiveTasksCleared = taskView.getAllArchivedTasks();
+			taskView.clearArchivedTasks ();
+			addCommandToHistory ();
 			break;
 		default: 
 			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE;
 		}
+		taskView.clearSearchView();
 		
 		return createResult(commandFeedback);
 	}
@@ -76,12 +87,26 @@ public class CommandClear extends Command {
 	public boolean undo () {
 		boolean isUndoSuccessful = false;
 
-		for (int i = 0; i < tasksCleared.size(); i++) {
-			taskListShop.addTaskToList(tasksCleared.get(i));
+		if(tasksCleared != null) {
+			for (int i = 0; i < tasksCleared.size(); i++) {
+				taskView.addTask(tasksCleared.get(i));
+			}
+			if (tasksCleared.size() == taskView.presentTaskCount()) {
+				isUndoSuccessful = true;
+			} else {
+				isUndoSuccessful = false;
+			}
 		}
 		
-		if (tasksCleared.size() == taskListShop.shopSize()) {
-			isUndoSuccessful = true;
+		if(archiveTasksCleared != null) {
+			for (int i = 0; i < archiveTasksCleared.size(); i++) {
+				taskView.addArchivedTask(archiveTasksCleared.get(i));
+			}
+			if (archiveTasksCleared.size() == taskView.archiveTaskCount()) {
+				isUndoSuccessful = true;
+			} else {
+				isUndoSuccessful = false;
+			}
 		}
 		
 		return isUndoSuccessful;

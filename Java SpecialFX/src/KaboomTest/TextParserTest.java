@@ -1,3 +1,4 @@
+//@author A0099863H
 package KaboomTest;
 
 import static org.junit.Assert.*;
@@ -5,8 +6,8 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import kaboom.logic.KEYWORD_TYPE;
 import kaboom.logic.TextParser;
+import kaboom.shared.KEYWORD_TYPE;
 
 import org.junit.Before;
 import org.junit.Test;

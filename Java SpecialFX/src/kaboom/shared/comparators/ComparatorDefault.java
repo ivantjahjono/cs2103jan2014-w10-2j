@@ -1,10 +1,10 @@
 //@author A0096670W
-package kaboom.logic.command;
+package kaboom.shared.comparators;
 
 import java.util.Calendar;
 import java.util.Comparator;
 
-import kaboom.logic.TaskInfo;
+import kaboom.shared.TaskInfo;
 
 public class ComparatorDefault implements Comparator<TaskInfo> {
 

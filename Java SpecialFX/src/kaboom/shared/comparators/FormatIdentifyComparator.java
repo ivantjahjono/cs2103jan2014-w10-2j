@@ -1,6 +1,8 @@
-package kaboom.logic;
+package kaboom.shared.comparators;
 
 import java.util.Comparator;
+
+import kaboom.shared.FormatIdentify;
 
 public class FormatIdentifyComparator implements Comparator<FormatIdentify> {
 

@@ -5,11 +5,14 @@ package kaboom.ui;
 import java.util.Observable;
 import java.util.Vector;
 
-import kaboom.logic.DateAndTimeFormat;
-import kaboom.logic.FormatIdentify;
-import kaboom.logic.Result;
-import kaboom.logic.TaskInfo;
-import kaboom.storage.TaskListShop;
+import kaboom.logic.TaskMasterKaboom;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.DateAndTimeFormat;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.HELP_STATE;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
+import kaboom.storage.TaskDepository;
 import kaboom.storage.TaskView;
 
 /**
@@ -27,8 +30,8 @@ public class DisplayData extends Observable {
 
 	static DisplayData instance;
 
-	TaskListShop 	taskListShop;
-	TaskView		taskView;
+//	TaskDepository 	taskListShop;
+//	TaskView		taskView;
 
 	Vector<TaskInfoDisplay> tasksDataToDisplay;
 	Vector<FormatIdentify> 	formattingCommand;
@@ -60,7 +63,7 @@ public class DisplayData extends Observable {
 	}
 
 	private DisplayData () {
-		taskListShop  	= TaskListShop.getInstance();
+//		taskListShop  	= TaskDepository.getInstance();
 		
 		tasksDataToDisplay = new Vector<TaskInfoDisplay>();
 		formattingCommand = new Vector<FormatIdentify>();
@@ -73,36 +76,36 @@ public class DisplayData extends Observable {
 	}
 
 	private void updateTaskCountList() {
-		taskCountList.clear();
-
-		// TODO Hardcoded to get each task !!!!
-		for (int i = 0; i < 6; i++) {
-			int currentCount = 0;
-
-			switch (i) {
-			case 0:
-				currentCount = taskListShop.getToday().size();
-				break;
-				
-			case 1:
-				currentCount = taskListShop.getFutureTasks().size();
-				break;
-
-			case 2:
-				currentCount = taskListShop.getFloatingTasks().size();
-				break;
-
-			case 3:
-				currentCount = taskListShop.getExpiredTasks().size();
-				break;
-
-			case 4:
-				currentCount = taskListShop.getAllArchivedTasks().size();
-				break;
-
-			}
-			taskCountList.add(currentCount);
-		}
+		//TODO
+		taskCountList = TaskMasterKaboom.getInstance().updateTaskCount();
+//		taskCountList.clear();
+//		for (int i = 0; i < 6; i++) {
+//			int currentCount = 0;
+//
+//			switch (i) {
+//			case 0:
+//				currentCount = taskListShop.getToday().size();
+//				break;
+//				
+//			case 1:
+//				currentCount = taskListShop.getFutureTasks().size();
+//				break;
+//
+//			case 2:
+//				currentCount = taskListShop.getFloatingTasks().size();
+//				break;
+//
+//			case 3:
+//				currentCount = taskListShop.getExpiredTasks().size();
+//				break;
+//
+//			case 4:
+//				currentCount = taskListShop.getAllArchivedTasks().size();
+//				break;
+//
+//			}
+//			taskCountList.add(currentCount);
+//		}
 	}
 
 	/**
@@ -113,9 +116,9 @@ public class DisplayData extends Observable {
 	 */
 	public void updateDisplayWithResult (Result commandResult) {
 		// TODO Hardcoded way of forcing to show to default if there is no tasks to display
-		if (taskView == null) {
-			taskView = TaskView.getInstance();
-		}
+//		if (taskView == null) {
+//			taskView = TaskView.getInstance();
+//		}
 		
 		// Update display state
 		DISPLAY_STATE stateChange = commandResult.getDisplayState();
@@ -144,7 +147,7 @@ public class DisplayData extends Observable {
 		TaskInfo taskToFocus = commandResult.getTaskToFocus();
 		int indexToGo = -1;
 		if (taskToFocus != null) {
-			indexToGo = taskView.getTaskPositionInView(taskToFocus);
+			indexToGo = TaskMasterKaboom.getInstance().indexToGoTo(taskToFocus); /*taskView.getTaskPositionInView(taskToFocus);*/
 		}
 
 		if (commandResult.getGoToNextPage()) {
@@ -184,7 +187,7 @@ public class DisplayData extends Observable {
 	}
 
 	private void extractTasksBasedOnDisplayState(DISPLAY_STATE displayState) {
-		setTaskDisplayToThese(TaskView.getInstance().setAndGetView(displayState), tasksDataToDisplay);
+		setTaskDisplayToThese(TaskMasterKaboom.getInstance().setAndGetView(displayState), tasksDataToDisplay);
 	}
 
 	/**

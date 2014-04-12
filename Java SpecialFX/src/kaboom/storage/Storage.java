@@ -1,7 +1,9 @@
 //@author A0096670W
 package kaboom.storage;
 
-import kaboom.storage.TaskListShop;
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
+import kaboom.storage.TaskDepository;
 
 import java.util.Scanner;
 import java.util.Vector;
@@ -13,9 +15,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
-
-import kaboom.logic.TASK_TYPE;
-import kaboom.logic.TaskInfo;
 
 
 public class Storage {
@@ -67,12 +66,12 @@ public class Storage {
 			writer = new BufferedWriter(new FileWriter(fileName));
 
 			logger.fine("Trying to write current tasks text file: " + fileName);
-			Vector<TaskInfo> currentTaskList = TaskListShop.getInstance().getAllCurrentTasks();
+			Vector<TaskInfo> currentTaskList = TaskDepository.getInstance().getAllCurrentTasks();
 			assert(currentTaskList != null);
 			writeToFile(currentTaskList);
 
 			logger.fine("Trying to write archived tasks text file: " + fileName);
-			currentTaskList = TaskListShop.getInstance().getAllArchivedTasks();
+			currentTaskList = TaskDepository.getInstance().getAllArchivedTasks();
 			assert(currentTaskList != null);
 			writeToFile(currentTaskList);
 
@@ -145,7 +144,7 @@ public class Storage {
 			logger.fine("Trying to read from text file: " + fileName);
 			File inFile = new File(fileName);
 			Scanner fileScanner = new Scanner(inFile);
-			TaskListShop currentTaskList = TaskListShop.getInstance();
+			TaskDepository currentTaskList = TaskDepository.getInstance();
 			assert(currentTaskList != null);
 
 			while (fileScanner.hasNext()) {

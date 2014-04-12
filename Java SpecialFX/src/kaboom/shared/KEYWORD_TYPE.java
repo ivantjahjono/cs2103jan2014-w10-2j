@@ -1,5 +1,5 @@
 //@author A0099863H
-package kaboom.logic;
+package kaboom.shared;
 
 public enum KEYWORD_TYPE {
 	COMMAND (0),

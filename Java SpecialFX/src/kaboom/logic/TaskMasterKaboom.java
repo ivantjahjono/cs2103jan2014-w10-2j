@@ -7,9 +7,12 @@ import kaboom.logic.command.COMMAND_TYPE;
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandFactory;
 import kaboom.logic.command.CommandUpdate;
-import kaboom.storage.History;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
 import kaboom.storage.Storage;
-import kaboom.storage.TaskListShop;
+import kaboom.storage.TaskView;
 import kaboom.ui.DisplayData;
 
 
@@ -146,4 +149,15 @@ public class TaskMasterKaboom {
 		guiDisplayData.updateDisplayWithResult(commandResult);
 	}
 	
+	public Vector<Integer> updateTaskCount() {
+		return TaskView.getInstance().getTasksCountList();
+	}
+	
+	public Integer indexToGoTo(TaskInfo taskToFocus) {
+		return TaskView.getInstance().getTaskPositionInView(taskToFocus);
+	}
+	
+	public Vector<TaskInfo> setAndGetView(DISPLAY_STATE displayState) {
+		return TaskView.getInstance().setAndGetView(displayState);
+	}
 }

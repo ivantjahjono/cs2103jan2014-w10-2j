@@ -5,6 +5,9 @@ import java.util.Calendar;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import kaboom.shared.DateAndTimeFormat;
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
 
 public class TaskInfoDisplay {
 	// TODO clean up magic strings

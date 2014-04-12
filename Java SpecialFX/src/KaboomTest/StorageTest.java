@@ -10,19 +10,19 @@ import java.io.File;
 import java.io.IOException;
 
 import kaboom.storage.Storage;
-import kaboom.storage.TaskListShop;
+import kaboom.storage.TaskDepository;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class StorageTest {
 	
-	TaskListShop allTasks;
+	TaskDepository allTasks;
 	Storage storageTest;
 	
 	@Before
 	public void initailize() {
-		allTasks = TaskListShop.getInstance();
+		allTasks = TaskDepository.getInstance();
 		storageTest = new Storage("StorageTest.txt");
 		storageTest.load();
 	}

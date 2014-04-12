@@ -1,4 +1,5 @@
-package kaboom.logic;
+package kaboom.shared;
+
 
 public class FormatIdentify {
 	KEYWORD_TYPE type;

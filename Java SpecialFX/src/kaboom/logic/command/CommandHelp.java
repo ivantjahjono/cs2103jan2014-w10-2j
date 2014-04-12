@@ -1,12 +1,13 @@
+//@author A0099863H
 package kaboom.logic.command;
 
 import java.util.Hashtable;
 import java.util.Vector;
 
-import kaboom.logic.FormatIdentify;
-import kaboom.logic.KEYWORD_TYPE;
-import kaboom.logic.Result;
-import kaboom.ui.HELP_STATE;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.HELP_STATE;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
 
 public class CommandHelp extends Command {
 	private final String HELP_TYPE_ADD 		= "add";
