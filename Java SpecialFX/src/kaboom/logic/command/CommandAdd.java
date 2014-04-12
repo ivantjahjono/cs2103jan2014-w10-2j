@@ -93,7 +93,7 @@ public class CommandAdd extends Command {
 
 		//check wad type of task
 
-		setTaskType(taskInfo);
+		determineAndSetTaskType(taskInfo);
 		taskInfo.setRecent(true);
 
 		DISPLAY_STATE stateToSet = DISPLAY_STATE.INVALID;
@@ -298,16 +298,6 @@ public class CommandAdd extends Command {
 			}
 		}
 		return COMMAND_ERROR.NIL;
-	}
-
-	private void setTaskType (TaskInfo temp) {
-		if (temp.getStartDate() != null && temp.getEndDate() !=null) {
-			temp.setTaskType(TASK_TYPE.TIMED);
-		} else if(temp.getStartDate() == null && temp.getEndDate() == null) {
-			temp.setTaskType(TASK_TYPE.FLOATING);
-		} else {
-			temp.setTaskType(TASK_TYPE.DEADLINE);
-		}
 	}
 
 }

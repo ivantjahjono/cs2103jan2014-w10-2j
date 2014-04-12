@@ -234,7 +234,6 @@ public class Command {
 	//extracts from the hash table and stores the information in the taskInfo variable
 	public void extractAndStoreTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
 		storeTaskInfo(infoHashes);
-		infoTable = infoHashes; //temp
 	}
 	
 	
@@ -312,33 +311,32 @@ public class Command {
 	
 	}
 	
+	//used
 	protected void determineAndSetTaskType (TaskInfo task) {
 		Calendar startDateAndTime = task.getStartDate();
 		Calendar endDateAndTime = task.getEndDate();
 		
 		if (startDateAndTime == null && endDateAndTime == null) {
 			task.setTaskType(TASK_TYPE.FLOATING);
+		} else if (startDateAndTime == null && endDateAndTime != null) {
+			task.setTaskType(TASK_TYPE.DEADLINE);
 		} else {
 			task.setTaskType(TASK_TYPE.TIMED);
-		}
-		if (startDateAndTime == null && endDateAndTime != null) {
-			task.setTaskType(TASK_TYPE.DEADLINE);
 		} 
 	}
 	
-	public KEYWORD_TYPE[] getKeywordList() {
-		return keywordList;
-	}
-	
+	//used
 	public void initialiseCommandVariables(String userInputSentence) {
-		Hashtable<KEYWORD_TYPE, String> taskInformationTable = textParser.testExtractList(userInputSentence, keywordList);
-		extractAndStoreTaskInfo(taskInformationTable);
+		infoTable = textParser.testExtractList(userInputSentence, keywordList);
+		//extractAndStoreTaskInfo(infoTable);
 	}
 	
+	//used
 	protected void addCommandToHistory () {
 		History.getInstance().addToRecentCommands(this);
 	}
 	
+	//used
 	protected Result taskDetectionWithErrorFeedback() {
 		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 		String feedback = "";
@@ -363,6 +361,7 @@ public class Command {
 		return errorFeedback;
 	}
 	
+	//used
 	protected boolean hasTaskWithTaskId() {
 		TaskInfo task = getTaskWithTaskId();
 		if(task == null) {
@@ -371,6 +370,7 @@ public class Command {
 		return true;
 	}
 
+	//used
 	protected TaskInfo getTaskWithTaskId() {
 		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
 		if (taskId != null) {
@@ -380,6 +380,7 @@ public class Command {
 		return null;
 	}
 	
+	//used
 	protected TaskInfo getTaskWithTaskName() {
 		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 		if (taskName != null && !taskName.isEmpty()) {
@@ -388,6 +389,7 @@ public class Command {
 		return null;
 	}
 	
+	//used
 	protected TaskInfo getTask() {
 		TaskInfo task = getTaskWithTaskId();
 		if(task == null) {
@@ -396,12 +398,14 @@ public class Command {
 		return task;
 	}
 	
+	//used
 	protected Result callSearch() {
 		Command search = new CommandSearch();
 		search.storeTaskInfo(infoTable);
 		return search.execute();
 	}
 	
+	//used
 	protected int numOfTasksWithSimilarNames(String name) {
 		int count = 0;
 		Vector<TaskInfo> currentView = taskView.getCurrentView();
