@@ -25,6 +25,8 @@ public class CommandClear extends Command {
 	private final String MESSAGE_COMMAND_CLEAR_FAIL_NOT_IMPLEMENTED = "LOL";
 	
 	Vector<TaskInfo> tasksCleared;
+	Vector<TaskInfo> archiveTasksCleared;
+	
 	String clearType;
 		
 	public CommandClear () {
@@ -38,19 +40,23 @@ public class CommandClear extends Command {
 	public Result execute() {
 		assert taskListShop != null;
 		
-		clearType = infoTable.get(KEYWORD_TYPE.CLEARTYPE).toLowerCase().trim();
+		clearType = infoTable.get(KEYWORD_TYPE.CLEARTYPE);
 		
 		if(clearType == null || clearType.isEmpty()) {
-			clearType = CLEAR_TYPE_ALL;
+			clearType = CLEAR_TYPE_EMPTY;
+		} else {
+			clearType = clearType.toLowerCase().trim();
 		}
 		
 		String commandFeedback = "";
 		
 		switch (clearType) {
 		case CLEAR_TYPE_ALL:
-			tasksCleared = taskListShop.getAllCurrentTasks();		
+			tasksCleared = taskListShop.getAllCurrentTasks();
+			archiveTasksCleared = taskListShop.getAllArchivedTasks();
 			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
 			taskListShop.clearAllTasks();
+			taskListShop.clearAllArchivedTasks();
 			addCommandToHistory ();
 			break;
 		case CLEAR_TYPE_CURRENT:
@@ -59,12 +65,16 @@ public class CommandClear extends Command {
 		case CLEAR_TYPE_EMPTY:
 			//take as all
 			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
+			tasksCleared = taskListShop.getAllCurrentTasks();
 //			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE;
 			taskListShop.clearAllTasks();
+			addCommandToHistory ();
 			break;
 		case CLEAR_TYPE_ARCHIVE:
 			commandFeedback = MESSAGE_COMMAND_CLEAR_ARCHIVE_SUCCESS;
+			archiveTasksCleared = taskListShop.getAllArchivedTasks();
 			taskListShop.clearAllArchivedTasks ();
+			addCommandToHistory ();
 			break;
 		default: 
 			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE;
@@ -76,12 +86,26 @@ public class CommandClear extends Command {
 	public boolean undo () {
 		boolean isUndoSuccessful = false;
 
-		for (int i = 0; i < tasksCleared.size(); i++) {
-			taskListShop.addTaskToList(tasksCleared.get(i));
+		if(tasksCleared != null) {
+			for (int i = 0; i < tasksCleared.size(); i++) {
+				taskListShop.addTaskToList(tasksCleared.get(i));
+			}
+			if (tasksCleared.size() == taskListShop.shopSize()) {
+				isUndoSuccessful = true;
+			} else {
+				isUndoSuccessful = false;
+			}
 		}
 		
-		if (tasksCleared.size() == taskListShop.shopSize()) {
-			isUndoSuccessful = true;
+		if(archiveTasksCleared != null) {
+			for (int i = 0; i < archiveTasksCleared.size(); i++) {
+				taskListShop.addTaskToList(archiveTasksCleared.get(i));
+			}
+			if (archiveTasksCleared.size() == taskListShop.archiveShopSize()) {
+				isUndoSuccessful = true;
+			} else {
+				isUndoSuccessful = false;
+			}
 		}
 		
 		return isUndoSuccessful;
