@@ -15,7 +15,7 @@ public class TaskView {
 	private Vector<TaskInfo> currentView; 	//Current view
 	private Vector<TaskInfo> searchView;  	//Vector for searches
 	private Vector<Integer> currentViewID;  //Vector for position of viewing tasks in actual vector
-	Vector<Integer> tasksCount;
+	private Vector<Integer> tasksCount;
 	private TaskDepository taskListShop;
 	private DisplayData displayData;
 
@@ -121,7 +121,11 @@ public class TaskView {
 			return currentView.get(index);			
 		}
 	}
-
+	
+	public int getTaskPositionInView (TaskInfo taskToSearch) {
+		return currentView.indexOf(taskToSearch);
+	}
+	
 	public void addToSearchView(TaskInfo task) {
 		searchView.add(task);
 	}
@@ -141,10 +145,6 @@ public class TaskView {
 				searchView.set(i, newTask);
 			}
 		}
-	}
-	
-	public int getTaskPositionInView (TaskInfo taskToSearch) {
-		return currentView.indexOf(taskToSearch);
 	}
 
 	private void setCurrentView(Vector<TaskInfo> taskList) {
