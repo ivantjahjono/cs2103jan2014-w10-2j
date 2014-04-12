@@ -40,8 +40,7 @@ public class CommandUndone extends Command{
 		if (!taskToBeModified.getDone()) {
 			feedback = String.format(MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE, taskName);
 		} else {
-			taskToBeModified.setDone(false);
-			taskListShop.refreshTasks();  //Refresh to shift task to current
+			taskView.undoneTask(taskToBeModified);
 			taskView.deleteInSearchView(taskToBeModified);
 			feedback = String.format(MESSAGE_COMMAND_UNDONE_SUCCESS, taskName);
 		}
@@ -53,7 +52,7 @@ public class CommandUndone extends Command{
 
 	public boolean undo() {
 		taskToBeModified.setDone(true);
-		taskListShop.refreshTasks();  //Refresh to shift task to archive
+		taskView.refreshTasks();  //Refresh to shift task to archive
 		taskView.addToSearchView(taskToBeModified);
 		return true;
 	}
