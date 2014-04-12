@@ -97,7 +97,7 @@ public class CommandModify extends Command {
 			feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 			return createResult(feedback);
 		}
-		setTaskType(temp);
+		determineAndSetTaskType(temp);
 		//store and update in memory
 		modifiedTaskInfo = temp;
 		modifiedTaskInfo.setRecent(true);
@@ -429,15 +429,5 @@ public class CommandModify extends Command {
 			}
 		}
 		return COMMAND_ERROR.NIL;
-	}
-	
-	private void setTaskType (TaskInfo temp) {
-		if (temp.getStartDate() != null && temp.getEndDate() !=null) {
-			temp.setTaskType(TASK_TYPE.TIMED);
-		} else if(temp.getStartDate() == null && temp.getEndDate() == null) {
-			temp.setTaskType(TASK_TYPE.FLOATING);
-		} else {
-			temp.setTaskType(TASK_TYPE.DEADLINE);
-		}
 	}
 }

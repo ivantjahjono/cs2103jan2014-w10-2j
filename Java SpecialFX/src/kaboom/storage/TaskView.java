@@ -136,7 +136,7 @@ public class TaskView {
 		return currentView.indexOf(taskToSearch);
 	}
 	
-	public Vector<TaskInfo> getAllCurrentTasks() {
+	public Vector<TaskInfo> getAllPresentTasks() {
 		return taskListShop.getAllCurrentTasks();
 	}
 	
@@ -198,7 +198,7 @@ public class TaskView {
 		addToSearchView(task);
 	}
 	
-	public void clearCurrentTasks() {
+	public void clearPresentTasks() {
 		taskListShop.clearAllCurrentTasks();
 		clearSearchView();
 	}
