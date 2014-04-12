@@ -30,8 +30,8 @@ public class DisplayData extends Observable {
 
 	static DisplayData instance;
 
-	TaskDepository 	taskListShop;
-	TaskView		taskView;
+//	TaskDepository 	taskListShop;
+//	TaskView		taskView;
 
 	Vector<TaskInfoDisplay> tasksDataToDisplay;
 	Vector<FormatIdentify> 	formattingCommand;
@@ -63,7 +63,7 @@ public class DisplayData extends Observable {
 	}
 
 	private DisplayData () {
-		taskListShop  	= TaskDepository.getInstance();
+//		taskListShop  	= TaskDepository.getInstance();
 		
 		tasksDataToDisplay = new Vector<TaskInfoDisplay>();
 		formattingCommand = new Vector<FormatIdentify>();
@@ -187,7 +187,7 @@ public class DisplayData extends Observable {
 	}
 
 	private void extractTasksBasedOnDisplayState(DISPLAY_STATE displayState) {
-		setTaskDisplayToThese(TaskView.getInstance().setAndGetView(displayState), tasksDataToDisplay);
+		setTaskDisplayToThese(TaskMasterKaboom.getInstance().setAndGetView(displayState), tasksDataToDisplay);
 	}
 
 	/**

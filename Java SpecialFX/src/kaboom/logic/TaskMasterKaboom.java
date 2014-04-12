@@ -7,6 +7,7 @@ import kaboom.logic.command.COMMAND_TYPE;
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandFactory;
 import kaboom.logic.command.CommandUpdate;
+import kaboom.shared.DISPLAY_STATE;
 import kaboom.shared.FormatIdentify;
 import kaboom.shared.Result;
 import kaboom.shared.TaskInfo;
@@ -154,5 +155,9 @@ public class TaskMasterKaboom {
 	
 	public Integer indexToGoTo(TaskInfo taskToFocus) {
 		return TaskView.getInstance().getTaskPositionInView(taskToFocus);
+	}
+	
+	public Vector<TaskInfo> setAndGetView(DISPLAY_STATE displayState) {
+		return TaskView.getInstance().setAndGetView(displayState);
 	}
 }
