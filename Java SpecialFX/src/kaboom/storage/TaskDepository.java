@@ -6,14 +6,10 @@ import java.util.Collections;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import kaboom.shared.KEYWORD_TYPE;
 import kaboom.shared.TASK_TYPE;
 import kaboom.shared.TaskInfo;
 import kaboom.shared.comparators.ComparatorDefault;
-import kaboom.shared.comparators.ComparatorEndDate;
-import kaboom.shared.comparators.ComparatorName;
 import kaboom.shared.comparators.ComparatorPriority;
-import kaboom.shared.comparators.ComparatorStartDate;
 
 public class TaskDepository {
 
@@ -248,24 +244,6 @@ public class TaskDepository {
 			taskID.add(currentTaskList.indexOf(taskList.get(i)));
 		}
 		return taskID;
-	}
-
-	public void sort(KEYWORD_TYPE type) {
-		if (type == KEYWORD_TYPE.TASKNAME) {
-			Collections.sort(currentTaskList, new ComparatorName());
-		}
-		else if (type == KEYWORD_TYPE.START_DATE) {
-			Collections.sort(currentTaskList, new ComparatorStartDate());
-		}
-		else if (type == KEYWORD_TYPE.END_DATE){
-			Collections.sort(currentTaskList, new ComparatorEndDate());
-		}
-		else if (type == KEYWORD_TYPE.PRIORITY) {
-			Collections.sort(currentTaskList, new ComparatorPriority());
-		}
-		else {
-			Collections.sort(currentTaskList, new ComparatorDefault());
-		}
 	}
 
 	public boolean isTaskToday(TaskInfo task) {
