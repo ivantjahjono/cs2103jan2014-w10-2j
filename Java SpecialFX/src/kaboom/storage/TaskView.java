@@ -130,16 +130,22 @@ public class TaskView {
 		return taskListShop.getAllCurrentTasks();
 	}
 	
-	public void addTask(TaskInfo task) {
+	public boolean addTask(TaskInfo task) {
 		//Check if task is archived or current and add to the proper list
-		taskListShop.addTaskToList(task);
+		boolean isAdded = taskListShop.addTaskToList(task);
 		taskListShop.refreshTasks();
-		//addToSearchView(task);
+		addToSearchView(task);
+		return isAdded;
 	}
 	
-	public void deleteTask(TaskInfo task) {
-		taskListShop.removeTask(task);
+	public TaskInfo removeTask(TaskInfo task) {
+		TaskInfo removedTask = taskListShop.removeTask(task);
 		deleteInSearchView(task);
+		if (removedTask != null) {
+			return task;
+		} else {
+			return null;
+		}
 	}
 	
 	public void updateTask(TaskInfo newTask, TaskInfo oldTask) {
