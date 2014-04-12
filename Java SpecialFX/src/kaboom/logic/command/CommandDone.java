@@ -5,10 +5,10 @@ package kaboom.logic.command;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import kaboom.logic.FormatIdentify;
-import kaboom.logic.KEYWORD_TYPE;
-import kaboom.logic.Result;
-import kaboom.logic.TaskInfo;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
 
 public class CommandDone extends Command{
 	private final String MESSAGE_COMMAND_DONE_SUCCESS = "Set %1$s to complete";
@@ -40,10 +40,7 @@ public class CommandDone extends Command{
 		if (taskToBeModified.getDone()) {
 			feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
 		} else {
-			taskToBeModified.setDone(true);
-			taskToBeModified.setExpiryFlag(false);
-			taskListShop.refreshTasks();  //Refresh to shift task to archive
-			taskView.deleteInSearchView(taskToBeModified);
+			taskView.doneTask(taskToBeModified);
 			feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
 		}
 		
@@ -54,7 +51,7 @@ public class CommandDone extends Command{
 
 	public boolean undo() {
 		taskToBeModified.setDone(false);
-		taskListShop.refreshTasks();  //Refresh to shift task to current
+		taskView.refreshTasks();  //Refresh to shift task to current
 		taskView.addToSearchView(taskToBeModified);
 		return true;
 	}

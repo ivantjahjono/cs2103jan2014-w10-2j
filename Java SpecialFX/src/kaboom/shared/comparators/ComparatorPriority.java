@@ -1,8 +1,9 @@
-package kaboom.logic.command;
+//@author A0096670W
+package kaboom.shared.comparators;
 
 import java.util.Comparator;
 
-import kaboom.logic.TaskInfo;
+import kaboom.shared.TaskInfo;
 
 public class ComparatorPriority implements Comparator<TaskInfo> {
 

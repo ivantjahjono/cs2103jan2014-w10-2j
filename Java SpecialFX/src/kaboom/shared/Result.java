@@ -1,11 +1,8 @@
 //@author A0073731J
 
-package kaboom.logic;
+package kaboom.shared;
 
 import java.util.Vector;
-
-import kaboom.ui.DISPLAY_STATE;
-import kaboom.ui.HELP_STATE;
 
 
 public class Result {

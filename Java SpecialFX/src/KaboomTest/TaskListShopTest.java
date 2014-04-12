@@ -6,22 +6,22 @@ import static org.junit.Assert.*;
 
 import java.util.Calendar;
 
-import kaboom.logic.TASK_TYPE;
-import kaboom.logic.TaskInfo;
-import kaboom.storage.TaskListShop;
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
+import kaboom.storage.TaskDepository;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class TaskListShopTest {
 
-	TaskListShop allTasks;
+	TaskDepository allTasks;
 	TaskInfo newTask;
 	TaskInfo oldTask;
 
 	@Before
 	public void initialize() {
-		allTasks = TaskListShop.getInstance();
+		allTasks = TaskDepository.getInstance();
 		newTask = new TaskInfo();
 		oldTask = new TaskInfo();
 		newTaskInfo(newTask);
@@ -72,7 +72,7 @@ public class TaskListShopTest {
 
 	@Test
 	public void testUpdateTask() {
-		allTasks.clearAllTasks();
+		allTasks.clearAllCurrentTasks();
 		assertTrue(allTasks.addTaskToList(oldTask));
 		assertTrue(allTasks.addTaskToList(newTask));
 		allTasks.updateTask(newTask, oldTask);
@@ -86,7 +86,7 @@ public class TaskListShopTest {
 
 	@Test
 	public void testGetFloatingTasks() {
-		allTasks.clearAllTasks();
+		allTasks.clearAllCurrentTasks();
 		assertEquals(0, allTasks.shopSize());
 		assertTrue(allTasks.addTaskToList(oldTask));
 		assertTrue(allTasks.addTaskToList(newTask));
@@ -97,7 +97,7 @@ public class TaskListShopTest {
 
 	@Test
 	public void testGetTimedTasks() {
-		allTasks.clearAllTasks();
+		allTasks.clearAllCurrentTasks();
 		assertEquals(0, allTasks.shopSize());
 		assertTrue(allTasks.addTaskToList(oldTask));
 		assertTrue(allTasks.addTaskToList(newTask));
@@ -110,13 +110,13 @@ public class TaskListShopTest {
 	public void testClearAllTasks() {
 		assertTrue(allTasks.addTaskToList(oldTask));
 		assertNotEquals(0, allTasks.shopSize());
-		allTasks.clearAllTasks();
+		allTasks.clearAllCurrentTasks();
 		assertEquals(0, allTasks.shopSize());
 	}
 
 	@Test
 	public void testShopSize() {
-		allTasks.clearAllTasks();
+		allTasks.clearAllCurrentTasks();
 		assertEquals(0, allTasks.shopSize());
 		assertTrue(allTasks.addTaskToList(oldTask));
 		assertEquals(1, allTasks.shopSize());

@@ -6,13 +6,13 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import kaboom.logic.DateAndTimeFormat;
-import kaboom.logic.FormatIdentify;
-import kaboom.logic.KEYWORD_TYPE;
-import kaboom.logic.Result;
-import kaboom.logic.TASK_TYPE;
-import kaboom.logic.TaskInfo;
-import kaboom.storage.TaskListShop;
+import kaboom.shared.DateAndTimeFormat;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
+import kaboom.storage.TaskDepository;
 import kaboom.storage.TaskView;
 
 
@@ -101,8 +101,7 @@ public class CommandModify extends Command {
 		//store and update in memory
 		modifiedTaskInfo = temp;
 		modifiedTaskInfo.setRecent(true);
-		taskListShop.updateTask(modifiedTaskInfo, preModifiedTaskInfo);
-		taskView.updateInSearchView(modifiedTaskInfo, preModifiedTaskInfo);
+		taskView.updateTask(modifiedTaskInfo, preModifiedTaskInfo);
 		
 		feedback = feedbackGenerator();
 		addCommandToHistory ();
@@ -111,8 +110,7 @@ public class CommandModify extends Command {
 
 	public boolean undo () {
 		System.out.println(preModifiedTaskInfo.getTaskName()+" > "+ modifiedTaskInfo.getTaskName());
-		TaskListShop.getInstance().updateTask(preModifiedTaskInfo, modifiedTaskInfo);
-		taskView.updateInSearchView(preModifiedTaskInfo,  modifiedTaskInfo);
+		taskView.updateTask(preModifiedTaskInfo, modifiedTaskInfo);
 		return true;
 	}
 

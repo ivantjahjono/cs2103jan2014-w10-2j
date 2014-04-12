@@ -1,5 +1,5 @@
 //@author A0099863H
-package kaboom.logic;
+package kaboom.shared;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

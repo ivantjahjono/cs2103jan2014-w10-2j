@@ -5,10 +5,10 @@ package kaboom.logic.command;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import kaboom.logic.FormatIdentify;
-import kaboom.logic.KEYWORD_TYPE;
-import kaboom.logic.Result;
-import kaboom.logic.TaskInfo;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
 
 
 public class CommandDelete extends Command {
@@ -38,16 +38,14 @@ public class CommandDelete extends Command {
 			taskToBeDeleted = getTask();
 		}
 		
-		taskListShop.removeTask(taskToBeDeleted);
-		taskView.deleteInSearchView(taskToBeDeleted);
+		taskView.removeTask(taskToBeDeleted);
 		commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskToBeDeleted.getTaskName());
 		addCommandToHistory ();
 		return createResult(commandFeedback);
 	}
 
 	public boolean undo () {
-		if (taskListShop.addTaskToList(taskToBeDeleted)) {
-			taskView.addToSearchView(taskToBeDeleted);
+		if (taskView.addTask(taskToBeDeleted)) {
 			return true;
 		}
 		return false;

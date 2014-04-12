@@ -7,18 +7,18 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import kaboom.logic.DateAndTimeFormat;
-import kaboom.logic.FormatIdentify;
-import kaboom.logic.FormatIdentifyComparator;
-import kaboom.logic.KEYWORD_TYPE;
-import kaboom.logic.Result;
-import kaboom.logic.TASK_TYPE;
-import kaboom.logic.TaskInfo;
 import kaboom.logic.TextParser;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.DateAndTimeFormat;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
+import kaboom.shared.comparators.FormatIdentifyComparator;
 import kaboom.storage.History;
-import kaboom.storage.TaskListShop;
+import kaboom.storage.TaskDepository;
 import kaboom.storage.TaskView;
-import kaboom.ui.DISPLAY_STATE;
 import kaboom.ui.DisplayData;
 
 /* 
@@ -34,7 +34,7 @@ public class Command {
 	
 	protected COMMAND_TYPE commandType;
 	protected TextParser textParser;
-	protected TaskListShop taskListShop;
+	protected TaskDepository taskListShop;
 	protected DisplayData displayData;
 	protected KEYWORD_TYPE[] keywordList;
 	Hashtable<KEYWORD_TYPE, Object> commandObjectTable;
@@ -48,7 +48,7 @@ public class Command {
 	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
 		textParser = TextParser.getInstance();
-		taskListShop = TaskListShop.getInstance();
+		taskListShop = TaskDepository.getInstance();
 		displayData = DisplayData.getInstance();
 		keywordList = new KEYWORD_TYPE[0];
 		commandObjectTable = new Hashtable<KEYWORD_TYPE, Object>();

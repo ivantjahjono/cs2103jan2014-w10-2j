@@ -6,33 +6,29 @@ import java.util.Collections;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import kaboom.logic.KEYWORD_TYPE;
-import kaboom.logic.TaskInfo;
-import kaboom.logic.TASK_TYPE;
-import kaboom.logic.command.ComparatorDefault;
-import kaboom.logic.command.ComparatorEndDate;
-import kaboom.logic.command.ComparatorName;
-import kaboom.logic.command.ComparatorPriority;
-import kaboom.logic.command.ComparatorStartDate;
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
+import kaboom.shared.comparators.ComparatorDefault;
+import kaboom.shared.comparators.ComparatorPriority;
 
-public class TaskListShop {
+public class TaskDepository {
 
-	private static TaskListShop taskListInstance = null;
+	private static TaskDepository taskListInstance = null;
 	private static final Logger logger = Logger.getLogger("TaskListShopLogger");
 
 	private Vector<TaskInfo> currentTaskList;
 	private Vector<TaskInfo> archivedTaskList;
 
-	public static TaskListShop getInstance () {
+	public static TaskDepository getInstance () {
 		if (taskListInstance == null) {
-			taskListInstance = new TaskListShop();
+			taskListInstance = new TaskDepository();
 			logger.fine("New singleton TaskListShop instance created");
 		}
 
 		return taskListInstance;
 	}
 
-	private TaskListShop () {
+	private TaskDepository () {
 		currentTaskList = new Vector<TaskInfo>();
 		archivedTaskList = new Vector<TaskInfo>();
 	}
@@ -172,17 +168,6 @@ public class TaskListShop {
 		return null;
 	}
 
-	public TaskInfo removeTaskByName (String taskName) {
-		//Assumes that there is only one task with the same name
-		for (int i = 0; i < currentTaskList.size(); i++) {
-			TaskInfo singleTask = currentTaskList.get(i);
-			if (singleTask.getTaskName().contains(taskName)) {
-				return currentTaskList.remove(currentTaskList.indexOf(singleTask));
-			}
-		}
-		return null;
-	}
-
 	//This function refreshes all the tasks in the vector to check
 	//whether it has expired and set to true if it has expired.
 	//Sets to false if the task has not expired
@@ -228,7 +213,7 @@ public class TaskListShop {
 		Collections.sort(currentTaskList, new ComparatorDefault());
 	}
 
-	public Vector<TaskInfo> clearAllTasks () {
+	public Vector<TaskInfo> clearAllCurrentTasks () {
 		currentTaskList = new Vector<TaskInfo>();
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(currentTaskList);
 		logger.fine("All tasks cleared");
@@ -248,24 +233,6 @@ public class TaskListShop {
 			taskID.add(currentTaskList.indexOf(taskList.get(i)));
 		}
 		return taskID;
-	}
-
-	public void sort(KEYWORD_TYPE type) {
-		if (type == KEYWORD_TYPE.TASKNAME) {
-			Collections.sort(currentTaskList, new ComparatorName());
-		}
-		else if (type == KEYWORD_TYPE.START_DATE) {
-			Collections.sort(currentTaskList, new ComparatorStartDate());
-		}
-		else if (type == KEYWORD_TYPE.END_DATE){
-			Collections.sort(currentTaskList, new ComparatorEndDate());
-		}
-		else if (type == KEYWORD_TYPE.PRIORITY) {
-			Collections.sort(currentTaskList, new ComparatorPriority());
-		}
-		else {
-			Collections.sort(currentTaskList, new ComparatorDefault());
-		}
 	}
 
 	public boolean isTaskToday(TaskInfo task) {
@@ -318,5 +285,9 @@ public class TaskListShop {
 
 	public int shopSize () {
 		return currentTaskList.size();
+	}
+	
+	public int archiveShopSize() {
+		return archivedTaskList.size();
 	}
 }
