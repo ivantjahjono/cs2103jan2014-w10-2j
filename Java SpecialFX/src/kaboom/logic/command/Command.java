@@ -328,7 +328,7 @@ public class Command {
 	//used
 	public void initialiseCommandVariables(String userInputSentence) {
 		infoTable = textParser.testExtractList(userInputSentence, keywordList);
-		//extractAndStoreTaskInfo(infoTable);
+		extractAndStoreTaskInfo(infoTable);
 	}
 	
 	//used
