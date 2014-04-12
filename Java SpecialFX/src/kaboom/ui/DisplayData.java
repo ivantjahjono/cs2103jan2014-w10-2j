@@ -5,6 +5,7 @@ package kaboom.ui;
 import java.util.Observable;
 import java.util.Vector;
 
+import kaboom.logic.TaskMasterKaboom;
 import kaboom.shared.DISPLAY_STATE;
 import kaboom.shared.DateAndTimeFormat;
 import kaboom.shared.FormatIdentify;
@@ -75,36 +76,36 @@ public class DisplayData extends Observable {
 	}
 
 	private void updateTaskCountList() {
-		taskCountList.clear();
-
-		// TODO Hardcoded to get each task !!!!
-		for (int i = 0; i < 6; i++) {
-			int currentCount = 0;
-
-			switch (i) {
-			case 0:
-				currentCount = taskListShop.getToday().size();
-				break;
-				
-			case 1:
-				currentCount = taskListShop.getFutureTasks().size();
-				break;
-
-			case 2:
-				currentCount = taskListShop.getFloatingTasks().size();
-				break;
-
-			case 3:
-				currentCount = taskListShop.getExpiredTasks().size();
-				break;
-
-			case 4:
-				currentCount = taskListShop.getAllArchivedTasks().size();
-				break;
-
-			}
-			taskCountList.add(currentCount);
-		}
+		//TODO
+		taskCountList = TaskMasterKaboom.getInstance().updateTaskCount();
+//		taskCountList.clear();
+//		for (int i = 0; i < 6; i++) {
+//			int currentCount = 0;
+//
+//			switch (i) {
+//			case 0:
+//				currentCount = taskListShop.getToday().size();
+//				break;
+//				
+//			case 1:
+//				currentCount = taskListShop.getFutureTasks().size();
+//				break;
+//
+//			case 2:
+//				currentCount = taskListShop.getFloatingTasks().size();
+//				break;
+//
+//			case 3:
+//				currentCount = taskListShop.getExpiredTasks().size();
+//				break;
+//
+//			case 4:
+//				currentCount = taskListShop.getAllArchivedTasks().size();
+//				break;
+//
+//			}
+//			taskCountList.add(currentCount);
+//		}
 	}
 
 	/**
