@@ -131,6 +131,7 @@ public class TaskView {
 	}
 	
 	public void addTask(TaskInfo task) {
+		//Check if task is archived or current and add to the proper list
 		taskListShop.addTaskToList(task);
 		taskListShop.refreshTasks();
 		//addToSearchView(task);
