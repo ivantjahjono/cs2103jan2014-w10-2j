@@ -169,8 +169,8 @@ public class TaskManager {
 		return taskListShop.archiveTaskCount();
 	}
 	
-	public boolean addTask(TaskInfo task) {
-		//Check if task is archived or current and add to the proper list
+	public boolean addPresentTask(TaskInfo task) {
+		assert task.getDone() == false;
 		boolean isAdded = taskListShop.addTaskToList(task);
 		taskListShop.refreshTasks();
 		addToSearchView(task);
@@ -179,7 +179,7 @@ public class TaskManager {
 	}
 	
 	public boolean addArchivedTask(TaskInfo task) {
-		//Check if task is archived or current and add to the proper list
+		assert task.getDone() == true;
 		boolean isAdded = taskListShop.addTaskToArchivedList(task);
 		taskListShop.refreshTasks();
 		addToSearchView(task);
@@ -205,7 +205,7 @@ public class TaskManager {
 	}
 	
 	public void doneTask(TaskInfo task) {
-		//add assertion here that the task is not done yet
+		assert task.getDone() == false;
 		task.setExpiryFlag(false);
 		task.setDone(true);
 		deleteInSearchView(task);
@@ -215,7 +215,7 @@ public class TaskManager {
 	}
 	
 	public void undoneTask(TaskInfo task) {
-		//add assertion here that the task is done already
+		assert task.getDone() == true;
 		task.setDone(false);
 		deleteInSearchView(task);
 		task.setRecent(true);

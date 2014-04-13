@@ -101,7 +101,7 @@ public class CommandAdd extends Command {
 		taskInfo.setRecent(true);
 
 		DISPLAY_STATE stateToSet = DISPLAY_STATE.INVALID;
-		if (taskView.addTask(taskInfo)) {
+		if (taskView.addPresentTask(taskInfo)) {
 			addCommandToHistory ();
 			commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
 
