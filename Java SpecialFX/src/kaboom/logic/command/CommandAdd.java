@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import kaboom.logic.command.Command.COMMAND_ERROR;
 import kaboom.shared.DISPLAY_STATE;
 import kaboom.shared.DateAndTimeFormat;
 import kaboom.shared.FormatIdentify;
@@ -27,6 +28,7 @@ public class CommandAdd extends Command {
 	public CommandAdd () {
 		commandType = COMMAND_TYPE.ADD;
 		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.TASKID,
 				KEYWORD_TYPE.PRIORITY,
 				KEYWORD_TYPE.END_TIME,
 				KEYWORD_TYPE.END_DATE,
@@ -54,6 +56,11 @@ public class CommandAdd extends Command {
 
 		String commandFeedback = "";
 
+		COMMAND_ERROR commandError = errorDetectionForInvalidTaskNameAndId();
+		if(commandError != null) {
+			return commandErrorHandler(commandError);
+		}
+		
 		taskInfo = new TaskInfo();
 
 		commandFeedback = saveTaskNameAndGetErrorMessage();
@@ -78,7 +85,7 @@ public class CommandAdd extends Command {
 		//			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
 		//		}
 
-		COMMAND_ERROR commandError = modifyDateAndTime(taskInfo);
+		commandError = modifyDateAndTime(taskInfo);
 		if(commandError != COMMAND_ERROR.NIL) {
 			commandFeedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 			return createResult(commandFeedback);
