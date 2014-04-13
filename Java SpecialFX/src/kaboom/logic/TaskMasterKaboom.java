@@ -122,13 +122,7 @@ public class TaskMasterKaboom {
 		boolean processResult = false;
 		Vector<FormatIdentify> characterIndexList = new Vector<FormatIdentify>();
 		
-		//System.out.println("Processing:" + usercommand);
-		
-		//1. Get Command 
-		String commandKeyword = TextParser.getInstance().getCommandKeyWord(usercommand);
-		
-		//2. Create Command
-		commandToExecute = CommandFactory.createCommand(commandKeyword);
+		commandToExecute = CommandFactory.createCommand(usercommand);
 		
 		try {
 			processResult = commandToExecute.parseInfo(usercommand, characterIndexList);

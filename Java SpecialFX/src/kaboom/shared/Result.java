@@ -13,17 +13,22 @@ public class Result {
 	
 	boolean isGoToNextPage;
 	boolean isGoToPreviousPage;
+	int 	pageToGoTo;
 	
 	DISPLAY_STATE 	stateToChangeTo;
 	HELP_STATE		helpStateToChangeTo;
 	
 	public Result () {
-		feedback = "";
+		feedback 	= "";
 		taskInFocus = null;
-		isGoToNextPage = false;
-		isGoToPreviousPage = false;
-		stateToChangeTo = DISPLAY_STATE.INVALID;
+		
+		isGoToNextPage 		= false;
+		isGoToPreviousPage 	= false;
+		pageToGoTo = -1;
+		
+		stateToChangeTo 	= DISPLAY_STATE.INVALID;
 		helpStateToChangeTo = HELP_STATE.INVALID;
+		
 	}
 	
 	public void setTasksToDisplay (Vector<TaskInfo> taskList) {
@@ -44,6 +49,10 @@ public class Result {
 	
 	public void setGoToPrevPage (boolean flag) {
 		isGoToPreviousPage = flag;
+	}
+	
+	public void setPageToGoTo (int page) {
+		pageToGoTo = page;
 	}
 	
 	public void setDisplayState (DISPLAY_STATE newState) {
@@ -72,6 +81,10 @@ public class Result {
 	
 	public boolean getGoToPrevPage () {
 		return isGoToPreviousPage;
+	}
+	
+	public int getPageToGoTo () {
+		return pageToGoTo;
 	}
 	
 	public DISPLAY_STATE getDisplayState () {
