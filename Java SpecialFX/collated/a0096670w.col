@@ -1,0 +1,1585 @@
+//@author: a0096670w
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandDone.java
+	 */
+
+
+package kaboom.logic.command;
+
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.logic.FormatIdentify;
+import kaboom.logic.KEYWORD_TYPE;
+import kaboom.logic.Result;
+import kaboom.logic.TaskInfo;
+
+public class CommandDone extends Command{
+	private final String MESSAGE_COMMAND_DONE_SUCCESS = "Set %1$s to complete";
+	private final String MESSAGE_COMMAND_DONE_AlEADY_COMPLETED = "%1$s was already completed";
+
+	TaskInfo taskToBeModified;
+
+	public CommandDone() {
+		commandType = COMMAND_TYPE.DONE;
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.TASKID,
+				KEYWORD_TYPE.TASKNAME
+		};
+	}
+
+	public Result execute() {
+		assert taskListShop != null;
+		
+		Result errorResult = taskDetectionWithErrorFeedback();
+		if(errorResult != null) {
+			return errorResult;
+		} else {
+			taskToBeModified = getTask();
+		}
+		
+		String feedback = MESSAGE_COMMAND_INVALID;
+		String taskName = taskToBeModified.getTaskName();
+		
+		if (taskToBeModified.getDone()) {
+			feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
+		} else {
+			taskToBeModified.setDone(true);
+			taskToBeModified.setExpiryFlag(false);
+			taskListShop.refreshTasks();  //Refresh to shift task to archive
+			taskView.deleteInSearchView(taskToBeModified);
+			feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
+		}
+		
+		taskToBeModified.setRecent(true);
+		addCommandToHistory ();
+		return createResult(feedback);
+	}
+
+	public boolean undo() {
+		taskToBeModified.setDone(false);
+		taskListShop.refreshTasks();  //Refresh to shift task to current
+		taskView.addToSearchView(taskToBeModified);
+		return true;
+	}
+
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+
+		return true;
+	}
+}
+	// End of segment: src\kaboom\logic\command\CommandDone.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandSearch.java
+	 */
+
+package kaboom.logic.command;
+
+import java.util.Calendar;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.logic.DateAndTimeFormat;
+import kaboom.logic.FormatIdentify;
+import kaboom.logic.Result;
+import kaboom.logic.TaskInfo;
+import kaboom.logic.KEYWORD_TYPE;
+import kaboom.ui.DISPLAY_STATE;
+
+public class CommandSearch extends Command {
+
+	private final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done. %d item(s) found.";
+
+	TaskInfo taskInfo = null;
+
+	public CommandSearch () {
+		commandType = COMMAND_TYPE.SEARCH;
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.DATE,
+				KEYWORD_TYPE.END_TIME,
+				KEYWORD_TYPE.TASKNAME
+		};
+	}
+
+	public Result execute() {
+
+		assert taskInfo != null;
+		assert taskListShop != null;
+
+		String searchName = taskInfo.getTaskName().toLowerCase();
+		Calendar searchByDate = taskInfo.getEndDate();
+		Calendar searchOnDate = taskInfo.getStartDate();
+
+		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
+		Vector<TaskInfo> listToSearch;
+
+		if (searchByDate != null || searchOnDate != null) {
+			listToSearch = taskListShop.getAllCurrentTasks();
+		} else {
+			listToSearch = taskView.getCurrentView();
+		}
+
+		if (!searchName.equals("")) {
+			for (int i = 0; i < listToSearch.size(); i++) {
+				TaskInfo singleTask = listToSearch.get(i);
+				if (singleTask.getTaskName().toLowerCase().contains(searchName)) {
+					tasksFound.add(singleTask);
+				}
+			}
+		} else if (searchOnDate != null){
+			//Search only on a particular day
+			for (int i = 0; i < listToSearch.size(); i++) {
+				TaskInfo singleTask = listToSearch.get(i);
+				if (isTaskOnDate(singleTask)) {
+					tasksFound.add(singleTask);
+				}
+			}
+		} else if (searchByDate != null) {
+			//Cumulative search to a particular day
+			for (int i = 0; i < listToSearch.size(); i++) {
+				TaskInfo singleTask = listToSearch.get(i);
+				Calendar taskEndDate = singleTask.getEndDate();
+				if (taskEndDate != null) {
+					if (DateAndTimeFormat.getInstance().isFirstDateBeforeSecondDate(taskEndDate, searchByDate)) {
+						tasksFound.add(singleTask);
+					}
+				}
+			}
+		}
+
+		String commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
+		taskView.setSearchView(tasksFound);
+
+		return createResult(commandFeedback, DISPLAY_STATE.SEARCH); 
+	}
+
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {	
+		taskInfo = new TaskInfo();
+		saveTaskPriority(infoHashes,taskInfo);
+		saveTaskStartDateAndTime(infoHashes,taskInfo);
+		saveTaskEndDateAndTime(infoHashes,taskInfo);
+		saveTaskName(infoHashes,taskInfo);
+	}
+
+	private boolean isTaskOnDate(TaskInfo task) {
+		Calendar taskStartDate = task.getStartDate();
+		Calendar taskEndDate = task.getEndDate();
+		Calendar searchOnDate = taskInfo.getStartDate();
+		if (taskStartDate != null) {
+			if (taskStartDate.get(Calendar.DAY_OF_YEAR) == searchOnDate.get(Calendar.DAY_OF_YEAR) &&
+					taskStartDate.get(Calendar.YEAR) == searchOnDate.get(Calendar.YEAR)) {
+				return true;
+			}
+		} else if(taskEndDate!=null) {
+			if (taskEndDate.get(Calendar.DAY_OF_YEAR) == searchOnDate.get(Calendar.DAY_OF_YEAR) &&
+					taskEndDate.get(Calendar.YEAR) == searchOnDate.get(Calendar.YEAR)) {
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\CommandSearch.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandSort.java
+	 */
+
+
+package kaboom.logic.command;
+
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.logic.FormatIdentify;
+import kaboom.logic.KEYWORD_TYPE;
+import kaboom.logic.Result;
+import kaboom.logic.TaskInfo;
+
+public class CommandSort extends Command {
+
+	private final String MESSAGE_COMMAND_SORT_SUCCESS = "Sort done. %d item(s) sorted.";
+
+	TaskInfo taskInfo = null;
+	
+	public CommandSort() {
+		commandType = COMMAND_TYPE.SORT;
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.END_TIME,
+				KEYWORD_TYPE.END_DATE,
+				KEYWORD_TYPE.START_TIME,
+				KEYWORD_TYPE.START_DATE,
+				KEYWORD_TYPE.PRIORITY,
+				KEYWORD_TYPE.TASKNAME
+		};
+	}
+
+	public Result execute() {
+		assert taskInfo != null;
+		assert taskListShop != null;
+
+		if (!taskInfo.getTaskName().equals("")) {
+			taskListShop.sort(KEYWORD_TYPE.TASKNAME);
+		}
+		else if (taskInfo.getStartDate() != null) {
+			taskListShop.sort(KEYWORD_TYPE.START_DATE);
+
+		}
+		else if (taskInfo.getEndDate() != null) {
+			taskListShop.sort(KEYWORD_TYPE.END_DATE);
+		}
+		else {
+			taskListShop.sort(KEYWORD_TYPE.PRIORITY);
+		}
+
+		String commandFeedback = String.format(MESSAGE_COMMAND_SORT_SUCCESS, taskListShop.shopSize());
+		return createResult(commandFeedback);
+	}
+	
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+		
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+		
+		return true;
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\CommandSort.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandUndone.java
+	 */
+
+package kaboom.logic.command;
+
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.logic.FormatIdentify;
+import kaboom.logic.KEYWORD_TYPE;
+import kaboom.logic.Result;
+import kaboom.logic.TaskInfo;
+
+public class CommandUndone extends Command{
+	private final String MESSAGE_COMMAND_UNDONE_SUCCESS = "Set %1$s to incomplete";
+	private final String MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE = "%1$s was incomplete";
+
+	TaskInfo taskToBeModified;
+	TaskInfo taskInfo = null;
+
+	public CommandUndone() {
+		commandType = COMMAND_TYPE.UNDONE;
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.TASKID,
+				KEYWORD_TYPE.TASKNAME
+		};
+	}
+
+	public Result execute() {
+		assert taskListShop != null;
+
+		Result errorResult = taskDetectionWithErrorFeedback();
+		if(errorResult != null) {
+			return errorResult;
+		} else {
+			taskToBeModified = getTask();
+		}
+
+		String feedback = MESSAGE_COMMAND_INVALID;
+		String taskName = taskToBeModified.getTaskName();
+
+		if (!taskToBeModified.getDone()) {
+			feedback = String.format(MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE, taskName);
+		} else {
+			taskToBeModified.setDone(false);
+			taskListShop.refreshTasks();  //Refresh to shift task to current
+			taskView.deleteInSearchView(taskToBeModified);
+			feedback = String.format(MESSAGE_COMMAND_UNDONE_SUCCESS, taskName);
+		}
+
+		taskToBeModified.setRecent(true);
+		addCommandToHistory ();
+		return createResult(feedback);
+	}
+
+	public boolean undo() {
+		taskToBeModified.setDone(true);
+		taskListShop.refreshTasks();  //Refresh to shift task to archive
+		taskView.addToSearchView(taskToBeModified);
+		return true;
+	}
+
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+
+		return true;
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\CommandUndone.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\ComparatorDefault.java
+	 */
+
+package kaboom.logic.command;
+
+import java.util.Comparator;
+
+import kaboom.logic.TaskInfo;
+
+public class ComparatorDefault implements Comparator<TaskInfo> {
+
+	public int compare(TaskInfo task1, TaskInfo task2) {
+		if (task1.getStartDate() != null && task2.getStartDate() != null) {
+			return task1.getStartDate().compareTo(task2.getStartDate());
+		}
+		else if (task1.getEndDate() != null && task2.getEndDate() != null){
+			return task1.getEndDate().compareTo(task2.getEndDate());
+		}
+		else
+			return 0;
+	}
+
+}
+
+	// End of segment: src\kaboom\logic\command\ComparatorDefault.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\ComparatorEndDate.java
+	 */
+
+
+package kaboom.logic.command;
+
+import java.util.Comparator;
+
+import kaboom.logic.TaskInfo;
+
+public class ComparatorEndDate implements Comparator<TaskInfo> {
+
+	public int compare(TaskInfo task1, TaskInfo task2) {
+		if (task1.getEndDate() != null && task2.getEndDate() != null) {
+			return task1.getEndDate().compareTo(task2.getEndDate());
+		} else if (task1.getStartDate() != null && task2.getStartDate() != null) {
+			return task1.getStartDate().compareTo(task2.getStartDate());
+		} else {
+			return 0;  //Both are equal
+		}
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\ComparatorEndDate.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\ComparatorName.java
+	 */
+
+package kaboom.logic.command;
+
+import java.util.Comparator;
+
+import kaboom.logic.TaskInfo;
+
+public class ComparatorName implements Comparator<TaskInfo> {
+		
+	public int compare(TaskInfo task1, TaskInfo task2) {
+		return task1.getTaskName().compareToIgnoreCase(task2.getTaskName());
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\ComparatorName.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\ComparatorPriority.java
+	 */
+
+package kaboom.logic.command;
+
+import java.util.Comparator;
+
+import kaboom.logic.TaskInfo;
+
+public class ComparatorPriority implements Comparator<TaskInfo> {
+
+	public int compare(TaskInfo task1, TaskInfo task2) {
+		return task2.getImportanceLevel() - task1.getImportanceLevel();
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\ComparatorPriority.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\ComparatorStartDate.java
+	 */
+
+package kaboom.logic.command;
+
+import java.util.Comparator;
+
+import kaboom.logic.TaskInfo;
+
+public class ComparatorStartDate implements Comparator<TaskInfo> {
+	
+	public int compare(TaskInfo task1, TaskInfo task2) {
+		if (task1.getStartDate() != null && task2.getStartDate() != null) {
+			return task1.getStartDate().compareTo(task2.getStartDate());
+		} else if (task1.getEndDate() != null && task2.getEndDate() != null) {
+			return task1.getEndDate().compareTo(task2.getEndDate());
+		} else {
+			return 0;  //Both are equal
+		}
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\ComparatorStartDate.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\storage\History.java
+	 */
+
+package kaboom.storage;
+
+import java.util.Stack;
+
+import kaboom.logic.command.Command;
+
+public class History {
+
+	private final int MAX_COMMAND_TO_STORE = 10;
+
+	private static History historyInstance = null;
+
+	private Stack<Command> previousCommandList;
+	private Command currentCommandView;
+
+	public static History getInstance () {
+		if (historyInstance == null) {
+			historyInstance = new History();
+		}
+		return historyInstance;
+	}
+
+	public History () {
+		previousCommandList = new Stack<Command>();
+		currentCommandView = null;
+	}
+
+	public Command getMostRecentCommand () {
+		if (previousCommandList.empty()) {
+			return null;
+		}
+
+		return previousCommandList.pop();
+	}
+
+	public Command getMostRecentCommandView () {            
+		return currentCommandView;
+	}
+
+	public int size() {
+		return previousCommandList.size();
+	}
+
+	public void clear() {
+		previousCommandList.clear();
+	}
+
+	public void addToRecentCommands(Command recentCommand) {
+		previousCommandList.push(recentCommand);
+
+		trimOutOldCommands();
+	}
+
+	public void setCurrentViewCommand(Command setView) {
+		currentCommandView = setView;
+	}
+
+	private void trimOutOldCommands () {
+		int firstObjectIndex = 0;
+
+		while (previousCommandList.size() > MAX_COMMAND_TO_STORE) {
+			previousCommandList.remove(firstObjectIndex);
+		}
+	}
+}
+
+	// End of segment: src\kaboom\storage\History.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\storage\Storage.java
+	 */
+
+package kaboom.storage;
+
+import kaboom.storage.TaskListShop;
+
+import java.util.Scanner;
+import java.util.Vector;
+import java.util.Calendar;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.IOException;
+
+import kaboom.logic.TASK_TYPE;
+import kaboom.logic.TaskInfo;
+
+
+public class Storage {
+	private static final String delimiter = "\u00b0";
+	private static final int INDEX_TASK_NAME = 0;
+	private static final int INDEX_TASK_TYPE = 1;
+	private static final int INDEX_START_YEAR = 2;
+	private static final int INDEX_START_MONTH = 3;
+	private static final int INDEX_START_DAY = 4;
+	private static final int INDEX_START_HOUR = 5;
+	private static final int INDEX_START_MINUTE = 6;
+	private static final int INDEX_END_YEAR = 7;
+	private static final int INDEX_END_MONTH = 8;
+	private static final int INDEX_END_DAY = 9;
+	private static final int INDEX_END_HOUR = 10;
+	private static final int INDEX_END_MINUTE = 11;
+	private static final int INDEX_IMPORTANCE_LEVEL = 12;
+	private static final int INDEX_IS_EXPIRED = 13;
+	private static final int INDEX_IS_DONE = 14;
+
+	private String fileName;
+	private final String storageLoggerFile = "StorageLog.txt";
+
+	private final Logger logger = Logger.getLogger("StorageLogger");
+	private FileHandler fileHandler; 
+	private BufferedWriter writer;
+
+	public Storage(String fileName) {
+		try {
+			this.fileName = fileName;
+			fileHandler = new FileHandler(storageLoggerFile);
+			logger.addHandler(fileHandler);
+			fileHandler.setFormatter(new SimpleFormatter());
+			logger.setUseParentHandlers(false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * This function stores all the data in taskListShop to the text file specified
+	 * in the constructor. Each task is on a new line. The task attributes are
+	 * delimited by the delimiter as specified.
+	 * @param	None
+	 * @return 	True if the file is successfully written, false otherwise.
+	 */
+	public boolean store() {
+		try {
+			writer = new BufferedWriter(new FileWriter(fileName));
+
+			logger.fine("Trying to write current tasks text file: " + fileName);
+			Vector<TaskInfo> currentTaskList = TaskListShop.getInstance().getAllCurrentTasks();
+			assert(currentTaskList != null);
+			writeToFile(currentTaskList);
+
+			logger.fine("Trying to write archived tasks text file: " + fileName);
+			currentTaskList = TaskListShop.getInstance().getAllArchivedTasks();
+			assert(currentTaskList != null);
+			writeToFile(currentTaskList);
+
+			logger.fine("All tasks written to text file: " + fileName);
+			writer.close();
+			return true;
+		} catch (IOException e) {
+			logger.warning("Cannot write to text file: " + fileName);
+			return false;
+		}
+	}
+
+	private void writeToFile(Vector<TaskInfo> currentTaskList) throws IOException {
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			StringBuilder output = new StringBuilder();
+			TaskInfo task = currentTaskList.get(i);
+
+			output.append(task.getTaskName() + delimiter);
+			output.append((TaskInfo.taskTypeToString(task.getTaskType()) + delimiter));
+
+			Calendar startDate = task.getStartDate();
+			if (startDate != null) {
+				output.append(startDate.get(Calendar.YEAR) + delimiter);
+				output.append(startDate.get(Calendar.MONTH) + delimiter);
+				output.append(startDate.get(Calendar.DAY_OF_MONTH) + delimiter);
+				output.append(startDate.get(Calendar.HOUR_OF_DAY) + delimiter);
+				output.append(startDate.get(Calendar.MINUTE) + delimiter);
+			}
+			else {
+				logger.fine("startDate for task " + i + "is null");
+				output.append(" " + delimiter);
+				output.append(" " + delimiter);
+				output.append(" " + delimiter);
+				output.append(" " + delimiter);
+				output.append(" " + delimiter);
+			}
+
+			Calendar endDate = task.getEndDate();
+			if (endDate != null) {
+				output.append(endDate.get(Calendar.YEAR) + delimiter);
+				output.append(endDate.get(Calendar.MONTH) + delimiter);
+				output.append(endDate.get(Calendar.DAY_OF_MONTH) + delimiter);
+				output.append(endDate.get(Calendar.HOUR_OF_DAY) + delimiter);
+				output.append(endDate.get(Calendar.MINUTE) + delimiter);
+			}
+			else {
+				logger.fine("endDate for task " + i + "is null");
+				output.append(" " + delimiter);
+				output.append(" " + delimiter);
+				output.append(" " + delimiter);
+				output.append(" " + delimiter);
+				output.append(" " + delimiter);
+			}
+			output.append(task.getImportanceLevel() + delimiter);
+			output.append(task.getExpiryFlag() + delimiter);
+			output.append(task.getDone() + delimiter);
+			writer.write(output.toString());
+			writer.newLine();
+			writer.flush();
+		}
+	}
+
+	/**
+	 * This function loads all the data in the text file to taskListShop. 
+	 * @param	None
+	 * @return 	True if the file is successfully read, false otherwise.
+	 */
+	public boolean load() {
+		try {
+			logger.fine("Trying to read from text file: " + fileName);
+			File inFile = new File(fileName);
+			Scanner fileScanner = new Scanner(inFile);
+			TaskListShop currentTaskList = TaskListShop.getInstance();
+			assert(currentTaskList != null);
+
+			while (fileScanner.hasNext()) {
+				Calendar now  = Calendar.getInstance();
+				String input = fileScanner.nextLine().trim();
+				String[] inputSplit = input.split(delimiter);
+				TaskInfo task = new TaskInfo();
+				task.setTaskName(inputSplit[INDEX_TASK_NAME]);
+				task.setTaskType(TaskInfo.getTaskType(inputSplit[INDEX_TASK_TYPE]));
+
+				Calendar startDate = Calendar.getInstance();
+				if (inputSplit[INDEX_START_YEAR].equals(" ")) {
+					logger.fine("startDate for task \"" + inputSplit[INDEX_TASK_NAME] + "\" is null");
+					startDate = null;
+				}
+				else {
+					startDate.set(Calendar.YEAR, Integer.parseInt(inputSplit[INDEX_START_YEAR]));
+					startDate.set(Calendar.MONTH, Integer.parseInt(inputSplit[INDEX_START_MONTH]));
+					startDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(inputSplit[INDEX_START_DAY]));
+					startDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputSplit[INDEX_START_HOUR]));
+					startDate.set(Calendar.MINUTE, Integer.parseInt(inputSplit[INDEX_START_MINUTE]));
+				}
+				task.setStartDate(startDate);
+
+				Calendar endDate = Calendar.getInstance();
+				if (inputSplit[INDEX_END_YEAR].equals(" ")) {
+					logger.fine("endDate for task \"" + inputSplit[INDEX_TASK_NAME] + "\" is null");
+					endDate = null;
+				}
+				else {
+					endDate.set(Calendar.YEAR, Integer.parseInt(inputSplit[INDEX_END_YEAR]));
+					endDate.set(Calendar.MONTH, Integer.parseInt(inputSplit[INDEX_END_MONTH]));
+					endDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(inputSplit[INDEX_END_DAY]));
+					endDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputSplit[INDEX_END_HOUR]));
+					endDate.set(Calendar.MINUTE, Integer.parseInt(inputSplit[INDEX_END_MINUTE]));
+				}
+				task.setEndDate(endDate);
+
+				boolean isExpired = now.after(endDate);
+				if (!task.getTaskType().equals(TASK_TYPE.FLOATING)) {
+					task.setExpiryFlag(isExpired);  //Set true if current time is after endDate
+				}
+				else {
+					task.setExpiryFlag(false);  //Floating tasks cannot expire
+				}
+
+				task.setImportanceLevel(Integer.parseInt(inputSplit[INDEX_IMPORTANCE_LEVEL]));
+				task.setExpiryFlag(Boolean.parseBoolean(inputSplit[INDEX_IS_EXPIRED]));
+				task.setDone(Boolean.parseBoolean(inputSplit[INDEX_IS_DONE]));
+
+				if (task.getDone()) {
+					currentTaskList.addTaskToArchivedList(task);
+				}
+				else {
+					currentTaskList.addTaskToList(task);
+				}
+			}
+
+			logger.fine(fileName + " has been scanned and read");
+			fileScanner.close();
+			return true;
+
+		} catch (IOException e) {
+			//Try to reproduce the error and find out what it is
+			File inFile = new File(fileName);
+
+			if (!inFile.exists()) {
+				logger.fine(fileName + " does not exist. Skipping.");
+				return true;  //Do nothing if the file does not exist because it will be created later
+			}
+			else {
+				logger.warning("Cannot read from text file: " + fileName);
+				return false;
+			}
+		} catch (Exception e) {
+			return store();
+		}
+	}
+}
+
+	// End of segment: src\kaboom\storage\Storage.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\storage\TaskListShop.java
+	 */
+
+package kaboom.storage;
+
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Vector;
+import java.util.logging.Logger;
+
+import kaboom.logic.KEYWORD_TYPE;
+import kaboom.logic.TaskInfo;
+import kaboom.logic.TASK_TYPE;
+import kaboom.logic.command.ComparatorDefault;
+import kaboom.logic.command.ComparatorEndDate;
+import kaboom.logic.command.ComparatorName;
+import kaboom.logic.command.ComparatorPriority;
+import kaboom.logic.command.ComparatorStartDate;
+
+public class TaskListShop {
+
+	private static TaskListShop taskListInstance = null;
+	private static final Logger logger = Logger.getLogger("TaskListShopLogger");
+
+	private Vector<TaskInfo> currentTaskList;
+	private Vector<TaskInfo> archivedTaskList;
+
+	public static TaskListShop getInstance () {
+		if (taskListInstance == null) {
+			taskListInstance = new TaskListShop();
+			logger.fine("New singleton TaskListShop instance created");
+		}
+
+		return taskListInstance;
+	}
+
+	private TaskListShop () {
+		currentTaskList = new Vector<TaskInfo>();
+		archivedTaskList = new Vector<TaskInfo>();
+	}
+
+	public boolean addTaskToList (TaskInfo newTask) {
+		if (currentTaskList != null) {
+			logger.fine("Adding one item to current list");
+			return currentTaskList.add(newTask);
+		} else {
+			return false;
+		}
+	}
+
+	public boolean addTaskToArchivedList (TaskInfo newTask) {
+		if (archivedTaskList != null) {
+			logger.fine("Adding one item to archived list");
+			return archivedTaskList.add(newTask);
+		} else {
+			return false;
+		}
+	}
+
+	public TaskInfo getTaskByName (String taskName) {
+		for (int i = currentTaskList.size()-1; i >= 0; i--) {
+			//System.out.println(taskList.get(i).getTaskName());
+			if (taskName.equals(currentTaskList.get(i).getTaskName())) {
+				return currentTaskList.get(i);
+			}
+		}
+		return null;
+	}
+
+	public void updateTask (TaskInfo newTaskInfo, TaskInfo prevTaskInfo) {
+		int indexOfTaskListToBeModified = -1;
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			if (prevTaskInfo.equals(currentTaskList.get(i))) {
+				indexOfTaskListToBeModified = i;
+				//System.out.println("index="+indexOfTaskListToBeModified);
+			}
+		}
+
+		if (indexOfTaskListToBeModified != -1) {
+			currentTaskList.set(indexOfTaskListToBeModified, newTaskInfo);
+		}
+	}
+
+	public Vector<TaskInfo> getToday() {
+		Vector<TaskInfo> tasksToReturn = new Vector<TaskInfo>();
+
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
+			if (isTaskToday(singleTask)) {
+				tasksToReturn.add(singleTask);
+			}
+		}
+		Collections.sort(tasksToReturn, new ComparatorDefault());
+		return tasksToReturn;
+	}
+
+	public Vector<TaskInfo> getFutureTasks() {
+		Vector<TaskInfo> tasksToReturn = new Vector<TaskInfo>();
+		
+
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
+			if (isFutureTask(singleTask)) {
+				tasksToReturn.add(singleTask);
+			}
+		}
+		Collections.sort(tasksToReturn, new ComparatorDefault());
+		return tasksToReturn;
+	}
+
+	public Vector<TaskInfo> getAllCurrentTasks () {
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(currentTaskList);
+		return vectorToReturn;
+	}
+
+	public Vector<TaskInfo> getAllArchivedTasks () {
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(archivedTaskList);
+		Collections.sort(vectorToReturn, new ComparatorDefault());
+		return vectorToReturn;
+	}
+
+	public Vector<TaskInfo> getFloatingTasks() {
+		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
+
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
+			if (singleTask.getTaskType() == TASK_TYPE.FLOATING) {
+				returnVector.add(singleTask);
+			}
+		}
+		Collections.sort(returnVector, new ComparatorPriority());
+		return returnVector;
+	}
+
+	public Vector<TaskInfo> getTimedTasks() {
+		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
+
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
+			if (singleTask.getTaskType() == TASK_TYPE.TIMED) {
+				returnVector.add(singleTask);
+			}
+		}
+		return returnVector;
+	}
+
+	public Vector<TaskInfo> getExpiredTasks() {
+		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
+
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
+			boolean isExpired = singleTask.getExpiryFlag();
+			if (isExpired) {
+				returnVector.add(singleTask);
+			}
+		}
+		Collections.sort(returnVector, new ComparatorDefault());
+		return returnVector;
+	}
+
+	public TaskInfo removeTask(TaskInfo taskToDelete) {
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
+			if (singleTask.equals(taskToDelete)) {
+				return currentTaskList.remove(currentTaskList.indexOf(singleTask));
+			}
+		}
+		for (int i = 0; i < archivedTaskList.size(); i++) {
+			TaskInfo singleTask = archivedTaskList.get(i);
+			if (singleTask.equals(taskToDelete)) {
+				return archivedTaskList.remove(archivedTaskList.indexOf(singleTask));
+			}
+		}
+		return null;
+	}
+
+	public TaskInfo removeTaskByName (String taskName) {
+		//Assumes that there is only one task with the same name
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
+			if (singleTask.getTaskName().contains(taskName)) {
+				return currentTaskList.remove(currentTaskList.indexOf(singleTask));
+			}
+		}
+		return null;
+	}
+
+	//This function refreshes all the tasks in the vector to check
+	//whether it has expired and set to true if it has expired.
+	//Sets to false if the task has not expired
+	//Floating tasks have a default of not expired
+	//Also changes current tasks to archived tasks and vice versa
+	public void refreshTasks() {
+		//Shift from archive to current list
+		for (int i = 0; i < archivedTaskList.size(); i++) {
+			TaskInfo singleTask = archivedTaskList.get(i);
+
+			if (!singleTask.getDone()) {
+				currentTaskList.add(singleTask);
+				archivedTaskList.remove(singleTask);
+			}
+		}
+
+		//Check for expired tasks
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			TaskInfo singleTask = currentTaskList.get(i);
+			Calendar now = Calendar.getInstance();
+
+			if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
+				if (now.after(singleTask.getEndDate()) && !singleTask.getDone()) {
+					singleTask.setExpiryFlag(true);
+				} else {
+					singleTask.setExpiryFlag(false);
+				}
+			} else {
+				singleTask.setExpiryFlag(false);  //Floating tasks cannot expire
+			}
+
+			if (singleTask.isRecent()) {
+				singleTask.setRecent(false);
+			}
+
+			//Shift from current list to archived list
+			if (singleTask.getDone()) {
+				archivedTaskList.add(singleTask);
+				currentTaskList.remove(singleTask);
+			}
+		}
+
+		Collections.sort(currentTaskList, new ComparatorDefault());
+	}
+
+	public Vector<TaskInfo> clearAllTasks () {
+		currentTaskList = new Vector<TaskInfo>();
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(currentTaskList);
+		logger.fine("All tasks cleared");
+		return vectorToReturn;
+	}
+
+	public Vector<TaskInfo> clearAllArchivedTasks () {
+		archivedTaskList = new Vector<TaskInfo>();
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(archivedTaskList);
+		logger.fine("All archive tasks cleared");
+		return vectorToReturn;
+	}
+
+	public Vector<Integer> getCorrespondingID(Vector<TaskInfo> taskList) {
+		Vector<Integer> taskID = new Vector<Integer>();
+		for (int i = 0; i < taskList.size(); i++) {
+			taskID.add(currentTaskList.indexOf(taskList.get(i)));
+		}
+		return taskID;
+	}
+
+	public void sort(KEYWORD_TYPE type) {
+		if (type == KEYWORD_TYPE.TASKNAME) {
+			Collections.sort(currentTaskList, new ComparatorName());
+		}
+		else if (type == KEYWORD_TYPE.START_DATE) {
+			Collections.sort(currentTaskList, new ComparatorStartDate());
+		}
+		else if (type == KEYWORD_TYPE.END_DATE){
+			Collections.sort(currentTaskList, new ComparatorEndDate());
+		}
+		else if (type == KEYWORD_TYPE.PRIORITY) {
+			Collections.sort(currentTaskList, new ComparatorPriority());
+		}
+		else {
+			Collections.sort(currentTaskList, new ComparatorDefault());
+		}
+	}
+
+	public boolean isTaskToday(TaskInfo task) {
+		Calendar today = Calendar.getInstance();
+
+		Calendar taskStartDate = task.getStartDate();
+		Calendar taskEndDate = task.getEndDate();
+
+		//Do not get floating tasks
+		if (task.getTaskType() != TASK_TYPE.FLOATING) {
+			if ((taskStartDate != null && taskStartDate.before(today)) 
+					&& (taskEndDate != null && taskEndDate.after(today))) {
+				return true;
+			}
+			else if (taskStartDate != null && 
+					taskStartDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) &&
+					taskStartDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
+				return true;
+			}
+			else if (taskEndDate != null &&
+					taskEndDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) &&
+					taskEndDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isFutureTask(TaskInfo task) {
+		Calendar today = Calendar.getInstance();
+		today.set(Calendar.HOUR_OF_DAY, 23);
+		today.set(Calendar.MINUTE, 59);
+		today.set(Calendar.SECOND, 59);
+		
+		Calendar taskStartDate = task.getStartDate();
+		Calendar taskEndDate = task.getEndDate();
+
+		//Do not get floating tasks
+		if (task.getTaskType() != TASK_TYPE.FLOATING) {
+			if (taskStartDate != null && taskStartDate.after(today)) {
+				return true;
+			}
+			else if (taskEndDate != null && taskEndDate.after(today)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	public int shopSize () {
+		return currentTaskList.size();
+	}
+}
+
+	// End of segment: src\kaboom\storage\TaskListShop.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\storage\TaskView.java
+	 */
+
+
+package kaboom.storage;
+
+import java.util.Vector;
+
+import kaboom.logic.TaskInfo;
+import kaboom.ui.DISPLAY_STATE;
+import kaboom.ui.DisplayData;
+
+public class TaskView {
+
+	private static TaskView instance = null;
+
+	private Vector<TaskInfo> currentView;  //Current view
+	private Vector<TaskInfo> searchView;  //Vector for searches
+	private Vector<Integer> currentViewID;  //Vector for position of viewing tasks in actual vector
+	private TaskListShop taskListShop;
+	private DisplayData displayData;
+
+	public TaskView() {
+		taskListShop = TaskListShop.getInstance();
+		currentView = taskListShop.getToday();
+		currentViewID = taskListShop.getCorrespondingID(currentView);
+		searchView = new Vector<TaskInfo>();
+		displayData = DisplayData.getInstance();
+	}
+
+	public static TaskView getInstance () {
+		if (instance == null) {
+			instance = new TaskView();
+		}
+		return instance;
+	}
+
+	public Vector<TaskInfo> setAndGetView(DISPLAY_STATE displayState) {
+		switch (displayState) {
+		case TODAY:
+			setCurrentView(taskListShop.getToday());
+			break;
+
+		case TIMELESS:
+			setCurrentView(taskListShop.getFloatingTasks());
+			break;
+
+		case EXPIRED:
+			setCurrentView(taskListShop.getExpiredTasks());
+			break;
+
+		case FUTURE:
+			setCurrentView(taskListShop.getFutureTasks());
+			break;
+
+		case SEARCH:
+			setCurrentView(searchView);
+			break;
+
+		case ARCHIVE:
+			setCurrentView(taskListShop.getAllArchivedTasks());
+			break;
+
+		default:
+			setCurrentView(taskListShop.getToday());
+			System.out.println("Encountered an invalid view!");
+			break;
+		}
+		return currentView;
+	}
+
+	public Vector<TaskInfo> getCurrentView() {
+		return currentView;
+	}
+
+	public Vector<Integer> getCurrentViewID() {
+		return currentViewID;
+	}
+
+	public void setSearchView(Vector<TaskInfo> taskList) {
+		searchView = taskList;
+		setCurrentView(taskList);
+	}
+
+	public Vector<TaskInfo> getSearchView() {
+		return searchView;
+	}
+
+	//Precondition: The index already has offset applied
+	//i.e. index starts from 0
+	public int getIndexFromView(int index) {
+		return currentViewID.get(index);
+	}
+	
+	public TaskInfo getTaskFromViewByName(String searchName) {
+		for (int i = 0; i < currentView.size(); i++) {
+			if (currentView.get(i).getTaskName().equals(searchName)) {
+				return currentView.get(i);
+			}
+		}
+		return null;
+	}
+	
+	public TaskInfo getTaskFromViewByID(int index) {
+		if (currentView.size() <= index) {
+			return null;
+		} else {
+			return currentView.get(index);			
+		}
+	}
+
+	public void addToSearchView(TaskInfo task) {
+		searchView.add(task);
+	}
+
+	public void deleteInSearchView(TaskInfo task) {
+		for (int i = 0; i < searchView.size(); i++) {
+			if (searchView.get(i).equals(task)) {
+				searchView.remove(i);
+			}
+		}
+	}
+
+	public void updateInSearchView(TaskInfo newTask, TaskInfo oldTask) {
+		for (int i = 0; i < searchView.size(); i++) {
+			if (searchView.get(i).equals(oldTask) 
+					&& displayData.getCurrentDisplayState() == DISPLAY_STATE.SEARCH) {
+				searchView.set(i, newTask);
+			}
+		}
+	}
+
+	private void setCurrentView(Vector<TaskInfo> taskList) {
+		currentView = taskList;
+		currentViewID = taskListShop.getCorrespondingID(taskList);
+	}
+}
+
+	// End of segment: src\kaboom\storage\TaskView.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\HistoryTest.java
+	 */
+
+
+package KaboomTest;
+
+import static org.junit.Assert.*;
+
+import kaboom.logic.command.Command;
+import kaboom.logic.command.CommandAdd;
+import kaboom.logic.command.CommandClear;
+import kaboom.logic.command.CommandView;
+import kaboom.storage.History;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class HistoryTest {
+	
+	History history;
+	Command commandAdd;
+	Command commandClear;
+	Command commandView;
+	
+	@Before
+	public void initialize() {
+		history = History.getInstance();
+		commandAdd = new CommandAdd();
+		commandClear = new CommandClear();
+		commandView = new CommandView();
+	}
+	
+	@Test
+	public void testGetInstance() {
+		assertNotNull(history);
+	}
+	
+	@Test
+	public void testAddToRecentCommands() {
+		history.clear();
+		history.addToRecentCommands(commandClear);
+		assertEquals(1, history.size());
+		history.addToRecentCommands(commandAdd);
+		assertEquals(2, history.size());
+	}
+
+	@Test
+	public void testGetMostRecentCommand() {
+		history.clear();
+		history.addToRecentCommands(commandAdd);
+		history.addToRecentCommands(commandClear);
+		assertEquals(history.getMostRecentCommand(), commandClear);
+		assertEquals(1, history.size());
+		assertEquals(history.getMostRecentCommand(), commandAdd);
+		assertEquals(0, history.size());
+	}
+
+	@Test
+	public void testGetMostRecentCommandView() {
+		history.addToRecentCommands(commandAdd);
+		assertNotEquals(history.getMostRecentCommandView(), commandAdd);
+		history.addToRecentCommands(commandView);
+		assertEquals(history.getMostRecentCommand(), commandView);
+	}
+}
+
+	// End of segment: src\KaboomTest\HistoryTest.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\StorageComponentTest.java
+	 */
+
+
+package KaboomTest;
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+@RunWith(Suite.class)
+@SuiteClasses({ 
+		StorageTest.class,
+		HistoryTest.class,
+		TaskListShopTest.class,
+		})
+public class StorageComponentTest {
+
+}
+
+	// End of segment: src\KaboomTest\StorageComponentTest.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\StorageTest.java
+	 */
+
+
+package KaboomTest;
+
+import static org.junit.Assert.*;
+
+import java.io.LineNumberReader;
+import java.io.FileReader;
+import java.io.File;
+import java.io.IOException;
+
+import kaboom.storage.Storage;
+import kaboom.storage.TaskListShop;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class StorageTest {
+	
+	TaskListShop allTasks;
+	Storage storageTest;
+	
+	@Before
+	public void initailize() {
+		allTasks = TaskListShop.getInstance();
+		storageTest = new Storage("StorageTest.txt");
+		storageTest.load();
+	}
+	
+	@Test
+	public void testLoad() throws IOException {
+		LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(new File("storageTest.txt")));
+		lineNumberReader.skip(Long.MAX_VALUE);  //Long.MAX_VALUE is more than 2 ExaBytes
+		assertEquals(allTasks.shopSize(), lineNumberReader.getLineNumber()*2);
+		lineNumberReader.close();
+	}
+
+	@Test
+	public void testStore() throws IOException {
+		storageTest.store();
+		LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(new File("storageTest.txt")));
+		lineNumberReader.skip(Long.MAX_VALUE);  //Long.MAX_VALUE is more than 2 ExaBytes
+		assertEquals(allTasks.shopSize(), lineNumberReader.getLineNumber());
+		lineNumberReader.close();
+	}
+}
+
+	// End of segment: src\KaboomTest\StorageTest.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\TaskListShopTest.java
+	 */
+
+
+package KaboomTest;
+
+import static org.junit.Assert.*;
+
+import java.util.Calendar;
+
+import kaboom.logic.TASK_TYPE;
+import kaboom.logic.TaskInfo;
+import kaboom.storage.TaskListShop;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class TaskListShopTest {
+
+	TaskListShop allTasks;
+	TaskInfo newTask;
+	TaskInfo oldTask;
+
+	@Before
+	public void initialize() {
+		allTasks = TaskListShop.getInstance();
+		newTask = new TaskInfo();
+		oldTask = new TaskInfo();
+		newTaskInfo(newTask);
+		oldTaskInfo(oldTask);
+	}
+
+	public void newTaskInfo(TaskInfo newTask) {
+		Calendar startDate = Calendar.getInstance();
+		startDate.set(2014,1,1,8,0);
+		Calendar endDate = Calendar.getInstance();
+		endDate.set(2014,1,5,8,0);
+
+		newTask.setTaskName("something");
+		newTask.setTaskType(TASK_TYPE.FLOATING);
+		newTask.setStartDate(startDate);
+		newTask.setEndDate(endDate);
+		newTask.setImportanceLevel(3);
+	}
+	
+	public void oldTaskInfo(TaskInfo oldTask) {
+		Calendar startDate = Calendar.getInstance();
+		startDate.set(2014,1,1,8,0);
+		Calendar endDate = Calendar.getInstance();
+		endDate.set(2014,1,5,8,0);
+
+		oldTask.setTaskName("something else");
+		oldTask.setTaskType(TASK_TYPE.TIMED);
+		oldTask.setStartDate(startDate);
+		oldTask.setEndDate(endDate);
+		oldTask.setImportanceLevel(3);
+	}
+
+	@Test
+	public void testGetInstance() {
+		assertNotNull(allTasks);
+	}
+
+	@Test
+	public void testAddTaskToList() {
+		assertTrue(allTasks.addTaskToList(oldTask));
+		assertTrue(allTasks.addTaskToList(newTask));
+	}
+
+	@Test
+	public void testGetTaskByName() {
+		assertEquals("something", allTasks.getTaskByName("something").getTaskName());
+	}
+
+	@Test
+	public void testUpdateTask() {
+		allTasks.clearAllTasks();
+		assertTrue(allTasks.addTaskToList(oldTask));
+		assertTrue(allTasks.addTaskToList(newTask));
+		allTasks.updateTask(newTask, oldTask);
+		assertEquals(newTask, allTasks.getTaskByName("something"));
+	}
+
+	@Test
+	public void testGetAllTaskInList() {
+		assertNotNull(allTasks.getAllCurrentTasks());
+	}
+
+	@Test
+	public void testGetFloatingTasks() {
+		allTasks.clearAllTasks();
+		assertEquals(0, allTasks.shopSize());
+		assertTrue(allTasks.addTaskToList(oldTask));
+		assertTrue(allTasks.addTaskToList(newTask));
+		assertEquals("something", allTasks.getFloatingTasks().get(0).getTaskName());
+		assertTrue(allTasks.addTaskToList(newTask));
+		assertEquals(2, allTasks.getFloatingTasks().size());
+	}
+
+	@Test
+	public void testGetTimedTasks() {
+		allTasks.clearAllTasks();
+		assertEquals(0, allTasks.shopSize());
+		assertTrue(allTasks.addTaskToList(oldTask));
+		assertTrue(allTasks.addTaskToList(newTask));
+		assertEquals("something else", allTasks.getTimedTasks().get(0).getTaskName());
+		assertTrue(allTasks.addTaskToList(oldTask));
+		assertEquals(2, allTasks.getTimedTasks().size());
+	}
+
+	@Test
+	public void testClearAllTasks() {
+		assertTrue(allTasks.addTaskToList(oldTask));
+		assertNotEquals(0, allTasks.shopSize());
+		allTasks.clearAllTasks();
+		assertEquals(0, allTasks.shopSize());
+	}
+
+	@Test
+	public void testShopSize() {
+		allTasks.clearAllTasks();
+		assertEquals(0, allTasks.shopSize());
+		assertTrue(allTasks.addTaskToList(oldTask));
+		assertEquals(1, allTasks.shopSize());
+		assertTrue(allTasks.addTaskToList(newTask));
+		assertEquals(2, allTasks.shopSize());
+	}
+}
+
+	// End of segment: src\KaboomTest\TaskListShopTest.java
+
+
+
+
+
