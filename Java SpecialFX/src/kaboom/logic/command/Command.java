@@ -16,7 +16,7 @@ import kaboom.shared.Result;
 import kaboom.shared.TASK_TYPE;
 import kaboom.shared.TaskInfo;
 import kaboom.shared.comparators.FormatIdentifyComparator;
-import kaboom.storage.TaskView;
+import kaboom.storage.TaskManager;
 /* 
  ** Purpose: 
  */
@@ -32,7 +32,7 @@ public class Command {
 	protected TextParser textParser;
 	protected KEYWORD_TYPE[] keywordList;
 	Hashtable<KEYWORD_TYPE, String> infoTable;
-	protected TaskView taskView;
+	protected TaskManager taskView;
 	
 	protected enum COMMAND_ERROR{
 		CLASH, TASK_DOES_NOT_EXIST, NO_TASK_NAME, INVALID_DATE, INVALID_TASKNAME ,NIL
@@ -41,7 +41,7 @@ public class Command {
 	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
 		textParser = TextParser.getInstance();
-		taskView = TaskView.getInstance();
+		taskView = TaskManager.getInstance();
 		infoTable = new Hashtable<KEYWORD_TYPE, String>();
 		keywordList = new KEYWORD_TYPE[0];
 	}
