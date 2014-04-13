@@ -20,7 +20,7 @@ public class CommandClear extends Command {
 	private final String MESSAGE_COMMAND_CLEAR_ALL_SUCCESS = "1.. 2.. 3.. Pooof! Your schedule has gone with the wind";
 	private final String MESSAGE_COMMAND_CLEAR_PRESENT_SUCCESS = "1.. 2.. 3.. Pooof! Your present schedule has gone with the wind";
 	private final String MESSAGE_COMMAND_CLEAR_ARCHIVE_SUCCESS = "3.. 2.. 1.. Pooof! Your archive has gone with the wind";
-	private final String MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE = "enter <clear all> to remove all tasks or <clear present> to remove current view";
+	private final String MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE = "Enter <clear all> to remove all tasks or <clear current> to remove current view";
 	
 	private enum CLEAR_TYPE {
 		ALL, PRESENT, ARCHIVE, INVALID
@@ -40,7 +40,11 @@ public class CommandClear extends Command {
 	}
 
 	public Result execute() {
-		assert taskView != null;	
+		assert taskView != null;
+		
+		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return createResult(MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE);
+		}
 		
 		CLEAR_TYPE clearType = retrieveClearTypeAndDetermineClearType();
 		String commandFeedback = processClearType(clearType);
