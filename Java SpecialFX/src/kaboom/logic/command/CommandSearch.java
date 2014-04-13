@@ -16,6 +16,8 @@ public class CommandSearch extends Command {
 
 	private final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done. %d item(s) found.";
 
+	TaskInfo taskInfo = null;
+	
 	public CommandSearch () {
 		commandType = COMMAND_TYPE.SEARCH;
 		keywordList = new KEYWORD_TYPE[] {
@@ -37,7 +39,7 @@ public class CommandSearch extends Command {
 		String searchByDateInString = dateAndTimeFormat.convertStringDateToDayMonthYearFormat(infoTable.get(KEYWORD_TYPE.END_DATE));
 		
 		Calendar searchOnDate = dateAndTimeFormat.formatStringToCalendar(searchOnDateInString, dateAndTimeFormat.getEndTimeOfTheDay());
-		Calendar searchByDate = dateAndTimeFormat.formatStringToCalendar(searchByDateInString, dateAndTimeFormat.getEndTimeOfTheDay());
+		Calendar searchByDate = dateAndTimeFormat.formatStringToCalendar(searchByDateInString, dateAndTimeFormat.getStartTimeOfTheDay());
 		
 		//past extraction
 //		String searchName = taskInfo.getTaskName().toLowerCase();
