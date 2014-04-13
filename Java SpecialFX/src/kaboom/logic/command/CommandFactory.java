@@ -19,6 +19,7 @@ public class CommandFactory {
 	private static final String KEYWORD_COMMAND_DONE 	= "boom";
 	private static final String KEYWORD_COMMAND_UNDONE 	= "unboom";
 	private static final String KEYWORD_COMMAND_HELP 	= "help";
+	private static final String KEYWORD_COMMAND_PAGE 	= "page";
 	
 	private static TextParser textParser = TextParser.getInstance();
 	
@@ -65,6 +66,8 @@ public class CommandFactory {
 				return COMMAND_TYPE.UNDONE;
 			case KEYWORD_COMMAND_HELP:
 				return COMMAND_TYPE.HELP;
+			case KEYWORD_COMMAND_PAGE:
+				return COMMAND_TYPE.PAGE;
 			default:
 				return COMMAND_TYPE.INVALID;
 		}
@@ -112,6 +115,10 @@ public class CommandFactory {
 				
 			case HELP:
 				newlyCreatedCommand = new CommandHelp();
+				break;
+				
+			case PAGE:
+				newlyCreatedCommand = new CommandPage();
 				break;
 				
 			default:

@@ -93,8 +93,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	@FXML private Label 				pageNumber;
 	@FXML private HBox 					pageTabContainer;
 		  private ArrayList<Rectangle> 	pagesTab;
-		  private final String NEXT_PAGE_KEYWORD = "next";
-		  private final String PREV_PAGE_KEYWORD = "prev";
 		  
 	// Help boxes
 	@FXML private Pane 	helpPane;
@@ -122,6 +120,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	// Logging unit and file handler for output
 	private final static Logger loggerUnit = Logger.getLogger(MainWindow.class.getName());
 	private static FileHandler 	fh;
+	private final String LOG_FILENAME = "KaboomUI.log";
 	
 	public MainWindow () {
 		currentCommand = "";
@@ -170,7 +169,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 
 	private void createAndStartLogging() {
 		try {
-			fh = new FileHandler("KaboomUI.log", false);
+			fh = new FileHandler(LOG_FILENAME, false);
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -202,11 +201,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			return;
 		}
 		
-		if (isPageToggle(command)) {
-			activatePageToggle(command);
-		} else {
-			applicationController.processCommand(command);
-		}
+		applicationController.processCommand(command);
 		
 		storeCommandEntered(command);
 		
@@ -215,32 +210,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 
 	private boolean isExitCommand(String command) {
 		return command.equals("exit");
-	}
-	
-	private void activatePageToggle(String command) {
-		switch (command) {
-			case NEXT_PAGE_KEYWORD:
-				uiData.goToNextPage();
-				break;
-				
-			case PREV_PAGE_KEYWORD:
-				uiData.goToPreviousPage();
-				break;
-				
-			default:
-				break;
-		}
-	}
-
-	private boolean isPageToggle(String command) {
-		switch (command) {
-			case NEXT_PAGE_KEYWORD:
-			case PREV_PAGE_KEYWORD:
-				return true;
-				
-			default:
-				return false;
-		}
 	}
 
 	private void updateDisplay() {
@@ -457,6 +426,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			case DATE:
 			case CLEARTYPE:
 			case HELP:
+			case PAGE:
 				newLabel.getStyleClass().add("parseCommandName");
 				break;
 				
@@ -481,15 +451,12 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	}
 	
 	private void updateHelpPanel() {		
-		// Get current status for help panel
 		HELP_STATE currentHelpState = uiData.getCurrentHelpState();
 		
-		// Close current panel
 		if (activeHelpPanel != null) {
 			activeHelpPanel.setVisible(false);
 		}
 		
-		// Open the new panel
 		switch (currentHelpState) {
 			case MAIN:
 				activeHelpPanel = helpPane;
@@ -655,7 +622,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				
 			default:
 				String command = commandTextInput.getText();
-				if (isPageToggle(command) || isExitCommand(command)) {
+				if (isExitCommand(command)) {
 					processResult = true;
 					commandFormatFeedback.getChildren().clear();
 				} else {

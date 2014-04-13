@@ -81,22 +81,8 @@ public class DisplayData extends Observable {
 		setFeedbackMessage(commandResult.getFeedback());
 
 		updateTaskCountList();
-		
-		TaskInfo taskToFocus = commandResult.getTaskToFocus();
-		int indexToGo = -1;
-		if (taskToFocus != null) {
-			indexToGo = TaskMasterKaboom.getInstance().indexToGoTo(taskToFocus);
-		}
-		
-		if (indexToGo != -1) {
-			currentPage = indexToGo/NUM_OF_TASK_PER_PAGE;
-		}
-
-		if (commandResult.getGoToNextPage()) {
-			goToNextPage();
-		} else if (commandResult.getGoToPrevPage()) {
-			goToPreviousPage();
-		}
+		updateTaskToFocus(commandResult);
+		updatePageSwitching(commandResult);
 
 		int maxPages = getMaxTaskDisplayPages(tasksDataToDisplay)-1;
 		if (isMoreThanMaxPage(maxPages)) {
@@ -107,6 +93,31 @@ public class DisplayData extends Observable {
 
 		setChanged();
 		notifyObservers();
+	}
+
+	private void updatePageSwitching(Result commandResult) {
+		int pageToGoTo = commandResult.getPageToGoTo();
+		if (pageToGoTo != -1) {
+			currentPage = pageToGoTo-1;
+		}
+		
+		if (commandResult.getGoToNextPage()) {
+			goToNextPage();
+		} else if (commandResult.getGoToPrevPage()) {
+			goToPreviousPage();
+		}
+	}
+
+	private void updateTaskToFocus(Result commandResult) {
+		TaskInfo taskToFocus = commandResult.getTaskToFocus();
+		int indexToGo = -1;
+		if (taskToFocus != null) {
+			indexToGo = TaskMasterKaboom.getInstance().indexToGoTo(taskToFocus);
+		}
+		
+		if (indexToGo != -1) {
+			currentPage = indexToGo/NUM_OF_TASK_PER_PAGE;
+		}
 	}
 
 	private void updateCurrentDateAndTime() {
