@@ -164,7 +164,7 @@
         <Image url="@img/MarkX.png" />
       </image>
     </ImageView>
-    <Label layoutX="10.0" layoutY="5.0" mouseTransparent="true" text="TASK MASTER KABOOM V0.4.1  |" textFill="WHITE">
+    <Label layoutX="10.0" layoutY="5.0" mouseTransparent="true" text="| TASK MASTER KABOOM V0.5" textFill="WHITE">
       <font>
         <Font name="Segoe UI" size="12.0" fx:id="x14" />
       </font>
@@ -204,7 +204,7 @@
         <Label styleClass="parseCommandInvalid" text="invalid" />
       </children>
     </HBox>
-    <Label layoutX="240.0" layoutY="5.0" mouseTransparent="true" text="Development Build" textFill="WHITE">
+    <Label layoutX="240.0" layoutY="5.0" mouseTransparent="true" text="Development Build" textFill="WHITE" visible="false">
       <font>
         <Font name="Segoe UI Bold" size="12.0" fx:id="x12" />
       </font>
