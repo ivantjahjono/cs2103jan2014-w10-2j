@@ -208,18 +208,18 @@ public class TaskView {
 		//add assertion here that the task is not done yet
 		task.setExpiryFlag(false);
 		task.setDone(true);
-		taskListShop.refreshTasks();  //Refresh to shift task to archive
 		deleteInSearchView(task);
 		task.setRecent(true);
+		taskListShop.refreshTasks();  //Refresh to shift task to archive
 		store();
 	}
 	
 	public void undoneTask(TaskInfo task) {
 		//add assertion here that the task is done already
 		task.setDone(false);
-		taskListShop.refreshTasks();  //Refresh to shift task to archive
 		deleteInSearchView(task);
 		task.setRecent(true);
+		taskListShop.refreshTasks();  //Refresh to shift task to archive
 		store();
 	}
 	
