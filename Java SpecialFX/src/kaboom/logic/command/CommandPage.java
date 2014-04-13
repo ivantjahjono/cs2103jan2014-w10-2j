@@ -21,9 +21,9 @@ public class CommandPage extends Command {
 	}
 
 	public Result execute() {
-		assert taskListShop != null;
+		assert taskDepo != null;
 		
-		String pageInfo = infoTable.get(KEYWORD_TYPE.PAGE);
+		String pageInfo = getPageCommandFromInfoTable();
 		if (pageInfo == null) {
 			return createResult(INVALID_PAGE_COMMAND_MESSAGE);
 		}

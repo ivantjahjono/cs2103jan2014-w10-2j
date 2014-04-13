@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import kaboom.logic.command.Command.COMMAND_ERROR;
 import kaboom.shared.DateAndTimeFormat;
 import kaboom.shared.FormatIdentify;
 import kaboom.shared.KEYWORD_TYPE;
@@ -68,16 +69,22 @@ public class CommandModify extends Command {
 	 * 
 	 */
 	public Result execute() {
-		assert taskListShop != null;
+		assert taskDepo != null;
 		assert infoTable != null;
 
 		if(infoTable == null) {
 			return createResult("No TaskInfoTable");
 		}
 		
-		Result errorResult = taskDetectionWithErrorFeedback();
-		if(errorResult != null) {
-			return errorResult;
+//		Result errorResult = invalidTaskNameAndClashErrorDetection();
+//		if(errorResult != null) {
+//			return errorResult;
+//		} else {
+//			preModifiedTaskInfo = getTask();
+//		}
+		COMMAND_ERROR commandError = errorDetectionForInvalidTaskNameAndId();
+		if(commandError != null) {
+			return commandErrorHandler(commandError);
 		} else {
 			preModifiedTaskInfo = getTask();
 		}
@@ -87,7 +94,7 @@ public class CommandModify extends Command {
 		TaskInfo temp = new TaskInfo(preModifiedTaskInfo);
 		hasNameChanged = modifyTaskName(temp);
 		hasPriorityChanged = modifyTaskPriority(temp);
-		COMMAND_ERROR commandError = modifyDateAndTime(temp);
+		commandError = modifyDateAndTime(temp);
 		if(commandError == COMMAND_ERROR.INVALID_DATE) {
 			feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 			return createResult(feedback);

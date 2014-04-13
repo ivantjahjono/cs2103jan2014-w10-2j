@@ -10,10 +10,10 @@ import kaboom.shared.KEYWORD_TYPE;
 import kaboom.shared.Result;
 import kaboom.shared.TaskInfo;
 
-
 public class CommandDelete extends Command {
 
 	private final String MESSAGE_COMMAND_DELETE_SUCCESS = "<%s> deleted. 1 less work to do :D";
+	private final String MESSAGE_COMMAND_DELETE_FAIL = "Delete fail. Can't access memory...";
 
 	TaskInfo taskToBeDeleted;
 
@@ -26,21 +26,25 @@ public class CommandDelete extends Command {
 	}
 
 	public Result execute() {
-		assert taskListShop != null;
+		assert taskView != null;
 		
-		//set task id;
 		String commandFeedback = "";
 
-		Result errorResult = taskDetectionWithErrorFeedback();
-		if(errorResult != null) {
-			return errorResult;
+//		Result errorResult = invalidTaskNameAndClashErrorDetection();
+//		if(errorResult != null) {
+//			return errorResult;
+//		} else {
+//			taskToBeDeleted = getTask();
+//		}
+		
+		COMMAND_ERROR commandError = errorDetectionForInvalidTaskNameAndId();
+		if(commandError != null) {
+			return commandErrorHandler(commandError);
 		} else {
 			taskToBeDeleted = getTask();
 		}
+		commandFeedback = removeTaskFromMemory();
 		
-		taskView.removeTask(taskToBeDeleted);
-		commandFeedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskToBeDeleted.getTaskName());
-		addCommandToHistory ();
 		return createResult(commandFeedback);
 	}
 
@@ -60,5 +64,17 @@ public class CommandDelete extends Command {
 		}
 
 		return true;
+	}
+	
+	private String removeTaskFromMemory() {
+		boolean hasRemovedTask = taskView.removeTask(taskToBeDeleted);
+		String feedback = "";
+		if (hasRemovedTask) {
+			addCommandToHistory ();
+			feedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskToBeDeleted.getTaskName());
+		} else {
+			feedback = MESSAGE_COMMAND_DELETE_FAIL;
+		}
+		return feedback;
 	}
 }
