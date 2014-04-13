@@ -68,12 +68,13 @@ public class TextParser {
 	    
 		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, PRIORITY_REGEX);
 	    
+		//if there is no match or no priority is detected
 		if (matchList.isEmpty()) {
 			return "";
 		}
 		
-		endIndex = matchList.get(matchList.size()-1);
-		startIndex = matchList.get(matchList.size()-2);
+		endIndex = getLastIndex(matchList);
+		startIndex = getStartIndex(matchList);
 	    
 	    // Extract the priority
 	    String extractedPriorityString = userInputSentence.substring(startIndex, endIndex).trim();
@@ -81,6 +82,14 @@ public class TextParser {
 	    keywordTable.put(KEYWORD_TYPE.PRIORITY, ""+priorityLevel);
 	    
 	    return extractedPriorityString;
+	}
+
+	private Integer getStartIndex(ArrayList<Integer> matchList) {
+		return matchList.get(matchList.size()-2);
+	}
+
+	private Integer getLastIndex(ArrayList<Integer> matchList) {
+		return matchList.get(matchList.size()-1);
 	}
 	
 	public String extractTimeOnly(String KEYWORD_TIME, String userInputSentence ,Hashtable<KEYWORD_TYPE, String> keywordTable){										
@@ -93,8 +102,8 @@ public class TextParser {
 			return "";
 		}
 		
-		endIndex = matchList.get(matchList.size()-1);
-		startIndex = matchList.get(matchList.size()-2);
+		endIndex = getLastIndex(matchList);
+		startIndex = getStartIndex(matchList);
 		
 		String extractedTimeString = userInputSentence.substring(startIndex, endIndex);
 		String finalExtractedTimeString = extractedTimeString.replaceAll(KEYWORD_TIME, "").trim();
@@ -124,8 +133,8 @@ public class TextParser {
 			return "";
 		}
 		
-		endIndex = matchList.get(matchList.size()-1);
-		startIndex = matchList.get(matchList.size()-2);
+		endIndex = getLastIndex(matchList);
+		startIndex = getStartIndex(matchList);
 		
 		String extractedDateString = userInputSentence.substring(startIndex, endIndex).trim();
 		String finalExtractedDateString = extractedDateString.replaceAll(KEYWORD_TIME, "").trim();
@@ -171,8 +180,8 @@ public class TextParser {
 		}
 		
 		//EXTRACT START/END DATE AND TIME
-		endIndex = matchListToUse.get(matchListToUse.size()-1);
-		startIndex = matchListToUse.get(matchListToUse.size()-2);
+		endIndex = getLastIndex(matchListToUse);
+		startIndex = getStartIndex(matchListToUse);
 		String extractedDateAndTimeString = userInputSentence.substring(startIndex, endIndex);
 		
 		//GET DATE
@@ -232,8 +241,8 @@ public class TextParser {
 		if (matchList.size() < 2) {
 			return "";
 		}
-		endIndex = matchList.get(matchList.size()-1);
-		startIndex = matchList.get(matchList.size()-2);
+		endIndex = getLastIndex(matchList);
+		startIndex = getStartIndex(matchList);
 		String taskId = userInputSentence.substring(startIndex, endIndex);;
 		taskId = taskId.replace(KEYWORD_TASKID, "").trim();
 		keywordTable.put(KEYWORD_TYPE.TASKID, taskId);
@@ -262,7 +271,7 @@ public class TextParser {
 	    return matchList;
 	}
 	
-	public Hashtable<KEYWORD_TYPE, String> testExtractList(String userInput, KEYWORD_TYPE[] list) {
+	public Hashtable<KEYWORD_TYPE, String> extractList(String userInput, KEYWORD_TYPE[] list) {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = getInfoFromList(userInput,list);
 		return taskInformationTable;
 	}
@@ -412,8 +421,8 @@ public class TextParser {
 			return "";
 		}
 		
-		int endIndex = matchList.get(matchList.size()-1);
-		int startIndex = matchList.get(matchList.size()-2);
+		int endIndex = getLastIndex(matchList);
+		int startIndex = getStartIndex(matchList);
 		
 		String extractedViewString = userInput.substring(startIndex, endIndex).trim();
 		taskInformationTable.put(KEYWORD_TYPE.VIEWTYPE, extractedViewString);
@@ -428,8 +437,8 @@ public class TextParser {
 			return "";
 		}
 		
-		int endIndex = matchList.get(matchList.size()-1);
-		int startIndex = matchList.get(matchList.size()-2);
+		int endIndex = getLastIndex(matchList);
+		int startIndex = getStartIndex(matchList);
 		
 		String extractedClearString = userInput.substring(startIndex, endIndex).trim();
 		taskInformationTable.put(KEYWORD_TYPE.CLEARTYPE, extractedClearString);
@@ -444,8 +453,8 @@ public class TextParser {
 			return "";
 		}
 		
-		int endIndex = matchList.get(matchList.size()-1);
-		int startIndex = matchList.get(matchList.size()-2);
+		int endIndex = getLastIndex(matchList);
+		int startIndex = getStartIndex(matchList);
 		
 		String extractedClearString = userInput.substring(startIndex, endIndex).trim();
 		taskInformationTable.put(KEYWORD_TYPE.HELP, extractedClearString);
@@ -460,8 +469,8 @@ public class TextParser {
 			return "";
 		}
 		
-		int endIndex = matchList.get(matchList.size()-1);
-		int startIndex = matchList.get(matchList.size()-2);
+		int endIndex = getLastIndex(matchList);
+		int startIndex = getStartIndex(matchList);
 		
 		String extractedString = userInput.substring(startIndex, endIndex).trim();
 		taskInformationTable.put(KEYWORD_TYPE.PAGE, extractedString);

@@ -374,7 +374,7 @@ public class DateAndTimeFormat {
 		
 		return weekFormat.format(dateTime.getTime());
 	}
-	
+	//get date today for the UI current date
 	public String getDateToday () {
 		Calendar dateTime = Calendar.getInstance();
 		
@@ -383,7 +383,7 @@ public class DateAndTimeFormat {
 		
 		return dayFormat.format(dateTime.getTime());
 	}
-	
+	//this one is for command 
 	public String getDateToday2 () {
 		Calendar dateTime = Calendar.getInstance();
 		

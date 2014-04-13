@@ -260,31 +260,31 @@ public class DateAndTimeFormatTest {
 		String timeString = "";
 		
 		timeString = "1pm";
-		assertEquals("1300", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("130000", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "1:00";
-		assertEquals("0100", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("010000", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "13:00";
-		assertEquals("1300", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("130000", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "8pm";
-		assertEquals("2000", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("200000", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "8am";
-		assertEquals("0800", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("080000", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "12:01am";
-		assertEquals("0001", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("000100", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "12:34pm";
-		assertEquals("1234", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("123400", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "1234";
-		assertEquals("1234", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("123400", datFormat.convertStringTimeTo24HourString(timeString));
 		
 		timeString = "2334";
-		assertEquals("2334", datFormat.convertStringTimeTo24HourString(timeString));
+		assertEquals("233400", datFormat.convertStringTimeTo24HourString(timeString));
 	}
 	
 //	@Test
@@ -304,14 +304,14 @@ public class DateAndTimeFormatTest {
 		String timeString = "";
 		String dateString = "";
 		Calendar testCalendar = null;
-		SimpleDateFormat sdf = new  SimpleDateFormat("HHmm ddMMyy");
+		SimpleDateFormat sdf = new  SimpleDateFormat("HHmmss ddMMyy");
 		
-		timeString = "0800";
+		timeString = "080000";
 		dateString = "121212";
 		testCalendar = datFormat.formatStringToCalendar(dateString, timeString);
 		assertEquals(sdf.format(testCalendar.getTime()), timeString + " " + dateString);
 		
-		timeString = "2000";
+		timeString = "200000";
 		dateString = "080414";
 		testCalendar = datFormat.formatStringToCalendar(dateString, timeString);
 		assertEquals(sdf.format(testCalendar.getTime()), timeString + " " + dateString);

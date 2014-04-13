@@ -77,7 +77,7 @@ public class Command {
 	}
 	
 	public void initialiseCommandInfoTable(String userInputSentence) {
-		infoTable = textParser.testExtractList(userInputSentence, keywordList);
+		infoTable = textParser.extractList(userInputSentence, keywordList);
 	}
 	
 	public void initialiseCommandInfoTable(Hashtable<KEYWORD_TYPE, String> infoTable) {
@@ -126,7 +126,7 @@ public class Command {
 		info = textParser.removeFirstWord(info);
 		
 		//5. Extract Task Info Base on Keywords
-		Hashtable<KEYWORD_TYPE, String> taskInformationTable = textParser.testExtractList(info, keywordList);
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = textParser.extractList(info, keywordList);
 		
 		return taskInformationTable;
 	}
