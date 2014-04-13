@@ -274,7 +274,7 @@ public class Command {
 				commandError = taskExistenceOrClashDetection(taskName);
 			} 
 		}
-		return null;
+		return commandError;
 	}
 
 	private boolean isTaskNameNullOrEmpty(String taskName) {
