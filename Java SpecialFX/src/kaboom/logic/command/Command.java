@@ -37,12 +37,11 @@ public class Command {
 	protected TaskDepository taskListShop;
 	protected DisplayData displayData;
 	protected KEYWORD_TYPE[] keywordList;
-	Hashtable<KEYWORD_TYPE, Object> commandObjectTable;
 	Hashtable<KEYWORD_TYPE, String> infoTable; //TEMP
 	protected TaskView taskView;
 
 	protected enum COMMAND_ERROR{
-		NO_TASK_NAME, INVALID_DATE, NIL, STARTDATE_AFTER_ENDDATE
+		NO_TASK_NAME, INVALID_DATE, NIL
 	}
 	
 	public Command () {
@@ -51,7 +50,6 @@ public class Command {
 		taskListShop = TaskDepository.getInstance();
 		displayData = DisplayData.getInstance();
 		keywordList = new KEYWORD_TYPE[0];
-		commandObjectTable = new Hashtable<KEYWORD_TYPE, Object>();
 		infoTable = new Hashtable<KEYWORD_TYPE, String>();
 		taskView = TaskView.getInstance();
 	}
@@ -177,12 +175,12 @@ public class Command {
 	}
 	
 	//used
-	public void initialiseCommandVariables(String userInputSentence) {
+	public void initialiseCommandInfoTable(String userInputSentence) {
 		infoTable = textParser.testExtractList(userInputSentence, keywordList);
 		//extractAndStoreTaskInfo(infoTable);
 	}
 	
-	public void initialiseCommandVariables(Hashtable<KEYWORD_TYPE, String> infoTable) {
+	public void initialiseCommandInfoTable(Hashtable<KEYWORD_TYPE, String> infoTable) {
 		this.infoTable = infoTable;
 	}
 	
@@ -256,7 +254,7 @@ public class Command {
 	//used
 	protected Result callSearch() {
 		Command search = new CommandSearch();
-		search.initialiseCommandVariables(infoTable);
+		search.initialiseCommandInfoTable(infoTable);
 		return search.execute();
 	}
 	
@@ -321,7 +319,6 @@ public class Command {
 //						try {
 //							dateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(stringDate, stringTime);
 //						} catch (InvalidDateAndTimeException e) {
-//							// TODO Auto-generated catch block
 //							e.printStackTrace();
 //						}
 //					}
