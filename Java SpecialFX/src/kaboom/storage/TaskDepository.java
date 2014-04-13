@@ -53,7 +53,6 @@ public class TaskDepository {
 
 	public TaskInfo getTaskByName (String taskName) {
 		for (int i = presentTaskList.size()-1; i >= 0; i--) {
-			//System.out.println(taskList.get(i).getTaskName());
 			if (taskName.equals(presentTaskList.get(i).getTaskName())) {
 				return presentTaskList.get(i);
 			}
@@ -66,7 +65,6 @@ public class TaskDepository {
 		for (int i = 0; i < presentTaskList.size(); i++) {
 			if (prevTaskInfo.equals(presentTaskList.get(i))) {
 				indexOfTaskListToBeModified = i;
-				//System.out.println("index="+indexOfTaskListToBeModified);
 			}
 		}
 
@@ -126,18 +124,6 @@ public class TaskDepository {
 		return returnVector;
 	}
 
-	public Vector<TaskInfo> getTimedTasks() {
-		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
-
-		for (int i = 0; i < presentTaskList.size(); i++) {
-			TaskInfo singleTask = presentTaskList.get(i);
-			if (singleTask.getTaskType() == TASK_TYPE.TIMED) {
-				returnVector.add(singleTask);
-			}
-		}
-		return returnVector;
-	}
-
 	public Vector<TaskInfo> getExpiredTasks() {
 		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
 
@@ -174,15 +160,15 @@ public class TaskDepository {
 		refreshTasks(false);
 	}
 
-	public void refreshTasks(boolean isSetToNotRecent) {
-		refreshArchive(isSetToNotRecent);
-		refreshPresent(isSetToNotRecent);
+	public void refreshTasks(boolean isResetRecentFlag) {
+		refreshArchive(isResetRecentFlag);
+		refreshPresent(isResetRecentFlag);
 	}
 
-	private void refreshArchive(boolean isSetToNotRecent) {
+	private void refreshArchive(boolean isResetRecentFlag) {
 		for (int i = 0; i < archivedTaskList.size(); i++) {
 			TaskInfo singleTask = archivedTaskList.get(i);
-			checkAndSetRecent(isSetToNotRecent, singleTask);
+			checkAndSetRecent(isResetRecentFlag, singleTask);
 
 			if (!singleTask.getDone()) {
 				swapFromArchiveToPresent(singleTask);
@@ -190,11 +176,11 @@ public class TaskDepository {
 		}
 	}
 
-	private void refreshPresent(boolean isSetToNotRecent) {
+	private void refreshPresent(boolean isResetRecentFlag) {
 		for (int i = 0; i < presentTaskList.size(); i++) {
 			TaskInfo singleTask = presentTaskList.get(i);
 			checkAndSetExpiry(singleTask);
-			checkAndSetRecent(isSetToNotRecent, singleTask);
+			checkAndSetRecent(isResetRecentFlag, singleTask);
 
 			if (singleTask.getDone()) {
 				swapFromPresentToArchive(singleTask);
