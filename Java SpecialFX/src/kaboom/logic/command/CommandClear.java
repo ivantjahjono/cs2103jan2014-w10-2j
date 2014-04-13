@@ -15,13 +15,12 @@ public class CommandClear extends Command {
 	
 	private final String CLEAR_TYPE_ALL = "all";
 	private final String CLEAR_TYPE_CURRENT = "current";
-	private final String CLEAR_TYPE_EMPTY = "";
+	private final String CLEAR_TYPE_PRESENT = "";
 	private final String CLEAR_TYPE_ARCHIVE = "archive";
 	
 	private final String MESSAGE_COMMAND_CLEAR_SUCCESS = "1.. 2.. 3.. Pooof! Your schedule has gone with the wind";
 	private final String MESSAGE_COMMAND_CLEAR_ARCHIVE_SUCCESS = "3.. 2.. 1.. Pooof! Your archive has gone with the wind";
-	private final String MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE = "You trying to be funny?";
-//	private final String MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE = "please enter <clear all> to remove all tasks or <clear current> to remove current view";
+	private final String MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE = "please enter <clear all> to remove all tasks or <clear current> to remove current view";
 	private final String MESSAGE_COMMAND_CLEAR_FAIL_NOT_IMPLEMENTED = "LOL";
 	
 	Vector<TaskInfo> tasksCleared;
@@ -38,48 +37,9 @@ public class CommandClear extends Command {
 	}
 
 	public Result execute() {
-		assert taskListShop != null;
-		
-		clearType = infoTable.get(KEYWORD_TYPE.CLEARTYPE);
-		
-		if(clearType == null || clearType.isEmpty()) {
-			clearType = CLEAR_TYPE_EMPTY;
-		} else {
-			clearType = clearType.toLowerCase().trim();
-		}
-		
-		String commandFeedback = "";
-		
-		switch (clearType) {
-		case CLEAR_TYPE_ALL:
-			tasksCleared = taskView.getAllPresentTasks();
-			archiveTasksCleared = taskView.getAllArchivedTasks();
-			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
-			taskView.clearPresentTasks();
-			taskView.clearArchivedTasks();
-			addCommandToHistory ();
-			break;
-		case CLEAR_TYPE_CURRENT:
-			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NOT_IMPLEMENTED;
-			break;
-		case CLEAR_TYPE_EMPTY:
-			//take as all
-			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
-			tasksCleared = taskView.getAllPresentTasks();
-//			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE;
-			taskView.clearPresentTasks();
-			addCommandToHistory ();
-			break;
-		case CLEAR_TYPE_ARCHIVE:
-			commandFeedback = MESSAGE_COMMAND_CLEAR_ARCHIVE_SUCCESS;
-			archiveTasksCleared = taskView.getAllArchivedTasks();
-			taskView.clearArchivedTasks ();
-			addCommandToHistory ();
-			break;
-		default: 
-			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE;
-		}
-		taskView.clearSearchView();
+		assert taskDepo != null;	
+		retrieveClearType();
+		String commandFeedback = determineAndProcessClearType();
 		
 		return createResult(commandFeedback);
 	}
@@ -111,6 +71,65 @@ public class CommandClear extends Command {
 		
 		return isUndoSuccessful;
 	}
+
+	private void retrieveClearType() {
+		clearType = getTaskClearTypeFromInfoTable();
+			
+		if(clearType == null || clearType.isEmpty()) {
+			clearType = CLEAR_TYPE_PRESENT;
+		} else {
+			clearType = clearType.toLowerCase().trim();
+		}	
+	}
+	
+	private String determineAndProcessClearType() {
+		String commandFeedback = "";
+		switch (clearType) {
+		case CLEAR_TYPE_ALL:
+			commandFeedback = clearAll();
+			break;
+		case CLEAR_TYPE_CURRENT:
+			//TODO
+			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NOT_IMPLEMENTED;
+			break;
+		case CLEAR_TYPE_PRESENT:
+			commandFeedback = clearPresent();
+			break;
+		case CLEAR_TYPE_ARCHIVE:
+			commandFeedback = clearArchive();
+			break;
+		default: 
+			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE;
+		}
+		return commandFeedback;
+	}
+	
+	private String clearAll() {
+		tasksCleared = taskView.getAllPresentTasks();
+		archiveTasksCleared = taskView.getAllArchivedTasks();
+		taskView.clearPresentTasks();
+		taskView.clearArchivedTasks();
+		taskView.clearSearchView();
+		addCommandToHistory ();
+		return MESSAGE_COMMAND_CLEAR_SUCCESS;
+	}
+	
+	private String clearPresent() {
+		tasksCleared = taskView.getAllPresentTasks();
+		taskView.clearSearchView();
+		taskView.clearPresentTasks();
+		addCommandToHistory ();
+		return MESSAGE_COMMAND_CLEAR_SUCCESS;
+	}
+	
+	private String clearArchive() {
+		archiveTasksCleared = taskView.getAllArchivedTasks();
+		taskView.clearSearchView();
+		taskView.clearArchivedTasks ();
+		addCommandToHistory ();
+		return MESSAGE_COMMAND_CLEAR_ARCHIVE_SUCCESS;
+	}
+
 	
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
@@ -122,4 +141,9 @@ public class CommandClear extends Command {
 		
 		return true;
 	}
+	
+
+	
+
+	
 }
