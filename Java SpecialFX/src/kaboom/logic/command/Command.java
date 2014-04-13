@@ -196,7 +196,7 @@ public class Command {
 		Result errorFeedback = null;
 		
 		if(!hasTaskWithTaskId()) {
-			if (taskName != null){
+			if (taskName != null && !taskName.isEmpty()){
 				int taskCount = numOfTasksWithSimilarNames(taskName);
 				
 				if (taskCount > 1) {
