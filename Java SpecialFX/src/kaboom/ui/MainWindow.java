@@ -122,6 +122,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	// Logging unit and file handler for output
 	private final static Logger loggerUnit = Logger.getLogger(MainWindow.class.getName());
 	private static FileHandler 	fh;
+	private final String LOG_FILENAME = "KaboomUI.log";
 	
 	public MainWindow () {
 		currentCommand = "";
@@ -170,7 +171,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 
 	private void createAndStartLogging() {
 		try {
-			fh = new FileHandler("KaboomUI.log", false);
+			fh = new FileHandler(LOG_FILENAME, false);
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -481,15 +482,12 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	}
 	
 	private void updateHelpPanel() {		
-		// Get current status for help panel
 		HELP_STATE currentHelpState = uiData.getCurrentHelpState();
 		
-		// Close current panel
 		if (activeHelpPanel != null) {
 			activeHelpPanel.setVisible(false);
 		}
 		
-		// Open the new panel
 		switch (currentHelpState) {
 			case MAIN:
 				activeHelpPanel = helpPane;
