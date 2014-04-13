@@ -44,18 +44,6 @@ public class TextParser {
 		return getFirstWord(userInput);
 	}
 	
-	
-	public Hashtable<KEYWORD_TYPE, String> extractTaskInformation (String userInput) {
-		String taskInformation = removeFirstWord(userInput);
-		
-		// Cut the command into their respective syntax. Will return hash table of data strings
-		Hashtable<KEYWORD_TYPE, String> keywordHashTable = new Hashtable<KEYWORD_TYPE, String>();
-		parser(taskInformation, keywordHashTable);
-
-		//System.out.println(keywordHashTable);
-		
-		return keywordHashTable;	
-	}
 
 	//******************** Method Calls By Controller ******************************************
 	public String removeFirstWord(String userInputSentence) {
@@ -72,16 +60,6 @@ public class TextParser {
 	private String[] textProcess(String userInputSentence){
 		String[] commandAndData = userInputSentence.trim().split("\\s+");
 		return commandAndData;
-	}
-	
-	public String parser(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
-		String userInputWithPriorityExtracted = extractPriority(userInputSentence,keywordTable);
-		String userInputWithEndDateAndTimeExtracted = extractDateAndTime(KEYWORD_ENDTIME,userInputWithPriorityExtracted,keywordTable);
-		String userInputWithStartDateAndTimeExtracted = extractDateAndTime(KEYWORD_STARTTIME,userInputWithEndDateAndTimeExtracted,keywordTable);
-		String userInputWithModifiedTaskNameExtracted = extractModifiedTaskName(userInputWithStartDateAndTimeExtracted,keywordTable);
-		String taskName = extractTaskName(userInputWithModifiedTaskNameExtracted,keywordTable);
-		//System.out.println(keywordTable);
-		return taskName;
 	}
 	
 	public String extractPriority(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
