@@ -51,7 +51,7 @@ public class CommandAdd extends Command {
 	 * If any are invalid: cancel add and return invalid command
 	 */
 	public Result execute() {
-		assert taskView != null;
+		assert taskManager != null;
 
 		String commandFeedback = "";
 
@@ -101,7 +101,7 @@ public class CommandAdd extends Command {
 		taskInfo.setRecent(true);
 
 		DISPLAY_STATE stateToSet = DISPLAY_STATE.INVALID;
-		if (taskView.addPresentTask(taskInfo)) {
+		if (taskManager.addPresentTask(taskInfo)) {
 			addCommandToHistory ();
 			commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
 
@@ -123,7 +123,7 @@ public class CommandAdd extends Command {
 	}
 
 	public boolean undo () {
-		return taskView.removeTask(taskInfo);
+		return taskManager.removeTask(taskInfo);
 	}
 
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {

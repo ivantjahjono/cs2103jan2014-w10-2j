@@ -26,7 +26,7 @@ public class CommandDone extends Command {
 	}
 
 	public Result execute() {
-		assert taskView != null;
+		assert taskManager != null;
 		
 //		Result errorResult = invalidTaskNameAndClashErrorDetection();
 //		if(errorResult != null) {
@@ -52,7 +52,7 @@ public class CommandDone extends Command {
 		if (taskToBeModified.getDone()) {
 			feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
 		} else {
-			taskView.doneTask(taskToBeModified);
+			taskManager.doneTask(taskToBeModified);
 			addCommandToHistory();
 			feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
 		}
@@ -62,8 +62,8 @@ public class CommandDone extends Command {
 
 	public boolean undo() {
 		taskToBeModified.setDone(false);
-		taskView.refreshTasks();  //Refresh to shift task to current
-		taskView.addToSearchView(taskToBeModified);
+		taskManager.refreshTasks();  //Refresh to shift task to current
+		taskManager.addToSearchView(taskToBeModified);
 		return true;
 	}
 

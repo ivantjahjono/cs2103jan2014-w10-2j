@@ -23,7 +23,7 @@ public class CommandUndo extends Command{
 			return createResult(MESSAGE_COMMAND_INVALID);
 		}
 		
-		Command commandToUndo = taskView.getMostRecentCommand();
+		Command commandToUndo = taskManager.getMostRecentCommand();
 		String feedback = "";
 		
 		if (commandToUndo == null) {

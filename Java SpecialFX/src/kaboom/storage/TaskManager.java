@@ -240,7 +240,7 @@ public class TaskManager {
 		store();
 	}
 	
-	public void refreshTasksAndClearRecent() {
+	public void refreshTasksAndResetRecent() {
 		taskListShop.refreshTasks(true);
 		store();
 	}
