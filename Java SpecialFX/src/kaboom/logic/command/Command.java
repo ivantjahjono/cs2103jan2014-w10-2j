@@ -271,7 +271,7 @@ public class Command {
 //		determineAndSetTaskType(task);
 //	}
 	
-	protected void saveTaskStartDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
+	protected void saveTaskStarsearctDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
 		DateAndTimeFormat datFormat = DateAndTimeFormat.getInstance();
 		String startDate = datFormat.convertStringDateToDayMonthYearFormat(infoHashes.get(KEYWORD_TYPE.START_DATE));
 		String startTime = datFormat.convertStringTimeTo24HourString(infoHashes.get(KEYWORD_TYPE.START_TIME));
