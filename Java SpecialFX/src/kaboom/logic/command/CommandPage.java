@@ -11,7 +11,7 @@ public class CommandPage extends Command {
 	private final String KEYWORD_NEXT_PAGE 		= "next";
 	private final String KEYWORD_PREV_PAGE		= "prev";
 	
-	private final String INVALID_PAGE_COMMAND_MESSAGE		= "Invalid page command!";
+	private final String INVALID_PAGE_COMMAND_MESSAGE		= "No such page command. Use <help page> for help.";
 	
 	public CommandPage () {
 		commandType = COMMAND_TYPE.PAGE;
@@ -24,7 +24,7 @@ public class CommandPage extends Command {
 		assert taskView != null;
 		
 		String pageInfo = getPageCommandFromInfoTable();
-		if (pageInfo == null) {
+		if (pageInfo == null || infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
 			return createResult(INVALID_PAGE_COMMAND_MESSAGE);
 		}
 		

@@ -12,7 +12,8 @@ import kaboom.shared.TaskInfo;
 public class CommandUndone extends Command {
 	private final String MESSAGE_COMMAND_UNDONE_SUCCESS = "Set %1$s to incomplete";
 	private final String MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE = "%1$s was incomplete";
-
+	private final String MESSAGE_COMMAND_INVALID = "No such unboom command. Type <help complete> for help.";
+	
 	TaskInfo taskToBeModified;
 	TaskInfo taskInfo = null;
 
@@ -33,6 +34,11 @@ public class CommandUndone extends Command {
 //		} else {
 //			taskToBeModified = getTask();
 //		}
+		
+		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return createResult(MESSAGE_COMMAND_INVALID);
+		}
+		
 		COMMAND_ERROR commandError = errorDetectionForInvalidTaskNameAndId();
 		if(commandError != null) {
 			return commandErrorHandler(commandError);

@@ -12,13 +12,18 @@ public class CommandUndo extends Command{
 	private final String MESSAGE_COMMAND_UNDO_SUCCESS = "Command undone!";
 	private final String MESSAGE_COMMAND_UNDO_FAIL = "Fail to undo.";
 	private final String MESSAGE_COMMAND_NOTHING_TO_UNDO = "No more action to undo";
+	private final String MESSAGE_COMMAND_INVALID = "Sorry. Not valid undo command. Type <help undo> for help.";
 	
 	public CommandUndo() {
 		commandType = COMMAND_TYPE.UNDO;
 	}
 	
 	public Result execute() {
-		Command commandToUndo = taskView.getMostRecentCommand();
+		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return createResult(MESSAGE_COMMAND_INVALID);
+		}
+		
+		Command commandToUndo = History.getInstance().getMostRecentCommand();
 		String feedback = "";
 		
 		if (commandToUndo == null) {
