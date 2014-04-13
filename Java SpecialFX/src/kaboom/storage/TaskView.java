@@ -41,6 +41,7 @@ public class TaskView {
 		FILENAME = "KABOOM_FILE.dat";
 		fileStorage = new Storage(FILENAME);
 		history = History.getInstance();
+		fileStorage.load();
 	}
 	
 	private TaskView(String fileName) {
@@ -51,6 +52,7 @@ public class TaskView {
 		FILENAME = "KABOOM_FILE.dat";
 		fileStorage = new Storage(fileName);
 		history = History.getInstance();
+		fileStorage.load();
 	}
 
 	public static TaskView getInstance () {
@@ -172,6 +174,7 @@ public class TaskView {
 		boolean isAdded = taskListShop.addTaskToList(task);
 		taskListShop.refreshTasks();
 		addToSearchView(task);
+		store();
 		return isAdded;
 	}
 	
@@ -180,12 +183,14 @@ public class TaskView {
 		boolean isAdded = taskListShop.addTaskToArchivedList(task);
 		taskListShop.refreshTasks();
 		addToSearchView(task);
+		store();
 		return isAdded;
 	}
 	
 	public boolean removeTask(TaskInfo task) {
 		TaskInfo removedTask = taskListShop.removeTask(task);
 		deleteInSearchView(task);
+		store();
 		if (removedTask == null) {
 			return false;
 		} else {
@@ -196,6 +201,7 @@ public class TaskView {
 	public void updateTask(TaskInfo newTask, TaskInfo oldTask) {
 		taskListShop.updateTask(newTask, oldTask);
 		updateInSearchView(newTask, oldTask);
+		store();
 	}
 	
 	public void doneTask(TaskInfo task) {
@@ -205,6 +211,7 @@ public class TaskView {
 		taskListShop.refreshTasks();  //Refresh to shift task to archive
 		deleteInSearchView(task);
 		task.setRecent(true);
+		store();
 	}
 	
 	public void undoneTask(TaskInfo task) {
@@ -213,24 +220,29 @@ public class TaskView {
 		taskListShop.refreshTasks();  //Refresh to shift task to archive
 		deleteInSearchView(task);
 		task.setRecent(true);
+		store();
 	}
 	
 	public void clearPresentTasks() {
 		taskListShop.clearAllCurrentTasks();
 		clearSearchView();
+		store();
 	}
 	
 	public void clearArchivedTasks() {
 		taskListShop.clearAllArchivedTasks();
 		clearSearchView();
+		store();
 	}
 	
 	public void refreshTasksFlagsOnly() {
 		taskListShop.refreshTasks();
+		store();
 	}
 	
 	public void refreshAllTasksFlags() {
 		taskListShop.refreshTasks(true);
+		store();
 	}
 	
 	public void addToSearchView(TaskInfo task) {

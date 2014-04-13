@@ -70,7 +70,7 @@ public class TaskMasterKaboom {
 	
 	private boolean initialiseTaskManager () {
 		taskManager = TaskView.getInstance(FILENAME);
-		taskManager.load();
+		//taskManager.load();
 		//fileStorage = new Storage(FILENAME);
 		//fileStorage.load();
 		
@@ -83,7 +83,7 @@ public class TaskMasterKaboom {
 			updateCommand.execute();
 			
 			//4. Save data to file
-			taskManager.store();
+			//taskManager.store();
 			
 			guiDisplayData.updateDisplayWithResult();
 			resetRefreshCounter();
@@ -128,7 +128,7 @@ public class TaskMasterKaboom {
 		updateUi(commandResult);
 		
 		//3. Save data to file
-		taskManager.store();
+		//taskManager.store();
 		
 		return commandResult.getFeedback();
 	}
