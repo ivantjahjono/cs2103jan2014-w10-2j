@@ -18,7 +18,8 @@ import java.io.IOException;
 
 
 public class Storage {
-	private static final String delimiter = "\u00b0";
+	private static final String DELIMITER = "\u00b0";
+	private static final String BLANK = " ";
 	private static final int INDEX_TASK_NAME = 0;
 	private static final int INDEX_TASK_TYPE = 1;
 	private static final int INDEX_START_YEAR = 2;
@@ -41,9 +42,11 @@ public class Storage {
 	private final Logger logger = Logger.getLogger("StorageLogger");
 	private FileHandler fileHandler; 
 	private BufferedWriter writer;
+	private TaskDepository taskDepository;
 
 	public Storage(String fileName) {
 		try {
+			taskDepository = TaskDepository.getInstance();
 			this.fileName = fileName;
 			fileHandler = new FileHandler(storageLoggerFile);
 			logger.addHandler(fileHandler);
@@ -65,15 +68,8 @@ public class Storage {
 		try {
 			writer = new BufferedWriter(new FileWriter(fileName));
 
-			logger.fine("Trying to write current tasks text file: " + fileName);
-			Vector<TaskInfo> currentTaskList = TaskDepository.getInstance().getAllCurrentTasks();
-			assert(currentTaskList != null);
-			writeToFile(currentTaskList);
-
-			logger.fine("Trying to write archived tasks text file: " + fileName);
-			currentTaskList = TaskDepository.getInstance().getAllArchivedTasks();
-			assert(currentTaskList != null);
-			writeToFile(currentTaskList);
+			writePresentTaskList();
+			writeArchivedTaskList();
 
 			logger.fine("All tasks written to text file: " + fileName);
 			writer.close();
@@ -84,54 +80,97 @@ public class Storage {
 		}
 	}
 
+	private void writePresentTaskList() throws IOException {
+		logger.fine("Trying to write current tasks text file: " + fileName);
+		Vector<TaskInfo> currentTaskList = taskDepository.getAllCurrentTasks();
+		assert (currentTaskList != null);
+		writeToFile(currentTaskList);
+	}
+	
+	private void writeArchivedTaskList() throws IOException {
+		logger.fine("Trying to write archived tasks text file: " + fileName);
+		Vector<TaskInfo> archivedTaskList = taskDepository.getAllArchivedTasks();
+		assert (archivedTaskList != null);
+		writeToFile(archivedTaskList);
+	}
+
 	private void writeToFile(Vector<TaskInfo> currentTaskList) throws IOException {
 		for (int i = 0; i < currentTaskList.size(); i++) {
 			StringBuilder output = new StringBuilder();
 			TaskInfo task = currentTaskList.get(i);
-
-			output.append(task.getTaskName() + delimiter);
-			output.append((TaskInfo.taskTypeToString(task.getTaskType()) + delimiter));
-
-			Calendar startDate = task.getStartDate();
-			if (startDate != null) {
-				output.append(startDate.get(Calendar.YEAR) + delimiter);
-				output.append(startDate.get(Calendar.MONTH) + delimiter);
-				output.append(startDate.get(Calendar.DAY_OF_MONTH) + delimiter);
-				output.append(startDate.get(Calendar.HOUR_OF_DAY) + delimiter);
-				output.append(startDate.get(Calendar.MINUTE) + delimiter);
-			}
-			else {
-				logger.fine("startDate for task " + i + "is null");
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-			}
-
-			Calendar endDate = task.getEndDate();
-			if (endDate != null) {
-				output.append(endDate.get(Calendar.YEAR) + delimiter);
-				output.append(endDate.get(Calendar.MONTH) + delimiter);
-				output.append(endDate.get(Calendar.DAY_OF_MONTH) + delimiter);
-				output.append(endDate.get(Calendar.HOUR_OF_DAY) + delimiter);
-				output.append(endDate.get(Calendar.MINUTE) + delimiter);
-			}
-			else {
-				logger.fine("endDate for task " + i + "is null");
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-				output.append(" " + delimiter);
-			}
-			output.append(task.getPriority() + delimiter);
-			output.append(task.getExpiryFlag() + delimiter);
-			output.append(task.getDone() + delimiter);
+			appendTaskAttributesToOutput(output, task);
 			writer.write(output.toString());
 			writer.newLine();
 			writer.flush();
 		}
+	}
+
+	private void appendTaskAttributesToOutput(StringBuilder output, TaskInfo task) {
+		appendTaskName(output, task);
+		appendTaskType(output, task);
+		appendStartDate(output, task);
+		appendEndDate(output, task);
+		appendPriority(output, task);
+		appendExpiry(output, task);
+		appendDone(output, task);
+	}
+
+	private void appendDone(StringBuilder output, TaskInfo task) {
+		output.append(task.getDone() + DELIMITER);
+	}
+
+	private void appendExpiry(StringBuilder output, TaskInfo task) {
+		output.append(task.getExpiryFlag() + DELIMITER);
+	}
+
+	private void appendPriority(StringBuilder output, TaskInfo task) {
+		output.append(task.getPriority() + DELIMITER);
+	}
+
+	private void appendEndDate(StringBuilder output, TaskInfo task) {
+		Calendar endDate = task.getEndDate();
+		if (endDate != null) {
+			output.append(endDate.get(Calendar.YEAR) + DELIMITER);
+			output.append(endDate.get(Calendar.MONTH) + DELIMITER);
+			output.append(endDate.get(Calendar.DAY_OF_MONTH) + DELIMITER);
+			output.append(endDate.get(Calendar.HOUR_OF_DAY) + DELIMITER);
+			output.append(endDate.get(Calendar.MINUTE) + DELIMITER);
+		}
+		else {
+			logger.fine("endDate for task " + task.getTaskName() + "is null");
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+		}
+	}
+
+	private void appendStartDate(StringBuilder output, TaskInfo task) {
+		Calendar startDate = task.getStartDate();
+		if (startDate != null) {
+			output.append(startDate.get(Calendar.YEAR) + DELIMITER);
+			output.append(startDate.get(Calendar.MONTH) + DELIMITER);
+			output.append(startDate.get(Calendar.DAY_OF_MONTH) + DELIMITER);
+			output.append(startDate.get(Calendar.HOUR_OF_DAY) + DELIMITER);
+			output.append(startDate.get(Calendar.MINUTE) + DELIMITER);
+		}
+		else {
+			logger.fine("startDate for task " + task.getTaskName() + "is null");
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+		}
+	}
+
+	private void appendTaskType(StringBuilder output, TaskInfo task) {
+		output.append((TaskInfo.taskTypeToString(task.getTaskType()) + DELIMITER));
+	}
+
+	private void appendTaskName(StringBuilder output, TaskInfo task) {
+		output.append(task.getTaskName() + DELIMITER);
 	}
 
 	/**
@@ -144,70 +183,11 @@ public class Storage {
 			logger.fine("Trying to read from text file: " + fileName);
 			File inFile = new File(fileName);
 			Scanner fileScanner = new Scanner(inFile);
-			TaskDepository currentTaskList = TaskDepository.getInstance();
-			assert(currentTaskList != null);
+			assert (taskDepository != null);
 
-			while (fileScanner.hasNext()) {
-				Calendar now  = Calendar.getInstance();
-				String input = fileScanner.nextLine().trim();
-				String[] inputSplit = input.split(delimiter);
-				TaskInfo task = new TaskInfo();
-				task.setTaskName(inputSplit[INDEX_TASK_NAME]);
-				task.setTaskType(TaskInfo.getTaskType(inputSplit[INDEX_TASK_TYPE]));
+			loadUntilEndOfFile(fileScanner);
 
-				Calendar startDate = Calendar.getInstance();
-				if (inputSplit[INDEX_START_YEAR].equals(" ")) {
-					logger.fine("startDate for task \"" + inputSplit[INDEX_TASK_NAME] + "\" is null");
-					startDate = null;
-				}
-				else {
-					startDate.set(Calendar.YEAR, Integer.parseInt(inputSplit[INDEX_START_YEAR]));
-					startDate.set(Calendar.MONTH, Integer.parseInt(inputSplit[INDEX_START_MONTH]));
-					startDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(inputSplit[INDEX_START_DAY]));
-					startDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputSplit[INDEX_START_HOUR]));
-					startDate.set(Calendar.MINUTE, Integer.parseInt(inputSplit[INDEX_START_MINUTE]));
-					startDate.set(Calendar.SECOND, 59);
-					startDate.set(Calendar.MILLISECOND, 0);
-				}
-				task.setStartDate(startDate);
-
-				Calendar endDate = Calendar.getInstance();
-				if (inputSplit[INDEX_END_YEAR].equals(" ")) {
-					logger.fine("endDate for task \"" + inputSplit[INDEX_TASK_NAME] + "\" is null");
-					endDate = null;
-				}
-				else {
-					endDate.set(Calendar.YEAR, Integer.parseInt(inputSplit[INDEX_END_YEAR]));
-					endDate.set(Calendar.MONTH, Integer.parseInt(inputSplit[INDEX_END_MONTH]));
-					endDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(inputSplit[INDEX_END_DAY]));
-					endDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputSplit[INDEX_END_HOUR]));
-					endDate.set(Calendar.MINUTE, Integer.parseInt(inputSplit[INDEX_END_MINUTE]));
-					endDate.set(Calendar.SECOND, 59);
-					endDate.set(Calendar.MILLISECOND, 0);
-				}
-				task.setEndDate(endDate);
-
-				boolean isExpired = now.after(endDate);
-				if (!task.getTaskType().equals(TASK_TYPE.FLOATING)) {
-					task.setExpiryFlag(isExpired);  //Set true if current time is after endDate
-				}
-				else {
-					task.setExpiryFlag(false);  //Floating tasks cannot expire
-				}
-
-				task.setPriority(Integer.parseInt(inputSplit[INDEX_IMPORTANCE_LEVEL]));
-				task.setExpiryFlag(Boolean.parseBoolean(inputSplit[INDEX_IS_EXPIRED]));
-				task.setDone(Boolean.parseBoolean(inputSplit[INDEX_IS_DONE]));
-
-				if (task.getDone()) {
-					currentTaskList.addTaskToArchivedList(task);
-				}
-				else {
-					currentTaskList.addTaskToList(task);
-				}
-			}
-
-			logger.fine(fileName + " has been scanned and read");
+			logger.fine(fileName + " has been fully scanned and read");
 			fileScanner.close();
 			return true;
 
@@ -225,6 +205,105 @@ public class Storage {
 			}
 		} catch (Exception e) {
 			return store();
+		}
+	}
+
+	private void loadUntilEndOfFile(Scanner fileScanner) {
+		while (fileScanner.hasNext()) {
+			String input = getNextLineFromFile(fileScanner);
+			String[] inputSplitTokens = input.split(DELIMITER);
+			
+			TaskInfo task = new TaskInfo();
+			setTaskAttributes(task, inputSplitTokens);
+			addTaskToAppropriateList(task);
+		}
+	}
+	
+	private String getNextLineFromFile(Scanner fileScanner) {
+		return fileScanner.nextLine().trim();
+	}
+
+	private void setTaskAttributes(TaskInfo task, String[] inputSplitTokens) {
+		setTaskName(task, inputSplitTokens);
+		setTaskType(task, inputSplitTokens);
+		setStartDate(task, inputSplitTokens);
+		setEndDate(task, inputSplitTokens);
+		setPriority(task, inputSplitTokens);
+		setExpired(task, inputSplitTokens);
+		setDone(task, inputSplitTokens);
+	}
+	
+	private void setTaskName(TaskInfo task, String[] inputTokens) {
+		task.setTaskName(inputTokens[INDEX_TASK_NAME]);
+	}
+	
+	private void setTaskType(TaskInfo task, String[] inputTokens) {
+		task.setTaskType(TaskInfo.getTaskType(inputTokens[INDEX_TASK_TYPE]));
+	}
+	
+	private void setStartDate(TaskInfo task, String[] inputTokens) {
+		Calendar startDate = Calendar.getInstance();
+		if (inputTokens[INDEX_START_YEAR].equals(BLANK)) {
+			logger.fine("Start date for task \"" + inputTokens[INDEX_TASK_NAME] + "\" is null");
+			startDate = null;
+		}
+		else {
+			startDate.set(Calendar.YEAR, Integer.parseInt(inputTokens[INDEX_START_YEAR]));
+			startDate.set(Calendar.MONTH, Integer.parseInt(inputTokens[INDEX_START_MONTH]));
+			startDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(inputTokens[INDEX_START_DAY]));
+			startDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputTokens[INDEX_START_HOUR]));
+			startDate.set(Calendar.MINUTE, Integer.parseInt(inputTokens[INDEX_START_MINUTE]));
+			startDate.set(Calendar.SECOND, 0);
+			startDate.set(Calendar.MILLISECOND, 0);
+		}
+		task.setStartDate(startDate);
+	}
+	
+	private void setEndDate(TaskInfo task, String[] inputTokens) {
+		Calendar endDate = Calendar.getInstance();
+		if (inputTokens[INDEX_START_YEAR].equals(BLANK)) {
+			logger.fine("End date for task \"" + inputTokens[INDEX_TASK_NAME] + "\" is null");
+			endDate = null;
+		}
+		else {
+			endDate.set(Calendar.YEAR, Integer.parseInt(inputTokens[INDEX_END_YEAR]));
+			endDate.set(Calendar.MONTH, Integer.parseInt(inputTokens[INDEX_END_MONTH]));
+			endDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(inputTokens[INDEX_END_DAY]));
+			endDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputTokens[INDEX_END_HOUR]));
+			endDate.set(Calendar.MINUTE, Integer.parseInt(inputTokens[INDEX_END_MINUTE]));
+			endDate.set(Calendar.SECOND, 59);
+			endDate.set(Calendar.MILLISECOND, 0);
+		}
+		task.setEndDate(endDate);
+	}
+	
+	private void setPriority(TaskInfo task, String[] inputTokens) {
+		task.setPriority(Integer.parseInt(inputTokens[INDEX_IMPORTANCE_LEVEL]));
+	}
+	
+	private void setExpired(TaskInfo task, String[] inputTokens) {
+		Calendar now = Calendar.getInstance();
+		Calendar endDate = task.getEndDate();
+		boolean isExpired = now.after(endDate);
+		
+		if (!task.getTaskType().equals(TASK_TYPE.FLOATING)) {
+			task.setExpiryFlag(isExpired);  //Set true if current time is after endDate
+		}
+		else {
+			task.setExpiryFlag(Boolean.parseBoolean(inputTokens[INDEX_IS_EXPIRED]));  //Floating tasks cannot expire
+		}
+	}
+	
+	private void setDone(TaskInfo task, String[] inputTokens) {
+		task.setDone(Boolean.parseBoolean(inputTokens[INDEX_IS_DONE]));
+	}
+	
+	private void addTaskToAppropriateList(TaskInfo task) {
+		if (task.getDone()) {
+			taskDepository.addTaskToArchivedList(task);
+		}
+		else {
+			taskDepository.addTaskToList(task);
 		}
 	}
 }
