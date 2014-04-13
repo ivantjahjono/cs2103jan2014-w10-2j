@@ -16,7 +16,7 @@ public class TaskDepository {
 	private static TaskDepository taskListInstance = null;
 	private static final Logger logger = Logger.getLogger("TaskListShopLogger");
 
-	private Vector<TaskInfo> currentTaskList;
+	private Vector<TaskInfo> presentTaskList;
 	private Vector<TaskInfo> archivedTaskList;
 
 	public static TaskDepository getInstance () {
@@ -29,14 +29,14 @@ public class TaskDepository {
 	}
 
 	private TaskDepository () {
-		currentTaskList = new Vector<TaskInfo>();
+		presentTaskList = new Vector<TaskInfo>();
 		archivedTaskList = new Vector<TaskInfo>();
 	}
 
 	public boolean addTaskToList (TaskInfo newTask) {
-		if (currentTaskList != null) {
+		if (presentTaskList != null) {
 			logger.fine("Adding one item to current list");
-			return currentTaskList.add(newTask);
+			return presentTaskList.add(newTask);
 		} else {
 			return false;
 		}
@@ -52,10 +52,10 @@ public class TaskDepository {
 	}
 
 	public TaskInfo getTaskByName (String taskName) {
-		for (int i = currentTaskList.size()-1; i >= 0; i--) {
+		for (int i = presentTaskList.size()-1; i >= 0; i--) {
 			//System.out.println(taskList.get(i).getTaskName());
-			if (taskName.equals(currentTaskList.get(i).getTaskName())) {
-				return currentTaskList.get(i);
+			if (taskName.equals(presentTaskList.get(i).getTaskName())) {
+				return presentTaskList.get(i);
 			}
 		}
 		return null;
@@ -63,23 +63,23 @@ public class TaskDepository {
 
 	public void updateTask (TaskInfo newTaskInfo, TaskInfo prevTaskInfo) {
 		int indexOfTaskListToBeModified = -1;
-		for (int i = 0; i < currentTaskList.size(); i++) {
-			if (prevTaskInfo.equals(currentTaskList.get(i))) {
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			if (prevTaskInfo.equals(presentTaskList.get(i))) {
 				indexOfTaskListToBeModified = i;
 				//System.out.println("index="+indexOfTaskListToBeModified);
 			}
 		}
 
 		if (indexOfTaskListToBeModified != -1) {
-			currentTaskList.set(indexOfTaskListToBeModified, newTaskInfo);
+			presentTaskList.set(indexOfTaskListToBeModified, newTaskInfo);
 		}
 	}
 
 	public Vector<TaskInfo> getToday() {
 		Vector<TaskInfo> tasksToReturn = new Vector<TaskInfo>();
 
-		for (int i = 0; i < currentTaskList.size(); i++) {
-			TaskInfo singleTask = currentTaskList.get(i);
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			TaskInfo singleTask = presentTaskList.get(i);
 			if (TaskInfo.isTaskToday(singleTask)) {
 				tasksToReturn.add(singleTask);
 			}
@@ -92,8 +92,8 @@ public class TaskDepository {
 		Vector<TaskInfo> tasksToReturn = new Vector<TaskInfo>();
 		
 
-		for (int i = 0; i < currentTaskList.size(); i++) {
-			TaskInfo singleTask = currentTaskList.get(i);
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			TaskInfo singleTask = presentTaskList.get(i);
 			if (TaskInfo.isFutureTask(singleTask)) {
 				tasksToReturn.add(singleTask);
 			}
@@ -103,7 +103,7 @@ public class TaskDepository {
 	}
 
 	public Vector<TaskInfo> getAllCurrentTasks () {
-		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(currentTaskList);
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(presentTaskList);
 		return vectorToReturn;
 	}
 
@@ -116,8 +116,8 @@ public class TaskDepository {
 	public Vector<TaskInfo> getFloatingTasks() {
 		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
 
-		for (int i = 0; i < currentTaskList.size(); i++) {
-			TaskInfo singleTask = currentTaskList.get(i);
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			TaskInfo singleTask = presentTaskList.get(i);
 			if (singleTask.getTaskType() == TASK_TYPE.FLOATING) {
 				returnVector.add(singleTask);
 			}
@@ -129,8 +129,8 @@ public class TaskDepository {
 	public Vector<TaskInfo> getTimedTasks() {
 		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
 
-		for (int i = 0; i < currentTaskList.size(); i++) {
-			TaskInfo singleTask = currentTaskList.get(i);
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			TaskInfo singleTask = presentTaskList.get(i);
 			if (singleTask.getTaskType() == TASK_TYPE.TIMED) {
 				returnVector.add(singleTask);
 			}
@@ -141,8 +141,8 @@ public class TaskDepository {
 	public Vector<TaskInfo> getExpiredTasks() {
 		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
 
-		for (int i = 0; i < currentTaskList.size(); i++) {
-			TaskInfo singleTask = currentTaskList.get(i);
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			TaskInfo singleTask = presentTaskList.get(i);
 			boolean isExpired = singleTask.getExpiryFlag();
 			if (isExpired) {
 				returnVector.add(singleTask);
@@ -153,10 +153,10 @@ public class TaskDepository {
 	}
 
 	public TaskInfo removeTask(TaskInfo taskToDelete) {
-		for (int i = 0; i < currentTaskList.size(); i++) {
-			TaskInfo singleTask = currentTaskList.get(i);
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			TaskInfo singleTask = presentTaskList.get(i);
 			if (singleTask.equals(taskToDelete)) {
-				return currentTaskList.remove(currentTaskList.indexOf(singleTask));
+				return presentTaskList.remove(presentTaskList.indexOf(singleTask));
 			}
 		}
 		for (int i = 0; i < archivedTaskList.size(); i++) {
@@ -184,14 +184,14 @@ public class TaskDepository {
 			TaskInfo singleTask = archivedTaskList.get(i);
 
 			if (!singleTask.getDone()) {
-				currentTaskList.add(singleTask);
+				presentTaskList.add(singleTask);
 				archivedTaskList.remove(singleTask);
 			}
 		}
 
 		//Check for expired tasks
-		for (int i = 0; i < currentTaskList.size(); i++) {
-			TaskInfo singleTask = currentTaskList.get(i);
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			TaskInfo singleTask = presentTaskList.get(i);
 			Calendar now = Calendar.getInstance();
 
 			if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
@@ -211,16 +211,16 @@ public class TaskDepository {
 			//Shift from current list to archived list
 			if (singleTask.getDone()) {
 				archivedTaskList.add(singleTask);
-				currentTaskList.remove(singleTask);
+				presentTaskList.remove(singleTask);
 			}
 		}
 
-		Collections.sort(currentTaskList, new ComparatorDefault());
+		Collections.sort(presentTaskList, new ComparatorDefault());
 	}
 
 	public Vector<TaskInfo> clearAllCurrentTasks () {
-		currentTaskList = new Vector<TaskInfo>();
-		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(currentTaskList);
+		presentTaskList = new Vector<TaskInfo>();
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(presentTaskList);
 		logger.fine("All tasks cleared");
 		return vectorToReturn;
 	}
@@ -235,16 +235,20 @@ public class TaskDepository {
 	public Vector<Integer> getCorrespondingID(Vector<TaskInfo> taskList) {
 		Vector<Integer> taskID = new Vector<Integer>();
 		for (int i = 0; i < taskList.size(); i++) {
-			taskID.add(currentTaskList.indexOf(taskList.get(i)));
+			taskID.add(presentTaskList.indexOf(taskList.get(i)));
 		}
 		return taskID;
 	}
+	
+	public int totalTaskCount() {
+		return presentTaskList.size() + archivedTaskList.size();
+	}
 
-	public int shopSize () {
-		return currentTaskList.size();
+	public int presentTaskCount () {
+		return presentTaskList.size();
 	}
 	
-	public int archiveShopSize() {
+	public int archiveTaskCount() {
 		return archivedTaskList.size();
 	}
 }

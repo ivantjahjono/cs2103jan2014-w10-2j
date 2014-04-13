@@ -24,14 +24,14 @@ public class StorageTest {
 	public void initailize() {
 		allTasks = TaskDepository.getInstance();
 		storageTest = new Storage("StorageTest.txt");
-		storageTest.load();
+		storageTest.load();  //Must load into the task depository
 	}
 	
 	@Test
 	public void testLoad() throws IOException {
 		LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(new File("storageTest.txt")));
 		lineNumberReader.skip(Long.MAX_VALUE);  //Long.MAX_VALUE is more than 2 ExaBytes
-		assertEquals(allTasks.shopSize(), lineNumberReader.getLineNumber()*2);
+		assertEquals(allTasks.totalTaskCount(), lineNumberReader.getLineNumber()*2);
 		lineNumberReader.close();
 	}
 
@@ -40,7 +40,7 @@ public class StorageTest {
 		storageTest.store();
 		LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(new File("storageTest.txt")));
 		lineNumberReader.skip(Long.MAX_VALUE);  //Long.MAX_VALUE is more than 2 ExaBytes
-		assertEquals(allTasks.shopSize(), lineNumberReader.getLineNumber());
+		assertEquals(allTasks.totalTaskCount(), lineNumberReader.getLineNumber());
 		lineNumberReader.close();
 	}
 }

@@ -156,11 +156,11 @@ public class TaskView {
 	}
 	
 	public int presentTaskCount() {
-		return taskListShop.shopSize();
+		return taskListShop.presentTaskCount();
 	}
 	
 	public int archiveTaskCount() {
-		return taskListShop.archiveShopSize();
+		return taskListShop.archiveTaskCount();
 	}
 	
 	public boolean addTask(TaskInfo task) {
