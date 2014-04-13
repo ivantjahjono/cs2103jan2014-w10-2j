@@ -235,12 +235,12 @@ public class TaskManager {
 		store();
 	}
 	
-	public void refreshTasksFlagsOnly() {
+	public void refreshTasks() {
 		taskListShop.refreshTasks();
 		store();
 	}
 	
-	public void refreshAllTasksFlags() {
+	public void refreshTasksAndClearRecent() {
 		taskListShop.refreshTasks(true);
 		store();
 	}

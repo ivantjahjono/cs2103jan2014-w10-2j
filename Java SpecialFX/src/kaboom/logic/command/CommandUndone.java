@@ -62,7 +62,7 @@ public class CommandUndone extends Command {
 
 	public boolean undo() {
 		taskToBeModified.setDone(true);
-		taskView.refreshTasksFlagsOnly();  //Refresh to shift task to archive
+		taskView.refreshTasks();  //Refresh to shift task to archive
 		taskView.addToSearchView(taskToBeModified);
 		return true;
 	}
