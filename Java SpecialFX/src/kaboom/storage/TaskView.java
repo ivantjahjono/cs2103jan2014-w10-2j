@@ -4,6 +4,8 @@
  * TaskManager class is the intermediary between logic and storage.
  * Any manipulations of tasks (such as addition, deletion, updating)
  * must use this class instead of accessing it from the TaskDepository. 
+ * This file also handles the storing of the tasks in the depository
+ * to the physical file specified in the String constant. 
  * 
  * This class is also responsible for the "dynamic" IDs of the tasks.
  * (Such as the task ID being different while under different views 
@@ -23,7 +25,6 @@ public class TaskView {
 
 	private Vector<TaskInfo> currentView; 	//Current view
 	private Vector<TaskInfo> searchView;  	//Vector for searches
-	private Vector<Integer> currentViewID;  //Vector for position of viewing tasks in actual vector
 	private Vector<Integer> tasksCount;
 	private TaskDepository taskListShop;
 	
@@ -87,7 +88,6 @@ public class TaskView {
 
 		default:
 			setCurrentView(taskListShop.getToday());
-			System.out.println("Encountered an invalid view!");
 			break;
 		}
 		
@@ -96,24 +96,15 @@ public class TaskView {
 	
 	private void setCurrentView(Vector<TaskInfo> taskList) {
 		currentView = taskList;
-		currentViewID = taskListShop.getCorrespondingID(taskList);
 	}	
 
 	public Vector<TaskInfo> getCurrentView() {
 		return currentView;
 	}
 
-	public Vector<Integer> getCurrentViewID() {
-		return currentViewID;
-	}
-
 	public void setSearchView(Vector<TaskInfo> taskList) {
 		searchView = taskList;
 		setCurrentView(taskList);
-	}
-
-	public Vector<TaskInfo> getSearchView() {
-		return searchView;
 	}
 	
 	public TaskInfo getTaskFromViewByName(String searchName) {
