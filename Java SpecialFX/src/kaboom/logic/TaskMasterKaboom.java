@@ -11,7 +11,6 @@ import kaboom.shared.DISPLAY_STATE;
 import kaboom.shared.FormatIdentify;
 import kaboom.shared.Result;
 import kaboom.shared.TaskInfo;
-import kaboom.storage.Storage;
 import kaboom.storage.TaskView;
 import kaboom.ui.DisplayData;
 
@@ -28,7 +27,8 @@ public class TaskMasterKaboom {
 	private String FILENAME = "KABOOM_FILE.dat";
 	
 	private DisplayData 	guiDisplayData;
-	private Storage 		fileStorage;
+	//private Storage 		fileStorage;
+	private TaskView taskManager;
 	private CommandFactory commandFactory;
 	
 	static TaskMasterKaboom instance;
@@ -50,7 +50,7 @@ public class TaskMasterKaboom {
 	
 	public void initialiseKaboom() {
 		// Setup Storage
-		initialiseStorage();
+		initialiseTaskManager();
 	
 		// Setup UI
 		guiDisplayData = DisplayData.getInstance();
@@ -68,9 +68,11 @@ public class TaskMasterKaboom {
 		updateUi(introResult);
 	}
 	
-	private boolean initialiseStorage () {
-		fileStorage = new Storage(FILENAME);
-		fileStorage.load();
+	private boolean initialiseTaskManager () {
+		taskManager = TaskView.getInstance(FILENAME);
+		taskManager.load();
+		//fileStorage = new Storage(FILENAME);
+		//fileStorage.load();
 		
 		return true;
 	}
@@ -81,7 +83,7 @@ public class TaskMasterKaboom {
 			updateCommand.execute();
 			
 			//4. Save data to file
-			fileStorage.store();
+			taskManager.store();
 			
 			guiDisplayData.updateDisplayWithResult();
 			resetRefreshCounter();
@@ -126,7 +128,7 @@ public class TaskMasterKaboom {
 		updateUi(commandResult);
 		
 		//3. Save data to file
-		fileStorage.store();
+		taskManager.store();
 		
 		return commandResult.getFeedback();
 	}
