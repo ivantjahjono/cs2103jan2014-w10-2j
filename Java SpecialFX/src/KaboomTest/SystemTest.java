@@ -1,3 +1,4 @@
+//@author A0099175N
 package KaboomTest;
 
 import static org.junit.Assert.*;
@@ -20,14 +21,15 @@ public class SystemTest {
 	
 	@Test
 	public void testAddAndDeleteCommands() {
+		controller.processCommand("clear all");
 		String command = "";
 		
 		// Process empty command
-		assertEquals("Invalid command!", controller.processCommand(command));
+		assertEquals("Please enter a valid command. Type <help> for info.", controller.processCommand(command));
 		
 		// Process only whitespaces command
 		command = "       ";
-		assertEquals("Invalid command!", controller.processCommand(command));
+		assertEquals("Please enter a valid command. Type <help> for info.", controller.processCommand(command));
 		
 		// Process only whitespaces command
 		command = "      add ";
@@ -53,6 +55,10 @@ public class SystemTest {
 		command = "delete ";
 		assertEquals("Enter a taskname or task id, please ?", controller.processCommand(command));
 		
+		// Test delete by id but over limit
+		command = "delete 3";
+		assertEquals("Enter a taskname or task id, please ?", controller.processCommand(command));
+		
 		// Delete whitespaces command
 		command = "delete hello";
 		assertEquals("<hello> deleted. 1 less work to do :D", controller.processCommand(command));
@@ -71,10 +77,10 @@ public class SystemTest {
 		String command = "";
 	
 		command = "view";
-		assertEquals("Invalid View Mode", controller.processCommand(command));
+		assertEquals("Invalid View Mode. Might want to use <help view>", controller.processCommand(command));
 		
 		command = "view     ";
-		assertEquals("Invalid View Mode", controller.processCommand(command));
+		assertEquals("Invalid View Mode. Might want to use <help view>", controller.processCommand(command));
 		
 		command = "view today";
 		assertEquals("Viewing all the tasks for today", controller.processCommand(command));
