@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import kaboom.logic.command.Command.COMMAND_ERROR;
 import kaboom.shared.DISPLAY_STATE;
 import kaboom.shared.DateAndTimeFormat;
 import kaboom.shared.FormatIdentify;

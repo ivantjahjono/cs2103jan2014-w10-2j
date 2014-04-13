@@ -109,7 +109,7 @@ public class TaskMasterKaboom {
 		assert userInputSentence != null;
 	
 		resetRefreshCounter();
-		TaskView.getInstance().refreshAllTasksFlags();
+		taskManager.refreshAllTasksFlags();
 		
 		Command commandToExecute = null;
 		Result commandResult = null;

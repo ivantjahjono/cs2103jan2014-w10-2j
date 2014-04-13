@@ -285,10 +285,10 @@ public class Command {
 //			return null;
 //		}
 //	}
-	
-	private boolean hasBothTaskNameAndTaskId(String taskName, String taskId) {
-		return taskId != null && isTaskNameNullOrEmpty(taskName);
-	}
+//	
+//	private boolean hasBothTaskNameAndTaskId(String taskName, String taskId) {
+//		return taskId != null && isTaskNameNullOrEmpty(taskName);
+//	}
 
 	private boolean isTaskNameNullOrEmpty(String taskName) {
 		return taskName == null || taskName.isEmpty();
