@@ -33,17 +33,32 @@ public class TaskView {
 
 	private TaskView() {
 		taskListShop = TaskDepository.getInstance();
-		//currentView = taskListShop.getToday();
-		//currentViewID = taskListShop.getCorrespondingID(currentView);
+		currentView = taskListShop.getToday();
 		searchView = new Vector<TaskInfo>();
 		tasksCount = new Vector<Integer>();
 		FILENAME = "KABOOM_FILE.dat";
 		fileStorage = new Storage(FILENAME);
 	}
+	
+	private TaskView(String fileName) {
+		taskListShop = TaskDepository.getInstance();
+		currentView = taskListShop.getToday();
+		searchView = new Vector<TaskInfo>();
+		tasksCount = new Vector<Integer>();
+		FILENAME = "KABOOM_FILE.dat";
+		fileStorage = new Storage(fileName);
+	}
 
 	public static TaskView getInstance () {
 		if (instance == null) {
 			instance = new TaskView();
+		}
+		return instance;
+	}
+	
+	public static TaskView getInstance(String fileName) {
+		if (instance == null) {
+			instance = new TaskView(fileName);
 		}
 		return instance;
 	}
@@ -105,6 +120,10 @@ public class TaskView {
 	public void setSearchView(Vector<TaskInfo> taskList) {
 		searchView = taskList;
 		setCurrentView(taskList);
+	}
+	
+	public Vector<TaskInfo> getSearchView() {
+		return searchView;
 	}
 	
 	public TaskInfo getTaskFromViewByName(String searchName) {
