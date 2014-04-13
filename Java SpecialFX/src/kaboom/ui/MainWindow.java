@@ -93,8 +93,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	@FXML private Label 				pageNumber;
 	@FXML private HBox 					pageTabContainer;
 		  private ArrayList<Rectangle> 	pagesTab;
-		  private final String NEXT_PAGE_KEYWORD = "next";
-		  private final String PREV_PAGE_KEYWORD = "prev";
 		  
 	// Help boxes
 	@FXML private Pane 	helpPane;
@@ -203,11 +201,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			return;
 		}
 		
-		if (isPageToggle(command)) {
-			activatePageToggle(command);
-		} else {
-			applicationController.processCommand(command);
-		}
+		applicationController.processCommand(command);
 		
 		storeCommandEntered(command);
 		
@@ -216,32 +210,6 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 
 	private boolean isExitCommand(String command) {
 		return command.equals("exit");
-	}
-	
-	private void activatePageToggle(String command) {
-		switch (command) {
-			case NEXT_PAGE_KEYWORD:
-				uiData.goToNextPage();
-				break;
-				
-			case PREV_PAGE_KEYWORD:
-				uiData.goToPreviousPage();
-				break;
-				
-			default:
-				break;
-		}
-	}
-
-	private boolean isPageToggle(String command) {
-		switch (command) {
-			case NEXT_PAGE_KEYWORD:
-			case PREV_PAGE_KEYWORD:
-				return true;
-				
-			default:
-				return false;
-		}
 	}
 
 	private void updateDisplay() {
@@ -458,6 +426,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 			case DATE:
 			case CLEARTYPE:
 			case HELP:
+			case PAGE:
 				newLabel.getStyleClass().add("parseCommandName");
 				break;
 				
@@ -653,7 +622,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				
 			default:
 				String command = commandTextInput.getText();
-				if (isPageToggle(command) || isExitCommand(command)) {
+				if (isExitCommand(command)) {
 					processResult = true;
 					commandFormatFeedback.getChildren().clear();
 				} else {
