@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.DateAndTimeFormat;
 import kaboom.shared.FormatIdentify;
 import kaboom.shared.KEYWORD_TYPE;
 import kaboom.shared.Result;
@@ -14,8 +15,6 @@ import kaboom.shared.TaskInfo;
 public class CommandSearch extends Command {
 
 	private final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done. %d item(s) found.";
-
-	TaskInfo taskInfo = null;
 
 	public CommandSearch () {
 		commandType = COMMAND_TYPE.SEARCH;
@@ -28,12 +27,22 @@ public class CommandSearch extends Command {
 
 	public Result execute() {
 
-		assert taskInfo != null;
 		assert taskListShop != null;
+		
+		//current extraction
+		DateAndTimeFormat dateAndTimeFormat = DateAndTimeFormat.getInstance();
 
-		String searchName = taskInfo.getTaskName().toLowerCase();
-		Calendar searchByDate = taskInfo.getEndDate();
-		Calendar searchOnDate = taskInfo.getStartDate();
+		String searchName = infoTable.get(KEYWORD_TYPE.TASKNAME).toLowerCase();
+		String searchOnDateInString = dateAndTimeFormat.convertStringDateToDayMonthYearFormat(infoTable.get(KEYWORD_TYPE.DATE));
+		String searchByDateInString = dateAndTimeFormat.convertStringDateToDayMonthYearFormat(infoTable.get(KEYWORD_TYPE.END_DATE));
+		
+		Calendar searchOnDate = dateAndTimeFormat.formatStringToCalendar(searchOnDateInString, dateAndTimeFormat.getEndTimeOfTheDay());
+		Calendar searchByDate = dateAndTimeFormat.formatStringToCalendar(searchByDateInString, dateAndTimeFormat.getEndTimeOfTheDay());
+		
+		//past extraction
+//		String searchName = taskInfo.getTaskName().toLowerCase();
+//		Calendar searchByDate = taskInfo.getEndDate();
+//		Calendar searchOnDate = taskInfo.getStartDate();
 
 		Vector<TaskInfo> tasksFound = new Vector<TaskInfo>();
 		Vector<TaskInfo> listToSearch;
@@ -88,14 +97,15 @@ public class CommandSearch extends Command {
 
 		return true;
 	}
-
-	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {	
-		taskInfo = new TaskInfo();
-		saveTaskPriority(infoHashes,taskInfo);
-		saveTaskStartDateAndTime(infoHashes,taskInfo);
-		saveTaskEndDateAndTime(infoHashes,taskInfo);
-		saveTaskName(infoHashes,taskInfo);
-	}
+	
+	//past extraction
+//	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {	
+//		taskInfo = new TaskInfo();
+//		saveTaskPriority(infoHashes,taskInfo);
+//		saveTaskStartDateAndTime(infoHashes,taskInfo);
+//		saveTaskEndDateAndTime(infoHashes,taskInfo);
+//		saveTaskName(infoHashes,taskInfo);
+//	}
 
 	//Checks if tasks starts or ends on a particular date
 	//Checks the start time of timed tasks or in between
