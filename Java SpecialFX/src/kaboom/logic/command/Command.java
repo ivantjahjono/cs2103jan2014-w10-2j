@@ -29,13 +29,11 @@ public class Command {
 	protected final String MESSAGE_COMMAND_FAIL_INVALID_TASKNAME = "Oops! HAVENDO??";
 	protected final String MESSAGE_COMMAND_INVALID = "Invalid command!";
 	
-	
 	protected COMMAND_TYPE commandType;
 	protected TextParser textParser;
 	protected KEYWORD_TYPE[] keywordList;
-	Hashtable<KEYWORD_TYPE, String> infoTable; //TEMP
+	Hashtable<KEYWORD_TYPE, String> infoTable;
 	protected TaskView taskView;
-
 	
 	protected enum COMMAND_ERROR{
 		CLASH, TASK_DOES_NOT_EXIST, NO_TASK_NAME, INVALID_DATE, INVALID_TASKNAME ,NIL

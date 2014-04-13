@@ -102,13 +102,13 @@ public class TaskUiContainer {
  		backlitBox.getStyleClass().removeAll(Collections.singleton("taskbox-rectangle"));
  		backlitBox.getStyleClass().removeAll(Collections.singleton("taskbox-recent-rectangle"));
  		
- 		if (info.isExpired()) {
- 			statusbar.getStyleClass().add("isExpired");
- 			backlitBox.getStyleClass().add("taskbox-rectangle");
- 		} else if (info.isDone()) {
+ 		 if (info.isDone()) {
  			statusbar.getStyleClass().add("isComplete");
  			backlitBox.getStyleClass().add("taskbox-rectangle");
- 		} else if (info.isRecent()) {
+ 		} else if (info.isExpired()) {
+ 			statusbar.getStyleClass().add("isExpired");
+ 			backlitBox.getStyleClass().add("taskbox-rectangle");
+ 		}  else if (info.isRecent()) {
  			backlitBox.getStyleClass().add("taskbox-recent-rectangle");
  			statusbar.getStyleClass().add("isNotExpired");
  		} else {
