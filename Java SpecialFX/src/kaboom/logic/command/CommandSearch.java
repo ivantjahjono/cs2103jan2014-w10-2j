@@ -32,7 +32,7 @@ public class CommandSearch extends Command {
 
 	public Result execute() {
 
-		assert taskListShop != null;
+		assert taskDepo != null;
 		
 		//current extraction
 		DateAndTimeFormat dateAndTimeFormat = DateAndTimeFormat.getInstance();

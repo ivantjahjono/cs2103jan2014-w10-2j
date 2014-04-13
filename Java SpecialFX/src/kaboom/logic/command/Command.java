@@ -34,7 +34,7 @@ public class Command {
 	
 	protected COMMAND_TYPE commandType;
 	protected TextParser textParser;
-	protected TaskDepository taskListShop;
+	protected TaskDepository taskDepo;
 	protected DisplayData displayData;
 	protected KEYWORD_TYPE[] keywordList;
 	Hashtable<KEYWORD_TYPE, String> infoTable; //TEMP
@@ -47,7 +47,7 @@ public class Command {
 	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
 		textParser = TextParser.getInstance();
-		taskListShop = TaskDepository.getInstance();
+		taskDepo = TaskDepository.getInstance();
 		displayData = DisplayData.getInstance();
 		keywordList = new KEYWORD_TYPE[0];
 		infoTable = new Hashtable<KEYWORD_TYPE, String>();
@@ -314,6 +314,10 @@ public class Command {
 	
 	protected String getTaskViewTypeFromInfoTable() {
 		return infoTable.get(KEYWORD_TYPE.VIEWTYPE);
+	}
+	
+	protected String getPageCommandFromInfoTable() {
+		return infoTable.get(KEYWORD_TYPE.PAGE);
 	}
 	
 	
