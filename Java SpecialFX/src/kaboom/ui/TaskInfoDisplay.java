@@ -90,7 +90,7 @@ public class TaskInfoDisplay {
 	
 	private String convertDateTimeFormatBasedOnTime(Calendar timeDate) {
 		if (dateTimeFormat.isToday(timeDate)) {
-			return fullTimeFormat.format(timeDate.getTime());
+			return fullTimeFormat.format(timeDate.getTime()) + ", Today";
 		} else if (dateTimeFormat.isThisWeek(timeDate)) {
 			return fullTimeFormat.format(timeDate.getTime()) +  ", " + dayOnlyFormat.format(timeDate.getTime());
 		} else if (dateTimeFormat.isThisYear(timeDate)) {
