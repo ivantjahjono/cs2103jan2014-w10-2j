@@ -1,4 +1,11 @@
 //@author A0096670W
+/**
+ * This class stores the data in the task depository into a text file
+ * for persistence. Storing and loading of data are called by the store()
+ * and load() functions respectively. Each task is stored in a single line
+ * in the text file and the task attributes are separated by a delimiter.
+ */
+
 package kaboom.storage;
 
 import kaboom.shared.TASK_TYPE;
@@ -18,23 +25,23 @@ import java.io.IOException;
 
 
 public class Storage {
-	private static final String DELIMITER = "\u00b0";
-	private static final String BLANK = " ";
-	private static final int INDEX_TASK_NAME = 0;
-	private static final int INDEX_TASK_TYPE = 1;
-	private static final int INDEX_START_YEAR = 2;
-	private static final int INDEX_START_MONTH = 3;
-	private static final int INDEX_START_DAY = 4;
-	private static final int INDEX_START_HOUR = 5;
-	private static final int INDEX_START_MINUTE = 6;
-	private static final int INDEX_END_YEAR = 7;
-	private static final int INDEX_END_MONTH = 8;
-	private static final int INDEX_END_DAY = 9;
-	private static final int INDEX_END_HOUR = 10;
-	private static final int INDEX_END_MINUTE = 11;
-	private static final int INDEX_IMPORTANCE_LEVEL = 12;
-	private static final int INDEX_IS_EXPIRED = 13;
-	private static final int INDEX_IS_DONE = 14;
+	private final String DELIMITER = "\u00b0";  //Delimiter cannot be typed using keyboard
+	private final String BLANK = " ";
+	private final int INDEX_TASK_NAME = 0;
+	private final int INDEX_TASK_TYPE = 1;
+	private final int INDEX_START_YEAR = 2;
+	private final int INDEX_START_MONTH = 3;
+	private final int INDEX_START_DAY = 4;
+	private final int INDEX_START_HOUR = 5;
+	private final int INDEX_START_MINUTE = 6;
+	private final int INDEX_END_YEAR = 7;
+	private final int INDEX_END_MONTH = 8;
+	private final int INDEX_END_DAY = 9;
+	private final int INDEX_END_HOUR = 10;
+	private final int INDEX_END_MINUTE = 11;
+	private final int INDEX_IMPORTANCE_LEVEL = 12;
+	private final int INDEX_IS_EXPIRED = 13;
+	private final int INDEX_IS_DONE = 14;
 
 	private String fileName;
 	private final String storageLoggerFile = "StorageLog.txt";
@@ -58,7 +65,7 @@ public class Storage {
 	}
 
 	/**
-	 * This function stores all the data in taskListShop to the text file specified
+	 * This function stores all the data in task depository to the text file specified
 	 * in the constructor. Each task is on a new line. The task attributes are
 	 * delimited by the delimiter as specified.
 	 * @param	None
@@ -68,8 +75,7 @@ public class Storage {
 		try {
 			writer = new BufferedWriter(new FileWriter(fileName));
 
-			writePresentTaskList();
-			writeArchivedTaskList();
+			writeAllTasks();
 
 			logger.fine("All tasks written to text file: " + fileName);
 			writer.close();
@@ -80,11 +86,16 @@ public class Storage {
 		}
 	}
 
+	private void writeAllTasks() throws IOException {
+		writePresentTaskList();
+		writeArchivedTaskList();
+	}
+
 	private void writePresentTaskList() throws IOException {
 		logger.fine("Trying to write current tasks text file: " + fileName);
-		Vector<TaskInfo> currentTaskList = taskDepository.getAllCurrentTasks();
-		assert (currentTaskList != null);
-		writeToFile(currentTaskList);
+		Vector<TaskInfo> presentTaskList = taskDepository.getAllCurrentTasks();
+		assert (presentTaskList != null);
+		writeToFile(presentTaskList);
 	}
 	
 	private void writeArchivedTaskList() throws IOException {
@@ -174,7 +185,7 @@ public class Storage {
 	}
 
 	/**
-	 * This function loads all the data in the text file to taskListShop. 
+	 * This function loads all the data in the text file to the task depository. 
 	 * @param	None
 	 * @return 	True if the file is successfully read, false otherwise.
 	 */
@@ -261,7 +272,7 @@ public class Storage {
 	
 	private void setEndDate(TaskInfo task, String[] inputTokens) {
 		Calendar endDate = Calendar.getInstance();
-		if (inputTokens[INDEX_START_YEAR].equals(BLANK)) {
+		if (inputTokens[INDEX_END_YEAR].equals(BLANK)) {
 			logger.fine("End date for task \"" + inputTokens[INDEX_TASK_NAME] + "\" is null");
 			endDate = null;
 		}
