@@ -50,7 +50,7 @@ public class CommandAdd extends Command {
 	 * If any are invalid: cancel add and return invalid command
 	 */
 	public Result execute() {
-		assert taskDepo != null;
+		assert taskView != null;
 
 		String commandFeedback = "";
 

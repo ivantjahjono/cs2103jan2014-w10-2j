@@ -75,7 +75,7 @@ public class CommandModify extends Command {
 			return createResult("No TaskInfoTable");
 		}
 		
-		Result errorResult = taskDetectionWithErrorFeedback();
+		Result errorResult = invalidTaskNameAndClashErrorDetection();
 		if(errorResult != null) {
 			return errorResult;
 		} else {
