@@ -24,6 +24,9 @@ public class DateAndTimeFormat {
 		new SimpleDateFormat(dateFormat6)
 	};
 	
+	private final String endTimeOfTheDay = "2359";
+	private final String startTimeOfTheDay = "0000";
+	
 	private static DateAndTimeFormat instance = null;
 	
 	private DateAndTimeFormat() {
@@ -277,6 +280,14 @@ public class DateAndTimeFormat {
 		String year = Integer.toString(cal.get(Calendar.YEAR));
 		todayString = day + month + year;
 		return todayString;
+	}
+	
+	public String getEndTimeOfTheDay () {
+		return endTimeOfTheDay;
+	}
+	
+	public String getStartTimeOfTheDay () {
+		return startTimeOfTheDay;
 	}
 	
 	//*************************** TEST METHODS **********************************
