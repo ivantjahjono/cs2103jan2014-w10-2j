@@ -80,7 +80,7 @@ public class TaskDepository {
 
 		for (int i = 0; i < currentTaskList.size(); i++) {
 			TaskInfo singleTask = currentTaskList.get(i);
-			if (isTaskToday(singleTask)) {
+			if (TaskInfo.isTaskToday(singleTask)) {
 				tasksToReturn.add(singleTask);
 			}
 		}
@@ -94,7 +94,7 @@ public class TaskDepository {
 
 		for (int i = 0; i < currentTaskList.size(); i++) {
 			TaskInfo singleTask = currentTaskList.get(i);
-			if (isFutureTask(singleTask)) {
+			if (TaskInfo.isFutureTask(singleTask)) {
 				tasksToReturn.add(singleTask);
 			}
 		}
@@ -240,53 +240,9 @@ public class TaskDepository {
 		return taskID;
 	}
 
-	public boolean isTaskToday(TaskInfo task) {
-		Calendar today = Calendar.getInstance();
-
-		Calendar taskStartDate = task.getStartDate();
-		Calendar taskEndDate = task.getEndDate();
-
-		//Do not get floating tasks
-		if (task.getTaskType() != TASK_TYPE.FLOATING) {
-			if ((taskStartDate != null && taskStartDate.before(today)) 
-					&& (taskEndDate != null && taskEndDate.after(today))) {
-				return true;
-			}
-			else if (taskStartDate != null && 
-					taskStartDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) &&
-					taskStartDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
-				return true;
-			}
-			else if (taskEndDate != null &&
-					taskEndDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) &&
-					taskEndDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
-				return true;
-			}
-		}
-		return false;
-	}
 	
-	public boolean isFutureTask(TaskInfo task) {
-		Calendar today = Calendar.getInstance();
-		today.set(Calendar.HOUR_OF_DAY, 23);
-		today.set(Calendar.MINUTE, 59);
-		today.set(Calendar.SECOND, 59);
-		
-		Calendar taskStartDate = task.getStartDate();
-		Calendar taskEndDate = task.getEndDate();
-
-		//Do not get floating tasks
-		if (task.getTaskType() != TASK_TYPE.FLOATING) {
-			if (taskStartDate != null && taskStartDate.after(today)) {
-				return true;
-			}
-			else if (taskEndDate != null && taskEndDate.after(today)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
+	
+	
 
 	public int shopSize () {
 		return currentTaskList.size();

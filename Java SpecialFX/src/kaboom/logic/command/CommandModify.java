@@ -69,7 +69,7 @@ public class CommandModify extends Command {
 	 * 
 	 */
 	public Result execute() {
-		assert taskDepo != null;
+		assert taskView != null;
 		assert infoTable != null;
 
 		if(infoTable == null) {

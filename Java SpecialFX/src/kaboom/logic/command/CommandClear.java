@@ -40,7 +40,7 @@ public class CommandClear extends Command {
 	}
 
 	public Result execute() {
-		assert taskDepo != null;	
+		assert taskView != null;	
 		
 		CLEAR_TYPE clearType = retrieveClearTypeAndDetermineClearType();
 		String commandFeedback = processClearType(clearType);
