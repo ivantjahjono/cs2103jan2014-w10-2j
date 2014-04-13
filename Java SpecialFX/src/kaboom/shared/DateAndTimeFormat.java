@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class DateAndTimeFormat {
 	
@@ -45,7 +46,7 @@ public class DateAndTimeFormat {
 		if(date == null || time == null) {
 			return null;
 		}
-		Calendar dateAndTime = Calendar.getInstance();
+		Calendar dateAndTime = new GregorianCalendar();
 		SimpleDateFormat sdf = new  SimpleDateFormat("HHmmss ddMMyy");
 		Date dateTime = null;
 		try {
