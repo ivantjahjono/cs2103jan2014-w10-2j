@@ -15,11 +15,12 @@ import kaboom.shared.TaskInfo;
 public class CommandSearch extends Command {
 
 	private final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done. %d item(s) found.";
+	private final String MESSAGE_COMMAND_SEARCH_ERROR = "Please enter something to search";
 
 	TaskInfo taskInfo = null;
 	Vector<TaskInfo> tasksFound;
 	Vector<TaskInfo> listToSearch;
-	
+
 	public CommandSearch () {
 		commandType = COMMAND_TYPE.SEARCH;
 		keywordList = new KEYWORD_TYPE[] {
@@ -33,14 +34,15 @@ public class CommandSearch extends Command {
 	public Result execute() {
 
 		assert taskView != null;
-		
+		String commandFeedback;
+
 		//current extraction
 		DateAndTimeFormat dateAndTimeFormat = DateAndTimeFormat.getInstance();
 
 		String searchName = infoTable.get(KEYWORD_TYPE.TASKNAME).toLowerCase();
 		String searchOnDateInString = dateAndTimeFormat.convertStringDateToDayMonthYearFormat(infoTable.get(KEYWORD_TYPE.DATE));
 		String searchByDateInString = dateAndTimeFormat.convertStringDateToDayMonthYearFormat(infoTable.get(KEYWORD_TYPE.END_DATE));
-		
+
 		Calendar searchOnDate = dateAndTimeFormat.formatStringToCalendar(searchOnDateInString, dateAndTimeFormat.getEndTimeOfTheDay());
 		Calendar searchByDate = dateAndTimeFormat.formatStringToCalendar(searchByDateInString, dateAndTimeFormat.getStartTimeOfTheDay());
 
@@ -54,14 +56,17 @@ public class CommandSearch extends Command {
 		} else if (searchByDate != null) {
 			//Cumulative search to a particular day
 			searchCumulativeByDate(searchByDate);
+		} else {
+			commandFeedback = MESSAGE_COMMAND_SEARCH_ERROR;
+			return createResult(commandFeedback);
 		}
 
-		String commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
+		commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
 		taskView.setSearchView(tasksFound);
 
 		return createResult(commandFeedback, DISPLAY_STATE.SEARCH, null); 
 	}
-	
+
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
 		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
 		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
@@ -141,7 +146,7 @@ public class CommandSearch extends Command {
 	//Does not include tasks that start before but end after that date
 	private boolean isTaskByDate(TaskInfo task, Calendar searchByDate) {
 		Calendar taskEndDate = task.getEndDate();
-		
+
 		if (taskEndDate != null) {
 			if (isTaskStartOrEndDate(taskEndDate, searchByDate)) {
 				return true;
