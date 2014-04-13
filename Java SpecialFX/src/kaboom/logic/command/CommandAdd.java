@@ -233,11 +233,11 @@ public class CommandAdd extends Command {
 		} else {
 			if (hasStartDate && hasEndDate) {
 				//time to 0000 if different date or start time to 2359 and end time to 2359 if same date
-				Calendar startCal = datFormat.formatStringToCalendar(startDate, "0000");
-				Calendar endCal = datFormat.formatStringToCalendar(endDate, "2359");
+				Calendar startCal = datFormat.formatStringToCalendar(startDate, datFormat.getStartTimeOfTheDay());
+				Calendar endCal = datFormat.formatStringToCalendar(endDate, datFormat.getEndTimeOfTheDay());
 				if(!datFormat.isFirstDateBeforeSecondDate(startCal, endCal)) {
-					startCal = datFormat.formatStringToCalendar(startDate, "0000");
-					endCal = datFormat.formatStringToCalendar(endDate, "2359");
+					startCal = datFormat.formatStringToCalendar(startDate, datFormat.getStartTimeOfTheDay());
+					endCal = datFormat.formatStringToCalendar(endDate, datFormat.getEndTimeOfTheDay());
 					endCal = datFormat.addTimeToCalendar(endCal, 1, 0);
 				}
 				temp.setStartDate(startCal);
@@ -266,8 +266,8 @@ public class CommandAdd extends Command {
 				temp.setEndDate(endCal);
 			} else if (hasStartDate) {
 				//set time from 0000 to 2359 and save start date
-				Calendar startCal = datFormat.formatStringToCalendar(startDate, "0000");
-				Calendar endCal = datFormat.formatStringToCalendar(startDate, "2359");
+				Calendar startCal = datFormat.formatStringToCalendar(startDate, datFormat.getStartTimeOfTheDay());
+				Calendar endCal = datFormat.formatStringToCalendar(startDate, datFormat.getEndTimeOfTheDay());
 				temp.setStartDate(startCal);
 				temp.setEndDate(endCal);
 			} else if (hasStartTime) {
@@ -279,7 +279,7 @@ public class CommandAdd extends Command {
 				temp.setEndDate(endCal);
 			} else if (hasEndDate) {
 				//set time to 2359 and save end date only
-				Calendar endCal = datFormat.formatStringToCalendar(endDate, "2359");
+				Calendar endCal = datFormat.formatStringToCalendar(endDate, datFormat.getEndTimeOfTheDay());
 				temp.setEndDate(endCal);
 			} else if (hasEndTime) {
 				//set date to today and save end date only

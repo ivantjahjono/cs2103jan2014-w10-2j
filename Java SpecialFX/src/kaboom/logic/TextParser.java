@@ -166,8 +166,7 @@ public class TextParser {
 			break;
 			
 		case KEYWORD_DATEONLY:
-			// TODO HARDCODED for the search to work!
-			keywordTable.put(KEYWORD_TYPE.START_DATE, finalExtractedDateString);
+			keywordTable.put(KEYWORD_TYPE.DATE, finalExtractedDateString);
 			break;
 		}
 		
