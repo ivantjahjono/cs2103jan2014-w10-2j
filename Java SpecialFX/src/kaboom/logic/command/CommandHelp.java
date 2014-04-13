@@ -16,6 +16,7 @@ public class CommandHelp extends Command {
 	private final String HELP_TYPE_COMPLETE = "complete";
 	private final String HELP_TYPE_SEARCH 	= "search";
 	private final String HELP_TYPE_VIEW 	= "view";
+	private final String HELP_TYPE_PAGE 	= "page";
 	private final String HELP_TYPE_CLOSE 	= "close";
 	
 	private final String HELP_INVALID_COMMAND = "Invalid help command!";
@@ -28,7 +29,7 @@ public class CommandHelp extends Command {
 	}
 
 	public Result execute() {
-		assert taskListShop != null;
+		assert taskDepo != null;
 		
 		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
 			return createResult(HELP_INVALID_COMMAND);
@@ -68,6 +69,9 @@ public class CommandHelp extends Command {
 					
 				case HELP_TYPE_VIEW:
 					return HELP_STATE.VIEW;
+					
+				case HELP_TYPE_PAGE:
+					return HELP_STATE.PAGE;
 					
 				case HELP_TYPE_CLOSE:
 					return HELP_STATE.CLOSE;

@@ -17,7 +17,7 @@ public class TextParser {
 	private final String KEYWORD_DATEONLY = "^";
 	private final String KEYWORD_CLEAR = "^(all|current|archive)";
 	private final String KEYWORD_VIEW = "^(today|future|timeless|expired|archive)";
-	private final String KEYWORD_HELP = "^(add|delete|modify|complete|search|view|close)";
+	private final String KEYWORD_HELP = "^(add|delete|modify|complete|search|view|page|close)";
 	
 	private final String TIME_REGEX = "\\s*(([0-9]|0[0-9]|1[0-9]|2[0-3])([\\s?:\\s?]?[0-5][0-9])?|([0-9]|0[1-9]|1[0-2])(([\\s?:\\s?]?[0-5][0-9])?(am|pm)))(\\s|$)";
 	private final String DATE_REGEX = "\\s*\\d{1,2}[\\/\\.]\\d{2}[\\/\\.]\\d{2}(\\s|$)";
