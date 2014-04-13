@@ -271,6 +271,53 @@ public class Command {
 		return count;
 	}
 	
+	//*******************************************RETRIEVAL METHODS FROM INFOTABLE***********************************************
+	protected String getTaskNameFromInfoTable() {
+		return infoTable.get(KEYWORD_TYPE.TASKNAME);
+	}
+	
+	protected String getTaskIdFromInfoTable() {
+		return infoTable.get(KEYWORD_TYPE.TASKID);
+	}
+	
+	protected String getTaskNameToModifyToFromInfoTable() {
+		return infoTable.get(KEYWORD_TYPE.MODIFIED_TASKNAME);
+	}
+
+	protected String getTaskPriorityFromInfoTable() {
+		return infoTable.get(KEYWORD_TYPE.PRIORITY);
+	}
+	
+	protected String getTaskEndTimeFromInfoTable() {
+		return infoTable.get(KEYWORD_TYPE.END_TIME);
+	}
+	
+	protected String getTaskEndDateFromInfoTable() {
+		return infoTable.get(KEYWORD_TYPE.END_DATE);
+	}
+	
+	protected String getTaskStartDateFromInfoTable() {
+		return infoTable.get(KEYWORD_TYPE.START_DATE);
+	}
+	
+	protected String getTaskStartTimeFromInfoTable() {
+		return infoTable.get(KEYWORD_TYPE.START_TIME);
+	}
+	
+	protected String getTaskDateFromInfoTable() {
+		return infoTable.get(KEYWORD_TYPE.DATE);
+	}
+	
+	protected String getTaskClearTypeFromInfoTable() {
+		return infoTable.get(KEYWORD_TYPE.CLEARTYPE);
+	}
+	
+	protected String getTaskViewTypeFromInfoTable() {
+		return infoTable.get(KEYWORD_TYPE.VIEWTYPE);
+	}
+	
+	
+	
 //	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
 //	taskInfo = new TaskInfo();
 //	
