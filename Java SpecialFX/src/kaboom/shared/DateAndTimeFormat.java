@@ -24,8 +24,8 @@ public class DateAndTimeFormat {
 		new SimpleDateFormat(dateFormat6)
 	};
 	
-	private final String endTimeOfTheDay = "2359";
-	private final String startTimeOfTheDay = "0000";
+	private final String endTimeOfTheDay = "235959";
+	private final String startTimeOfTheDay = "000000";
 	
 	private static DateAndTimeFormat instance = null;
 	
@@ -46,7 +46,7 @@ public class DateAndTimeFormat {
 			return null;
 		}
 		Calendar dateAndTime = Calendar.getInstance();
-		SimpleDateFormat sdf = new  SimpleDateFormat("HHmm ddMMyy");
+		SimpleDateFormat sdf = new  SimpleDateFormat("HHmmss ddMMyy");
 		Date dateTime = null;
 		try {
 			dateTime = sdf.parse(time+" "+date);
@@ -97,6 +97,7 @@ public class DateAndTimeFormat {
 		int hour = 0;
 		int addedHour = 0;
 		int minutes = 0;
+		int seconds = 0;
 		boolean ampmTiming = false;
 		
 		// Check if it contains am or pm
@@ -127,7 +128,7 @@ public class DateAndTimeFormat {
 			hour += addedHour;
 		}
 		
-		return String.format("%02d%02d", hour, minutes);
+		return String.format("%02d%02d%02d", hour, minutes, seconds);
 	}
 	
 	public String convertStringDateToDayMonthYearFormat(String date) {
@@ -218,7 +219,7 @@ public class DateAndTimeFormat {
 	}
 	
 	public String timeFromCalendarToString (Calendar cal) {
-		String timeFormatString = "HHmm";
+		String timeFormatString = "HHmmss";
 		SimpleDateFormat dayFormat = new SimpleDateFormat(timeFormatString);
 		
 		return dayFormat.format(cal.getTime());
