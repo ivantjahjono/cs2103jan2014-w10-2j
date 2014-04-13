@@ -207,27 +207,6 @@ public class TextParserTest {
 	}
 	
 	@Test
-	public void testParser() {
-		//standard format
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("", textparser.parser("hello world at 0700 on 14/05/12 by 0200 on 14/05/12 ***",keywordTable));
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("", textparser.parser("hello world",keywordTable));
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("", textparser.parser("hello world at 0700 on 14/05/12",keywordTable));
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("", textparser.parser("hello world by 0200 on 14/05/12",keywordTable));
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("", textparser.parser("hello world at 0700 on 14/05/12 ***",keywordTable));
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("", textparser.parser("hello world by 0200 on 14/05/12 ***",keywordTable));
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("", textparser.parser("hello world ***",keywordTable));
-		keywordTable = new Hashtable<KEYWORD_TYPE, String>();
-		assertEquals("", textparser.parser("hello world by 0200 on 14/05/12 at 0700 on 14/05/12  ***",keywordTable));
-	}
-	
-	@Test
 	public void testExtractModifyName() {
 		Hashtable<KEYWORD_TYPE, String> keywordTable = new Hashtable<KEYWORD_TYPE, String>();
 		assertEquals("> some name", textparser.extractModifiedTaskName("hello world > some name",keywordTable));

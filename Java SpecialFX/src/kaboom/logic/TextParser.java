@@ -17,7 +17,7 @@ public class TextParser {
 	private final String KEYWORD_DATEONLY = "^";
 	private final String KEYWORD_CLEAR = "^(all|present|archive)";
 	private final String KEYWORD_VIEW = "^(today|future|timeless|expired|archive)";
-	private final String KEYWORD_HELP = "^(add|delete|modify|complete|search|view|close)";
+	private final String KEYWORD_HELP = "^(add|delete|modify|complete|search|view|page|close)";
 	
 	private final String TIME_REGEX = "\\s*(([0-9]|0[0-9]|1[0-9]|2[0-3])([\\s?:\\s?]?[0-5][0-9])?|([0-9]|0[1-9]|1[0-2])(([\\s?:\\s?]?[0-5][0-9])?(am|pm)))(\\s|$)";
 	private final String DATE_REGEX = "\\s*\\d{1,2}[\\/\\.]\\d{2}[\\/\\.]\\d{2}(\\s|$)";
@@ -44,18 +44,6 @@ public class TextParser {
 		return getFirstWord(userInput);
 	}
 	
-	
-	public Hashtable<KEYWORD_TYPE, String> extractTaskInformation (String userInput) {
-		String taskInformation = removeFirstWord(userInput);
-		
-		// Cut the command into their respective syntax. Will return hash table of data strings
-		Hashtable<KEYWORD_TYPE, String> keywordHashTable = new Hashtable<KEYWORD_TYPE, String>();
-		parser(taskInformation, keywordHashTable);
-
-		//System.out.println(keywordHashTable);
-		
-		return keywordHashTable;	
-	}
 
 	//******************** Method Calls By Controller ******************************************
 	public String removeFirstWord(String userInputSentence) {
@@ -72,16 +60,6 @@ public class TextParser {
 	private String[] textProcess(String userInputSentence){
 		String[] commandAndData = userInputSentence.trim().split("\\s+");
 		return commandAndData;
-	}
-	
-	public String parser(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
-		String userInputWithPriorityExtracted = extractPriority(userInputSentence,keywordTable);
-		String userInputWithEndDateAndTimeExtracted = extractDateAndTime(KEYWORD_ENDTIME,userInputWithPriorityExtracted,keywordTable);
-		String userInputWithStartDateAndTimeExtracted = extractDateAndTime(KEYWORD_STARTTIME,userInputWithEndDateAndTimeExtracted,keywordTable);
-		String userInputWithModifiedTaskNameExtracted = extractModifiedTaskName(userInputWithStartDateAndTimeExtracted,keywordTable);
-		String taskName = extractTaskName(userInputWithModifiedTaskNameExtracted,keywordTable);
-		//System.out.println(keywordTable);
-		return taskName;
 	}
 	
 	public String extractPriority(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
