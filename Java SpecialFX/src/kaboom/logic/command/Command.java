@@ -16,7 +16,6 @@ import kaboom.shared.Result;
 import kaboom.shared.TASK_TYPE;
 import kaboom.shared.TaskInfo;
 import kaboom.shared.comparators.FormatIdentifyComparator;
-import kaboom.storage.History;
 import kaboom.storage.TaskView;
 /* 
  ** Purpose: 
@@ -85,7 +84,7 @@ public class Command {
 	
 	//TODO
 	protected void addCommandToHistory () {
-		History.getInstance().addToRecentCommands(this);
+		taskView.addToHistory(this);;
 	}
 	
 	protected int numOfTasksWithSimilarNames(String name) {
