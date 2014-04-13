@@ -26,7 +26,7 @@ public class CommandDelete extends Command {
 	}
 
 	public Result execute() {
-		assert taskListShop != null;
+		assert taskDepo != null;
 		
 		//set task id;
 		String commandFeedback = "";
