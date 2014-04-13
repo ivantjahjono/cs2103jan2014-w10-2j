@@ -26,7 +26,7 @@ public class CommandUndone extends Command {
 	}
 
 	public Result execute() {
-		assert taskDepo != null;
+		assert taskView != null;
 
 //		Result errorResult = invalidTaskNameAndClashErrorDetection();
 //		if(errorResult != null) {

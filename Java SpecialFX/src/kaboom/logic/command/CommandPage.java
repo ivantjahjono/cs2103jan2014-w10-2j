@@ -21,7 +21,7 @@ public class CommandPage extends Command {
 	}
 
 	public Result execute() {
-		assert taskDepo != null;
+		assert taskView != null;
 		
 		String pageInfo = getPageCommandFromInfoTable();
 		if (pageInfo == null) {

@@ -29,7 +29,7 @@ public class CommandHelp extends Command {
 	}
 
 	public Result execute() {
-		assert taskDepo != null;
+		assert taskView != null;
 		
 		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
 			return createResult(HELP_INVALID_COMMAND);

@@ -102,9 +102,9 @@ public class CommandAdd extends Command {
 
 			if (taskInfo.getTaskType() == TASK_TYPE.FLOATING) {
 				stateToSet = DISPLAY_STATE.TIMELESS;
-			} else if (taskDepo.isTaskToday(taskInfo)) {
+			} else if (TaskInfo.isTaskToday(taskInfo)) {
 				stateToSet =  DISPLAY_STATE.TODAY;
-			} else if (taskDepo.isFutureTask(taskInfo)){
+			} else if (TaskInfo.isFutureTask(taskInfo)){
 				stateToSet =  DISPLAY_STATE.FUTURE;
 			} else {
 				stateToSet =  DISPLAY_STATE.EXPIRED;
