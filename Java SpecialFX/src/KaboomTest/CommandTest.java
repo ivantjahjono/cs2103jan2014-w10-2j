@@ -54,19 +54,19 @@ public class CommandTest {
 		//Execution
 		//Add a task without any task name input
 		initialise();
-		com.initialiseCommandVariables(infoTable);
+		com.initialiseCommandInfoTable(infoTable);
 		assertEquals("Oops! Task cannot be entered without a name Y_Y",com.execute().getFeedback());
 		
 		//Add a task with given task name
 		initialise();
 		infoTable.put(KEYWORD_TYPE.TASKNAME, "Hello World");
-		com.initialiseCommandVariables(infoTable);
+		com.initialiseCommandInfoTable(infoTable);
 		assertEquals("WOOT! <Hello World> ADDED. MORE STUFF TO DO!",com.execute().getFeedback());
 		
 		//Add a task with empty task name
 		initialise();
 		infoTable.put(KEYWORD_TYPE.TASKNAME, "");
-		com.initialiseCommandVariables(infoTable);
+		com.initialiseCommandInfoTable(infoTable);
 		assertEquals("Oops! Task cannot be entered without a name Y_Y",com.execute().getFeedback());
 		
 		//Add a task with valid date and time
@@ -76,7 +76,7 @@ public class CommandTest {
 		infoTable.put(KEYWORD_TYPE.START_DATE, "010114");
 		infoTable.put(KEYWORD_TYPE.END_TIME, "2359");
 		infoTable.put(KEYWORD_TYPE.END_DATE, "010114");
-		com.initialiseCommandVariables(infoTable);
+		com.initialiseCommandInfoTable(infoTable);
 		assertEquals("WOOT! <Valid Time> ADDED. MORE STUFF TO DO!",com.execute().getFeedback());
 		
 		//Add a task with invalid date and time
@@ -86,7 +86,7 @@ public class CommandTest {
 		infoTable.put(KEYWORD_TYPE.START_DATE, "010114");
 		infoTable.put(KEYWORD_TYPE.END_TIME, "0000");
 		infoTable.put(KEYWORD_TYPE.END_DATE, "010114");
-		com.initialiseCommandVariables(infoTable);
+		com.initialiseCommandInfoTable(infoTable);
 		assertEquals("Oops! Did you check the calendar? The date you've entered is invalid",com.execute().getFeedback());
 	}
 	
