@@ -11,11 +11,11 @@ import kaboom.shared.Result;
 import kaboom.storage.History;
 
 public class CommandView extends Command{
-	private final String KEYWORD_TODAY = "today";
-	private final String KEYWORD_FUTURE = "future";
-	private final String KEYWORD_TIMELESS = "timeless";
-	private final String KEYWORD_EXPIRED = "expired";
-	private final String KEYWORD_ARCHIVE = "archive";
+	private final String KEYWORD_TODAY 		= "today";
+	private final String KEYWORD_FUTURE		= "future";
+	private final String KEYWORD_TIMELESS 	= "timeless";
+	private final String KEYWORD_EXPIRED 	= "expired";
+	private final String KEYWORD_ARCHIVE 	= "archive";
 	
 	private final String MESSAGE_VIEW_TODAY 	= "Viewing all the tasks for today";
 	private final String MESSAGE_VIEW_TIMELESS 	= "Viewing timeless tasks";
