@@ -292,30 +292,12 @@ public class TextParser {
 				break;
 				
 			case END_TIME:
-				ArrayList<Integer> endTimeMatchList = new ArrayList<Integer>();
-				if(checkTimeAndDateInputFormat(KEYWORD_ENDTIME, userInput, endTimeMatchList)){
-					result = extractDateAndTime(KEYWORD_ENDTIME,userInput,taskInformationTable);
-				}
-				else if(checkTimeOnlyInputFormat(KEYWORD_ENDTIME, userInput, endTimeMatchList)){
-					result = extractTimeOnly(KEYWORD_ENDTIME,userInput,taskInformationTable);
-				}
-				else if(checkDateOnlyInputFormat(KEYWORD_ENDTIME, userInput, endTimeMatchList)){
-					result = extractDateOnly(KEYWORD_ENDTIME, KEYWORD_ENDTIME ,userInput, taskInformationTable);
-				}
+				result = getEndTimeDate(userInput, taskInformationTable);
 				break;
 				
 			case START_TIME:
 				//userInput = extractDateAndTime(KEYWORD_STARTTIME,userInput,taskInformationTable);
-				ArrayList<Integer> startTimeMatchList = new ArrayList<Integer>();
-				if(checkTimeAndDateInputFormat(KEYWORD_STARTTIME, userInput, startTimeMatchList)){
-					result = extractDateAndTime(KEYWORD_STARTTIME,userInput,taskInformationTable);
-				}
-				else if(checkTimeOnlyInputFormat(KEYWORD_STARTTIME, userInput, startTimeMatchList)){
-					result = extractTimeOnly(KEYWORD_STARTTIME,userInput,taskInformationTable);
-				}
-				else if(checkDateOnlyInputFormat(KEYWORD_STARTTIME, userInput, startTimeMatchList)){
-					result = extractDateOnly(KEYWORD_STARTTIME, KEYWORD_STARTTIME, userInput,taskInformationTable);
-				}
+				result = getStartTimeDate(userInput, taskInformationTable);
 				break;
 				
 			case MODIFIED_TASKNAME:
@@ -359,6 +341,40 @@ public class TextParser {
 		}
 		
 		return taskInformationTable;
+	}
+
+	private String getStartTimeDate(String userInput,
+			Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+		
+		ArrayList<Integer> startTimeMatchList = new ArrayList<Integer>();
+		String result = "";
+		if(checkTimeAndDateInputFormat(KEYWORD_STARTTIME, userInput, startTimeMatchList)){
+			result = extractDateAndTime(KEYWORD_STARTTIME,userInput,taskInformationTable);
+		}
+		else if(checkTimeOnlyInputFormat(KEYWORD_STARTTIME, userInput, startTimeMatchList)){
+			result = extractTimeOnly(KEYWORD_STARTTIME,userInput,taskInformationTable);
+		}
+		else if(checkDateOnlyInputFormat(KEYWORD_STARTTIME, userInput, startTimeMatchList)){
+			result = extractDateOnly(KEYWORD_STARTTIME, KEYWORD_STARTTIME, userInput,taskInformationTable);
+		}
+		return result;
+	}
+
+	private String getEndTimeDate(String userInput,
+			Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+		
+		ArrayList<Integer> endTimeMatchList = new ArrayList<Integer>();
+		String result = "";
+		if(checkTimeAndDateInputFormat(KEYWORD_ENDTIME, userInput, endTimeMatchList)){
+			result = extractDateAndTime(KEYWORD_ENDTIME,userInput,taskInformationTable);
+		}
+		else if(checkTimeOnlyInputFormat(KEYWORD_ENDTIME, userInput, endTimeMatchList)){
+			result = extractTimeOnly(KEYWORD_ENDTIME,userInput,taskInformationTable);
+		}
+		else if(checkDateOnlyInputFormat(KEYWORD_ENDTIME, userInput, endTimeMatchList)){
+			result = extractDateOnly(KEYWORD_ENDTIME, KEYWORD_ENDTIME ,userInput, taskInformationTable);
+		}
+		return result;
 	}
 
 
