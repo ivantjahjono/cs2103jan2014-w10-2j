@@ -25,6 +25,7 @@ public class TextParser {
 	private final String FULLDATE_REGEX = "((%1$s" + DATE_REGEX + ")|(%2$s" + DATE_NAME_REGEX + "))";
 	private final String ID_REGEX = "^\\s*\\d+(\\s+|$)";
 	private final String PRIORITY_REGEX = "[\\s+]\\*{1,5}[\\s\\W]*";
+	private final String PAGE_REGEX = "^\\s*(\\d+|next|prev)\\s*$";
 	static TextParser instance;
 	
 	private TextParser () {
@@ -359,6 +360,10 @@ public class TextParser {
 				result = extractHelpType(userInput,taskInformationTable);
 				break;
 				
+			case PAGE:
+				result = extractPageType(userInput,taskInformationTable);
+				break;
+				
 			default:
 				break;
 			}
@@ -475,4 +480,19 @@ public class TextParser {
 		return extractedClearString;
 	}
 	
+	private String extractPageType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
+		ArrayList<Integer> matchList = searchForPatternMatch(userInput, PAGE_REGEX);
+		
+		if (matchList.size() < 2) {
+			return "";
+		}
+		
+		int endIndex = matchList.get(matchList.size()-1);
+		int startIndex = matchList.get(matchList.size()-2);
+		
+		String extractedString = userInput.substring(startIndex, endIndex).trim();
+		taskInformationTable.put(KEYWORD_TYPE.PAGE, extractedString);
+
+		return extractedString;
+	}
 }
