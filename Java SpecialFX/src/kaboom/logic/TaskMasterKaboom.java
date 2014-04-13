@@ -33,8 +33,12 @@ public class TaskMasterKaboom {
 	
 	static TaskMasterKaboom instance;
 	
+	private int refreshCounter;
+	private int REFRESH_POINT = 3;
+	
 	private TaskMasterKaboom () {
 		commandFactory = CommandFactory.getInstance();
+		resetRefreshCounter();
 	}
 	
 	public static TaskMasterKaboom getInstance () {
@@ -72,13 +76,18 @@ public class TaskMasterKaboom {
 	}
 	
 	public void updateTaskList () {
-		Command updateCommand = new CommandUpdate();
-		updateCommand.execute();
-		
-		//4. Save data to file
-		fileStorage.store();
-		
-		guiDisplayData.updateDisplayWithResult();
+		if (refreshCounter >= REFRESH_POINT) {
+			Command updateCommand = new CommandUpdate();
+			updateCommand.execute();
+			
+			//4. Save data to file
+			fileStorage.store();
+			
+			guiDisplayData.updateDisplayWithResult();
+			resetRefreshCounter();
+		} else {
+			refreshCounter++;
+		}
 	}
 	
 	/*
@@ -97,6 +106,9 @@ public class TaskMasterKaboom {
 	public String processCommand(String userInputSentence) {
 		assert userInputSentence != null;
 	
+		resetRefreshCounter();
+		TaskView.getInstance().refreshAllTasksFlags();
+		
 		Command commandToExecute = null;
 		Result commandResult = null;
 		
@@ -117,6 +129,10 @@ public class TaskMasterKaboom {
 		fileStorage.store();
 		
 		return commandResult.getFeedback();
+	}
+
+	private void resetRefreshCounter() {
+		refreshCounter = 0;
 	}
 	
 	public boolean processSyntax(String usercommand) {
