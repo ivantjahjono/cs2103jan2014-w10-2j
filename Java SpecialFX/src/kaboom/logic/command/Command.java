@@ -27,7 +27,7 @@ public class Command {
 	protected final String MESSAGE_COMMAND_FAIL_NO_SUCH_TASK = "Oops! Modify wut??";
 	protected final String MESSAGE_COMMAND_FAIL_NO_TASK_NAME = "Oops! What was the task name again??";
 	protected final String MESSAGE_COMMAND_FAIL_INVALID_TASKNAME = "Oops! HAVENDO??";
-	protected final String MESSAGE_COMMAND_INVALID = "Invalid command!";
+	protected final String MESSAGE_COMMAND_INVALID = "Please enter a valid command. Type <help> for info.";
 	
 	protected COMMAND_TYPE commandType;
 	protected TextParser textParser;
