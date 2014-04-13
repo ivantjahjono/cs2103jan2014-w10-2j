@@ -258,26 +258,37 @@ public class Command {
 		}
 	}
 	
-	protected COMMAND_ERROR errorDetectionForInvalidTaskNameAndId() {
-		COMMAND_ERROR commandError = null;
-		String taskName = getTaskNameFromInfoTable();
+	protected COMMAND_ERROR errorDetectionForInvalidTaskNameAndId() {	
 		String taskId = getTaskIdFromInfoTable();
-		
-		if(hasBothTaskNameAndTaskId(taskName, taskId)) {
+		String taskName = getTaskNameFromInfoTable();
+		if(taskId != null && !isTaskNameNullOrEmpty(taskName)) {
 			return COMMAND_ERROR.INVALID_TASKNAME;
-		} else if (isTaskIdValid()) {
-			return commandError;
+		} else if(isTaskIdValid()) {
+			return null;
 		} else {
 			if (isTaskNameNullOrEmpty(taskName)) {
 				return COMMAND_ERROR.NO_TASK_NAME;
 			} else {
 				return taskExistenceOrClashDetection(taskName);
-			} 
+			}
 		}
 	}
 
+//	protected COMMAND_ERROR errorDetectionForInvalidTaskName() {
+//		String taskName = getTaskNameFromInfoTable();
+//		String taskId = getTaskIdFromInfoTable();
+//		
+//		if(taskId == null && isTaskNameNullOrEmpty(taskName)) {
+//			return COMMAND_ERROR.NO_TASK_NAME;
+//		} else if(hasBothTaskNameAndTaskId(taskName, taskId)) {
+//			return COMMAND_ERROR.INVALID_TASKNAME;
+//		} else {
+//			return null;
+//		}
+//	}
+	
 	private boolean hasBothTaskNameAndTaskId(String taskName, String taskId) {
-		return taskId != null && taskName != null;
+		return taskId != null && isTaskNameNullOrEmpty(taskName);
 	}
 
 	private boolean isTaskNameNullOrEmpty(String taskName) {
