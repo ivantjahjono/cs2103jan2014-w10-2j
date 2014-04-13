@@ -50,7 +50,7 @@ public class CommandAdd extends Command {
 	 * If any are invalid: cancel add and return invalid command
 	 */
 	public Result execute() {
-		assert taskListShop != null;
+		assert taskView != null;
 
 		String commandFeedback = "";
 
@@ -102,9 +102,9 @@ public class CommandAdd extends Command {
 
 			if (taskInfo.getTaskType() == TASK_TYPE.FLOATING) {
 				stateToSet = DISPLAY_STATE.TIMELESS;
-			} else if (taskListShop.isTaskToday(taskInfo)) {
+			} else if (taskDepo.isTaskToday(taskInfo)) {
 				stateToSet =  DISPLAY_STATE.TODAY;
-			} else if (taskListShop.isFutureTask(taskInfo)){
+			} else if (taskDepo.isFutureTask(taskInfo)){
 				stateToSet =  DISPLAY_STATE.FUTURE;
 			} else {
 				stateToSet =  DISPLAY_STATE.EXPIRED;

@@ -14,100 +14,43 @@ import kaboom.shared.TaskInfo;
 public class CommandClear extends Command {
 	
 	private final String CLEAR_TYPE_ALL = "all";
-	private final String CLEAR_TYPE_CURRENT = "current";
-	private final String CLEAR_TYPE_EMPTY = "";
+	private final String CLEAR_TYPE_PRESENT = "present";
 	private final String CLEAR_TYPE_ARCHIVE = "archive";
 	
-	private final String MESSAGE_COMMAND_CLEAR_SUCCESS = "1.. 2.. 3.. Pooof! Your schedule has gone with the wind";
+	private final String MESSAGE_COMMAND_CLEAR_ALL_SUCCESS = "1.. 2.. 3.. Pooof! Your schedule has gone with the wind";
+	private final String MESSAGE_COMMAND_CLEAR_PRESENT_SUCCESS = "1.. 2.. 3.. Pooof! Your present schedule has gone with the wind";
 	private final String MESSAGE_COMMAND_CLEAR_ARCHIVE_SUCCESS = "3.. 2.. 1.. Pooof! Your archive has gone with the wind";
-	private final String MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE = "You trying to be funny?";
-//	private final String MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE = "please enter <clear all> to remove all tasks or <clear current> to remove current view";
-	private final String MESSAGE_COMMAND_CLEAR_FAIL_NOT_IMPLEMENTED = "LOL";
+	private final String MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE = "enter <clear all> to remove all tasks or <clear current> to remove current view";
+	
+	private enum CLEAR_TYPE {
+		ALL, PRESENT, ARCHIVE, INVALID
+	}
 	
 	Vector<TaskInfo> tasksCleared;
 	Vector<TaskInfo> archiveTasksCleared;
 	
-	String clearType;
+	String clearTypeInString;
 		
 	public CommandClear () {
 		commandType = COMMAND_TYPE.CLEAR;
 		keywordList = new KEYWORD_TYPE[] {
 				KEYWORD_TYPE.CLEARTYPE
 		};
-		clearType = null;
+		clearTypeInString = null;
 	}
 
 	public Result execute() {
-		assert taskListShop != null;
+		assert taskDepo != null;	
 		
-		clearType = infoTable.get(KEYWORD_TYPE.CLEARTYPE);
-		
-		if(clearType == null || clearType.isEmpty()) {
-			clearType = CLEAR_TYPE_EMPTY;
-		} else {
-			clearType = clearType.toLowerCase().trim();
-		}
-		
-		String commandFeedback = "";
-		
-		switch (clearType) {
-		case CLEAR_TYPE_ALL:
-			tasksCleared = taskView.getAllPresentTasks();
-			archiveTasksCleared = taskView.getAllArchivedTasks();
-			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
-			taskView.clearPresentTasks();
-			taskView.clearArchivedTasks();
-			addCommandToHistory ();
-			break;
-		case CLEAR_TYPE_CURRENT:
-			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NOT_IMPLEMENTED;
-			break;
-		case CLEAR_TYPE_EMPTY:
-			//take as all
-			commandFeedback = MESSAGE_COMMAND_CLEAR_SUCCESS;
-			tasksCleared = taskView.getAllPresentTasks();
-//			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_NO_TYPE;
-			taskView.clearPresentTasks();
-			addCommandToHistory ();
-			break;
-		case CLEAR_TYPE_ARCHIVE:
-			commandFeedback = MESSAGE_COMMAND_CLEAR_ARCHIVE_SUCCESS;
-			archiveTasksCleared = taskView.getAllArchivedTasks();
-			taskView.clearArchivedTasks ();
-			addCommandToHistory ();
-			break;
-		default: 
-			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE;
-		}
-		taskView.clearSearchView();
+		CLEAR_TYPE clearType = retrieveClearTypeAndDetermineClearType();
+		String commandFeedback = processClearType(clearType);
 		
 		return createResult(commandFeedback);
 	}
 	
 	public boolean undo () {
 		boolean isUndoSuccessful = false;
-
-		if(tasksCleared != null) {
-			for (int i = 0; i < tasksCleared.size(); i++) {
-				taskView.addTask(tasksCleared.get(i));
-			}
-			if (tasksCleared.size() == taskView.presentTaskCount()) {
-				isUndoSuccessful = true;
-			} else {
-				isUndoSuccessful = false;
-			}
-		}
-		
-		if(archiveTasksCleared != null) {
-			for (int i = 0; i < archiveTasksCleared.size(); i++) {
-				taskView.addArchivedTask(archiveTasksCleared.get(i));
-			}
-			if (archiveTasksCleared.size() == taskView.archiveTaskCount()) {
-				isUndoSuccessful = true;
-			} else {
-				isUndoSuccessful = false;
-			}
-		}
+		isUndoSuccessful = undoClearedPresentTaskAndClearedArchiveTask(isUndoSuccessful);
 		
 		return isUndoSuccessful;
 	}
@@ -122,4 +65,130 @@ public class CommandClear extends Command {
 		
 		return true;
 	}
+
+	private CLEAR_TYPE retrieveClearTypeAndDetermineClearType() {
+		clearTypeInString = getTaskClearTypeFromInfoTable();
+		if (clearTypeInString == null) {
+			return CLEAR_TYPE.INVALID;
+		} else {
+			clearTypeInString = clearTypeInString.toLowerCase().trim();
+			return determineClearType(clearTypeInString);
+		}
+	}
+	
+	private CLEAR_TYPE determineClearType(String clearTypeInString) {
+		switch (clearTypeInString) {
+		case CLEAR_TYPE_ALL:
+			return CLEAR_TYPE.ALL;
+		case CLEAR_TYPE_PRESENT:
+			return CLEAR_TYPE.PRESENT;
+		case CLEAR_TYPE_ARCHIVE:
+			return CLEAR_TYPE.ARCHIVE;
+		default: 
+			return CLEAR_TYPE.INVALID;
+		}
+	}
+	
+	private String processClearType(CLEAR_TYPE clearType) {
+		String commandFeedback = "";
+		switch (clearType) {
+		case ALL:
+			commandFeedback = clearAll();
+			break;
+		case PRESENT:
+			commandFeedback = clearPresent();
+			break;
+		case ARCHIVE:
+			commandFeedback = clearArchive();
+			break;
+		default: 
+			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE;
+		}
+		return commandFeedback;
+	}
+	
+	private String clearAll() {
+		saveAndClearPresentTaskFromTaskView();
+		saveAndClearArhiveTaskFromTaskView();
+		taskView.clearSearchView();
+		addCommandToHistory ();
+		return MESSAGE_COMMAND_CLEAR_ALL_SUCCESS;
+	}
+	
+	private String clearPresent() {
+		saveAndClearPresentTaskFromTaskView();
+		taskView.clearSearchView();
+		addCommandToHistory ();
+		return MESSAGE_COMMAND_CLEAR_PRESENT_SUCCESS;
+	}
+	
+	private String clearArchive() {
+		saveAndClearArhiveTaskFromTaskView();
+		taskView.clearSearchView();
+		addCommandToHistory ();
+		return MESSAGE_COMMAND_CLEAR_ARCHIVE_SUCCESS;
+	}
+
+	private void saveAndClearPresentTaskFromTaskView() {
+		tasksCleared = taskView.getAllPresentTasks();
+		taskView.clearPresentTasks();
+	}
+	
+	private void saveAndClearArhiveTaskFromTaskView() {
+		archiveTasksCleared = taskView.getAllArchivedTasks();
+		taskView.clearArchivedTasks ();
+	}
+	
+	private boolean addClearedPresentTaskToMemory() {
+		for (int i = 0; i < tasksCleared.size(); i++) {
+			taskView.addTask(tasksCleared.get(i));
+		}
+		if (tasksCleared.size() == taskView.presentTaskCount()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean addClearedArchiveTaskToMemory() {
+		for (int i = 0; i < archiveTasksCleared.size(); i++) {
+			taskView.addArchivedTask(archiveTasksCleared.get(i));
+		}
+		if (archiveTasksCleared.size() == taskView.archiveTaskCount()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean undoClearedArchiveTask() {
+		boolean isUndoSuccessful;
+		isUndoSuccessful = addClearedArchiveTaskToMemory();
+		if(isUndoSuccessful == false) {
+			taskView.clearArchivedTasks ();
+		}
+		return isUndoSuccessful;
+	}
+
+	private boolean undoClearedPresentTask() {
+		boolean isUndoSuccessful;
+		isUndoSuccessful = addClearedPresentTaskToMemory();
+		if(isUndoSuccessful == false) {
+			taskView.clearPresentTasks();
+		}
+		return isUndoSuccessful;
+	}
+	
+	private boolean undoClearedPresentTaskAndClearedArchiveTask(
+			boolean isUndoSuccessful) {
+		if(tasksCleared != null) {
+			isUndoSuccessful = undoClearedPresentTask();
+		}
+		if(archiveTasksCleared != null) {
+			isUndoSuccessful = undoClearedArchiveTask();
+		}
+		return isUndoSuccessful;
+	}
+	
+
 }

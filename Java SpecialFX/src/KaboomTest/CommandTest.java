@@ -8,6 +8,7 @@ import java.util.Hashtable;
 
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandAdd;
+import kaboom.logic.command.CommandClear;
 import kaboom.logic.command.CommandDelete;
 import kaboom.logic.command.CommandFactory;
 import kaboom.logic.command.CommandModify;
@@ -25,14 +26,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class CommandTest {
-	TaskDepository memory;
-	DateAndTimeFormat dateAndTimeFormat;
+	TaskDepository memory = TaskDepository.getInstance();
+	DateAndTimeFormat dateAndTimeFormat = DateAndTimeFormat.getInstance();;
 	Hashtable<KEYWORD_TYPE, String> infoTable;
 	
 	@Before
 	public void initialise() {
-		memory = TaskDepository.getInstance();
-		dateAndTimeFormat = DateAndTimeFormat.getInstance();
 		infoTable = new Hashtable<KEYWORD_TYPE, String>();
 	}
 	
@@ -90,64 +89,99 @@ public class CommandTest {
 		assertEquals("Oops! Did you check the calendar? The date you've entered is invalid",com.execute().getFeedback());
 	}
 	
-	//CommandDelete (Unable to test unless memory is initialised);
-	@Test
-	public void testCommandDelete() {
-		CommandDelete com = new CommandDelete();
-	//	com.setTaskInfo(task);
-		//Test when no taskinfo in memory to be deleted
-//		assertEquals("<Hello World> does not exist...", com.execute().getFeedback());
+//	//CommandDelete (Unable to test unless memory is initialised);
+//	@Test
+//	public void testCommandDelete() {
+//		CommandDelete com = new CommandDelete();
+//	//	com.setTaskInfo(task);
+//		//Test when no taskinfo in memory to be deleted
+////		assertEquals("<Hello World> does not exist...", com.execute().getFeedback());
+////		
+////		//Delete by name
+////		task.setTaskName("abc");
+////		assertEquals("<abc> does not exist...", com.execute().getFeedback());
+//	}
+//
+//	//CommandModify (Unable to test unless memory is initialised);
+//	@Test
+//	public void testCommandModify() {
+//		CommandModify com = new CommandModify();
+////		com.setPreModifiedTask(task);
+//		//Test when no existing task to modify
+////		assertEquals("Fail to cast a spell on <Hello World>", com.execute().getFeedback());
+//	}
+//	
+//	
+//	//CommandView
+//	@Test
+//	public void testCommandView() {
+//		String viewString = "view";
 //		
-//		//Delete by name
-//		task.setTaskName("abc");
-//		assertEquals("<abc> does not exist...", com.execute().getFeedback());
-	}
-
-	//CommandModify (Unable to test unless memory is initialised);
-	@Test
-	public void testCommandModify() {
-		CommandModify com = new CommandModify();
-//		com.setPreModifiedTask(task);
-		//Test when no existing task to modify
-//		assertEquals("Fail to cast a spell on <Hello World>", com.execute().getFeedback());
-	}
+//		Command currentCommand = null;
+//		CommandView com = new CommandView();
+//
+//		//Test Command feedback
+//		//No viewType set
+//		assertEquals("Invalid View Mode", com.execute().getFeedback());
+//		
+//		//Valid ViewTypes
+//		com.setDisplayState(DISPLAY_STATE.TODAY);
+//		assertEquals("Viewing all the tasks for today", com.execute().getFeedback());
+//		
+//		com.setDisplayState(DISPLAY_STATE.TIMELESS);
+//		assertEquals("Viewing timeless tasks", com.execute().getFeedback());
+//		
+//		com.setDisplayState(DISPLAY_STATE.EXPIRED);
+//		assertEquals("Viewing expired tasks", com.execute().getFeedback());
+//		
+//		//Boundary 
+//		//To be discussed whether to accept or no
+//		currentCommand = CommandFactory.createCommand(viewString+" today ");
+//		assertEquals("Viewing all the tasks for today", currentCommand.execute().getFeedback());
+//		
+//		currentCommand = CommandFactory.createCommand(viewString+" today");
+//		assertEquals("Viewing all the tasks for today", currentCommand.execute().getFeedback());
+//		
+//		currentCommand = CommandFactory.createCommand(viewString+" today 123");
+//		assertEquals("Invalid View Mode", currentCommand.execute().getFeedback());
+//		
+//		//Invalid Types
+//		currentCommand = CommandFactory.createCommand(viewString+" todays");
+//		assertEquals("Invalid View Mode", currentCommand.execute().getFeedback());
+//	}
 	
-	//CommandView
+	//CommandClear
 	@Test
-	public void testCommandView() {
-		String viewString = "view";
+	public void testCommandClear() {
+		CommandClear com = new CommandClear();
 		
-		Command currentCommand = null;
-		CommandView com = new CommandView();
-
-		//Test Command feedback
-		//No viewType set
-		assertEquals("Invalid View Mode", com.execute().getFeedback());
+		//Clear without setting clear type
+		initialise();
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("enter <clear all> to remove all tasks or <clear current> to remove current view",com.execute().getFeedback());
 		
-		//Valid ViewTypes
-		com.setDisplayState(DISPLAY_STATE.TODAY);
-		assertEquals("Viewing all the tasks for today", com.execute().getFeedback());
+		//Clear with invalid clear type
+		initialise();
+		infoTable.put(KEYWORD_TYPE.CLEARTYPE, "lala");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("enter <clear all> to remove all tasks or <clear current> to remove current view",com.execute().getFeedback());
 		
-		com.setDisplayState(DISPLAY_STATE.TIMELESS);
-		assertEquals("Viewing timeless tasks", com.execute().getFeedback());
+		//Clear with ALL clear type
+		initialise();
+		infoTable.put(KEYWORD_TYPE.CLEARTYPE, "all");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("1.. 2.. 3.. Pooof! Your schedule has gone with the wind",com.execute().getFeedback());
 		
-		com.setDisplayState(DISPLAY_STATE.EXPIRED);
-		assertEquals("Viewing expired tasks", com.execute().getFeedback());
+		//Clear with PRESENT clear type
+		initialise();
+		infoTable.put(KEYWORD_TYPE.CLEARTYPE, "present");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("1.. 2.. 3.. Pooof! Your present schedule has gone with the wind",com.execute().getFeedback());
 		
-		//Boundary 
-		//To be discussed whether to accept or no
-		currentCommand = CommandFactory.createCommand(viewString+" today ");
-		assertEquals("Viewing all the tasks for today", currentCommand.execute().getFeedback());
-		
-		currentCommand = CommandFactory.createCommand(viewString+" today");
-		assertEquals("Viewing all the tasks for today", currentCommand.execute().getFeedback());
-		
-		currentCommand = CommandFactory.createCommand(viewString+" today 123");
-		assertEquals("Invalid View Mode", currentCommand.execute().getFeedback());
-		
-		//Invalid Types
-		currentCommand = CommandFactory.createCommand(viewString+" todays");
-		assertEquals("Invalid View Mode", currentCommand.execute().getFeedback());
-		}
-	
+		//Clear with ARCHIVE clear type
+		initialise();
+		infoTable.put(KEYWORD_TYPE.CLEARTYPE, "archive");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("3.. 2.. 1.. Pooof! Your archive has gone with the wind",com.execute().getFeedback());
+	}
 }

@@ -92,11 +92,15 @@ public class TaskInfoDisplay {
 		if (dateTimeFormat.isToday(timeDate)) {
 			return fullTimeFormat.format(timeDate.getTime()) + ", Today";
 		} else if (dateTimeFormat.isThisWeek(timeDate)) {
-			return fullTimeFormat.format(timeDate.getTime()) + ", " + dayOnlyFormat.format(timeDate.getTime());
+			return fullTimeFormat.format(timeDate.getTime()) +  ", " + dayOnlyFormat.format(timeDate.getTime());
 		} else if (dateTimeFormat.isThisYear(timeDate)) {
-			return fullTimeFormat.format(timeDate.getTime()) + ", " + dayMonthFormat.format(timeDate.getTime());
+			return fullTimeFormat.format(timeDate.getTime()) + ", " +
+					dayMonthFormat.format(timeDate.getTime())  +
+					" (" + dayOnlyFormat.format(timeDate.getTime()) + ")"; 
 		} else {
-			return fullTimeFormat.format(timeDate.getTime()) + ", " + fullDateFormat.format(timeDate.getTime());
+			return fullTimeFormat.format(timeDate.getTime()) + ", " + 
+					fullDateFormat.format(timeDate.getTime()) +
+					" (" + dayOnlyFormat.format(timeDate.getTime()) + ")";
 		}
 	}
 

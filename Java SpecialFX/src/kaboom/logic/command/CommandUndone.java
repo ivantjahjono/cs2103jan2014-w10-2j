@@ -4,6 +4,7 @@ package kaboom.logic.command;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import kaboom.logic.command.Command.COMMAND_ERROR;
 import kaboom.shared.FormatIdentify;
 import kaboom.shared.KEYWORD_TYPE;
 import kaboom.shared.Result;
@@ -25,11 +26,17 @@ public class CommandUndone extends Command {
 	}
 
 	public Result execute() {
-		assert taskListShop != null;
+		assert taskDepo != null;
 
-		Result errorResult = taskDetectionWithErrorFeedback();
-		if(errorResult != null) {
-			return errorResult;
+//		Result errorResult = invalidTaskNameAndClashErrorDetection();
+//		if(errorResult != null) {
+//			return errorResult;
+//		} else {
+//			taskToBeModified = getTask();
+//		}
+		COMMAND_ERROR commandError = errorDetectionForInvalidTaskNameAndId();
+		if(commandError != null) {
+			return commandErrorHandler(commandError);
 		} else {
 			taskToBeModified = getTask();
 		}
