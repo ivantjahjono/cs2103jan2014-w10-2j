@@ -15,7 +15,7 @@ public class TextParser {
 	private final String KEYWORD_MODIFY = ">";
 	private final String KEYWORD_TASKID = "#";
 	private final String KEYWORD_DATEONLY = "^";
-	private final String KEYWORD_CLEAR = "^(all|current|archive)";
+	private final String KEYWORD_CLEAR = "^(all|present|archive)";
 	private final String KEYWORD_VIEW = "^(today|future|timeless|expired|archive)";
 	private final String KEYWORD_HELP = "^(add|delete|modify|complete|search|view|close)";
 	
