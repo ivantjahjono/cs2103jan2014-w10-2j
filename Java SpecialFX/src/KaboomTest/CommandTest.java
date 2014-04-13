@@ -40,7 +40,7 @@ public class CommandTest {
 	public void testInvalidCommand() {
 		Command com = new Command();
 		
-		assertEquals("Invalid command!",com.execute().getFeedback());
+		assertEquals("Please enter a valid command. Type <help> for info.",com.execute().getFeedback());
 	}
 	
 	//CommandAdd
@@ -158,13 +158,13 @@ public class CommandTest {
 		//Clear without setting clear type
 		initialise();
 		com.initialiseCommandInfoTable(infoTable);
-		assertEquals("enter <clear all> to remove all tasks or <clear current> to remove current view",com.execute().getFeedback());
+		assertEquals("Enter <clear all> to remove all tasks or <clear current> to remove current view",com.execute().getFeedback());
 		
 		//Clear with invalid clear type
 		initialise();
 		infoTable.put(KEYWORD_TYPE.CLEARTYPE, "lala");
 		com.initialiseCommandInfoTable(infoTable);
-		assertEquals("enter <clear all> to remove all tasks or <clear current> to remove current view",com.execute().getFeedback());
+		assertEquals("Enter <clear all> to remove all tasks or <clear current> to remove current view",com.execute().getFeedback());
 		
 		//Clear with ALL clear type
 		initialise();
