@@ -102,6 +102,7 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 	@FXML private Pane 	helpCompletePane;
 	@FXML private Pane 	helpViewPane;
 	@FXML private Pane 	helpSearchPane;
+	@FXML private Pane 	helpPagePane;
 		  private Pane 	activeHelpPanel;
 	
 	// Tracks previous commands
@@ -484,6 +485,10 @@ public class MainWindow implements javafx.fxml.Initializable, Observer {
 				
 			case VIEW:
 				activeHelpPanel = helpViewPane;
+				break;
+				
+			case PAGE:
+				activeHelpPanel = helpPagePane;
 				break;
 				
 			default:

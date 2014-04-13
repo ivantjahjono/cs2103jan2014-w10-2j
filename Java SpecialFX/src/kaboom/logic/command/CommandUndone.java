@@ -25,7 +25,7 @@ public class CommandUndone extends Command {
 	}
 
 	public Result execute() {
-		assert taskListShop != null;
+		assert taskDepo != null;
 
 		Result errorResult = taskDetectionWithErrorFeedback();
 		if(errorResult != null) {

@@ -68,7 +68,7 @@ public class CommandModify extends Command {
 	 * 
 	 */
 	public Result execute() {
-		assert taskListShop != null;
+		assert taskDepo != null;
 		assert infoTable != null;
 
 		if(infoTable == null) {
