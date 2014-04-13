@@ -55,23 +55,28 @@ public class Command {
 		infoTable = new Hashtable<KEYWORD_TYPE, String>();
 		taskView = TaskView.getInstance();
 	}
-
+	
+	//used
 	public void setCommandType (COMMAND_TYPE type) {
 		commandType = type;
 	}
-
+	
+	//used
 	public COMMAND_TYPE getCommandType () {
 		return commandType;
 	}
 
+	//used
 	public Result execute() {
 		return createResult(MESSAGE_COMMAND_INVALID);
 	}
 	
+	//used
 	protected Result createResult (String feedback) {
 		return createResult(feedback, DISPLAY_STATE.INVALID, null);
 	}
 
+	//used
 	protected Result createResult (String feedback, DISPLAY_STATE displayState, TaskInfo taskToFocus) {
 		Result commandResult = new Result();
 		commandResult.setFeedback(feedback);
@@ -85,6 +90,7 @@ public class Command {
 		return false;
 	}
 	
+	//used
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
 		if (info.equals("")) {
 			return true;
@@ -96,6 +102,7 @@ public class Command {
 		return false;
 	}
 	
+	//used
 	protected Hashtable<KEYWORD_TYPE, String> updateFormatList (String info, Vector<FormatIdentify> indexList) {
 		getCommandString(info, indexList);
 		info = textParser.removeFirstWord(info);
@@ -106,6 +113,7 @@ public class Command {
 		return taskInformationTable;
 	}
 	
+	//used
 	protected void updateFormatListBasedOnHashtable(Vector<FormatIdentify> indexList, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
 		String stringDate;
 		
@@ -263,7 +271,7 @@ public class Command {
 //		determineAndSetTaskType(task);
 //	}
 	
-	protected void saveTaskStartDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
+	protected void saveTaskStarsearctDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
 		DateAndTimeFormat datFormat = DateAndTimeFormat.getInstance();
 		String startDate = datFormat.convertStringDateToDayMonthYearFormat(infoHashes.get(KEYWORD_TYPE.START_DATE));
 		String startTime = datFormat.convertStringTimeTo24HourString(infoHashes.get(KEYWORD_TYPE.START_TIME));
@@ -408,9 +416,10 @@ public class Command {
 	//used
 	protected int numOfTasksWithSimilarNames(String name) {
 		int count = 0;
-		Vector<TaskInfo> currentView = taskView.getCurrentView();
-		for (int i = 0; i < currentView.size(); i++) {
-			if (currentView.get(i).getTaskName().toLowerCase().contains(name.toLowerCase())) {
+		Vector<TaskInfo> currentViewList = taskView.getCurrentView();
+		for (int i = 0; i < currentViewList.size(); i++) {
+			String nameFromCurrentViewListInLowerCase = currentViewList.get(i).getTaskName().toLowerCase();
+			if (nameFromCurrentViewListInLowerCase.contains(name.toLowerCase())) {
 				count++;
 			}
 		}

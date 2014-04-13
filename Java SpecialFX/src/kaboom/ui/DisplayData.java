@@ -85,17 +85,17 @@ public class DisplayData extends Observable {
 		TaskInfo taskToFocus = commandResult.getTaskToFocus();
 		int indexToGo = -1;
 		if (taskToFocus != null) {
-			indexToGo = TaskMasterKaboom.getInstance().indexToGoTo(taskToFocus); /*taskView.getTaskPositionInView(taskToFocus);*/
+			indexToGo = TaskMasterKaboom.getInstance().indexToGoTo(taskToFocus);
+		}
+		
+		if (indexToGo != -1) {
+			currentPage = indexToGo/NUM_OF_TASK_PER_PAGE;
 		}
 
 		if (commandResult.getGoToNextPage()) {
 			goToNextPage();
 		} else if (commandResult.getGoToPrevPage()) {
 			goToPreviousPage();
-		} else 
-
-		if (indexToGo != -1) {
-			currentPage = indexToGo/NUM_OF_TASK_PER_PAGE;
 		}
 
 		int maxPages = getMaxTaskDisplayPages(tasksDataToDisplay)-1;
@@ -103,12 +103,16 @@ public class DisplayData extends Observable {
 			currentPage = maxPages;
 		}
 		
-		currentWeekDay = DateAndTimeFormat.getInstance().getCurrentWeekday().toUpperCase();
-		currentDate = DateAndTimeFormat.getInstance().getDateToday();
-		currentTime = DateAndTimeFormat.getInstance().getTimeNow();
+		updateCurrentDateAndTime();
 
 		setChanged();
 		notifyObservers();
+	}
+
+	private void updateCurrentDateAndTime() {
+		currentWeekDay = DateAndTimeFormat.getInstance().getCurrentWeekday().toUpperCase();
+		currentDate = DateAndTimeFormat.getInstance().getDateToday();
+		currentTime = DateAndTimeFormat.getInstance().getTimeNow();
 	}
 
 	private void updateHelpPanelStateBasedOnResult(Result commandResult) {

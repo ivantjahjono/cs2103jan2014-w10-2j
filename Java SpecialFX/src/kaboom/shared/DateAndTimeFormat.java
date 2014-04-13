@@ -24,6 +24,9 @@ public class DateAndTimeFormat {
 		new SimpleDateFormat(dateFormat6)
 	};
 	
+	private final String endTimeOfTheDay = "235959";
+	private final String startTimeOfTheDay = "000000";
+	
 	private static DateAndTimeFormat instance = null;
 	
 	private DateAndTimeFormat() {
@@ -37,20 +40,13 @@ public class DateAndTimeFormat {
 		return instance;
 	}
 
-		
-	/* (MOVING TO CONTROLLER)
-	 * If only date is valid: Set calendar to date and default time of 0000 (12am)
-	 * If only time is valid: Set calendar to time and default date to current day
-	 * If both are valid: Set calendar to respective date and time
-	 * If both are null: return null;
-	 */
 	
 	public Calendar formatStringToCalendar (String date, String time) {
 		if(date == null || time == null) {
 			return null;
 		}
 		Calendar dateAndTime = Calendar.getInstance();
-		SimpleDateFormat sdf = new  SimpleDateFormat("HHmm ddMMyy");
+		SimpleDateFormat sdf = new  SimpleDateFormat("HHmmss ddMMyy");
 		Date dateTime = null;
 		try {
 			dateTime = sdf.parse(time+" "+date);
@@ -101,6 +97,7 @@ public class DateAndTimeFormat {
 		int hour = 0;
 		int addedHour = 0;
 		int minutes = 0;
+		int seconds = 0;
 		boolean ampmTiming = false;
 		
 		// Check if it contains am or pm
@@ -131,7 +128,7 @@ public class DateAndTimeFormat {
 			hour += addedHour;
 		}
 		
-		return String.format("%02d%02d", hour, minutes);
+		return String.format("%02d%02d%02d", hour, minutes, seconds);
 	}
 	
 	public String convertStringDateToDayMonthYearFormat(String date) {
@@ -222,7 +219,7 @@ public class DateAndTimeFormat {
 	}
 	
 	public String timeFromCalendarToString (Calendar cal) {
-		String timeFormatString = "HHmm";
+		String timeFormatString = "HHmmss";
 		SimpleDateFormat dayFormat = new SimpleDateFormat(timeFormatString);
 		
 		return dayFormat.format(cal.getTime());
@@ -277,6 +274,14 @@ public class DateAndTimeFormat {
 		String year = Integer.toString(cal.get(Calendar.YEAR));
 		todayString = day + month + year;
 		return todayString;
+	}
+	
+	public String getEndTimeOfTheDay () {
+		return endTimeOfTheDay;
+	}
+	
+	public String getStartTimeOfTheDay () {
+		return startTimeOfTheDay;
 	}
 	
 	//*************************** TEST METHODS **********************************
