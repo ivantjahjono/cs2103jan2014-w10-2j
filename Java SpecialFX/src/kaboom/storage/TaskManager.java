@@ -20,9 +20,9 @@ import kaboom.logic.command.Command;
 import kaboom.shared.DISPLAY_STATE;
 import kaboom.shared.TaskInfo;
 
-public class TaskView {
+public class TaskManager {
 
-	private static TaskView instance = null;
+	private static TaskManager instance = null;
 
 	private Vector<TaskInfo> currentView; 	//Current view
 	private Vector<TaskInfo> searchView;  	//Vector for searches
@@ -33,7 +33,7 @@ public class TaskView {
 	private final String FILENAME;
 	private History history;
 
-	private TaskView() {
+	private TaskManager() {
 		taskListShop = TaskDepository.getInstance();
 		currentView = taskListShop.getToday();
 		searchView = new Vector<TaskInfo>();
@@ -44,7 +44,7 @@ public class TaskView {
 		fileStorage.load();
 	}
 	
-	private TaskView(String fileName) {
+	private TaskManager(String fileName) {
 		taskListShop = TaskDepository.getInstance();
 		currentView = taskListShop.getToday();
 		searchView = new Vector<TaskInfo>();
@@ -55,16 +55,16 @@ public class TaskView {
 		fileStorage.load();
 	}
 
-	public static TaskView getInstance () {
+	public static TaskManager getInstance () {
 		if (instance == null) {
-			instance = new TaskView();
+			instance = new TaskManager();
 		}
 		return instance;
 	}
 	
-	public static TaskView getInstance(String fileName) {
+	public static TaskManager getInstance(String fileName) {
 		if (instance == null) {
-			instance = new TaskView(fileName);
+			instance = new TaskManager(fileName);
 		}
 		return instance;
 	}
