@@ -26,18 +26,17 @@ public class Command {
 	protected final String MESSAGE_COMMAND_FAIL_INVALID_DATE = "Oops! Did you check the calendar? The date you've entered is invalid";
 	protected final String MESSAGE_COMMAND_FAIL_NO_SUCH_TASK = "Oops! Modify wut??";
 	protected final String MESSAGE_COMMAND_FAIL_NO_TASK_NAME = "Oops! What was the task name again??";
-	protected final String MESSAGE_COMMAND_INVALID = "Invalid command!";
-	
+	protected final String MESSAGE_COMMAND_FAIL_INVALID_TASKNAME = "Oops! HAVENDO??";
+	protected final String MESSAGE_COMMAND_INVALID = "Please enter a valid command. Type <help> for info.";
 	
 	protected COMMAND_TYPE commandType;
 	protected TextParser textParser;
 	protected KEYWORD_TYPE[] keywordList;
-	Hashtable<KEYWORD_TYPE, String> infoTable; //TEMP
+	Hashtable<KEYWORD_TYPE, String> infoTable;
 	protected TaskView taskView;
-
 	
 	protected enum COMMAND_ERROR{
-		CLASH, TASK_DOES_NOT_EXIST, NO_TASK_NAME, INVALID_DATE, NIL
+		CLASH, TASK_DOES_NOT_EXIST, NO_TASK_NAME, INVALID_DATE, INVALID_TASKNAME ,NIL
 	}
 	
 	public Command () {
@@ -252,24 +251,44 @@ public class Command {
 			return createResult(MESSAGE_COMMAND_FAIL_NO_TASK_NAME);
 		case INVALID_DATE:
 			return createResult(MESSAGE_COMMAND_FAIL_INVALID_DATE);
+		case INVALID_TASKNAME:
+			return createResult(MESSAGE_COMMAND_FAIL_INVALID_TASKNAME);
 		default:
 			return null;
 		}
 	}
 	
-	protected COMMAND_ERROR errorDetectionForInvalidTaskNameAndId() {
-		COMMAND_ERROR commandError = null;
-		if (isTaskIdValid()) {
-			return commandError;
+	protected COMMAND_ERROR errorDetectionForInvalidTaskNameAndId() {	
+		String taskId = getTaskIdFromInfoTable();
+		String taskName = getTaskNameFromInfoTable();
+		if(taskId != null && !isTaskNameNullOrEmpty(taskName)) {
+			return COMMAND_ERROR.INVALID_TASKNAME;
+		} else if(isTaskIdValid()) {
+			return null;
 		} else {
-			String taskName = getTaskNameFromInfoTable();
 			if (isTaskNameNullOrEmpty(taskName)) {
-				commandError = COMMAND_ERROR.NO_TASK_NAME;
+				return COMMAND_ERROR.NO_TASK_NAME;
 			} else {
-				commandError = taskExistenceOrClashDetection(taskName);
-			} 
+				return taskExistenceOrClashDetection(taskName);
+			}
 		}
-		return commandError;
+	}
+
+//	protected COMMAND_ERROR errorDetectionForInvalidTaskName() {
+//		String taskName = getTaskNameFromInfoTable();
+//		String taskId = getTaskIdFromInfoTable();
+//		
+//		if(taskId == null && isTaskNameNullOrEmpty(taskName)) {
+//			return COMMAND_ERROR.NO_TASK_NAME;
+//		} else if(hasBothTaskNameAndTaskId(taskName, taskId)) {
+//			return COMMAND_ERROR.INVALID_TASKNAME;
+//		} else {
+//			return null;
+//		}
+//	}
+	
+	private boolean hasBothTaskNameAndTaskId(String taskName, String taskId) {
+		return taskId != null && isTaskNameNullOrEmpty(taskName);
 	}
 
 	private boolean isTaskNameNullOrEmpty(String taskName) {

@@ -19,7 +19,7 @@ public class CommandHelp extends Command {
 	private final String HELP_TYPE_PAGE 	= "page";
 	private final String HELP_TYPE_CLOSE 	= "close";
 	
-	private final String HELP_INVALID_COMMAND = "Invalid help command!";
+	private final String HELP_INVALID_COMMAND = "Nope. Not help command! Type <help> for more info.";
 		
 	public CommandHelp () {
 		commandType = COMMAND_TYPE.HELP;
