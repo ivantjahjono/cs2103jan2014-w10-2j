@@ -168,12 +168,17 @@ public class TaskDepository {
 		return null;
 	}
 
+	
+	public void refreshTasks() {
+		refreshTasks(false);
+	}
+	
 	//This function refreshes all the tasks in the vector to check
 	//whether it has expired and set to true if it has expired.
 	//Sets to false if the task has not expired
 	//Floating tasks have a default of not expired
 	//Also changes current tasks to archived tasks and vice versa
-	public void refreshTasks() {
+	public void refreshTasks(boolean uiFlag) {
 		//Shift from archive to current list
 		for (int i = 0; i < archivedTaskList.size(); i++) {
 			TaskInfo singleTask = archivedTaskList.get(i);
@@ -199,7 +204,7 @@ public class TaskDepository {
 				singleTask.setExpiryFlag(false);  //Floating tasks cannot expire
 			}
 
-			if (singleTask.isRecent()) {
+			if (uiFlag && singleTask.isRecent()) {
 				singleTask.setRecent(false);
 			}
 

@@ -202,8 +202,12 @@ public class TaskView {
 		clearSearchView();
 	}
 	
-	public void refreshTasks() {
+	public void refreshTasksFlagsOnly() {
 		taskListShop.refreshTasks();
+	}
+	
+	public void refreshAllTasksFlags() {
+		taskListShop.refreshTasks(true);
 	}
 	
 	public void addToSearchView(TaskInfo task) {
