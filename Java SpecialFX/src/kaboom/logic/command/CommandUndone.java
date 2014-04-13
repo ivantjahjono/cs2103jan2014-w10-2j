@@ -4,7 +4,6 @@ package kaboom.logic.command;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import kaboom.logic.command.Command.COMMAND_ERROR;
 import kaboom.shared.FormatIdentify;
 import kaboom.shared.KEYWORD_TYPE;
 import kaboom.shared.Result;

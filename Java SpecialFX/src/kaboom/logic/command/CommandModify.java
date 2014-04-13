@@ -6,28 +6,17 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import kaboom.logic.command.Command.COMMAND_ERROR;
 import kaboom.shared.DateAndTimeFormat;
 import kaboom.shared.FormatIdentify;
 import kaboom.shared.KEYWORD_TYPE;
 import kaboom.shared.Result;
-import kaboom.shared.TASK_TYPE;
 import kaboom.shared.TaskInfo;
-import kaboom.storage.TaskDepository;
 import kaboom.storage.TaskView;
 
 
 public class CommandModify extends Command {
 
-	private final String MESSAGE_COMMAND_MODIFY_SUCCESS = "WOOT! Manipulated %1$s";
-	private final String MESSAGE_COMMAND_MODIFY_FAIL = "Oops! Fail to cast a spell on <%1$s>";
-//	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_NAME = "Master Wugui says: 'My time has come to find the task name'";
-//	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_SUCH_TASK = "Trying to manipulate air";
-	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_TASK_TO_MODIFY = "<%1$s> does not exist...";
 	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_CHANGE = "Nothing happened...";
-	private final String MESSAGE_COMMAND_MODIFY_FAIL_SET_ENDDATEBOFORESTARDATE = "Trying to let <%1$s> end before it even started...";
-	private final String MESSAGE_COMMAND_MODIFY_FAIL_SET_STARTDATEAFTERENDDATE = "Trying to let <%1$s> start after it ended...";
-
 	private final String MESSAGE_TASK_NAME = "<%1$s> has";
 	private final String MESSAGE_COMMAND_MODIFY_SUCCESS_NAME_CHANGE = " evolved into <%1$s>";
 	private final String MESSAGE_COMMAND_MODIFY_SUCCESS_TIME_CHANGE = " manipulated time";
@@ -163,10 +152,6 @@ public class CommandModify extends Command {
 		}
 
 		return feedback;
-	}
-
-	private boolean isNumeric(String taskName) {
-		return taskName.matches("\\d{1,4}");
 	}
 	
 	private boolean modifyTaskName(TaskInfo temp) {

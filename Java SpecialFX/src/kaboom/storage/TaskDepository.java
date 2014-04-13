@@ -240,10 +240,6 @@ public class TaskDepository {
 		return taskID;
 	}
 
-	
-	
-	
-
 	public int shopSize () {
 		return currentTaskList.size();
 	}
