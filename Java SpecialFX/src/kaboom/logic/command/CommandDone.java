@@ -27,7 +27,7 @@ public class CommandDone extends Command {
 	public Result execute() {
 		assert taskDepo != null;
 		
-		Result errorResult = taskDetectionWithErrorFeedback();
+		Result errorResult = invalidTaskNameAndClashErrorDetection();
 		if(errorResult != null) {
 			return errorResult;
 		} else {

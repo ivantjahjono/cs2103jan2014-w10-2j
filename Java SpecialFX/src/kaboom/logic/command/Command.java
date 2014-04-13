@@ -19,8 +19,6 @@ import kaboom.shared.comparators.FormatIdentifyComparator;
 import kaboom.storage.History;
 import kaboom.storage.TaskDepository;
 import kaboom.storage.TaskView;
-import kaboom.ui.DisplayData;
-
 /* 
  ** Purpose: 
  */
@@ -34,59 +32,86 @@ public class Command {
 	
 	protected COMMAND_TYPE commandType;
 	protected TextParser textParser;
-	protected TaskDepository taskDepo;
-	protected DisplayData displayData;
 	protected KEYWORD_TYPE[] keywordList;
 	Hashtable<KEYWORD_TYPE, String> infoTable; //TEMP
 	protected TaskView taskView;
 
+	//TODO
+	protected TaskDepository taskDepo;
+	
 	protected enum COMMAND_ERROR{
-		NO_TASK_NAME, INVALID_DATE, NIL
+		CLASH, TASK_DOES_NOT_EXIST, NO_TASK_NAME, INVALID_DATE, NIL
 	}
 	
 	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
 		textParser = TextParser.getInstance();
-		taskDepo = TaskDepository.getInstance();
-		displayData = DisplayData.getInstance();
-		keywordList = new KEYWORD_TYPE[0];
-		infoTable = new Hashtable<KEYWORD_TYPE, String>();
 		taskView = TaskView.getInstance();
+		infoTable = new Hashtable<KEYWORD_TYPE, String>();
+		keywordList = new KEYWORD_TYPE[0];
+		
+		taskDepo = TaskDepository.getInstance();
 	}
 	
-	//used
 	public void setCommandType (COMMAND_TYPE type) {
 		commandType = type;
 	}
 	
-	//used
 	public COMMAND_TYPE getCommandType () {
 		return commandType;
 	}
 
-	//used
 	public Result execute() {
 		return createResult(MESSAGE_COMMAND_INVALID);
 	}
 	
-	//used
 	protected Result createResult (String feedback) {
 		return createResult(feedback, DISPLAY_STATE.INVALID, null);
 	}
 
-	//used
 	protected Result createResult (String feedback, DISPLAY_STATE displayState, TaskInfo taskToFocus) {
 		Result commandResult = new Result();
 		commandResult.setFeedback(feedback);
 		commandResult.setDisplayState(displayState);
 		commandResult.setTaskToFocus(taskToFocus);
-
 		return commandResult;
 	}
 	
 	public boolean undo() {
 		return false;
 	}
+	
+	public void initialiseCommandInfoTable(String userInputSentence) {
+		infoTable = textParser.testExtractList(userInputSentence, keywordList);
+	}
+	
+	public void initialiseCommandInfoTable(Hashtable<KEYWORD_TYPE, String> infoTable) {
+		this.infoTable = infoTable;
+	}
+	
+	//TODO
+	protected void addCommandToHistory () {
+		History.getInstance().addToRecentCommands(this);
+	}
+	
+	protected int numOfTasksWithSimilarNames(String name) {
+		int count = 0;
+		Vector<TaskInfo> currentViewList = taskView.getCurrentView();
+		for (int i = 0; i < currentViewList.size(); i++) {
+			String nameFromCurrentViewListInLowerCase = currentViewList.get(i).getTaskName().toLowerCase();
+			if (nameFromCurrentViewListInLowerCase.contains(name.toLowerCase())) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	protected Result callSearch() {
+		Command search = new CommandSearch();
+		search.initialiseCommandInfoTable(infoTable);
+		return search.execute();
+	}
+	//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ DONE ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 	
 	//used
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
@@ -175,27 +200,12 @@ public class Command {
 	}
 	
 	//used
-	public void initialiseCommandInfoTable(String userInputSentence) {
-		infoTable = textParser.testExtractList(userInputSentence, keywordList);
-		//extractAndStoreTaskInfo(infoTable);
-	}
-	
-	public void initialiseCommandInfoTable(Hashtable<KEYWORD_TYPE, String> infoTable) {
-		this.infoTable = infoTable;
-	}
-	
-	//used
-	protected void addCommandToHistory () {
-		History.getInstance().addToRecentCommands(this);
-	}
-	
-	//used
-	protected Result taskDetectionWithErrorFeedback() {
-		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
+	protected Result invalidTaskNameAndClashErrorDetection() {
+		String taskName = getTaskNameFromInfoTable();
 		String feedback = "";
 		Result errorFeedback = null;
 		
-		if(!hasTaskWithTaskId()) {
+		if(!existsATaskWithGivenTaskId()) {
 			if (taskName != null && !taskName.isEmpty()){
 				int taskCount = numOfTasksWithSimilarNames(taskName);
 				
@@ -214,8 +224,28 @@ public class Command {
 		return errorFeedback;
 	}
 	
+	protected COMMAND_ERROR invalidTaskNameAndClashErrorDetection2() {
+		if (existsATaskWithGivenTaskId()) {
+			return null;
+		} else {
+			String taskName = getTaskNameFromInfoTable();
+			if (taskName == null || taskName.isEmpty()) {
+				return COMMAND_ERROR.NO_TASK_NAME;
+			} else {
+				int taskCount = numOfTasksWithSimilarNames(taskName);
+				if (taskCount > 1) {
+					return COMMAND_ERROR.CLASH;
+				}
+				else if (taskCount < 1) {
+					return COMMAND_ERROR.TASK_DOES_NOT_EXIST;
+				}
+			} 
+		}
+		return null;
+	}
+	
 	//used
-	protected boolean hasTaskWithTaskId() {
+	protected boolean existsATaskWithGivenTaskId() {
 		TaskInfo task = getTaskWithTaskId();
 		if(task == null) {
 			return false;
@@ -225,7 +255,7 @@ public class Command {
 
 	//used
 	protected TaskInfo getTaskWithTaskId() {
-		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
+		String taskId = getTaskIdFromInfoTable();
 		if (taskId != null) {
 			int taskIdInteger = Integer.parseInt(taskId);
 			return taskView.getTaskFromViewByID(taskIdInteger-1);
@@ -235,7 +265,7 @@ public class Command {
 	
 	//used
 	protected TaskInfo getTaskWithTaskName() {
-		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
+		String taskName = getTaskNameFromInfoTable();
 		if (taskName != null && !taskName.isEmpty()) {
 			return taskView.getTaskFromViewByName(taskName);
 		}
@@ -249,26 +279,6 @@ public class Command {
 			task = getTaskWithTaskName();
 		}
 		return task;
-	}
-	
-	//used
-	protected Result callSearch() {
-		Command search = new CommandSearch();
-		search.initialiseCommandInfoTable(infoTable);
-		return search.execute();
-	}
-	
-	//used
-	protected int numOfTasksWithSimilarNames(String name) {
-		int count = 0;
-		Vector<TaskInfo> currentViewList = taskView.getCurrentView();
-		for (int i = 0; i < currentViewList.size(); i++) {
-			String nameFromCurrentViewListInLowerCase = currentViewList.get(i).getTaskName().toLowerCase();
-			if (nameFromCurrentViewListInLowerCase.contains(name.toLowerCase())) {
-				count++;
-			}
-		}
-		return count;
 	}
 	
 	//*******************************************RETRIEVAL METHODS FROM INFOTABLE***********************************************
@@ -320,163 +330,19 @@ public class Command {
 		return infoTable.get(KEYWORD_TYPE.PAGE);
 	}
 	
-	
-	
-//	protected void storeTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
-//	taskInfo = new TaskInfo();
-//	
-//	
-//	 //In progress
-//	String stringDate;
-//	String stringTime;
-//	Calendar dateAndTime = null;
-//	
-//	// Loop through the list and update to our list
-//	Enumeration<KEYWORD_TYPE> elementItr =  infoHashes.keys();
-//	
-//	while (elementItr.hasMoreElements()) {
-//		KEYWORD_TYPE currentKeyword = elementItr.nextElement();
-//		
-//		switch (currentKeyword) {
-//			case TASKNAME:
-//				commandObjectTable.put(currentKeyword, infoHashes.get(currentKeyword));
-//				break;
-//				
-//			case START_TIME:
-//			case END_TIME:
-//				stringTime = infoHashes.get(currentKeyword);
-//				
-//				// Check if time is valid
-//				if (DateAndTimeFormat.getInstance().is12hrTimeValid(stringTime) ||
-//					DateAndTimeFormat.getInstance().is24hrTimeValid(stringTime)) {
-//					commandObjectTable.put(currentKeyword, infoHashes.get(currentKeyword));
-//				}
-//				break;
-//				
-//			case START_DATE:
-//			case END_DATE:
-//				stringDate = infoHashes.get(currentKeyword);
-//				stringTime = "";
-//				// Check if time is valid
-//				if (DateAndTimeFormat.getInstance().isDateValid(stringDate)) {
-//					// Check if start or end time is valid
-//					if (currentKeyword == KEYWORD_TYPE.START_DATE && commandObjectTable.containsKey(KEYWORD_TYPE.START_TIME)) {
-//						stringTime = (String) commandObjectTable.get(KEYWORD_TYPE.START_TIME);
-//					} else if (currentKeyword == KEYWORD_TYPE.START_DATE && commandObjectTable.containsKey(KEYWORD_TYPE.END_TIME)) {
-//						stringTime = (String) commandObjectTable.get(KEYWORD_TYPE.END_TIME);
-//					}
-//					
-//					if (!stringTime.equals("")) {
-//						try {
-//							dateAndTime = DateAndTimeFormat.getInstance().formatStringToCalendar(stringDate, stringTime);
-//						} catch (InvalidDateAndTimeException e) {
-//							e.printStackTrace();
-//						}
-//					}
-//					
-//				} else {
-//					
-//				}
-//				break;
-//				
-//			case PRIORITY:
-//				commandObjectTable.put(currentKeyword, infoHashes.get(currentKeyword));
-//				break;
-//				
-//			case VIEWTYPE:
-//				commandObjectTable.put(currentKeyword, infoHashes.get(currentKeyword));
-//				break;
-//				
-//			case SORT:
-//				commandObjectTable.put(currentKeyword, infoHashes.get(currentKeyword));
-//				break;
-//				
-//			default:
-//				commandObjectTable.put(currentKeyword, infoHashes.get(currentKeyword));
-//				break;
-//		}
-//		
-//	}
-//}
-
-//This function takes in the hash table that is returned from the controller
-//extracts from the hash table and stores the information in the taskInfo variable
-//public void extractAndStoreTaskInfo(Hashtable<KEYWORD_TYPE, String> infoHashes) {
-//	storeTaskInfo(infoHashes);
-//}
-
-
-//protected String saveTaskName(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
-//	String taskName = infoHashes.get(KEYWORD_TYPE.TASKNAME);
-//	task.setTaskName(taskName);
-//	return taskName;
-//}
-//
-//protected String saveModifiedTaskName(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
-//	String taskName = infoHashes.get(KEYWORD_TYPE.MODIFIED_TASKNAME);
-//	task.setTaskName(taskName);
-//	return taskName;
-//}
-//
-//protected String saveTaskPriority(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
-//	String taskPriority = infoHashes.get(KEYWORD_TYPE.PRIORITY);
-//	if(taskPriority != null) {
-//		task.setPriority(Integer.parseInt(taskPriority));
-//	}
-//	return taskPriority;
-//}
-
-//protected void saveTaskDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
-//	saveTaskStartDateAndTime(infoHashes, task);
-//	saveTaskEndDateAndTime(infoHashes, task);
-//	determineAndSetTaskType(task);
-//}
-//
-//protected void saveTaskStarsearctDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
-//	DateAndTimeFormat datFormat = DateAndTimeFormat.getInstance();
-//	String startDate = datFormat.convertStringDateToDayMonthYearFormat(infoHashes.get(KEYWORD_TYPE.START_DATE));
-//	String startTime = datFormat.convertStringTimeTo24HourString(infoHashes.get(KEYWORD_TYPE.START_TIME));
-//	if(startTime == null || startTime.isEmpty()) {
-//		startTime = "2359";
-//	}
-//	Calendar startDateAndTime = null;
-//	try {
-//		startDateAndTime = datFormat.formatStringToCalendar(startDate, startTime);
-//		task.setStartDate(startDateAndTime);
-//	} catch (Exception e) {
-//		task.setStartDate(startDateAndTime);
-//	}
-//}
-//
-//protected void saveTaskEndDateAndTime(Hashtable<KEYWORD_TYPE, String> infoHashes, TaskInfo task) {
-//	DateAndTimeFormat datFormat = DateAndTimeFormat.getInstance();
-//	String endDate = datFormat.convertStringDateToDayMonthYearFormat(infoHashes.get(KEYWORD_TYPE.END_DATE));
-//	String endTime = datFormat.convertStringTimeTo24HourString(infoHashes.get(KEYWORD_TYPE.END_TIME));
-//	if(endTime == null || endTime.isEmpty()) {
-//		endTime = "0000";
-//	}
-//	Calendar endDateAndTime = null;
-//	try {
-//		endDateAndTime = datFormat.formatStringToCalendar(endDate, endTime);
-//		task.setEndDate(endDateAndTime);
-//	} catch (Exception e) {
-//		task.setEndDate(endDateAndTime);
-//	}
-//}
-//
-//protected void setEndDateAndTimeToHourBlock (TaskInfo task) {
-//	Calendar startDateAndTime = task.getStartDate();
-//	Calendar endDateAndTime = task.getEndDate();
-//	//this condition is to make the end time one hour apart of current time
-//	//and also maintain end date same as start date
-//	if(endDateAndTime == null) {
-//		if (startDateAndTime != null) {
-//			int addingHour = 1;
-//			int addingMins = 0;
-//			endDateAndTime = DateAndTimeFormat.getInstance().addTimeToCalendar(startDateAndTime, addingHour, addingMins);
-//			task.setEndDate(endDateAndTime);
-//		}
-//	}
-//
-//}
+	//************************ ERROR HANDLER *******************************
+	protected Result commandErrorHandler(COMMAND_ERROR commandError) {
+		switch(commandError) {
+		case CLASH:
+			return callSearch();
+		case TASK_DOES_NOT_EXIST:
+			return createResult(MESSAGE_COMMAND_FAIL_NO_SUCH_TASK);
+		case NO_TASK_NAME:
+			return createResult(MESSAGE_COMMAND_FAIL_NO_TASK_NAME);
+		case INVALID_DATE:
+			return createResult(MESSAGE_COMMAND_FAIL_INVALID_DATE);
+		default:
+			return null;
+		}
+	}
 }
