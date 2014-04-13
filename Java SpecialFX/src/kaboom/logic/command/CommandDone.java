@@ -14,7 +14,8 @@ import kaboom.shared.TaskInfo;
 public class CommandDone extends Command {
 	private final String MESSAGE_COMMAND_DONE_SUCCESS = "Set %1$s to complete";
 	private final String MESSAGE_COMMAND_DONE_AlEADY_COMPLETED = "%1$s was already completed";
-
+	private final String MESSAGE_COMMAND_INVALID = "Nope. No such BOOM command. Type <help complete> for help.";
+	
 	TaskInfo taskToBeModified;
 
 	public CommandDone() {
@@ -34,6 +35,11 @@ public class CommandDone extends Command {
 //		} else {
 //			taskToBeModified = getTask();
 //		}
+		
+		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return createResult(MESSAGE_COMMAND_INVALID);
+		}
+		
 		COMMAND_ERROR commandError = errorDetectionForInvalidTaskNameAndId();
 		if(commandError != null) {
 			return commandErrorHandler(commandError);
