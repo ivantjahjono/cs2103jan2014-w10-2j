@@ -10,7 +10,7 @@ import kaboom.shared.KEYWORD_TYPE;
 import kaboom.shared.Result;
 import kaboom.shared.TaskInfo;
 
-public class CommandDone extends Command{
+public class CommandDone extends Command {
 	private final String MESSAGE_COMMAND_DONE_SUCCESS = "Set %1$s to complete";
 	private final String MESSAGE_COMMAND_DONE_AlEADY_COMPLETED = "%1$s was already completed";
 
@@ -41,11 +41,10 @@ public class CommandDone extends Command{
 			feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
 		} else {
 			taskView.doneTask(taskToBeModified);
+			addCommandToHistory();
 			feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
 		}
 		
-		taskToBeModified.setRecent(true);
-		addCommandToHistory ();
 		return createResult(feedback);
 	}
 

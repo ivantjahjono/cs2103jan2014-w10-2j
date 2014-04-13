@@ -179,7 +179,7 @@ public class Command {
 	//used
 	public void initialiseCommandVariables(String userInputSentence) {
 		infoTable = textParser.testExtractList(userInputSentence, keywordList);
-//		extractAndStoreTaskInfo(infoTable);
+		extractAndStoreTaskInfo(infoTable);
 	}
 	
 	public void initialiseCommandVariables(Hashtable<KEYWORD_TYPE, String> infoTable) {

@@ -1,12 +1,23 @@
 //@author A0096670W
 
+/**
+ * TaskManager class is the intermediary between logic and storage.
+ * Any manipulations of tasks (such as addition, deletion, updating)
+ * must use this class instead of accessing it from the TaskDepository. 
+ * This file also handles the storing of the tasks in the depository
+ * to the physical file specified in the String constant. 
+ * 
+ * This class is also responsible for the "dynamic" IDs of the tasks.
+ * (Such as the task ID being different while under different views 
+ * but referring to the same object.)
+ */
+
 package kaboom.storage;
 
 import java.util.Vector;
 
 import kaboom.shared.DISPLAY_STATE;
 import kaboom.shared.TaskInfo;
-import kaboom.ui.DisplayData;
 
 public class TaskView {
 
@@ -14,10 +25,8 @@ public class TaskView {
 
 	private Vector<TaskInfo> currentView; 	//Current view
 	private Vector<TaskInfo> searchView;  	//Vector for searches
-	private Vector<Integer> currentViewID;  //Vector for position of viewing tasks in actual vector
 	private Vector<Integer> tasksCount;
 	private TaskDepository taskListShop;
-	private DisplayData displayData;
 	
 	private Storage fileStorage;
 	private final String FILENAME;
@@ -27,7 +36,6 @@ public class TaskView {
 		//currentView = taskListShop.getToday();
 		//currentViewID = taskListShop.getCorrespondingID(currentView);
 		searchView = new Vector<TaskInfo>();
-		displayData = DisplayData.getInstance();
 		tasksCount = new Vector<Integer>();
 		FILENAME = "KABOOM_FILE.dat";
 		fileStorage = new Storage(FILENAME);
@@ -80,7 +88,6 @@ public class TaskView {
 
 		default:
 			setCurrentView(taskListShop.getToday());
-			System.out.println("Encountered an invalid view!");
 			break;
 		}
 		
@@ -89,30 +96,15 @@ public class TaskView {
 	
 	private void setCurrentView(Vector<TaskInfo> taskList) {
 		currentView = taskList;
-		currentViewID = taskListShop.getCorrespondingID(taskList);
 	}	
 
 	public Vector<TaskInfo> getCurrentView() {
 		return currentView;
 	}
 
-	public Vector<Integer> getCurrentViewID() {
-		return currentViewID;
-	}
-
 	public void setSearchView(Vector<TaskInfo> taskList) {
 		searchView = taskList;
 		setCurrentView(taskList);
-	}
-
-	public Vector<TaskInfo> getSearchView() {
-		return searchView;
-	}
-
-	//Precondition: The index already has offset applied
-	//i.e. index starts from 0
-	public int getIndexFromView(int index) {
-		return currentViewID.get(index);
 	}
 	
 	public TaskInfo getTaskFromViewByName(String searchName) {
@@ -148,7 +140,7 @@ public class TaskView {
 		return taskListShop.shopSize();
 	}
 	
-	public int archiveTaskCount(){
+	public int archiveTaskCount() {
 		return taskListShop.archiveShopSize();
 	}
 	
@@ -189,13 +181,15 @@ public class TaskView {
 		task.setDone(true);
 		taskListShop.refreshTasks();  //Refresh to shift task to archive
 		deleteInSearchView(task);
+		task.setRecent(true);
 	}
 	
 	public void undoneTask(TaskInfo task) {
 		//add assertion here that the task is done already
 		task.setDone(false);
 		taskListShop.refreshTasks();  //Refresh to shift task to archive
-		addToSearchView(task);
+		deleteInSearchView(task);
+		task.setRecent(true);
 	}
 	
 	public void clearPresentTasks() {
@@ -226,8 +220,7 @@ public class TaskView {
 
 	public void updateInSearchView(TaskInfo newTask, TaskInfo oldTask) {
 		for (int i = 0; i < searchView.size(); i++) {
-			if (searchView.get(i).equals(oldTask) 
-					&& displayData.getCurrentDisplayState() == DISPLAY_STATE.SEARCH) {
+			if (searchView.get(i).equals(oldTask)) {
 				searchView.set(i, newTask);
 			}
 		}

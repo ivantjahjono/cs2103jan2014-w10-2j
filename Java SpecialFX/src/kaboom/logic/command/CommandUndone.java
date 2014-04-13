@@ -9,7 +9,7 @@ import kaboom.shared.KEYWORD_TYPE;
 import kaboom.shared.Result;
 import kaboom.shared.TaskInfo;
 
-public class CommandUndone extends Command{
+public class CommandUndone extends Command {
 	private final String MESSAGE_COMMAND_UNDONE_SUCCESS = "Set %1$s to incomplete";
 	private final String MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE = "%1$s was incomplete";
 
@@ -41,12 +41,10 @@ public class CommandUndone extends Command{
 			feedback = String.format(MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE, taskName);
 		} else {
 			taskView.undoneTask(taskToBeModified);
-			taskView.deleteInSearchView(taskToBeModified);
+			addCommandToHistory ();
 			feedback = String.format(MESSAGE_COMMAND_UNDONE_SUCCESS, taskName);
 		}
 
-		taskToBeModified.setRecent(true);
-		addCommandToHistory ();
 		return createResult(feedback);
 	}
 
