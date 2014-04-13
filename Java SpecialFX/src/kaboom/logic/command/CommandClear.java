@@ -145,7 +145,7 @@ public class CommandClear extends Command {
 	
 	private boolean addClearedPresentTaskToMemory() {
 		for (int i = 0; i < tasksCleared.size(); i++) {
-			taskView.addTask(tasksCleared.get(i));
+			taskView.addPresentTask(tasksCleared.get(i));
 		}
 		if (tasksCleared.size() == taskView.presentTaskCount()) {
 			return true;

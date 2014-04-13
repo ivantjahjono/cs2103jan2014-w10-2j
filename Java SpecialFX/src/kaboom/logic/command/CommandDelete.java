@@ -49,7 +49,7 @@ public class CommandDelete extends Command {
 	}
 
 	public boolean undo () {
-		if (taskView.addTask(taskToBeDeleted)) {
+		if (taskView.addPresentTask(taskToBeDeleted)) {
 			return true;
 		}
 		return false;
