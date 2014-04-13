@@ -2,48 +2,47 @@
 
 package kaboom.logic.command;
 
-import java.util.Hashtable;
-import java.util.Vector;
-
 import kaboom.logic.TextParser;
-import kaboom.shared.KEYWORD_TYPE;
 
 public class CommandFactory {
-	private static final String KEYWORD_COMMAND_ADD 	= "add";
-	private static final String KEYWORD_COMMAND_DELETE 	= "delete";
-	private static final String KEYWORD_COMMAND_MODIFY 	= "modify";
-	private static final String KEYWORD_COMMAND_SEARCH 	= "search";
-	private static final String KEYWORD_COMMAND_CLEAR 	= "clear";
-	private static final String KEYWORD_COMMAND_VIEW 	= "view";
-	private static final String KEYWORD_COMMAND_UNDO 	= "undo";
-	private static final String KEYWORD_COMMAND_DONE 	= "boom";
-	private static final String KEYWORD_COMMAND_UNDONE 	= "unboom";
-	private static final String KEYWORD_COMMAND_HELP 	= "help";
-	private static final String KEYWORD_COMMAND_PAGE 	= "page";
+	private final String KEYWORD_COMMAND_ADD = "add";
+	private final String KEYWORD_COMMAND_DELETE = "delete";
+	private final String KEYWORD_COMMAND_MODIFY = "modify";
+	private final String KEYWORD_COMMAND_SEARCH = "search";
+	private final String KEYWORD_COMMAND_CLEAR	 = "clear";
+	private final String KEYWORD_COMMAND_VIEW = "view";
+	private final String KEYWORD_COMMAND_UNDO = "undo";
+	private final String KEYWORD_COMMAND_DONE = "boom";
+	private final String KEYWORD_COMMAND_UNDONE = "unboom";
+	private final String KEYWORD_COMMAND_HELP = "help";
+	private final String KEYWORD_COMMAND_PAGE = "page";
 	
 	private static TextParser textParser = TextParser.getInstance();
+	static CommandFactory commandFactoryInstance = null;
 	
-	public static Command createCommand(String userInputSentence) {
+	private CommandFactory() {
+	}
+	
+	public static CommandFactory getInstance() {
+		if (commandFactoryInstance == null) {
+			commandFactoryInstance = new CommandFactory();
+		}
+		return commandFactoryInstance;
+	}
+	
+	
+	public Command createCommand(String userInputSentence) {
 		
-		//1. Get Command 
 		String commandKeyword = textParser.getCommandKeyWord(userInputSentence);
-		
-		//2. Get Command keyword
 		COMMAND_TYPE commandType = determineCommandType(commandKeyword);
-		
-		//3. Create Command
 		Command commandToExecute = createCommandBasedOnCommandType(commandType);	
-		
-		//4. Remove Command Word From UserInput
-		userInputSentence = textParser.removeFirstWord(userInputSentence);
-		
-		//5.Initialise variables
-		commandToExecute.initialiseCommandInfoTable(userInputSentence);
+		String userInputSentenceWithCommandKeyWordRemoved = textParser.removeFirstWord(userInputSentence);
+		commandToExecute.initialiseCommandInfoTable(userInputSentenceWithCommandKeyWordRemoved);
 		
 		return commandToExecute;
 	}
 	
-	private static COMMAND_TYPE determineCommandType(String commandWord) {
+	private COMMAND_TYPE determineCommandType(String commandWord) {
 		commandWord = commandWord.toLowerCase();
 		switch(commandWord) {
 			case KEYWORD_COMMAND_ADD:
@@ -73,7 +72,7 @@ public class CommandFactory {
 		}
 	}
 	
-	private static Command createCommandBasedOnCommandType (COMMAND_TYPE commandType) {
+	private Command createCommandBasedOnCommandType (COMMAND_TYPE commandType) {
 		Command newlyCreatedCommand = new Command();
 		
 		switch (commandType) {

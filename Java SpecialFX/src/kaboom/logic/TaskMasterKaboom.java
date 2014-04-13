@@ -29,10 +29,12 @@ public class TaskMasterKaboom {
 	
 	private DisplayData 	guiDisplayData;
 	private Storage 		fileStorage;
+	private CommandFactory commandFactory;
 	
 	static TaskMasterKaboom instance;
 	
 	private TaskMasterKaboom () {
+		commandFactory = CommandFactory.getInstance();
 	}
 	
 	public static TaskMasterKaboom getInstance () {
@@ -99,7 +101,7 @@ public class TaskMasterKaboom {
 		Result commandResult = null;
 		
 		//1. Create Command
-		commandToExecute = CommandFactory.createCommand(userInputSentence);
+		commandToExecute = commandFactory.createCommand(userInputSentence);
 	
 		//2. Execute Command
 		try {
@@ -122,7 +124,7 @@ public class TaskMasterKaboom {
 		boolean processResult = false;
 		Vector<FormatIdentify> characterIndexList = new Vector<FormatIdentify>();
 		
-		commandToExecute = CommandFactory.createCommand(usercommand);
+		commandToExecute = commandFactory.createCommand(usercommand);
 		
 		try {
 			processResult = commandToExecute.parseInfo(usercommand, characterIndexList);
