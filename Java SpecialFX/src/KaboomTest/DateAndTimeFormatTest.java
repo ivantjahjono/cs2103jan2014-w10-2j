@@ -1,3 +1,4 @@
+//@author A0099863H
 package KaboomTest;
 
 import static org.junit.Assert.*;
@@ -10,7 +11,7 @@ import kaboom.shared.DateAndTimeFormat;
 import org.junit.Test;
 
 public class DateAndTimeFormatTest {
-	
+	//TODO
 	DateAndTimeFormat datFormat = DateAndTimeFormat.getInstance();
 	Calendar cal = Calendar.getInstance();
 	
@@ -315,6 +316,5 @@ public class DateAndTimeFormatTest {
 		dateString = "080414";
 		testCalendar = datFormat.formatStringToCalendar(dateString, timeString);
 		assertEquals(sdf.format(testCalendar.getTime()), timeString + " " + dateString);
-		System.out.println(sdf.format(testCalendar.getTime()));
 	}
 }
