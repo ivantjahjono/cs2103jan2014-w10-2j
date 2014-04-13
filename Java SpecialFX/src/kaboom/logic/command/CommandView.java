@@ -21,7 +21,7 @@ public class CommandView extends Command{
 	private final String MESSAGE_VIEW_EXPIRED 	= "Viewing expired tasks";
 	private final String MESSAGE_VIEW_FUTURE 	= "Viewing upcoming tasks";
 	private final String MESSAGE_VIEW_ARCHIVE 	= "Viewing completed tasks";
-	private final String MESSAGE_VIEW_INVALID 	= "Invalid View Mode";
+	private final String MESSAGE_VIEW_INVALID 	= "Invalid View Mode. Might want to use <help view>";
 	
 	String 			viewType;
 	DISPLAY_STATE 	stateToSet;

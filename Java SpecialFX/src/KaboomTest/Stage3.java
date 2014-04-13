@@ -9,7 +9,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ 
 		Stage2.class,
-		SystemTest.class
+		SystemTest.class,
+		DisplayDataTest.class
 		})
 public class Stage3 {
 
