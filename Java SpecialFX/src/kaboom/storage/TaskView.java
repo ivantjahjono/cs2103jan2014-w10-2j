@@ -16,6 +16,7 @@ package kaboom.storage;
 
 import java.util.Vector;
 
+import kaboom.logic.command.Command;
 import kaboom.shared.DISPLAY_STATE;
 import kaboom.shared.TaskInfo;
 
@@ -30,6 +31,7 @@ public class TaskView {
 	
 	private Storage fileStorage;
 	private final String FILENAME;
+	private History history;
 
 	private TaskView() {
 		taskListShop = TaskDepository.getInstance();
@@ -38,6 +40,7 @@ public class TaskView {
 		tasksCount = new Vector<Integer>();
 		FILENAME = "KABOOM_FILE.dat";
 		fileStorage = new Storage(FILENAME);
+		history = History.getInstance();
 	}
 	
 	private TaskView(String fileName) {
@@ -47,6 +50,7 @@ public class TaskView {
 		tasksCount = new Vector<Integer>();
 		FILENAME = "KABOOM_FILE.dat";
 		fileStorage = new Storage(fileName);
+		history = History.getInstance();
 	}
 
 	public static TaskView getInstance () {
@@ -259,5 +263,13 @@ public class TaskView {
 	
 	public void load() {
 		fileStorage.load();
+	}
+	
+	public void addToHistory(Command command) {
+		history.addToRecentCommands(command);
+	}
+	
+	public Command getMostRecentCommand() {
+		return history.getMostRecentCommand();
 	}
 }

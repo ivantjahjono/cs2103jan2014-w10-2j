@@ -7,7 +7,6 @@ import java.util.Vector;
 import kaboom.shared.FormatIdentify;
 import kaboom.shared.KEYWORD_TYPE;
 import kaboom.shared.Result;
-import kaboom.storage.History;
 
 public class CommandUndo extends Command{
 	private final String MESSAGE_COMMAND_UNDO_SUCCESS = "Command undone!";
@@ -19,7 +18,7 @@ public class CommandUndo extends Command{
 	}
 	
 	public Result execute() {
-		Command commandToUndo = History.getInstance().getMostRecentCommand();
+		Command commandToUndo = taskView.getMostRecentCommand();
 		String feedback = "";
 		
 		if (commandToUndo == null) {

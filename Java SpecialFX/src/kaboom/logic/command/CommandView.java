@@ -8,7 +8,6 @@ import kaboom.shared.DISPLAY_STATE;
 import kaboom.shared.FormatIdentify;
 import kaboom.shared.KEYWORD_TYPE;
 import kaboom.shared.Result;
-import kaboom.storage.History;
 
 public class CommandView extends Command{
 	private final String KEYWORD_TODAY 		= "today";
@@ -70,7 +69,6 @@ public class CommandView extends Command{
 		
 		commandResult.setDisplayState(stateToSet);
 		commandResult.setFeedback(feedback);
-		History.getInstance().setCurrentViewCommand(this);
 		return commandResult;
 	}
 
