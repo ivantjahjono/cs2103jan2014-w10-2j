@@ -37,7 +37,7 @@ public class CommandFactory {
 		userInputSentence = textParser.removeFirstWord(userInputSentence);
 		
 		//5.Initialise variables
-		commandToExecute.initialiseCommandVariables(userInputSentence);
+		commandToExecute.initialiseCommandInfoTable(userInputSentence);
 		
 		return commandToExecute;
 	}
