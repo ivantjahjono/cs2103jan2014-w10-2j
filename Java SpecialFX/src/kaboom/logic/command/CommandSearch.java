@@ -114,8 +114,6 @@ public class CommandSearch extends Command {
 			if (isTaskStartOrEndDate(taskStartDate, searchOnDate)) {
 				return true;
 			} else if (isSearchDateBetweenTaskDates(taskStartDate, taskEndDate, searchOnDate)) {
-				//For tasks that start before and ends after the search date
-				//Since there is a start date, there must surely be an end date
 				return true;
 			}
 		} else if (taskEndDate != null) {
@@ -128,6 +126,8 @@ public class CommandSearch extends Command {
 
 	private boolean isSearchDateBetweenTaskDates(Calendar taskStartDate,
 			Calendar taskEndDate, Calendar searchOnDate) {
+		//For tasks that start before and ends after the search date
+		//Since there is a start date, there must surely be an end date
 		assert taskEndDate != null;
 		return taskStartDate.before(searchOnDate) && taskEndDate.after(searchOnDate);
 	}
