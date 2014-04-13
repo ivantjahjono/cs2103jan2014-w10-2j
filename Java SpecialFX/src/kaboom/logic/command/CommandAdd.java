@@ -20,7 +20,6 @@ public class CommandAdd extends Command {
 	private final String MESSAGE_COMMAND_ADD_SUCCESS = "WOOT! <%1$s> ADDED. MORE STUFF TO DO!";
 	private final String MESSAGE_COMMAND_ADD_FAIL = "Oops! Fail to add <%1$s>... Error somewhere...";
 	private final String MESSAGE_COMMAND_ADD_FAIL_NO_NAME = "Oops! Task cannot be entered without a name Y_Y";
-	private final String MESSAGE_COMMAND_ADD_FAIL_STARTDATE_OVER_ENDDATE = "Oops! Task cannot end before it even started";
 
 	DateAndTimeFormat datFormat;
 	TaskInfo taskInfo;
@@ -299,5 +298,4 @@ public class CommandAdd extends Command {
 		}
 		return COMMAND_ERROR.NIL;
 	}
-
 }
