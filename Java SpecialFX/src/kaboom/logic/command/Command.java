@@ -182,8 +182,6 @@ public class Command {
 
 		indexList.add(newIdentity);
 	}
-
-
 	
 	//used
 	protected void determineAndSetTaskType (TaskInfo task) {
@@ -198,89 +196,7 @@ public class Command {
 			task.setTaskType(TASK_TYPE.TIMED);
 		} 
 	}
-	
-	//used
-	protected Result invalidTaskNameAndClashErrorDetection() {
-		String taskName = getTaskNameFromInfoTable();
-		String feedback = "";
-		Result errorFeedback = null;
-		
-		if(!existsATaskWithGivenTaskId()) {
-			if (taskName != null && !taskName.isEmpty()){
-				int taskCount = numOfTasksWithSimilarNames(taskName);
-				
-				if (taskCount > 1) {
-					errorFeedback = callSearch();
-				}
-				else if (taskCount < 1) {
-					feedback = MESSAGE_COMMAND_FAIL_NO_SUCH_TASK;
-					errorFeedback = createResult(feedback);
-				}
-			} else {
-				feedback = MESSAGE_COMMAND_FAIL_NO_TASK_NAME;
-				errorFeedback = createResult(feedback);
-			}
-		}
-		return errorFeedback;
-	}
-	
-	protected COMMAND_ERROR invalidTaskNameAndClashErrorDetection2() {
-		if (existsATaskWithGivenTaskId()) {
-			return null;
-		} else {
-			String taskName = getTaskNameFromInfoTable();
-			if (taskName == null || taskName.isEmpty()) {
-				return COMMAND_ERROR.NO_TASK_NAME;
-			} else {
-				int taskCount = numOfTasksWithSimilarNames(taskName);
-				if (taskCount > 1) {
-					return COMMAND_ERROR.CLASH;
-				}
-				else if (taskCount < 1) {
-					return COMMAND_ERROR.TASK_DOES_NOT_EXIST;
-				}
-			} 
-		}
-		return null;
-	}
-	
-	//used
-	protected boolean existsATaskWithGivenTaskId() {
-		TaskInfo task = getTaskWithTaskId();
-		if(task == null) {
-			return false;
-		}
-		return true;
-	}
 
-	//used
-	protected TaskInfo getTaskWithTaskId() {
-		String taskId = getTaskIdFromInfoTable();
-		if (taskId != null) {
-			int taskIdInteger = Integer.parseInt(taskId);
-			return taskView.getTaskFromViewByID(taskIdInteger-1);
-		}
-		return null;
-	}
-	
-	//used
-	protected TaskInfo getTaskWithTaskName() {
-		String taskName = getTaskNameFromInfoTable();
-		if (taskName != null && !taskName.isEmpty()) {
-			return taskView.getTaskFromViewByName(taskName);
-		}
-		return null;
-	}
-	
-	//used
-	protected TaskInfo getTask() {
-		TaskInfo task = getTaskWithTaskId();
-		if(task == null) {
-			task = getTaskWithTaskName();
-		}
-		return task;
-	}
-	
 	//*******************************************RETRIEVAL METHODS FROM INFOTABLE***********************************************
 	protected String getTaskNameFromInfoTable() {
 		return infoTable.get(KEYWORD_TYPE.TASKNAME);
@@ -345,4 +261,91 @@ public class Command {
 			return null;
 		}
 	}
+	
+	protected COMMAND_ERROR errorDetectionForInvalidTaskNameAndId() {
+		COMMAND_ERROR commandError = null;
+		if (isTaskIdValid()) {
+			return commandError;
+		} else {
+			String taskName = getTaskNameFromInfoTable();
+			if (isTaskNameNullOrEmpty(taskName)) {
+				commandError = COMMAND_ERROR.NO_TASK_NAME;
+			} else {
+				commandError = taskExistenceOrClashDetection(taskName);
+			} 
+		}
+		return null;
+	}
+
+	private boolean isTaskNameNullOrEmpty(String taskName) {
+		return taskName == null || taskName.isEmpty();
+	}
+
+	private COMMAND_ERROR taskExistenceOrClashDetection(String taskName) {
+		int taskCount = numOfTasksWithSimilarNames(taskName);
+		if (taskCount > 1) {
+			return COMMAND_ERROR.CLASH;
+		}
+		else if (taskCount < 1) {
+			return COMMAND_ERROR.TASK_DOES_NOT_EXIST;
+		}
+		return null;
+	}
+	
+	protected boolean isTaskIdValid() {
+		TaskInfo task = getTaskWithTaskId();
+		if(task == null) {
+			return false;
+		}
+		return true;
+	}
+
+	protected TaskInfo getTaskWithTaskId() {
+		String taskId = getTaskIdFromInfoTable();
+		if (taskId != null) {
+			int taskIdInteger = Integer.parseInt(taskId);
+			return taskView.getTaskFromViewByID(taskIdInteger-1);
+		}
+		return null;
+	}
+	
+	protected TaskInfo getTaskWithTaskName() {
+		String taskName = getTaskNameFromInfoTable();
+		if (taskName != null && !taskName.isEmpty()) {
+			return taskView.getTaskFromViewByName(taskName);
+		}
+		return null;
+	}
+	
+	protected TaskInfo getTask() {
+		TaskInfo task = getTaskWithTaskId();
+		if(task == null) {
+			task = getTaskWithTaskName();
+		}
+		return task;
+	}
+	
+//	protected Result invalidTaskNameAndClashErrorDetection() {
+//	String taskName = getTaskNameFromInfoTable();
+//	String feedback = "";
+//	Result errorFeedback = null;
+//	
+//	if(!existsATaskWithGivenTaskId()) {
+//		if (taskName != null && !taskName.isEmpty()){
+//			int taskCount = numOfTasksWithSimilarNames(taskName);
+//			
+//			if (taskCount > 1) {
+//				errorFeedback = callSearch();
+//			}
+//			else if (taskCount < 1) {
+//				feedback = MESSAGE_COMMAND_FAIL_NO_SUCH_TASK;
+//				errorFeedback = createResult(feedback);
+//			}
+//		} else {
+//			feedback = MESSAGE_COMMAND_FAIL_NO_TASK_NAME;
+//			errorFeedback = createResult(feedback);
+//		}
+//	}
+//	return errorFeedback;
+//}
 }

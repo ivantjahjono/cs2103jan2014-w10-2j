@@ -37,14 +37,12 @@ public class CommandDelete extends Command {
 //			taskToBeDeleted = getTask();
 //		}
 		
-		COMMAND_ERROR commandError = invalidTaskNameAndClashErrorDetection2();
+		COMMAND_ERROR commandError = errorDetectionForInvalidTaskNameAndId();
 		if(commandError != null) {
 			return commandErrorHandler(commandError);
 		} else {
 			taskToBeDeleted = getTask();
 		}
-		
-		
 		commandFeedback = removeTaskFromMemory();
 		
 		return createResult(commandFeedback);
