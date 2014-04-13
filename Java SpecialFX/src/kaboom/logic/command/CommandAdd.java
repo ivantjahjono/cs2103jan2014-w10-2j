@@ -54,36 +54,29 @@ public class CommandAdd extends Command {
 		assert taskView != null;
 
 		String commandFeedback = "";
-
-		if(getTaskIdFromInfoTable() != null && (getTaskNameFromInfoTable() != null && !getTaskNameFromInfoTable().isEmpty())) {
-			return commandErrorHandler(COMMAND_ERROR.INVALID_TASKNAME);
-		}
-		
 		taskInfo = new TaskInfo();
 
-		commandFeedback = saveTaskNameAndGetErrorMessage();
-		if(!commandFeedback.isEmpty()) {
-			return createResult(commandFeedback);
-		}
+//		if(getTaskIdFromInfoTable() != null && (getTaskNameFromInfoTable() != null && !getTaskNameFromInfoTable().isEmpty())) {
+//			return commandErrorHandler(COMMAND_ERROR.INVALID_TASKNAME);
+//		}
+		
+		
 
+//		commandFeedback = saveTaskNameAndGetErrorMessage();
+//		if(!commandFeedback.isEmpty()) {
+//			return createResult(commandFeedback);
+//		}
+
+		COMMAND_ERROR commandError = taskNameValidity();
+		if(commandError != null) {
+			return commandErrorHandler(commandError);
+		} else {
+			taskInfo.setTaskName(getTaskNameFromInfoTable());
+		}
+		
 		saveTaskPriority();
 
-		//		commandFeedback = saveStartDateAndTime();
-		//		if(!commandFeedback.isEmpty()) {
-		//			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
-		//		}
-		//		
-		//		commandFeedback = saveEndDateAndTime();
-		//		if(!commandFeedback.isEmpty()) {
-		//			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
-		//		}
-		//		
-		//		commandFeedback = startAndEndTimeValidityAndSetTaskType ();
-		//		if(!commandFeedback.isEmpty()) {
-		//			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
-		//		}
-
-		COMMAND_ERROR commandError = modifyDateAndTime(taskInfo);
+		commandError = modifyDateAndTime(taskInfo);
 		if(commandError != COMMAND_ERROR.NIL) {
 			commandFeedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 			return createResult(commandFeedback);
@@ -138,15 +131,27 @@ public class CommandAdd extends Command {
 	}
 
 	//********************************* STORING METHODS **********************************************
-	private String saveTaskNameAndGetErrorMessage() {
-		String feedback = "";
-		//End if no task name
-		if (infoTable.get(KEYWORD_TYPE.TASKNAME) == null || infoTable.get(KEYWORD_TYPE.TASKNAME).isEmpty()) {
-			feedback = MESSAGE_COMMAND_ADD_FAIL_NO_NAME;
+//	private String saveTaskNameAndGetErrorMessage() {
+//		String feedback = "";
+//		//End if no task name
+//		if (infoTable.get(KEYWORD_TYPE.TASKNAME) == null || infoTable.get(KEYWORD_TYPE.TASKNAME).isEmpty()) {
+//			feedback = MESSAGE_COMMAND_ADD_FAIL_NO_NAME;
+//		} else {
+//			taskInfo.setTaskName(infoTable.get(KEYWORD_TYPE.TASKNAME));
+//		}
+//		return feedback;
+//	}
+	
+	private COMMAND_ERROR taskNameValidity() {
+		String taskName = getTaskNameFromInfoTable();
+		String taskId = getTaskIdFromInfoTable();
+		if (taskId != null && !(taskName == null || taskName.isEmpty())) {
+			return COMMAND_ERROR.INVALID_TASKNAME;
+		} else if (taskName == null || infoTable.get(KEYWORD_TYPE.TASKNAME).isEmpty()) {
+			return COMMAND_ERROR.NO_TASK_NAME;
 		} else {
-			taskInfo.setTaskName(infoTable.get(KEYWORD_TYPE.TASKNAME));
+			return null;
 		}
-		return feedback;
 	}
 
 	private void saveTaskPriority() {

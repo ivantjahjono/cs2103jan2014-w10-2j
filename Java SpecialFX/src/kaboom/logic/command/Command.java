@@ -25,7 +25,7 @@ public class Command {
 	protected final String MESSAGE_COMMAND_FAIL_INVALID_DATE = "Oops! Did you check the calendar? The date you've entered is invalid";
 	protected final String MESSAGE_COMMAND_FAIL_NO_SUCH_TASK = "Oops! Modify wut??";
 	protected final String MESSAGE_COMMAND_FAIL_NO_TASK_NAME = "Enter a taskname or task id, please ?";
-	protected final String MESSAGE_COMMAND_FAIL_INVALID_TASKNAME = "Oops! HAVENDO??";
+	protected final String MESSAGE_COMMAND_FAIL_INVALID_TASKNAME = "Oops! Invalid taskname??";
 	protected final String MESSAGE_COMMAND_INVALID = "Please enter a valid command. Type <help> for info.";
 	
 	protected COMMAND_TYPE commandType;
@@ -104,9 +104,7 @@ public class Command {
 		search.initialiseCommandInfoTable(infoTable);
 		return search.execute();
 	}
-	//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ DONE ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-	
-	//used
+
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
 		if (info.equals("")) {
 			return true;
@@ -118,7 +116,6 @@ public class Command {
 		return false;
 	}
 	
-	//used
 	protected Hashtable<KEYWORD_TYPE, String> updateFormatList (String info, Vector<FormatIdentify> indexList) {
 		getCommandString(info, indexList);
 		info = textParser.removeFirstWord(info);
@@ -176,7 +173,6 @@ public class Command {
 		indexList.add(newIdentity);
 	}
 	
-	//used
 	protected void determineAndSetTaskType (TaskInfo task) {
 		Calendar startDateAndTime = task.getStartDate();
 		Calendar endDateAndTime = task.getEndDate();
@@ -190,7 +186,6 @@ public class Command {
 		} 
 	}
 
-	//*******************************************RETRIEVAL METHODS FROM INFOTABLE***********************************************
 	protected String getTaskNameFromInfoTable() {
 		return infoTable.get(KEYWORD_TYPE.TASKNAME);
 	}
@@ -239,7 +234,6 @@ public class Command {
 		return infoTable.get(KEYWORD_TYPE.PAGE);
 	}
 	
-	//************************ ERROR HANDLER *******************************
 	protected Result commandErrorHandler(COMMAND_ERROR commandError) {
 		switch(commandError) {
 		case CLASH:
@@ -272,23 +266,6 @@ public class Command {
 			}
 		}
 	}
-
-//	protected COMMAND_ERROR errorDetectionForInvalidTaskName() {
-//		String taskName = getTaskNameFromInfoTable();
-//		String taskId = getTaskIdFromInfoTable();
-//		
-//		if(taskId == null && isTaskNameNullOrEmpty(taskName)) {
-//			return COMMAND_ERROR.NO_TASK_NAME;
-//		} else if(hasBothTaskNameAndTaskId(taskName, taskId)) {
-//			return COMMAND_ERROR.INVALID_TASKNAME;
-//		} else {
-//			return null;
-//		}
-//	}
-//	
-//	private boolean hasBothTaskNameAndTaskId(String taskName, String taskId) {
-//		return taskId != null && isTaskNameNullOrEmpty(taskName);
-//	}
 
 	private boolean isTaskNameNullOrEmpty(String taskName) {
 		return taskName == null || taskName.isEmpty();
