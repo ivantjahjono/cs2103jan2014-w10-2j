@@ -1,3 +1,4 @@
+//@author A0099175N
 package KaboomTest;
 
 import static org.junit.Assert.*;
@@ -35,7 +36,7 @@ public class TestPopulate {
 		String command = "";
 		
 		// Process empty command
-		assertEquals("Invalid command!", controller.processCommand(command));
+		assertEquals("Please enter a valid command. Type <help> for info.", controller.processCommand(command));
 		
 		for (int i = 0; i < commandArrayList.length; i++) {
 			controller.processCommand(commandArrayList[i]);
