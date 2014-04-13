@@ -139,7 +139,7 @@ public class DisplayData extends Observable {
 
 	private void updateDisplayStateBasedOnResult(Result commandResult) {
 		DISPLAY_STATE stateChange = commandResult.getDisplayState();
-		if (stateChange != DISPLAY_STATE.INVALID) {
+		if (stateChange != null && stateChange != DISPLAY_STATE.INVALID) {
 			currentDisplayState = stateChange; 
 		}
 	}
