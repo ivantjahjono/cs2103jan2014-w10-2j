@@ -42,7 +42,7 @@ public class Command {
 	protected TaskView taskView;
 
 	protected enum COMMAND_ERROR{
-		NO_TASK_NAME, INVALID_DATE, NIL, STARTDATE_AFTER_ENDDATE
+		NO_TASK_NAME, INVALID_DATE, NIL
 	}
 	
 	public Command () {

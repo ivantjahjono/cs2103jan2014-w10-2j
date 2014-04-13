@@ -4,6 +4,7 @@ package KaboomTest;
 import static org.junit.Assert.*;
 
 import java.util.Calendar;
+import java.util.Hashtable;
 
 import kaboom.logic.command.Command;
 import kaboom.logic.command.CommandAdd;
@@ -13,57 +14,80 @@ import kaboom.logic.command.CommandModify;
 import kaboom.logic.command.CommandView;
 import kaboom.shared.DISPLAY_STATE;
 import kaboom.shared.DateAndTimeFormat;
+import kaboom.shared.KEYWORD_TYPE;
 import kaboom.shared.TASK_TYPE;
 import kaboom.shared.TaskInfo;
 import kaboom.storage.Storage;
 import kaboom.storage.TaskDepository;
+import kaboom.storage.TaskView;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class CommandTest {
-	TaskInfo task;
-	Storage fileStorage;
-	TaskDepository shop;
-	DateAndTimeFormat date;
+	TaskDepository memory;
+	DateAndTimeFormat dateAndTimeFormat;
+	Hashtable<KEYWORD_TYPE, String> infoTable;
 	
 	@Before
 	public void initialise() {
-//		fileStorage = new Storage("BOOMTEST.dat");
-//		fileStorage.load();
-		shop = TaskDepository.getInstance();
-		task = new TaskInfo();
-		taskInfoUpdate(task);
-		date = DateAndTimeFormat.getInstance();
+		memory = TaskDepository.getInstance();
+		dateAndTimeFormat = DateAndTimeFormat.getInstance();
+		infoTable = new Hashtable<KEYWORD_TYPE, String>();
 	}
 	
-	public void taskInfoUpdate(TaskInfo task) {
-		Calendar startDate = Calendar.getInstance();
-		startDate.set(2014,1,1,8,0);
-		Calendar endDate = Calendar.getInstance();
-		endDate.set(2014,1,5,8,0);
+	//Invalid Command
+	@Test
+	public void testInvalidCommand() {
+		Command com = new Command();
 		
-		task.setTaskName("Hello World");
-		task.setTaskType(TASK_TYPE.TIMED);
-		task.setStartDate(startDate);
-		task.setEndDate(endDate);
-		task.setPriority(3);
+		assertEquals("Invalid command!",com.execute().getFeedback());
 	}
 	
-	
-	//CommandAdd (outdated)
+	//CommandAdd
 	@Test
 	public void testCommandAdd() {
 		CommandAdd com = new CommandAdd();
-//		
-//		//Initial test when no taskinfo is inside to be executed
-//		assertEquals("Enter a task name please :'(", com.execute().getFeedback());
-//		
-//		//Test Command feedback
-//		com.setTaskInfo(task);
-//		assertEquals("WOOT! <Hello World> ADDED. MORE STUFF TO DO!", com.execute().getFeedback());
-//		task.setTaskName("hello world");
-//		assertEquals("WOOT! <hello world> ADDED. MORE STUFF TO DO!", com.execute().getFeedback());
+
+		
+		
+		//Execution
+		//Add a task without any task name input
+		initialise();
+		com.initialiseCommandVariables(infoTable);
+		assertEquals("Oops! Task cannot be entered without a name Y_Y",com.execute().getFeedback());
+		
+		//Add a task with given task name
+		initialise();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "Hello World");
+		com.initialiseCommandVariables(infoTable);
+		assertEquals("WOOT! <Hello World> ADDED. MORE STUFF TO DO!",com.execute().getFeedback());
+		
+		//Add a task with empty task name
+		initialise();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "");
+		com.initialiseCommandVariables(infoTable);
+		assertEquals("Oops! Task cannot be entered without a name Y_Y",com.execute().getFeedback());
+		
+		//Add a task with valid date and time
+		initialise();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "Valid Time");
+		infoTable.put(KEYWORD_TYPE.START_TIME, "0000");
+		infoTable.put(KEYWORD_TYPE.START_DATE, "010114");
+		infoTable.put(KEYWORD_TYPE.END_TIME, "2359");
+		infoTable.put(KEYWORD_TYPE.END_DATE, "010114");
+		com.initialiseCommandVariables(infoTable);
+		assertEquals("WOOT! <Valid Time> ADDED. MORE STUFF TO DO!",com.execute().getFeedback());
+		
+		//Add a task with invalid date and time
+		initialise();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "Invalid Time");
+		infoTable.put(KEYWORD_TYPE.START_TIME, "2359");
+		infoTable.put(KEYWORD_TYPE.START_DATE, "010114");
+		infoTable.put(KEYWORD_TYPE.END_TIME, "0000");
+		infoTable.put(KEYWORD_TYPE.END_DATE, "010114");
+		com.initialiseCommandVariables(infoTable);
+		assertEquals("Oops! Did you check the calendar? The date you've entered is invalid",com.execute().getFeedback());
 	}
 	
 	//CommandDelete (Unable to test unless memory is initialised);
@@ -83,7 +107,7 @@ public class CommandTest {
 	@Test
 	public void testCommandModify() {
 		CommandModify com = new CommandModify();
-		com.setPreModifiedTask(task);
+//		com.setPreModifiedTask(task);
 		//Test when no existing task to modify
 //		assertEquals("Fail to cast a spell on <Hello World>", com.execute().getFeedback());
 	}
