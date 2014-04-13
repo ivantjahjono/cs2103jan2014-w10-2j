@@ -179,31 +179,31 @@ public class TextParserTest {
 		Hashtable<KEYWORD_TYPE, String> tempHashTable = new Hashtable<KEYWORD_TYPE, String>();
 		
 		command = "on 12/06/06";
-		assertEquals("", textparser.extractDateOnly(keyword, command, tempHashTable));
+		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 		
 		command = "on 12.06.06";
-		assertEquals("", textparser.extractDateOnly(keyword, command, tempHashTable));
+		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 		
 		command = "on 120606";
-		assertEquals("", textparser.extractDateOnly(keyword, command, tempHashTable));
+		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 		
 		command = "on  120606 ";
-		assertEquals("", textparser.extractDateOnly(keyword, command, tempHashTable));
+		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 		
 		command = "on  1206065  ";
-		assertEquals(command, textparser.extractDateOnly(keyword, command, tempHashTable));
+		assertEquals(command, textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 		
 		command = "on  120.06.06 ";
-		assertEquals(command, textparser.extractDateOnly(keyword, command, tempHashTable));
+		assertEquals(command, textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 		
 		command = "on  1.06.06 ";
-		assertEquals(command, textparser.extractDateOnly(keyword, command, tempHashTable));
+		assertEquals(command, textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 		
 		command = "on  1.6.06 ";
-		assertEquals(command, textparser.extractDateOnly(keyword, command, tempHashTable));
+		assertEquals(command, textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 		
 		command = "on  1.6.1906 ";
-		assertEquals(command, textparser.extractDateOnly(keyword, command, tempHashTable));
+		assertEquals(command, textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 	}
 	
 	@Test
