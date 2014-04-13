@@ -56,9 +56,8 @@ public class CommandAdd extends Command {
 
 		String commandFeedback = "";
 
-		COMMAND_ERROR commandError = errorDetectionForInvalidTaskNameAndId();
-		if(commandError != null) {
-			return commandErrorHandler(commandError);
+		if(getTaskIdFromInfoTable() != null && (getTaskNameFromInfoTable() != null && !getTaskNameFromInfoTable().isEmpty())) {
+			return commandErrorHandler(COMMAND_ERROR.INVALID_TASKNAME);
 		}
 		
 		taskInfo = new TaskInfo();
@@ -85,7 +84,7 @@ public class CommandAdd extends Command {
 		//			return createResult(taskListShop.getAllCurrentTasks(), commandFeedback);
 		//		}
 
-		commandError = modifyDateAndTime(taskInfo);
+		COMMAND_ERROR commandError = modifyDateAndTime(taskInfo);
 		if(commandError != COMMAND_ERROR.NIL) {
 			commandFeedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 			return createResult(commandFeedback);
