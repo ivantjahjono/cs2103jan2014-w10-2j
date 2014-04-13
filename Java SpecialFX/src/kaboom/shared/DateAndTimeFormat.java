@@ -40,13 +40,6 @@ public class DateAndTimeFormat {
 		return instance;
 	}
 
-		
-	/* (MOVING TO CONTROLLER)
-	 * If only date is valid: Set calendar to date and default time of 0000 (12am)
-	 * If only time is valid: Set calendar to time and default date to current day
-	 * If both are valid: Set calendar to respective date and time
-	 * If both are null: return null;
-	 */
 	
 	public Calendar formatStringToCalendar (String date, String time) {
 		if(date == null || time == null) {
