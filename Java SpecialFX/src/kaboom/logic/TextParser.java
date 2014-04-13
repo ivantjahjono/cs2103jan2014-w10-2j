@@ -43,7 +43,6 @@ public class TextParser {
 	public String getCommandKeyWord (String userInput) {
 		return getFirstWord(userInput);
 	}
-	
 
 	//******************** Method Calls By Controller ******************************************
 	public String removeFirstWord(String userInputSentence) {
@@ -110,10 +109,6 @@ public class TextParser {
 		}
 		
 		return extractedTimeString;
-	}
-	
-	public String extractDateOnly(String KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
-		return extractDateOnly(KEYWORD_TIME, KEYWORD_TIME, userInputSentence, keywordTable);
 	}
 	
 	public String extractDateOnly(String KEYWORD_TIME, String SECOND_KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
@@ -280,7 +275,7 @@ public class TextParser {
 			switch(list[i]) {
 			
 			case DATE:
-				result = extractDateOnly("^", userInput, taskInformationTable);
+				result = extractDateOnly("^", "^", userInput, taskInformationTable);
 				break;
 			
 			case PRIORITY: 
@@ -296,7 +291,7 @@ public class TextParser {
 					result = extractTimeOnly(KEYWORD_ENDTIME,userInput,taskInformationTable);
 				}
 				else if(checkDateOnlyInputFormat(KEYWORD_ENDTIME, userInput, endTimeMatchList)){
-					result = extractDateOnly(KEYWORD_ENDTIME, userInput, taskInformationTable);
+					result = extractDateOnly(KEYWORD_ENDTIME, KEYWORD_ENDTIME ,userInput, taskInformationTable);
 				}
 				break;
 				
@@ -310,7 +305,7 @@ public class TextParser {
 					result = extractTimeOnly(KEYWORD_STARTTIME,userInput,taskInformationTable);
 				}
 				else if(checkDateOnlyInputFormat(KEYWORD_STARTTIME, userInput, startTimeMatchList)){
-					result = extractDateOnly(KEYWORD_STARTTIME,userInput,taskInformationTable);
+					result = extractDateOnly(KEYWORD_STARTTIME, KEYWORD_STARTTIME, userInput,taskInformationTable);
 				}
 				break;
 				
