@@ -109,7 +109,7 @@ public class TaskMasterKaboom {
 		assert userInputSentence != null;
 	
 		resetRefreshCounter();
-		taskManager.refreshTasksAndClearRecent();
+		taskManager.refreshTasksAndResetRecent();
 		
 		Command commandToExecute = null;
 		Result commandResult = null;
