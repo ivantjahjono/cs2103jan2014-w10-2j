@@ -17,6 +17,7 @@ public class CommandHelp extends Command {
 	private final String HELP_TYPE_SEARCH 	= "search";
 	private final String HELP_TYPE_VIEW 	= "view";
 	private final String HELP_TYPE_PAGE 	= "page";
+	private final String HELP_TYPE_CLEAR 	= "clear";
 	private final String HELP_TYPE_CLOSE 	= "close";
 	
 	private final String HELP_INVALID_COMMAND = "Nope. Not help command! Type <help> for more info.";
@@ -72,6 +73,9 @@ public class CommandHelp extends Command {
 					
 				case HELP_TYPE_PAGE:
 					return HELP_STATE.PAGE;
+					
+				case HELP_TYPE_CLEAR:
+					return HELP_STATE.CLEAR;
 					
 				case HELP_TYPE_CLOSE:
 					return HELP_STATE.CLOSE;
