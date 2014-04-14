@@ -24,7 +24,7 @@ public class TextParser {
 	private final String DATE_NAME_REGEX = "\\s*(today|tmr|tomorrow|monday|tuesday|wednesday|thursday|friday|saturday|sunday)(\\s|$)";
 	private final String FULLDATE_REGEX = "((%1$s" + DATE_REGEX + ")|(%2$s" + DATE_NAME_REGEX + "))";
 	private final String ID_REGEX = "^\\s*\\d+(\\s+|$)";
-	private final String PRIORITY_REGEX = "[\\s+]\\*{1,5}[\\s\\W]*";
+	private final String PRIORITY_REGEX = "[\\s+]\\*{1,5}(\\s|$)";
 	private final String PAGE_REGEX = "^\\s*(\\d+|next|prev)\\s*$";
 	static TextParser instance;
 	
