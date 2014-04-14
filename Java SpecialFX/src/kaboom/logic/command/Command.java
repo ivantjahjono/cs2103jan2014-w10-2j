@@ -33,6 +33,7 @@ public class Command {
 	protected KEYWORD_TYPE[] keywordList;
 	Hashtable<KEYWORD_TYPE, String> infoTable;
 	protected TaskView taskView;
+	protected Vector <COMMAND_ERROR> commandErrorList;
 	
 	protected enum COMMAND_ERROR{
 		CLASH, TASK_DOES_NOT_EXIST, NO_TASK_NAME, INVALID_DATE, INVALID_TASKNAME ,NIL
@@ -44,6 +45,7 @@ public class Command {
 		taskView = TaskView.getInstance();
 		infoTable = new Hashtable<KEYWORD_TYPE, String>();
 		keywordList = new KEYWORD_TYPE[0];
+		commandErrorList = new Vector <COMMAND_ERROR>();
 	}
 	
 	public void setCommandType (COMMAND_TYPE type) {
@@ -76,10 +78,20 @@ public class Command {
 	
 	public void initialiseCommandInfoTable(String userInputSentence) {
 		infoTable = textParser.extractList(userInputSentence, keywordList);
+		convertAndValidateInformation ();
 	}
 	
 	public void initialiseCommandInfoTable(Hashtable<KEYWORD_TYPE, String> infoTable) {
 		this.infoTable = infoTable;
+		convertAndValidateInformation ();
+	}
+	
+	protected void convertAndValidateInformation () {
+		//this is a stub
+	}
+	
+	protected void addCommandErrorToList (COMMAND_ERROR commandError) {
+		commandErrorList.add(commandError);
 	}
 	
 	//TODO
@@ -254,12 +266,12 @@ public class Command {
 	protected COMMAND_ERROR errorDetectionForInvalidTaskNameAndId() {	
 		String taskId = getTaskIdFromInfoTable();
 		String taskName = getTaskNameFromInfoTable();
-		if(taskId != null && !isTaskNameNullOrEmpty(taskName)) {
+		if(taskId != null && !isStringNullOrEmpty(taskName)) {
 			return COMMAND_ERROR.INVALID_TASKNAME;
 		} else if(isTaskIdValid()) {
 			return null;
 		} else {
-			if (isTaskNameNullOrEmpty(taskName)) {
+			if (isStringNullOrEmpty(taskName)) {
 				return COMMAND_ERROR.NO_TASK_NAME;
 			} else {
 				return taskExistenceOrClashDetection(taskName);
@@ -267,8 +279,8 @@ public class Command {
 		}
 	}
 
-	private boolean isTaskNameNullOrEmpty(String taskName) {
-		return taskName == null || taskName.isEmpty();
+	protected boolean isStringNullOrEmpty(String string) {
+		return string == null || string.isEmpty();
 	}
 
 	private COMMAND_ERROR taskExistenceOrClashDetection(String taskName) {
