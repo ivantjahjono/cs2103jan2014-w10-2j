@@ -173,7 +173,7 @@ public class TaskManager {
 	
 	public boolean addPresentTask(TaskInfo task) {
 		assert task.getDone() == false;
-		boolean isAdded = taskDepo.addTaskToList(task);
+		boolean isAdded = taskDepo.addTaskToPresentList(task);
 		taskDepo.refreshTasks();
 		addToSearchView(task);
 		store();

@@ -324,7 +324,7 @@ public class Storage {
 			taskDepository.addTaskToArchivedList(task);
 		}
 		else {
-			taskDepository.addTaskToList(task);
+			taskDepository.addTaskToPresentList(task);
 		}
 	}
 }
