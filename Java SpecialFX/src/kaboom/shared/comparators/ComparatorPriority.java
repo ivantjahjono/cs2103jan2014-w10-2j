@@ -1,4 +1,10 @@
 //@author A0096670W
+
+/**
+ * This comparator is the comparator to sort tasks by priority.
+ * First, it compares the priority.
+ * If they are the same, the task name is compared.
+ */
 package kaboom.shared.comparators;
 
 import java.util.Comparator;

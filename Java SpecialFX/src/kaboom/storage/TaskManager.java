@@ -10,6 +10,8 @@
  * This class is also responsible for the "dynamic" IDs of the tasks.
  * (Such as the task ID being different while under different views 
  * but referring to the same object.)
+ * 
+ * This is a singleton class as there can only be one instance of this class. 
  */
 
 package kaboom.storage;
@@ -20,81 +22,83 @@ import kaboom.logic.command.Command;
 import kaboom.shared.DISPLAY_STATE;
 import kaboom.shared.TaskInfo;
 
-public class TaskView {
+public class TaskManager {
 
-	private static TaskView instance = null;
+	private static TaskManager instance = null;
 
 	private Vector<TaskInfo> currentView; 	//Current view
 	private Vector<TaskInfo> searchView;  	//Vector for searches
 	private Vector<Integer> tasksCount;
-	private TaskDepository taskListShop;
+	private TaskDepository taskDepo;
 	
 	private Storage fileStorage;
-	private final String FILENAME;
+	private final String FILENAME = "KABOOM_FILE.dat";
 	private History history;
 
-	private TaskView() {
-		taskListShop = TaskDepository.getInstance();
-		currentView = taskListShop.getToday();
+	private TaskManager() {
+		taskDepo = TaskDepository.getInstance();
+		currentView = taskDepo.getToday();
 		searchView = new Vector<TaskInfo>();
 		tasksCount = new Vector<Integer>();
-		FILENAME = "KABOOM_FILE.dat";
 		fileStorage = new Storage(FILENAME);
 		history = History.getInstance();
+		fileStorage.load();
 	}
 	
-	private TaskView(String fileName) {
-		taskListShop = TaskDepository.getInstance();
-		currentView = taskListShop.getToday();
+	private TaskManager(String fileName) {
+		taskDepo = TaskDepository.getInstance();
+		currentView = taskDepo.getToday();
 		searchView = new Vector<TaskInfo>();
 		tasksCount = new Vector<Integer>();
-		FILENAME = "KABOOM_FILE.dat";
 		fileStorage = new Storage(fileName);
 		history = History.getInstance();
+		fileStorage.load();
 	}
 
-	public static TaskView getInstance () {
+	public static TaskManager getInstance () {
 		if (instance == null) {
-			instance = new TaskView();
+			instance = new TaskManager();
 		}
 		return instance;
 	}
 	
-	public static TaskView getInstance(String fileName) {
+	public static TaskManager getInstance(String fileName) {
 		if (instance == null) {
-			instance = new TaskView(fileName);
+			instance = new TaskManager(fileName);
 		}
 		return instance;
 	}
 	
 	public Vector<Integer> getTasksCountList() {
-		tasksCount.clear();
-		
-		tasksCount.add(taskListShop.getToday().size());
-		tasksCount.add(taskListShop.getFutureTasks().size());
-		tasksCount.add(taskListShop.getFloatingTasks().size());
-		tasksCount.add(taskListShop.getExpiredTasks().size());
-		tasksCount.add(taskListShop.getAllArchivedTasks().size());
-		
+		clearAndAddTaskCounts();
 		return tasksCount;
+	}
+
+	private void clearAndAddTaskCounts() {
+		tasksCount.clear();
+		tasksCount.add(taskDepo.getToday().size());
+		tasksCount.add(taskDepo.getFutureTasks().size());
+		tasksCount.add(taskDepo.getFloatingTasks().size());
+		tasksCount.add(taskDepo.getExpiredTasks().size());
+		tasksCount.add(taskDepo.getAllArchivedTasks().size());
 	}
 
 	public Vector<TaskInfo> setAndGetView(DISPLAY_STATE displayState) {
 		switch (displayState) {
 		case TODAY:
-			setCurrentView(taskListShop.getToday());
+			setCurrentView(taskDepo.getToday());
 			break;
 
 		case TIMELESS:
-			setCurrentView(taskListShop.getFloatingTasks());
+			setCurrentView(taskDepo.getFloatingTasks());
 			break;
 
 		case EXPIRED:
-			setCurrentView(taskListShop.getExpiredTasks());
+			setCurrentView(taskDepo.getExpiredTasks());
 			break;
 
 		case FUTURE:
-			setCurrentView(taskListShop.getFutureTasks());
+			setCurrentView(taskDepo.getFutureTasks());
 			break;
 
 		case SEARCH:
@@ -102,11 +106,11 @@ public class TaskView {
 			break;
 
 		case ARCHIVE:
-			setCurrentView(taskListShop.getAllArchivedTasks());
+			setCurrentView(taskDepo.getAllArchivedTasks());
 			break;
 
 		default:
-			setCurrentView(taskListShop.getToday());
+			setCurrentView(taskDepo.getToday());
 			break;
 		}
 		
@@ -152,40 +156,43 @@ public class TaskView {
 	}
 	
 	public Vector<TaskInfo> getAllPresentTasks() {
-		return taskListShop.getAllCurrentTasks();
+		return taskDepo.getAllPresentTasks();
 	}
 	
 	public Vector<TaskInfo> getAllArchivedTasks() {
-		return taskListShop.getAllArchivedTasks();
+		return taskDepo.getAllArchivedTasks();
 	}
 	
 	public int presentTaskCount() {
-		return taskListShop.presentTaskCount();
+		return taskDepo.countPresentTasks();
 	}
 	
 	public int archiveTaskCount() {
-		return taskListShop.archiveTaskCount();
+		return taskDepo.countArchivedTasks();
 	}
 	
-	public boolean addTask(TaskInfo task) {
-		//Check if task is archived or current and add to the proper list
-		boolean isAdded = taskListShop.addTaskToList(task);
-		taskListShop.refreshTasks();
+	public boolean addPresentTask(TaskInfo task) {
+		assert task.getDone() == false;
+		boolean isAdded = taskDepo.addTaskToList(task);
+		taskDepo.refreshTasks();
 		addToSearchView(task);
+		store();
 		return isAdded;
 	}
 	
 	public boolean addArchivedTask(TaskInfo task) {
-		//Check if task is archived or current and add to the proper list
-		boolean isAdded = taskListShop.addTaskToArchivedList(task);
-		taskListShop.refreshTasks();
+		assert task.getDone() == true;
+		boolean isAdded = taskDepo.addTaskToArchivedList(task);
+		taskDepo.refreshTasks();
 		addToSearchView(task);
+		store();
 		return isAdded;
 	}
 	
 	public boolean removeTask(TaskInfo task) {
-		TaskInfo removedTask = taskListShop.removeTask(task);
+		TaskInfo removedTask = taskDepo.removeTask(task);
 		deleteInSearchView(task);
+		store();
 		if (removedTask == null) {
 			return false;
 		} else {
@@ -194,43 +201,50 @@ public class TaskView {
 	}
 	
 	public void updateTask(TaskInfo newTask, TaskInfo oldTask) {
-		taskListShop.updateTask(newTask, oldTask);
+		taskDepo.updateTask(newTask, oldTask);
 		updateInSearchView(newTask, oldTask);
+		store();
 	}
 	
 	public void doneTask(TaskInfo task) {
-		//add assertion here that the task is not done yet
+		assert task.getDone() == false;
 		task.setExpiryFlag(false);
 		task.setDone(true);
-		taskListShop.refreshTasks();  //Refresh to shift task to archive
 		deleteInSearchView(task);
 		task.setRecent(true);
+		taskDepo.refreshTasks();  //Refresh to shift task to archive
+		store();
 	}
 	
 	public void undoneTask(TaskInfo task) {
-		//add assertion here that the task is done already
+		assert task.getDone() == true;
 		task.setDone(false);
-		taskListShop.refreshTasks();  //Refresh to shift task to archive
 		deleteInSearchView(task);
 		task.setRecent(true);
+		taskDepo.refreshTasks();  //Refresh to shift task to archive
+		store();
 	}
 	
 	public void clearPresentTasks() {
-		taskListShop.clearAllCurrentTasks();
+		taskDepo.clearAllPresentTasks();
 		clearSearchView();
+		store();
 	}
 	
 	public void clearArchivedTasks() {
-		taskListShop.clearAllArchivedTasks();
+		taskDepo.clearAllArchivedTasks();
 		clearSearchView();
+		store();
 	}
 	
-	public void refreshTasksFlagsOnly() {
-		taskListShop.refreshTasks();
+	public void refreshTasks() {
+		taskDepo.refreshTasks();
+		store();
 	}
 	
-	public void refreshAllTasksFlags() {
-		taskListShop.refreshTasks(true);
+	public void refreshTasksAndResetRecent() {
+		taskDepo.refreshTasks(true);
+		store();
 	}
 	
 	public void addToSearchView(TaskInfo task) {

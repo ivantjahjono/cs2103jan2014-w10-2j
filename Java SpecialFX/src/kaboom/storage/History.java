@@ -1,4 +1,13 @@
 //@author A0096670W
+
+/**
+ * History.java:
+ * This class stores and retrieves commands that are saved for undo purposes.
+ * The commands are stored in a stack and the limit set is 10 commands. 
+ * This is to ensure that the program does not take up too much memory even if
+ * the user runs Task Master Kaboom for extended periods. 
+ * This is a singleton class as there can only be one instance of this class. 
+ */
 package kaboom.storage;
 
 import java.util.Stack;
@@ -12,7 +21,6 @@ public class History {
 	private static History historyInstance = null;
 
 	private Stack<Command> previousCommandList;
-	private Command currentCommandView;
 
 	public static History getInstance () {
 		if (historyInstance == null) {
@@ -23,7 +31,6 @@ public class History {
 
 	public History () {
 		previousCommandList = new Stack<Command>();
-		currentCommandView = null;
 	}
 
 	public Command getMostRecentCommand () {
@@ -32,10 +39,6 @@ public class History {
 		}
 
 		return previousCommandList.pop();
-	}
-
-	public Command getMostRecentCommandView () {            
-		return currentCommandView;
 	}
 
 	public int size() {
@@ -48,12 +51,7 @@ public class History {
 
 	public void addToRecentCommands(Command recentCommand) {
 		previousCommandList.push(recentCommand);
-
 		trimOutOldCommands();
-	}
-
-	public void setCurrentViewCommand(Command setView) {
-		currentCommandView = setView;
 	}
 
 	private void trimOutOldCommands () {

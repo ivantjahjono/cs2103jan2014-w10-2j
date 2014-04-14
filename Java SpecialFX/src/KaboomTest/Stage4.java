@@ -7,7 +7,10 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ DateAndTimeFormatTest.class, })
-public class Stage1 {
+@SuiteClasses({ 
+		Stage3.class,
+		DisplayDataTest.class
+		})
+public class Stage4 {
 
 }

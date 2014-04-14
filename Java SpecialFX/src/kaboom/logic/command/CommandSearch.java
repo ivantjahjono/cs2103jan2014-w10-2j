@@ -33,10 +33,9 @@ public class CommandSearch extends Command {
 
 	public Result execute() {
 
-		assert taskView != null;
+		assert taskManager != null;
 		String commandFeedback;
 
-		//current extraction
 		DateAndTimeFormat dateAndTimeFormat = DateAndTimeFormat.getInstance();
 
 		String searchName = infoTable.get(KEYWORD_TYPE.TASKNAME).toLowerCase();
@@ -46,15 +45,13 @@ public class CommandSearch extends Command {
 		Calendar searchOnDate = dateAndTimeFormat.formatStringToCalendar(searchOnDateInString, dateAndTimeFormat.getEndTimeOfTheDay());
 		Calendar searchByDate = dateAndTimeFormat.formatStringToCalendar(searchByDateInString, dateAndTimeFormat.getStartTimeOfTheDay());
 
-		listToSearch = taskView.getAllPresentTasks();
+		listToSearch = taskManager.getAllPresentTasks();
 
 		if (!searchName.equals("")) {
 			searchUsingName(searchName);
 		} else if (searchOnDate != null){
-			//Search only on a particular day
 			searchOnlyOnDate(searchOnDate);
 		} else if (searchByDate != null) {
-			//Cumulative search to a particular day
 			searchCumulativeByDate(searchByDate);
 		} else {
 			commandFeedback = MESSAGE_COMMAND_SEARCH_ERROR;
@@ -62,7 +59,7 @@ public class CommandSearch extends Command {
 		}
 
 		commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
-		taskView.setSearchView(tasksFound);
+		taskManager.setSearchView(tasksFound);
 
 		return createResult(commandFeedback, DISPLAY_STATE.SEARCH, null); 
 	}
