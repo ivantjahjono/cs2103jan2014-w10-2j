@@ -1,0 +1,2694 @@
+//@author: a0096670w
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandDone.java
+	 */
+
+
+/**
+ * CommandDone.java:
+ * This class set a task as done and shifts it to the archive.
+ */
+package kaboom.logic.command;
+
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
+
+public class CommandDone extends Command {
+	private final String MESSAGE_COMMAND_DONE_SUCCESS = "Set %1$s to complete";
+	private final String MESSAGE_COMMAND_DONE_AlEADY_COMPLETED = "%1$s was already completed";
+	private final String MESSAGE_COMMAND_INVALID = "Nope. No such BOOM command. Type <help complete> for help.";
+	
+	TaskInfo taskToBeModified;
+
+	public CommandDone() {
+		commandType = COMMAND_TYPE.DONE;
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.TASKID,
+				KEYWORD_TYPE.TASKNAME
+		};
+	}
+
+	public Result execute() {
+		assert taskManager != null;
+		
+		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return createResult(MESSAGE_COMMAND_INVALID);
+		}
+		
+		errorDetectionForInvalidTaskNameAndId();
+		if(!commandErrorList.isEmpty()) {
+			return commandErrorHandler(commandErrorList.get(0));
+		} else {
+			taskToBeModified = getTask();
+		}
+		
+		String feedback = MESSAGE_COMMAND_INVALID;
+		String taskName = taskToBeModified.getTaskName();
+		
+		if (taskToBeModified.isDone()) {
+			feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
+		} else {
+			taskManager.doneTask(taskToBeModified);
+			addCommandToHistory();
+			feedback = String.format(MESSAGE_COMMAND_DONE_SUCCESS, taskName);
+		}
+		
+		return createResult(feedback);
+	}
+
+	public boolean undo() {
+		taskToBeModified.setDone(false);
+		taskManager.refreshTasks();
+		taskManager.addToSearchView(taskToBeModified);
+		return true;
+	}
+
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+
+		return true;
+	}
+}
+	// End of segment: src\kaboom\logic\command\CommandDone.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandSearch.java
+	 */
+
+
+/**
+ * CommandSearch.java:
+ * This class performs the searching for tasks using either the name
+ * or the date.
+ */
+package kaboom.logic.command;
+
+import java.util.Calendar;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.DateAndTimeFormat;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
+
+public class CommandSearch extends Command {
+
+	private final String MESSAGE_COMMAND_SEARCH_SUCCESS = "Search done. %d item(s) found.";
+	private final String MESSAGE_COMMAND_SEARCH_ERROR = "Please enter something to search";
+
+	TaskInfo taskInfo = null;
+	Vector<TaskInfo> tasksFound;
+	Vector<TaskInfo> listToSearch;
+
+	public CommandSearch () {
+		commandType = COMMAND_TYPE.SEARCH;
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.DATE,
+				KEYWORD_TYPE.END_TIME,
+				KEYWORD_TYPE.TASKNAME
+		};
+		tasksFound = new Vector<TaskInfo>();
+	}
+
+	public Result execute() {
+
+		assert taskManager != null;
+		String commandFeedback;
+
+		DateAndTimeFormat dateAndTimeFormat = DateAndTimeFormat.getInstance();
+
+		String searchName = infoTable.get(KEYWORD_TYPE.TASKNAME).toLowerCase();
+		String searchOnDateInString = dateAndTimeFormat.convertStringDateToDayMonthYearFormat(infoTable.get(KEYWORD_TYPE.DATE));
+		String searchByDateInString = dateAndTimeFormat.convertStringDateToDayMonthYearFormat(infoTable.get(KEYWORD_TYPE.END_DATE));
+
+		Calendar searchOnDate = dateAndTimeFormat.formatStringToCalendar(searchOnDateInString, dateAndTimeFormat.getEndTimeOfTheDay());
+		Calendar searchByDate = dateAndTimeFormat.formatStringToCalendar(searchByDateInString, dateAndTimeFormat.getStartTimeOfTheDay());
+
+		listToSearch = taskManager.getAllPresentTasks();
+
+		if (!searchName.equals("")) {
+			searchUsingName(searchName);
+		} else if (searchOnDate != null){
+			searchOnlyOnDate(searchOnDate);
+		} else if (searchByDate != null) {
+			searchCumulativeByDate(searchByDate);
+		} else {
+			commandFeedback = MESSAGE_COMMAND_SEARCH_ERROR;
+			return createResult(commandFeedback);
+		}
+
+		commandFeedback = String.format(MESSAGE_COMMAND_SEARCH_SUCCESS, tasksFound.size());
+		taskManager.setSearchView(tasksFound);
+
+		return createResult(commandFeedback, DISPLAY_STATE.SEARCH, null); 
+	}
+
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private void searchCumulativeByDate(Calendar searchByDate) {
+		for (int i = 0; i < listToSearch.size(); i++) {
+			TaskInfo singleTask = listToSearch.get(i);
+			Calendar taskEndDate = singleTask.getEndDate();
+			if (taskEndDate != null) {
+				if (isTaskByDate(singleTask, searchByDate)) {
+					tasksFound.add(singleTask);
+				}
+			}
+		}
+	}
+
+	private void searchOnlyOnDate(Calendar searchOnDate) {
+		for (int i = 0; i < listToSearch.size(); i++) {
+			TaskInfo singleTask = listToSearch.get(i);
+			if (isTaskOnDate(singleTask, searchOnDate)) {
+				tasksFound.add(singleTask);
+			}
+		}
+	}
+
+	private void searchUsingName(String searchName) {
+		for (int i = 0; i < listToSearch.size(); i++) {
+			TaskInfo singleTask = listToSearch.get(i);
+			if (singleTask.getTaskName().toLowerCase().contains(searchName)) {
+				tasksFound.add(singleTask);
+			}
+		}
+	}
+
+	/**
+	 * This function checks if a task starts or ends on the date.
+	 * Checks the start/end time or in between for timed tasks
+	 * Checks the end time for deadline tasks
+	 * @param task
+	 * @param searchOnDate
+	 */
+	private boolean isTaskOnDate(TaskInfo task, Calendar searchOnDate) {
+		Calendar taskStartDate = task.getStartDate();
+		Calendar taskEndDate = task.getEndDate();
+
+		if (taskStartDate != null) {
+			if (isTaskStartOrEndDate(taskStartDate, searchOnDate)) {
+				return true;
+			} else if (isSearchDateBetweenTaskDates(taskStartDate, taskEndDate, searchOnDate)) {
+				return true;
+			}
+		} else if (taskEndDate != null) {
+			if (isTaskStartOrEndDate(taskEndDate, searchOnDate)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isSearchDateBetweenTaskDates(Calendar taskStartDate,
+			Calendar taskEndDate, Calendar searchOnDate) {
+		//For tasks that start before and ends after the search date
+		//Since there is a start date, there must surely be an end date
+		assert taskEndDate != null;
+		return taskStartDate.before(searchOnDate) && taskEndDate.after(searchOnDate);
+	}
+
+	private boolean isTaskStartOrEndDate(Calendar taskDate, Calendar searchDate) {
+		return taskDate.get(Calendar.DAY_OF_YEAR) == searchDate.get(Calendar.DAY_OF_YEAR) &&
+				taskDate.get(Calendar.YEAR) == searchDate.get(Calendar.YEAR);
+	}
+
+	/**
+	 * This class searches for tasks that ends by that particular date.
+	 * Does not include tasks that start before but ends after that date.
+	 * @param task
+	 * @param searchByDate
+	 */
+	private boolean isTaskByDate(TaskInfo task, Calendar searchByDate) {
+		Calendar taskEndDate = task.getEndDate();
+
+		if (taskEndDate != null) {
+			if (isTaskStartOrEndDate(taskEndDate, searchByDate)) {
+				return true;
+			} else if (isTaskBetweenNowAndSearchDate(taskEndDate, searchByDate)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isTaskBetweenNowAndSearchDate(Calendar taskEndDate, Calendar searchByDate) {
+		Calendar today = Calendar.getInstance();
+		today.set(Calendar.HOUR_OF_DAY, 00);
+		today.set(Calendar.MINUTE, 00);
+		today.set(Calendar.SECOND, 00);
+		return taskEndDate.after(today) && taskEndDate.before(searchByDate);
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\CommandSearch.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandUndone.java
+	 */
+
+
+/**
+ * CommandUndone.java:
+ * This class sets a task as undone and shifts it from the archive to the present task list.
+ */
+package kaboom.logic.command;
+
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
+
+public class CommandUndone extends Command {
+	private final String MESSAGE_COMMAND_UNDONE_SUCCESS = "Set %1$s to incomplete";
+	private final String MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE = "%1$s was incomplete";
+	private final String MESSAGE_COMMAND_INVALID = "No such unboom command. Type <help complete> for help.";
+	
+	TaskInfo taskToBeModified;
+	TaskInfo taskInfo = null;
+
+	public CommandUndone() {
+		commandType = COMMAND_TYPE.UNDONE;
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.TASKID,
+				KEYWORD_TYPE.TASKNAME
+		};
+	}
+
+	public Result execute() {
+		assert taskManager != null;
+		
+		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return createResult(MESSAGE_COMMAND_INVALID);
+		}
+		
+		errorDetectionForInvalidTaskNameAndId();
+		if(!commandErrorList.isEmpty()) {
+			return commandErrorHandler(commandErrorList.get(0));
+		} else {
+			taskToBeModified = getTask();
+		}
+
+		String feedback = MESSAGE_COMMAND_INVALID;
+		String taskName = taskToBeModified.getTaskName();
+
+		if (!taskToBeModified.isDone()) {
+			feedback = String.format(MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE, taskName);
+		} else {
+			taskManager.undoneTask(taskToBeModified);
+			addCommandToHistory ();
+			feedback = String.format(MESSAGE_COMMAND_UNDONE_SUCCESS, taskName);
+		}
+
+		return createResult(feedback);
+	}
+
+	public boolean undo() {
+		taskToBeModified.setDone(true);
+		taskManager.refreshTasks();
+		taskManager.addToSearchView(taskToBeModified);
+		return true;
+	}
+
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+
+		return true;
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\CommandUndone.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\shared\comparators\ComparatorDefault.java
+	 */
+
+
+/**
+ * This comparator is the default comparator for tasks.
+ * First, it compares the start dates.
+ * If they are the same, it compares the end dates.
+ * If they are the same, it compares the priority.
+ * If they are the same, the task name is compared.
+ */
+package kaboom.shared.comparators;
+
+import java.util.Calendar;
+import java.util.Comparator;
+
+import kaboom.shared.TaskInfo;
+
+public class ComparatorDefault implements Comparator<TaskInfo> {
+
+	public int compare(TaskInfo task1, TaskInfo task2) {
+		final int COMPARE_EQUAL = 0;
+		final int COMPARE_LESS_THAN = -1;
+		final int COMPARE_MORE_THAN = 1;
+
+		int compareValue = compareDates(task1.getStartDate(), task2.getStartDate());
+		if (compareValue != COMPARE_EQUAL) {
+			return compareValue;
+		}
+		
+		if (task1.getStartDate() != null && task2.getStartDate() == null) {
+			return COMPARE_LESS_THAN;
+		}
+		
+		if (task1.getStartDate() == null && task2.getStartDate() != null) {
+			return COMPARE_MORE_THAN;
+		}
+		
+		compareValue = compareDates(task1.getEndDate(), task2.getEndDate());
+		if (compareValue != COMPARE_EQUAL) {
+			return compareValue;
+		}
+		
+		compareValue = comparePriority(task1.getPriority(), task2.getPriority());
+		if (compareValue != COMPARE_EQUAL) {
+			return compareValue;
+		}
+		
+		return compareTaskName(task1.getTaskName(), task2.getTaskName());
+	}
+
+	private int compareDates(Calendar date1, Calendar date2) {
+		if (date1 == null || date2 == null) {
+			return 0;
+		} else {
+			return date1.compareTo(date2);
+		}
+	}
+
+	private int comparePriority(int priority1, int priority2) {
+		return priority2 - priority1;
+	}
+	
+	private int compareTaskName(String name1, String name2) {
+		return name1.compareToIgnoreCase(name2);
+	}
+}
+
+	// End of segment: src\kaboom\shared\comparators\ComparatorDefault.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\shared\comparators\ComparatorExpired.java
+	 */
+
+
+/**
+ * This comparator is the comparator for expired tasks.
+ * First, it compares the end dates.
+ * If they are the same, it compares the start dates.
+ * If they are the same, it compares the priority.
+ * If they are the same, the task name is compared.
+ */
+package kaboom.shared.comparators;
+
+import java.util.Calendar;
+import java.util.Comparator;
+
+import kaboom.shared.TaskInfo;
+
+public class ComparatorExpired implements Comparator<TaskInfo> {
+	public int compare(TaskInfo task1, TaskInfo task2) {
+		final int COMPARE_EQUAL = 0;
+		
+		int compareValue = compareDates(task1.getEndDate(), task2.getEndDate());
+		if (compareValue != COMPARE_EQUAL) {
+			return compareValue;
+		}
+		
+		compareValue = compareDates(task1.getStartDate(), task2.getStartDate());
+		if (compareValue != COMPARE_EQUAL) {
+			return compareValue;
+		}
+		
+		compareValue = comparePriority(task1.getPriority(), task2.getPriority());
+		if (compareValue != COMPARE_EQUAL) {
+			return compareValue;
+		}
+		
+		return compareTaskName(task1.getTaskName(), task2.getTaskName());
+	}
+	
+	private int compareDates(Calendar date1, Calendar date2) {
+		if (date1 == null || date2 == null) {
+			return 0;
+		} else {
+			return date1.compareTo(date2);
+		}
+	}
+	
+	private int comparePriority(int priority1, int priority2) {
+		return priority2 - priority1;
+	}
+	
+	private int compareTaskName(String name1, String name2) {
+		return name1.compareToIgnoreCase(name2);
+	}
+}
+
+	// End of segment: src\kaboom\shared\comparators\ComparatorExpired.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\shared\comparators\ComparatorPriority.java
+	 */
+
+
+/**
+ * This comparator is the comparator to sort tasks by priority.
+ * First, it compares the priority.
+ * If they are the same, the task name is compared.
+ */
+package kaboom.shared.comparators;
+
+import java.util.Comparator;
+
+import kaboom.shared.TaskInfo;
+
+public class ComparatorPriority implements Comparator<TaskInfo> {
+
+	public int compare(TaskInfo task1, TaskInfo task2) {
+		final int COMPARE_EQUAL = 0;
+		
+		int compareValue = comparePriority(task1.getPriority(), task2.getPriority());
+		if (compareValue != COMPARE_EQUAL) {
+			return compareValue;
+		} else {
+			return compareTaskName(task1.getTaskName(), task2.getTaskName());
+		}
+	}
+	
+	private int comparePriority(int task1Priority, int task2Priority) {
+		return task2Priority - task1Priority;
+	}
+	
+	private int compareTaskName(String name1, String name2) {
+		return name1.compareToIgnoreCase(name2);
+	}
+}
+
+	// End of segment: src\kaboom\shared\comparators\ComparatorPriority.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\storage\History.java
+	 */
+
+
+/**
+ * History.java:
+ * This class stores and retrieves commands that are saved for undo purposes.
+ * The commands are stored in a stack and the limit set is 10 commands. 
+ * This is to ensure that the program does not take up too much memory even if
+ * the user runs Task Master Kaboom for extended periods. 
+ * This is a singleton class as there can only be one instance of this class. 
+ */
+package kaboom.storage;
+
+import java.util.Stack;
+
+import kaboom.logic.command.Command;
+
+public class History {
+
+	private final int MAX_COMMAND_TO_STORE = 10;
+
+	private static History historyInstance = null;
+
+	private Stack<Command> previousCommandList;
+
+	public static History getInstance () {
+		if (historyInstance == null) {
+			historyInstance = new History();
+		}
+		return historyInstance;
+	}
+
+	private History() {
+		previousCommandList = new Stack<Command>();
+	}
+
+	public Command getMostRecentCommand() {
+		if (previousCommandList.empty()) {
+			return null;
+		}
+
+		return previousCommandList.pop();
+	}
+
+	public int size() {
+		return previousCommandList.size();
+	}
+
+	public void clear() {
+		previousCommandList.clear();
+	}
+
+	public void addToRecentCommands(Command recentCommand) {
+		previousCommandList.push(recentCommand);
+		trimOutOldCommands();
+	}
+
+	private void trimOutOldCommands() {
+		int firstObjectIndex = 0;
+
+		while (previousCommandList.size() > MAX_COMMAND_TO_STORE) {
+			previousCommandList.remove(firstObjectIndex);
+		}
+	}
+}
+
+	// End of segment: src\kaboom\storage\History.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\storage\Storage.java
+	 */
+
+
+/**
+ * Storage.java:
+ * This class stores the data in the task depository into a text file
+ * for persistence. Storing and loading of data are called by the store()
+ * and load() functions respectively. Each task is stored in a single line
+ * in the text file and the task attributes are separated by a delimiter.
+ */
+
+package kaboom.storage;
+
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
+import kaboom.storage.TaskDepository;
+
+import java.util.Scanner;
+import java.util.Vector;
+import java.util.Calendar;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.IOException;
+
+
+public class Storage {
+	private final String DELIMITER = "\u00b0";  //Delimiter cannot be typed using keyboard
+	private final String BLANK = " ";
+	private final int INDEX_TASK_NAME = 0;
+	private final int INDEX_TASK_TYPE = 1;
+	private final int INDEX_START_YEAR = 2;
+	private final int INDEX_START_MONTH = 3;
+	private final int INDEX_START_DAY = 4;
+	private final int INDEX_START_HOUR = 5;
+	private final int INDEX_START_MINUTE = 6;
+	private final int INDEX_END_YEAR = 7;
+	private final int INDEX_END_MONTH = 8;
+	private final int INDEX_END_DAY = 9;
+	private final int INDEX_END_HOUR = 10;
+	private final int INDEX_END_MINUTE = 11;
+	private final int INDEX_IMPORTANCE_LEVEL = 12;
+	private final int INDEX_IS_EXPIRED = 13;
+	private final int INDEX_IS_DONE = 14;
+	private final int VALUE_START_TIME_SECONDS = 0;
+	private final int VALUE_START_TIME_MILLISECONDS = 0;
+	private final int VALUE_END_TIME_SECONDS = 59;
+	private final int VALUE_END_TIME_MILLISECONDS = 0;
+
+	private String fileName;
+	private final String storageLoggerFile = "StorageLog.txt";
+
+	private final Logger logger = Logger.getLogger("StorageLogger");
+	private FileHandler fileHandler; 
+	private BufferedWriter writer;
+	private TaskDepository taskDepository;
+
+	public Storage(String fileName) {
+		try {
+			taskDepository = TaskDepository.getInstance();
+			this.fileName = fileName;
+			fileHandler = new FileHandler(storageLoggerFile);
+			logger.addHandler(fileHandler);
+			fileHandler.setFormatter(new SimpleFormatter());
+			logger.setUseParentHandlers(false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * This function stores all the data in task depository to the text file specified
+	 * in the constructor. Each task is on a new line. The task attributes are
+	 * delimited by the delimiter as specified.
+	 * @param	None
+	 * @return 	True if the file is successfully written, false otherwise.
+	 */
+	public boolean store() {
+		try {
+			writer = new BufferedWriter(new FileWriter(fileName));
+
+			writeAllTasksToFile();
+
+			logger.fine("All tasks written to text file: " + fileName);
+			writer.close();
+			return true;
+		} catch (IOException e) {
+			logger.warning("Cannot write to text file: " + fileName);
+			return false;
+		}
+	}
+
+	private void writeAllTasksToFile() throws IOException {
+		writePresentTaskList();
+		writeArchivedTaskList();
+	}
+
+	private void writePresentTaskList() throws IOException {
+		logger.fine("Trying to write current tasks text file: " + fileName);
+		Vector<TaskInfo> presentTaskList = taskDepository.getAllPresentTasks();
+		assert (presentTaskList != null);
+		writeToFile(presentTaskList);
+	}
+
+	private void writeArchivedTaskList() throws IOException {
+		logger.fine("Trying to write archived tasks text file: " + fileName);
+		Vector<TaskInfo> archivedTaskList = taskDepository.getAllArchivedTasks();
+		assert (archivedTaskList != null);
+		writeToFile(archivedTaskList);
+	}
+
+	private void writeToFile(Vector<TaskInfo> currentTaskList) throws IOException {
+		for (int i = 0; i < currentTaskList.size(); i++) {
+			StringBuilder output = new StringBuilder();
+			TaskInfo task = currentTaskList.get(i);
+			appendTaskAttributesToOutput(output, task);
+			writer.write(output.toString());
+			writer.newLine();
+			writer.flush();
+		}
+	}
+
+	private void appendTaskAttributesToOutput(StringBuilder output, TaskInfo task) {
+		appendTaskName(output, task);
+		appendTaskType(output, task);
+		appendStartDate(output, task);
+		appendEndDate(output, task);
+		appendPriority(output, task);
+		appendExpiry(output, task);
+		appendDone(output, task);
+	}
+
+	private void appendDone(StringBuilder output, TaskInfo task) {
+		output.append(task.isDone() + DELIMITER);
+	}
+
+	private void appendExpiry(StringBuilder output, TaskInfo task) {
+		output.append(task.isExpired() + DELIMITER);
+	}
+
+	private void appendPriority(StringBuilder output, TaskInfo task) {
+		output.append(task.getPriority() + DELIMITER);
+	}
+
+	private void appendEndDate(StringBuilder output, TaskInfo task) {
+		Calendar endDate = task.getEndDate();
+		if (endDate != null) {
+			output.append(endDate.get(Calendar.YEAR) + DELIMITER);
+			output.append(endDate.get(Calendar.MONTH) + DELIMITER);
+			output.append(endDate.get(Calendar.DAY_OF_MONTH) + DELIMITER);
+			output.append(endDate.get(Calendar.HOUR_OF_DAY) + DELIMITER);
+			output.append(endDate.get(Calendar.MINUTE) + DELIMITER);
+		}
+		else {
+			logger.fine("endDate for task " + task.getTaskName() + "is null");
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+		}
+	}
+
+	private void appendStartDate(StringBuilder output, TaskInfo task) {
+		Calendar startDate = task.getStartDate();
+		if (startDate != null) {
+			output.append(startDate.get(Calendar.YEAR) + DELIMITER);
+			output.append(startDate.get(Calendar.MONTH) + DELIMITER);
+			output.append(startDate.get(Calendar.DAY_OF_MONTH) + DELIMITER);
+			output.append(startDate.get(Calendar.HOUR_OF_DAY) + DELIMITER);
+			output.append(startDate.get(Calendar.MINUTE) + DELIMITER);
+		}
+		else {
+			logger.fine("startDate for task " + task.getTaskName() + "is null");
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+			output.append(BLANK + DELIMITER);
+		}
+	}
+
+	private void appendTaskType(StringBuilder output, TaskInfo task) {
+		output.append((TaskInfo.taskTypeToString(task.getTaskType()) + DELIMITER));
+	}
+
+	private void appendTaskName(StringBuilder output, TaskInfo task) {
+		output.append(task.getTaskName() + DELIMITER);
+	}
+
+	/**
+	 * This function loads all the data in the text file to the task depository. 
+	 * @param	None
+	 * @return 	True if the file is successfully read, false otherwise.
+	 */
+	public boolean load() {
+		try {
+			logger.fine("Trying to read from text file: " + fileName);
+			File inFile = new File(fileName);
+			Scanner fileScanner = new Scanner(inFile);
+			assert (taskDepository != null);
+
+			loadUntilEndOfFile(fileScanner);
+
+			logger.fine(fileName + " has been fully scanned and read");
+			fileScanner.close();
+			return true;
+
+		} catch (IOException e) {
+			//Try to reproduce the error and find out what it is
+			File inFile = new File(fileName);
+
+			if (!inFile.exists()) {
+				logger.fine(fileName + " does not exist. Skipping.");
+				return true;  //Do nothing if the file does not exist because it will be created later
+			}
+			else {
+				logger.warning("Cannot read from text file: " + fileName);
+				return false;
+			}
+		} catch (Exception e) {
+			return store();
+		}
+	}
+
+	private void loadUntilEndOfFile(Scanner fileScanner) {
+		while (fileScanner.hasNext()) {
+			String input = getNextLineFromFile(fileScanner);
+			String[] inputSplitTokens = input.split(DELIMITER);
+
+			TaskInfo task = new TaskInfo();
+			setTaskAttributes(task, inputSplitTokens);
+			addTaskToAppropriateList(task);
+		}
+	}
+
+	private String getNextLineFromFile(Scanner fileScanner) {
+		return fileScanner.nextLine().trim();
+	}
+
+	private void setTaskAttributes(TaskInfo task, String[] inputSplitTokens) {
+		setTaskName(task, inputSplitTokens);
+		setTaskType(task, inputSplitTokens);
+		setStartDate(task, inputSplitTokens);
+		setEndDate(task, inputSplitTokens);
+		setPriority(task, inputSplitTokens);
+		setExpired(task, inputSplitTokens);
+		setDone(task, inputSplitTokens);
+	}
+
+	private void setTaskName(TaskInfo task, String[] inputTokens) {
+		task.setTaskName(inputTokens[INDEX_TASK_NAME]);
+	}
+
+	private void setTaskType(TaskInfo task, String[] inputTokens) {
+		task.setTaskType(TaskInfo.getTaskType(inputTokens[INDEX_TASK_TYPE]));
+	}
+
+	private void setStartDate(TaskInfo task, String[] inputTokens) {
+		Calendar startDate = Calendar.getInstance();
+		if (inputTokens[INDEX_START_YEAR].equals(BLANK)) {
+			logger.fine("Start date for task \"" + inputTokens[INDEX_TASK_NAME] + "\" is null");
+			startDate = null;
+		}
+		else {
+			startDate.set(Calendar.YEAR, Integer.parseInt(inputTokens[INDEX_START_YEAR]));
+			startDate.set(Calendar.MONTH, Integer.parseInt(inputTokens[INDEX_START_MONTH]));
+			startDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(inputTokens[INDEX_START_DAY]));
+			startDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputTokens[INDEX_START_HOUR]));
+			startDate.set(Calendar.MINUTE, Integer.parseInt(inputTokens[INDEX_START_MINUTE]));
+			startDate.set(Calendar.SECOND, VALUE_START_TIME_SECONDS);
+			startDate.set(Calendar.MILLISECOND, VALUE_START_TIME_MILLISECONDS);
+		}
+		task.setStartDate(startDate);
+	}
+
+	private void setEndDate(TaskInfo task, String[] inputTokens) {
+		Calendar endDate = Calendar.getInstance();
+		if (inputTokens[INDEX_END_YEAR].equals(BLANK)) {
+			logger.fine("End date for task \"" + inputTokens[INDEX_TASK_NAME] + "\" is null");
+			endDate = null;
+		}
+		else {
+			endDate.set(Calendar.YEAR, Integer.parseInt(inputTokens[INDEX_END_YEAR]));
+			endDate.set(Calendar.MONTH, Integer.parseInt(inputTokens[INDEX_END_MONTH]));
+			endDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(inputTokens[INDEX_END_DAY]));
+			endDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputTokens[INDEX_END_HOUR]));
+			endDate.set(Calendar.MINUTE, Integer.parseInt(inputTokens[INDEX_END_MINUTE]));
+			endDate.set(Calendar.SECOND, VALUE_END_TIME_SECONDS);
+			endDate.set(Calendar.MILLISECOND, VALUE_END_TIME_MILLISECONDS);
+		}
+		task.setEndDate(endDate);
+	}
+
+	private void setPriority(TaskInfo task, String[] inputTokens) {
+		task.setPriority(Integer.parseInt(inputTokens[INDEX_IMPORTANCE_LEVEL]));
+	}
+
+	private void setExpired(TaskInfo task, String[] inputTokens) {
+		boolean isExpired = checkExpired(task);
+
+		if (!task.getTaskType().equals(TASK_TYPE.FLOATING)) {
+			task.setExpiry(isExpired);  //Set true only for non-floating tasks
+		}
+		else {
+			task.setExpiry(Boolean.parseBoolean(inputTokens[INDEX_IS_EXPIRED]));
+		}
+	}
+
+	private boolean checkExpired(TaskInfo task) {
+		Calendar now = Calendar.getInstance();
+		Calendar endDate = task.getEndDate();
+		return now.after(endDate);
+	}
+
+	private void setDone(TaskInfo task, String[] inputTokens) {
+		task.setDone(Boolean.parseBoolean(inputTokens[INDEX_IS_DONE]));
+	}
+
+	private void addTaskToAppropriateList(TaskInfo task) {
+		if (task.isDone()) {
+			taskDepository.addTaskToArchivedList(task);
+		}
+		else {
+			taskDepository.addTaskToPresentList(task);
+		}
+	}
+}
+
+	// End of segment: src\kaboom\storage\Storage.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\storage\TaskDepository.java
+	 */
+
+
+/**
+ * TaskDepository.java:
+ * This class stores, retrieves, updates and deletes tasks.
+ * Tasks are separated into two vectors, presentTaskList and archivedTaskList.
+ * presentTaskList contains tasks that are not marked as done by the user.
+ * archivedTaskList contains tasks that are marked as done by the user.
+ * 
+ * This is a singleton class as there can only be one instance of this class. 
+ */
+package kaboom.storage;
+
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Vector;
+import java.util.logging.Logger;
+
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
+import kaboom.shared.comparators.ComparatorDefault;
+import kaboom.shared.comparators.ComparatorExpired;
+import kaboom.shared.comparators.ComparatorPriority;
+
+public class TaskDepository {
+
+	private static TaskDepository taskListInstance = null;
+	private static final Logger logger = Logger.getLogger("TaskListShopLogger");
+
+	private Vector<TaskInfo> presentTaskList;
+	private Vector<TaskInfo> archivedTaskList;
+
+	public static TaskDepository getInstance () {
+		if (taskListInstance == null) {
+			taskListInstance = new TaskDepository();
+			logger.fine("New singleton TaskListShop instance created");
+		}
+
+		return taskListInstance;
+	}
+
+	private TaskDepository () {
+		presentTaskList = new Vector<TaskInfo>();
+		archivedTaskList = new Vector<TaskInfo>();
+	}
+
+	public boolean addTaskToPresentList (TaskInfo newTask) {
+		if (presentTaskList != null) {
+			logger.fine("Adding one item to current list");
+			return presentTaskList.add(newTask);
+		} else {
+			return false;
+		}
+	}
+
+	public boolean addTaskToArchivedList (TaskInfo newTask) {
+		if (archivedTaskList != null) {
+			logger.fine("Adding one item to archived list");
+			return archivedTaskList.add(newTask);
+		} else {
+			return false;
+		}
+	}
+
+	public void updateTask (TaskInfo newTaskInfo, TaskInfo prevTaskInfo) {
+		int indexOfTaskListToBeModified = getIndexOfTask(prevTaskInfo);
+
+		if (indexOfTaskListToBeModified != -1) {
+			presentTaskList.set(indexOfTaskListToBeModified, newTaskInfo);
+		}
+	}
+	
+	private int getIndexOfTask(TaskInfo task) {
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			if (task.equals(presentTaskList.get(i))) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public Vector<TaskInfo> getToday() {
+		Vector<TaskInfo> tasksToReturn = new Vector<TaskInfo>();
+
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			TaskInfo singleTask = presentTaskList.get(i);
+			if (TaskInfo.isTaskToday(singleTask)) {
+				tasksToReturn.add(singleTask);
+			}
+		}
+		Collections.sort(tasksToReturn, new ComparatorDefault());
+		return tasksToReturn;
+	}
+
+	public Vector<TaskInfo> getFutureTasks() {
+		Vector<TaskInfo> tasksToReturn = new Vector<TaskInfo>();
+
+
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			TaskInfo singleTask = presentTaskList.get(i);
+			if (TaskInfo.isFutureTask(singleTask)) {
+				tasksToReturn.add(singleTask);
+			}
+		}
+		Collections.sort(tasksToReturn, new ComparatorDefault());
+		return tasksToReturn;
+	}
+
+	public Vector<TaskInfo> getAllPresentTasks () {
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(presentTaskList);
+		return vectorToReturn;
+	}
+
+	public Vector<TaskInfo> getAllArchivedTasks () {
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(archivedTaskList);
+		Collections.sort(vectorToReturn, new ComparatorDefault());
+		return vectorToReturn;
+	}
+
+	public Vector<TaskInfo> getFloatingTasks() {
+		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
+
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			TaskInfo singleTask = presentTaskList.get(i);
+			if (singleTask.getTaskType() == TASK_TYPE.FLOATING) {
+				returnVector.add(singleTask);
+			}
+		}
+		Collections.sort(returnVector, new ComparatorPriority());
+		return returnVector;
+	}
+
+	public Vector<TaskInfo> getExpiredTasks() {
+		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
+
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			TaskInfo singleTask = presentTaskList.get(i);
+			boolean isExpired = singleTask.isExpired();
+			if (isExpired) {
+				returnVector.add(singleTask);
+			}
+		}
+		Collections.sort(returnVector, new ComparatorExpired());
+		return returnVector;
+	}
+
+	public TaskInfo removeTask(TaskInfo taskToDelete) {
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			TaskInfo singleTask = presentTaskList.get(i);
+			if (singleTask.equals(taskToDelete)) {
+				return presentTaskList.remove(presentTaskList.indexOf(singleTask));
+			}
+		}
+		
+		for (int i = 0; i < archivedTaskList.size(); i++) {
+			TaskInfo singleTask = archivedTaskList.get(i);
+			if (singleTask.equals(taskToDelete)) {
+				return archivedTaskList.remove(archivedTaskList.indexOf(singleTask));
+			}
+		}
+		return null;
+	}
+
+
+	public void refreshTasks() {
+		boolean isResetRecentFlag = false;
+		refreshTasks(isResetRecentFlag);
+	}
+
+	public void refreshTasks(boolean isResetRecentFlag) {
+		refreshArchive(isResetRecentFlag);
+		refreshPresent(isResetRecentFlag);
+	}
+
+	private void refreshArchive(boolean isResetRecentFlag) {
+		for (int i = 0; i < archivedTaskList.size(); i++) {
+			TaskInfo singleTask = archivedTaskList.get(i);
+			checkAndSetRecent(isResetRecentFlag, singleTask);
+
+			if (!singleTask.isDone()) {
+				swapFromArchiveToPresent(singleTask);
+			}
+		}
+	}
+
+	private void refreshPresent(boolean isResetRecentFlag) {
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			TaskInfo singleTask = presentTaskList.get(i);
+			checkAndSetExpiry(singleTask);
+			checkAndSetRecent(isResetRecentFlag, singleTask);
+
+			if (singleTask.isDone()) {
+				swapFromPresentToArchive(singleTask);
+			}
+		}
+	}
+
+	private void checkAndSetRecent(boolean isSetToNotRecent, TaskInfo singleTask) {
+		if (isSetToNotRecent && singleTask.isRecent()) {
+			singleTask.setRecent(false);
+		}
+	}
+
+	private void checkAndSetExpiry(TaskInfo singleTask) {
+		if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
+			if (isTaskExpired(singleTask)) {
+				singleTask.setExpiry(true);
+			} else {
+				singleTask.setExpiry(false);
+			}
+		} else {
+			singleTask.setExpiry(false);  //Floating tasks cannot expire
+		}
+	}
+
+	private boolean isTaskExpired(TaskInfo singleTask) {
+		Calendar now = Calendar.getInstance();
+		return now.after(singleTask.getEndDate()) && !singleTask.isDone();
+	}
+
+	private void swapFromPresentToArchive(TaskInfo singleTask) {
+		archivedTaskList.add(singleTask);
+		presentTaskList.remove(singleTask);
+	}
+
+	private void swapFromArchiveToPresent(TaskInfo singleTask) {
+		presentTaskList.add(singleTask);
+		archivedTaskList.remove(singleTask);
+	}
+	
+	public void clearAllTasks() {
+		clearAllPresentTasks();
+		clearAllArchivedTasks();
+	}
+
+	public Vector<TaskInfo> clearAllPresentTasks () {
+		presentTaskList = new Vector<TaskInfo>();
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(presentTaskList);
+		logger.fine("All tasks cleared");
+		return vectorToReturn;
+	}
+
+	public Vector<TaskInfo> clearAllArchivedTasks () {
+		archivedTaskList = new Vector<TaskInfo>();
+		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(archivedTaskList);
+		logger.fine("All archive tasks cleared");
+		return vectorToReturn;
+	}
+
+	public Vector<Integer> getCorrespondingID(Vector<TaskInfo> taskList) {
+		Vector<Integer> taskID = new Vector<Integer>();
+		for (int i = 0; i < taskList.size(); i++) {
+			taskID.add(presentTaskList.indexOf(taskList.get(i)));
+		}
+		return taskID;
+	}
+
+	public int countAllTasks() {
+		return presentTaskList.size() + archivedTaskList.size();
+	}
+
+	public int countPresentTasks() {
+		return presentTaskList.size();
+	}
+
+	public int countArchivedTasks() {
+		return archivedTaskList.size();
+	}
+}
+
+	// End of segment: src\kaboom\storage\TaskDepository.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\storage\TaskManager.java
+	 */
+
+
+/**
+ * TaskManager class is the intermediary between logic and storage.
+ * Any manipulations of tasks (such as addition, deletion, updating)
+ * must use this class instead of accessing it from the TaskDepository. 
+ * This file also handles the storing of the tasks in the depository
+ * to the physical file specified in the String constant. 
+ * 
+ * This class is also responsible for the "dynamic" IDs of the tasks.
+ * (Such as the task ID being different while under different views 
+ * but referring to the same object.)
+ * 
+ * This is a singleton class as there can only be one instance of this class. 
+ */
+
+package kaboom.storage;
+
+import java.util.Vector;
+
+import kaboom.logic.command.Command;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.TaskInfo;
+
+public class TaskManager {
+
+	private static TaskManager instance = null;
+
+	private Vector<TaskInfo> currentView; 	//Current view
+	private Vector<TaskInfo> searchView;  	//Vector for searches
+	private Vector<Integer> tasksCount;
+	private TaskDepository taskDepo;
+
+	private Storage fileStorage;
+	private final String FILENAME = "KABOOM_FILE.dat";
+	private History history;
+
+	private TaskManager() {
+		taskDepo = TaskDepository.getInstance();
+		currentView = taskDepo.getToday();
+		searchView = new Vector<TaskInfo>();
+		tasksCount = new Vector<Integer>();
+		fileStorage = new Storage(FILENAME);
+		history = History.getInstance();
+		fileStorage.load();
+	}
+
+	private TaskManager(String fileName) {
+		taskDepo = TaskDepository.getInstance();
+		currentView = taskDepo.getToday();
+		searchView = new Vector<TaskInfo>();
+		tasksCount = new Vector<Integer>();
+		fileStorage = new Storage(fileName);
+		history = History.getInstance();
+		fileStorage.load();
+	}
+
+	public static TaskManager getInstance () {
+		if (instance == null) {
+			instance = new TaskManager();
+		}
+		return instance;
+	}
+
+	public static TaskManager getInstance(String fileName) {
+		if (instance == null) {
+			instance = new TaskManager(fileName);
+		}
+		return instance;
+	}
+
+	public Vector<Integer> getTasksCountList() {
+		clearAndAddTaskCounts();
+		return tasksCount;
+	}
+
+	private void clearAndAddTaskCounts() {
+		tasksCount.clear();
+		tasksCount.add(taskDepo.getToday().size());
+		tasksCount.add(taskDepo.getFutureTasks().size());
+		tasksCount.add(taskDepo.getFloatingTasks().size());
+		tasksCount.add(taskDepo.getExpiredTasks().size());
+		tasksCount.add(taskDepo.getAllArchivedTasks().size());
+	}
+
+	public Vector<TaskInfo> setAndGetView(DISPLAY_STATE displayState) {
+		switch (displayState) {
+		case TODAY:
+			setCurrentView(taskDepo.getToday());
+			break;
+
+		case TIMELESS:
+			setCurrentView(taskDepo.getFloatingTasks());
+			break;
+
+		case EXPIRED:
+			setCurrentView(taskDepo.getExpiredTasks());
+			break;
+
+		case FUTURE:
+			setCurrentView(taskDepo.getFutureTasks());
+			break;
+
+		case SEARCH:
+			setCurrentView(searchView);
+			break;
+
+		case ARCHIVE:
+			setCurrentView(taskDepo.getAllArchivedTasks());
+			break;
+
+		default:
+			setCurrentView(taskDepo.getToday());
+			break;
+		}
+
+		return currentView;
+	}
+
+	private void setCurrentView(Vector<TaskInfo> taskList) {
+		currentView = taskList;
+	}	
+
+	public Vector<TaskInfo> getCurrentView() {
+		return currentView;
+	}
+
+	public void setSearchView(Vector<TaskInfo> taskList) {
+		searchView = taskList;
+		setCurrentView(taskList);
+	}
+
+	public Vector<TaskInfo> getSearchView() {
+		return searchView;
+	}
+
+	public TaskInfo getTaskFromViewByName(String searchName) {
+		for (int i = 0; i < currentView.size(); i++) {
+			if (currentView.get(i).getTaskName().contains(searchName)) {
+				return currentView.get(i);
+			}
+		}
+		return null;
+	}
+
+	public TaskInfo getTaskFromViewByID(int index) {
+		if (currentView.size() <= index) {
+			return null;
+		} else {
+			return currentView.get(index);			
+		}
+	}
+
+	public int getTaskPositionInView (TaskInfo taskToSearch) {
+		return currentView.indexOf(taskToSearch);
+	}
+
+	public Vector<TaskInfo> getAllPresentTasks() {
+		return taskDepo.getAllPresentTasks();
+	}
+
+	public Vector<TaskInfo> getAllArchivedTasks() {
+		return taskDepo.getAllArchivedTasks();
+	}
+
+	public int countPresentTasks() {
+		return taskDepo.countPresentTasks();
+	}
+
+	public int countArchivedTasks() {
+		return taskDepo.countArchivedTasks();
+	}
+
+	public boolean addPresentTask(TaskInfo task) {
+		assert task.isDone() == false;
+		boolean isAdded = taskDepo.addTaskToPresentList(task);
+		taskDepo.refreshTasks();
+		addToSearchView(task);
+		store();
+		return isAdded;
+	}
+
+	public boolean addArchivedTask(TaskInfo task) {
+		assert task.isDone() == true;
+		boolean isAdded = taskDepo.addTaskToArchivedList(task);
+		taskDepo.refreshTasks();
+		addToSearchView(task);
+		store();
+		return isAdded;
+	}
+
+	public boolean removeTask(TaskInfo task) {
+		TaskInfo removedTask = taskDepo.removeTask(task);
+		deleteInSearchView(task);
+		store();
+		if (removedTask == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public void updateTask(TaskInfo newTask, TaskInfo oldTask) {
+		taskDepo.updateTask(newTask, oldTask);
+		updateInSearchView(newTask, oldTask);
+		store();
+	}
+
+	public void doneTask(TaskInfo task) {
+		assert task.isDone() == false;
+		task.setExpiry(false);
+		task.setDone(true);
+		deleteInSearchView(task);
+		task.setRecent(true);
+		taskDepo.refreshTasks();
+		store();
+	}
+
+	public void undoneTask(TaskInfo task) {
+		assert task.isDone() == true;
+		task.setDone(false);
+		deleteInSearchView(task);
+		task.setRecent(true);
+		taskDepo.refreshTasks();
+		store();
+	}
+
+	public void clearAllTasks() {
+		clearPresentTasks();
+		clearArchivedTasks();
+	}
+
+	public void clearPresentTasks() {
+		taskDepo.clearAllPresentTasks();
+		clearSearchView();
+		store();
+	}
+
+	public void clearArchivedTasks() {
+		taskDepo.clearAllArchivedTasks();
+		clearSearchView();
+		store();
+	}
+
+	public void refreshTasks() {
+		taskDepo.refreshTasks();
+		store();
+	}
+
+	public void refreshTasksAndResetRecent() {
+		boolean isResetRecentFlag = true;
+		taskDepo.refreshTasks(isResetRecentFlag);
+		store();
+	}
+
+	public void addToSearchView(TaskInfo task) {
+		searchView.add(task);
+	}
+
+	public void deleteInSearchView(TaskInfo task) {
+		for (int i = 0; i < searchView.size(); i++) {
+			if (searchView.get(i).equals(task)) {
+				searchView.remove(i);
+			}
+		}
+	}
+
+	public void updateInSearchView(TaskInfo newTask, TaskInfo oldTask) {
+		for (int i = 0; i < searchView.size(); i++) {
+			if (searchView.get(i).equals(oldTask)) {
+				searchView.set(i, newTask);
+			}
+		}
+	}
+
+	public void clearSearchView() {
+		searchView.clear();
+	}
+
+	public void store() {
+		fileStorage.store();
+	}
+
+	public void load() {
+		fileStorage.load();
+	}
+
+	public void addToHistory(Command command) {
+		history.addToRecentCommands(command);
+	}
+
+	public Command getMostRecentCommand() {
+		return history.getMostRecentCommand();
+	}
+}
+
+	// End of segment: src\kaboom\storage\TaskManager.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\HistoryTest.java
+	 */
+
+
+/**
+ * HistoryTest.java:
+ * This class tests the storing and retrieving of commands from History class.
+ * Since History class is limited to only 10 commands, there are two boundary cases.
+ * One is where there are no commands in History and the other when there are 10.
+ */
+
+package KaboomTest;
+
+import static org.junit.Assert.*;
+
+import kaboom.logic.command.Command;
+import kaboom.logic.command.CommandAdd;
+import kaboom.logic.command.CommandClear;
+import kaboom.logic.command.CommandView;
+import kaboom.storage.History;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class HistoryTest {
+	
+	History history;
+	Command commandAdd;
+	Command commandClear;
+	Command commandView;
+	
+	@Before
+	public void initialize() {
+		history = History.getInstance();
+		commandAdd = new CommandAdd();
+		commandClear = new CommandClear();
+		commandView = new CommandView();
+	}
+	
+	@Test
+	public void testGetInstance() {
+		assertNotNull(history);
+	}
+	
+	/**
+	 * This function tests the pushing of the commands into the stack.
+	 * The size of the history after pushing will be compared with 
+	 * the expected value.
+	 */
+	@Test
+	public void testAddToRecentCommands() {
+		//Boundary testing when there are 0 objects in history
+		history.clear();
+		assertEquals(0, history.size());
+		
+		//Valid testing values
+		history.addToRecentCommands(commandClear);
+		assertEquals(1, history.size());
+		history.addToRecentCommands(commandAdd);
+		assertEquals(2, history.size());
+		history.addToRecentCommands(commandClear);
+		assertEquals(3, history.size());
+		history.addToRecentCommands(commandAdd);
+		assertEquals(4, history.size());
+		history.addToRecentCommands(commandClear);
+		assertEquals(5, history.size());
+		history.addToRecentCommands(commandAdd);
+		assertEquals(6, history.size());
+		history.addToRecentCommands(commandClear);
+		assertEquals(7, history.size());
+		history.addToRecentCommands(commandAdd);
+		assertEquals(8, history.size());
+		history.addToRecentCommands(commandClear);
+		assertEquals(9, history.size());
+		history.addToRecentCommands(commandAdd);
+		assertEquals(10, history.size());
+		
+		//Boundary case testing where trying to add commands
+		//even though there are already 10 in history
+		history.addToRecentCommands(commandClear);
+		assertEquals(10, history.size());
+		history.addToRecentCommands(commandAdd);
+		assertEquals(10, history.size());
+		
+		history.clear();
+		assertEquals(0, history.size());
+	}
+
+	/**
+	 * This function tests the popping of the commands from the stack.
+	 * The size of the history after popping will be compared with 
+	 * the expected value.
+	 */
+	@Test
+	public void testGetMostRecentCommand() {
+		//Boundary testing where trying to pop when there are 0 objects in history
+		history.clear();
+		assertEquals(0, history.size());
+		assertNull(history.getMostRecentCommand());
+		
+		history.addToRecentCommands(commandAdd);
+		history.addToRecentCommands(commandClear);
+		assertEquals(history.getMostRecentCommand(), commandClear);
+		assertEquals(1, history.size());
+		assertEquals(history.getMostRecentCommand(), commandAdd);
+		assertEquals(0, history.size());
+		
+		history.addToRecentCommands(commandAdd);
+		history.addToRecentCommands(commandClear);
+		history.addToRecentCommands(commandAdd);
+		history.addToRecentCommands(commandClear);
+		history.addToRecentCommands(commandAdd);
+		history.addToRecentCommands(commandClear);
+		//Valid testing values
+		assertEquals(history.getMostRecentCommand(), commandClear);
+		assertEquals(5, history.size());
+		history.addToRecentCommands(commandAdd);
+		history.addToRecentCommands(commandClear);
+		history.addToRecentCommands(commandAdd);
+		history.addToRecentCommands(commandClear);
+		history.addToRecentCommands(commandClear);  //10th item
+		
+		//Boundary testing where more than 10 items are added and attempting to pop them
+		history.addToRecentCommands(commandAdd);  //11th item
+		assertEquals(10, history.size());
+		assertEquals(history.getMostRecentCommand(), commandAdd);
+		assertEquals(9, history.size());
+		assertEquals(history.getMostRecentCommand(), commandClear);
+		assertEquals(8, history.size());
+		assertEquals(history.getMostRecentCommand(), commandClear);
+		assertEquals(7, history.size());
+		assertEquals(history.getMostRecentCommand(), commandAdd);
+		assertEquals(6, history.size());
+	}
+}
+
+	// End of segment: src\KaboomTest\HistoryTest.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\StorageComponentTest.java
+	 */
+
+
+package KaboomTest;
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+@RunWith(Suite.class)
+@SuiteClasses({ 
+	TaskManagerTest.class,
+	HistoryTest.class,
+	TaskDepositoryTest.class,
+	StorageTest.class
+})
+public class StorageComponentTest {
+
+}
+
+	// End of segment: src\KaboomTest\StorageComponentTest.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\StorageTest.java
+	 */
+
+
+/**
+ * StorageTest.java:
+ * This class tests the storage on whether it stores and loads information properly.
+ * There are two boundary cases, no tasks to store/load or the file size limit.
+ * Since it is not feasible to test the latter boundary, only the former will be tested.
+ */
+
+package KaboomTest;
+
+import static org.junit.Assert.*;
+
+import java.io.LineNumberReader;
+import java.io.FileReader;
+import java.io.File;
+import java.io.IOException;
+import java.util.Calendar;
+
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
+import kaboom.storage.Storage;
+import kaboom.storage.TaskDepository;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class StorageTest {
+	
+	TaskDepository taskDepo;
+	Storage storageTest;
+	LineNumberReader lineNumberReader;
+
+	private final int EMPTY = 0;
+	private final String TEST_FILE_NAME = "StorageTest.txt";
+	
+	TaskInfo floatingTask;
+	TaskInfo todayTask;
+	TaskInfo futureTask;
+	TaskInfo expiredTask;
+	TaskInfo archivedTask;
+	
+	@Before
+	public void initailize() {
+		taskDepo = TaskDepository.getInstance();
+		populateTaskDepo();
+		assertNotNull(taskDepo);
+		storageTest = new Storage(TEST_FILE_NAME);
+		assertNotNull(storageTest);
+		
+		floatingTask = setFloatingTask();
+		todayTask = setTodayTask();
+		futureTask = setFutureTask();
+		expiredTask = setExpiredTask();
+		archivedTask = setArchivedTask();
+		populateTaskDepo();
+	}
+	
+	/**
+	 * This function tests if the loading of the text file into task depository is successful.
+	 * A LineNumberReader object is used and the whole file is skipped to the last line.
+	 * Since Long.MAX_VALUE is more than 2 ExaBytes, skipping by that value will guarantee
+	 * that the end of file is reached. 
+	 * The line number is then obtained and compared with the task count in task depository.
+	 * @throws IOException
+	 */
+	@Test
+	public void testLoad() throws IOException {
+		taskDepo.clearAllTasks();
+		storageTest.load();
+		lineNumberReader = new LineNumberReader(new FileReader(new File("storageTest.txt")));
+		lineNumberReader.skip(Long.MAX_VALUE);  //Long.MAX_VALUE is more than 2 ExaBytes
+		assertEquals(taskDepo.countAllTasks(), lineNumberReader.getLineNumber());
+		lineNumberReader.close();
+	}
+
+	/**
+	 * This function tests if the saving of tasks from task depository
+	 *  to the text file is successful.
+	 * A LineNumberReader object is used and the whole file is skipped to 
+	 * the last line after storing
+	 * is performed.
+	 * Since Long.MAX_VALUE is more than 2 ExaBytes, skipping by that value 
+	 * will guarantee that the end of file is reached. 
+	 * The line number is then obtained and compared with the task count in task depository.
+	 * @throws IOException
+	 */
+	@Test
+	public void testStore() throws IOException {
+		//Test usual case where there are tasks to store
+		storageTest.store();
+		lineNumberReader = new LineNumberReader(new FileReader(new File("storageTest.txt")));
+		lineNumberReader.skip(Long.MAX_VALUE);  //Long.MAX_VALUE is more than 2 ExaBytes
+		assertEquals(taskDepo.countAllTasks(), lineNumberReader.getLineNumber());
+		
+		//Test boundary case where there is no task in task depository
+		taskDepo.clearAllTasks();
+		assertEquals(EMPTY, taskDepo.countAllTasks());
+		storageTest.store();
+		lineNumberReader = new LineNumberReader(new FileReader(new File("storageTest.txt")));
+		lineNumberReader.skip(Long.MAX_VALUE);  //Long.MAX_VALUE is more than 2 ExaBytes
+		assertEquals(taskDepo.countAllTasks(), lineNumberReader.getLineNumber());
+		lineNumberReader.close();
+		
+		//It is not feasible to test the other boundary case where the taskDepo takes up
+		//the full memory allocated for it
+	}
+	
+	private void populateTaskDepo() {
+		taskDepo.clearAllTasks();
+		assertEquals(0, taskDepo.countPresentTasks());
+		assertTrue(taskDepo.addTaskToPresentList(floatingTask));
+		assertTrue(taskDepo.addTaskToPresentList(todayTask));
+		assertTrue(taskDepo.addTaskToPresentList(futureTask));
+		assertTrue(taskDepo.addTaskToPresentList(expiredTask));
+		assertTrue(taskDepo.addTaskToArchivedList(archivedTask));
+		assertEquals(4, taskDepo.countPresentTasks());
+		assertEquals(1, taskDepo.countArchivedTasks());
+	}
+	
+	private TaskInfo setFloatingTask() {
+		TaskInfo task = new TaskInfo();
+		task.setTaskName("something");
+		task.setTaskType(TASK_TYPE.FLOATING);
+		task.setStartDate(null);
+		task.setEndDate(null);
+		task.setPriority(3);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setTodayTask() {
+		TaskInfo task = new TaskInfo();
+		Calendar startDate = Calendar.getInstance();
+		Calendar endDate = Calendar.getInstance();
+
+		task.setTaskName("something else");
+		task.setTaskType(TASK_TYPE.TIMED);
+		task.setStartDate(startDate);
+		task.setEndDate(endDate);
+		task.setPriority(5);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setFutureTask() {
+		TaskInfo task = new TaskInfo();
+		Calendar endDate = Calendar.getInstance();
+		endDate.set(2014,12,12,23,59);  //Set a future end date
+
+		task.setTaskName("hi there");
+		task.setTaskType(TASK_TYPE.DEADLINE);
+		task.setStartDate(null);
+		task.setEndDate(endDate);
+		task.setPriority(1);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setExpiredTask() {
+		TaskInfo task = new TaskInfo();
+		Calendar endDate = Calendar.getInstance();
+		endDate.set(2014,1,1,0,0);  //Set to a date that is expired
+
+		task.setTaskName("hi");
+		task.setTaskType(TASK_TYPE.DEADLINE);
+		task.setStartDate(null);
+		task.setEndDate(endDate);
+		task.setPriority(1);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setArchivedTask() {
+		TaskInfo task = new TaskInfo();
+
+		task.setTaskName("another task");
+		task.setTaskType(TASK_TYPE.FLOATING);
+		task.setStartDate(null);
+		task.setEndDate(null);
+		task.setPriority(1);
+		task.setDone(true);
+		task.setExpiry(false);
+		return task;
+	}
+}
+
+	// End of segment: src\KaboomTest\StorageTest.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\TaskDepositoryTest.java
+	 */
+
+
+/**
+ * TaskDepositoryTest.java:
+ * This class tests if the storing, loading, manipulation of tasks in
+ * TaskDepository is working. 
+ * Since the objects that are being handled are of TaskInfo type, 
+ * the only boundary case is where the vector in TaskDepository is empty.
+ */
+
+package KaboomTest;
+
+import static org.junit.Assert.*;
+
+import java.util.Calendar;
+
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
+import kaboom.storage.TaskDepository;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class TaskDepositoryTest {
+
+	TaskDepository taskDepo;
+	TaskInfo floatingTask;
+	TaskInfo todayTask;
+	TaskInfo futureTask;
+	TaskInfo expiredTask;
+	TaskInfo archivedTask;
+
+	@Before
+	public void initialize() {
+		taskDepo = TaskDepository.getInstance();
+		floatingTask = setFloatingTask();
+		todayTask = setTodayTask();
+		futureTask = setFutureTask();
+		expiredTask = setExpiredTask();
+		archivedTask = setArchivedTask();
+	}
+
+	@Test
+	public void testGetInstance() {
+		assertNotNull(taskDepo);
+	}
+
+	@Test
+	public void testAddTaskToPresentList() {
+		taskDepo.clearAllPresentTasks();
+		assertEquals(0, taskDepo.countPresentTasks());
+		assertTrue(taskDepo.addTaskToPresentList(floatingTask));
+		assertTrue(taskDepo.addTaskToPresentList(todayTask));
+		assertTrue(taskDepo.addTaskToPresentList(futureTask));
+		assertEquals(3, taskDepo.countPresentTasks());
+	}
+	
+	@Test
+	public void testAddTaskToArchivedList() {
+		taskDepo.clearAllArchivedTasks();
+		assertEquals(0, taskDepo.countArchivedTasks());
+		assertTrue(taskDepo.addTaskToArchivedList(floatingTask));
+		assertTrue(taskDepo.addTaskToArchivedList(todayTask));
+		assertTrue(taskDepo.addTaskToArchivedList(futureTask));
+		assertEquals(3, taskDepo.countArchivedTasks());
+	}
+
+	@Test
+	public void testUpdateTask() {
+		taskDepo.clearAllPresentTasks();
+		assertEquals(0, taskDepo.getFloatingTasks().size());
+		assertTrue(taskDepo.addTaskToPresentList(todayTask));
+		assertTrue(taskDepo.addTaskToPresentList(floatingTask));
+		assertEquals(1, taskDepo.getFloatingTasks().size());
+		
+		//Update timed task to floating task
+		taskDepo.updateTask(floatingTask, todayTask);
+		assertEquals(2, taskDepo.getFloatingTasks().size());
+		
+		//Update floating tasks to deadline tasks
+		taskDepo.updateTask(futureTask, floatingTask);
+		assertEquals(1, taskDepo.getFloatingTasks().size());
+		taskDepo.updateTask(futureTask, floatingTask);
+		assertEquals(0, taskDepo.getFloatingTasks().size());
+		
+		//Update deadline task to timed task
+		taskDepo.updateTask(todayTask, futureTask);
+		assertEquals(0, taskDepo.getFloatingTasks().size());
+	}
+
+	@Test
+	public void testRemoveFromPresentList() {
+		testAddTaskToPresentList();
+		assertEquals(3, taskDepo.countPresentTasks());
+		taskDepo.removeTask(floatingTask);  //Remove valid task
+		assertEquals(2, taskDepo.countPresentTasks());
+		taskDepo.removeTask(floatingTask);  //Remove non-existent task
+		assertEquals(2, taskDepo.countPresentTasks());
+		taskDepo.removeTask(todayTask);  //Remove valid task
+		assertEquals(1, taskDepo.countPresentTasks());
+		taskDepo.removeTask(futureTask);  //Remove valid task
+		assertEquals(0, taskDepo.countPresentTasks());
+		taskDepo.removeTask(futureTask);  //Boundary case for empty list
+		assertEquals(0, taskDepo.countPresentTasks());
+	}
+	
+	@Test
+	public void testRemoveFromArchiveList() {
+		testAddTaskToArchivedList();
+		assertEquals(3, taskDepo.countArchivedTasks());
+		taskDepo.removeTask(floatingTask);  //Remove valid task
+		assertEquals(2, taskDepo.countArchivedTasks());
+		taskDepo.removeTask(floatingTask);  //Remove non-existent task
+		assertEquals(2, taskDepo.countArchivedTasks());
+		taskDepo.removeTask(todayTask);  //Remove valid task
+		assertEquals(1, taskDepo.countArchivedTasks());
+		taskDepo.removeTask(futureTask);  //Remove valid task
+		assertEquals(0, taskDepo.countArchivedTasks());
+		taskDepo.removeTask(futureTask);  //Boundary case for empty list
+		assertEquals(0, taskDepo.countArchivedTasks());
+	}
+
+	@Test
+	public void testGetTasksInList() {
+		assertNotNull(taskDepo.getAllPresentTasks());
+		assertNotNull(taskDepo.getAllArchivedTasks());
+		taskDepo.clearAllTasks();
+		assertNotNull(taskDepo.getAllPresentTasks());
+		assertNotNull(taskDepo.getAllArchivedTasks());
+	}
+
+	@Test
+	public void testGetFloatingTasks() {
+		taskDepo.clearAllPresentTasks();
+		assertEquals(0, taskDepo.countPresentTasks());
+		
+		assertTrue(taskDepo.addTaskToPresentList(floatingTask));
+		assertTrue(taskDepo.addTaskToPresentList(floatingTask));
+		assertEquals("something", taskDepo.getFloatingTasks().get(0).getTaskName());
+		assertEquals("something", taskDepo.getFloatingTasks().get(1).getTaskName());
+		
+		assertTrue(taskDepo.addTaskToPresentList(floatingTask));
+		assertNotNull(taskDepo.getFloatingTasks());
+		assertEquals(3, taskDepo.getFloatingTasks().size());
+	}
+	
+	@Test
+	public void testGetTodayTasks() {
+		taskDepo.clearAllPresentTasks();
+		assertTrue(taskDepo.addTaskToPresentList(todayTask));
+		assertNotNull(taskDepo.getToday());
+		assertEquals(1, taskDepo.getToday().size());
+	}
+	
+	@Test
+	public void testGetExpiredTasks() {
+		taskDepo.clearAllPresentTasks();
+		assertTrue(taskDepo.addTaskToPresentList(expiredTask));
+		taskDepo.refreshTasks();
+		assertNotNull(taskDepo.getExpiredTasks());
+		assertEquals(1, taskDepo.getExpiredTasks().size());
+	}
+	
+	@Test
+	public void testGetFutureTasks() {
+		taskDepo.clearAllPresentTasks();
+		assertTrue(taskDepo.addTaskToPresentList(futureTask));
+		assertNotNull(taskDepo.getFutureTasks());
+		assertEquals(1, taskDepo.getFutureTasks().size());
+	}
+	
+	@Test
+	public void testRefreshTasks() {
+		taskDepo.clearAllTasks();
+		assertEquals(0, taskDepo.countAllTasks());
+		
+		assertFalse(expiredTask.isExpired());
+		assertTrue(taskDepo.addTaskToPresentList(expiredTask));
+		assertEquals(1, taskDepo.countPresentTasks());
+		assertEquals(0, taskDepo.countArchivedTasks());
+		taskDepo.refreshTasks();  //Refresh to detect and set expiry flag
+		assertTrue(expiredTask.isExpired());
+		
+		expiredTask.setDone(true);
+		taskDepo.refreshTasks();  //Refresh to move from present to archive
+		assertFalse(expiredTask.isExpired());  //Done tasks are not expired
+		assertEquals(0, taskDepo.countPresentTasks());
+		assertEquals(1, taskDepo.countArchivedTasks());
+		
+		
+		expiredTask.setDone(false);
+		taskDepo.refreshTasks();  //Refresh to move from archive to present
+		assertEquals(1, taskDepo.countPresentTasks());
+		assertEquals(0, taskDepo.countArchivedTasks());
+	}
+
+	@Test
+	public void testClearTasks() {
+		assertTrue(taskDepo.addTaskToPresentList(todayTask));
+		assertTrue(taskDepo.addTaskToArchivedList(futureTask));
+		assertNotEquals(0, taskDepo.countPresentTasks());
+		assertNotEquals(0, taskDepo.countArchivedTasks());
+		
+		taskDepo.clearAllTasks();
+		assertEquals(0, taskDepo.countPresentTasks());
+		assertEquals(0, taskDepo.countArchivedTasks());
+		assertEquals(0, taskDepo.countAllTasks());
+	}
+
+	@Test
+	public void testCount() {
+		taskDepo.clearAllPresentTasks();
+		assertEquals(0, taskDepo.countPresentTasks());
+		assertEquals(0, taskDepo.countArchivedTasks());
+		assertEquals(0, taskDepo.countAllTasks());
+		
+		assertTrue(taskDepo.addTaskToPresentList(todayTask));
+		assertEquals(1, taskDepo.countPresentTasks());
+		assertTrue(taskDepo.addTaskToArchivedList(floatingTask));
+		assertEquals(1, taskDepo.countArchivedTasks());
+		assertEquals(2, taskDepo.countAllTasks());
+	}
+
+	private TaskInfo setFloatingTask() {
+		TaskInfo task = new TaskInfo();
+		task.setTaskName("something");
+		task.setTaskType(TASK_TYPE.FLOATING);
+		task.setStartDate(null);
+		task.setEndDate(null);
+		task.setPriority(3);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setTodayTask() {
+		TaskInfo task = new TaskInfo();
+		Calendar startDate = Calendar.getInstance();
+		Calendar endDate = Calendar.getInstance();
+
+		task.setTaskName("something else");
+		task.setTaskType(TASK_TYPE.TIMED);
+		task.setStartDate(startDate);
+		task.setEndDate(endDate);
+		task.setPriority(5);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setFutureTask() {
+		TaskInfo task = new TaskInfo();
+		Calendar endDate = Calendar.getInstance();
+		endDate.set(2014,12,12,23,59);  //Set a future end date
+
+		task.setTaskName("hi there");
+		task.setTaskType(TASK_TYPE.DEADLINE);
+		task.setStartDate(null);
+		task.setEndDate(endDate);
+		task.setPriority(1);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setExpiredTask() {
+		TaskInfo task = new TaskInfo();
+		Calendar endDate = Calendar.getInstance();
+		endDate.set(2014,1,1,0,0);  //Set to a date that is expired
+
+		task.setTaskName("hi");
+		task.setTaskType(TASK_TYPE.DEADLINE);
+		task.setStartDate(null);
+		task.setEndDate(endDate);
+		task.setPriority(1);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setArchivedTask() {
+		TaskInfo task = new TaskInfo();
+
+		task.setTaskName("another task");
+		task.setTaskType(TASK_TYPE.FLOATING);
+		task.setStartDate(null);
+		task.setEndDate(null);
+		task.setPriority(1);
+		task.setDone(true);
+		task.setExpiry(false);
+		return task;
+	}
+}
+
+	// End of segment: src\KaboomTest\TaskDepositoryTest.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\TaskManagerTest.java
+	 */
+
+
+/**
+ * TaskViewTest.java:
+ * This class tests if the function calls are properly routed to the appropriate
+ * classes and compare return values with theirs. 
+ * There is seemingly no boundary cases to take note of. 
+ */
+
+package KaboomTest;
+
+import static org.junit.Assert.*;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.util.Calendar;
+
+import kaboom.logic.command.Command;
+import kaboom.logic.command.CommandAdd;
+import kaboom.logic.command.CommandClear;
+import kaboom.logic.command.CommandDone;
+import kaboom.logic.command.CommandUndone;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
+import kaboom.storage.History;
+import kaboom.storage.TaskDepository;
+import kaboom.storage.TaskManager;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class TaskManagerTest {
+
+	TaskManager taskManager;
+	TaskDepository taskDepo;
+	History history;
+
+	TaskInfo floatingTask;
+	TaskInfo todayTask;
+	TaskInfo futureTask;
+	TaskInfo expiredTask;
+	TaskInfo archivedTask;
+
+	Command commandAdd;
+	Command commandClear;
+	Command commandDone;
+	Command commandUndone;
+
+	@Before
+	public void initailize() {
+		taskManager = TaskManager.getInstance("StorageTest.txt");
+		taskDepo = TaskDepository.getInstance();
+		history = History.getInstance();
+		assertNotNull(taskDepo);
+		assertNotNull(taskManager);
+		assertNotNull(history);
+
+		floatingTask = setFloatingTask();
+		todayTask = setTodayTask();
+		futureTask = setFutureTask();
+		expiredTask = setExpiredTask();
+		archivedTask = setArchivedTask();
+
+		commandAdd = new CommandAdd();
+		commandClear = new CommandClear();
+		commandDone = new CommandDone();
+		commandUndone = new CommandUndone();
+
+		populateTaskDepo();
+	}
+
+	@Test
+	public void testGetInstance() {
+		assertNotNull(TaskManager.getInstance());
+	}
+
+	@Test
+	public void testGetTasksCountList() {
+		assertEquals(5, taskManager.getTasksCountList().size());
+	}
+
+	@Test
+	public void testSetAndGetView() {
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.TODAY));
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.FUTURE));
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.TIMELESS));
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.EXPIRED));
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.ARCHIVE));
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.INVALID));
+	}
+
+	@Test
+	public void testGetCurrentView() {
+		assertNotNull(taskManager.getCurrentView());
+	}
+
+	@Test
+	public void testSetSearchView() {
+		taskManager.setSearchView(taskManager.getCurrentView());
+		assertNotNull(taskManager.getSearchView());
+		taskManager.setSearchView(taskManager.getAllPresentTasks());
+		assertNotNull(taskManager.getSearchView());
+		taskManager.setSearchView(taskManager.getAllArchivedTasks());
+		assertNotNull(taskManager.getSearchView());
+	}
+
+	@Test
+	public void testGetTaskFromViewByName() {
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.TODAY));
+		assertEquals(taskManager.getTaskFromViewByName("something else"), todayTask);
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.FUTURE));
+		assertEquals(taskManager.getTaskFromViewByName("hi there"), futureTask);
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.TIMELESS));
+		assertEquals(taskManager.getTaskFromViewByName("something"), floatingTask);
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.EXPIRED));
+		assertEquals(taskManager.getTaskFromViewByName("hi"), expiredTask);
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.ARCHIVE));
+		assertEquals(taskManager.getTaskFromViewByName("another task"), archivedTask);
+	}
+
+	@Test
+	public void testGetTaskFromViewByID() {
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.TODAY));
+		assertEquals(taskManager.getTaskFromViewByID(0), todayTask);
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.FUTURE));
+		assertEquals(taskManager.getTaskFromViewByID(0), futureTask);
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.TIMELESS));
+		assertEquals(taskManager.getTaskFromViewByID(0), floatingTask);
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.EXPIRED));
+		assertEquals(taskManager.getTaskFromViewByID(0), expiredTask);
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.ARCHIVE));
+		assertEquals(taskManager.getTaskFromViewByID(0), archivedTask);
+	}
+
+	@Test
+	public void testGetTaskPositionInView() {
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.TODAY));
+		assertEquals(taskManager.getTaskPositionInView(todayTask), 0);
+	}
+
+	@Test
+	public void testGetAllPresentTasks() {
+		assertNotNull(taskManager.getAllPresentTasks());
+	}
+
+	@Test
+	public void testGetAllArchivedTasks() {
+		assertNotNull(taskManager.getAllArchivedTasks());
+	}
+
+	@Test
+	public void testCount() {
+		assertEquals(taskManager.countArchivedTasks(), taskDepo.countArchivedTasks());
+		assertEquals(taskManager.countPresentTasks(), taskDepo.countPresentTasks());
+	}
+
+	@Test
+	public void testAdd() {
+		taskManager.clearPresentTasks();
+		taskManager.clearArchivedTasks();
+		assertEquals(0, taskManager.countPresentTasks());
+		assertEquals(0, taskManager.countArchivedTasks());
+		assertTrue(taskManager.addPresentTask(floatingTask));
+		assertTrue(taskManager.addPresentTask(todayTask));
+		assertTrue(taskManager.addPresentTask(futureTask));
+		assertTrue(taskManager.addPresentTask(expiredTask));
+		assertTrue(taskManager.addArchivedTask(archivedTask));
+		assertEquals(4, taskManager.countPresentTasks());
+		assertEquals(1, taskManager.countArchivedTasks());
+	}
+
+	@Test
+	public void testRemoveTask() {
+		assertEquals(4, taskManager.countPresentTasks());
+		assertEquals(1, taskManager.countArchivedTasks());
+		//Valid removal
+		taskManager.removeTask(floatingTask);
+		assertEquals(3, taskManager.countPresentTasks());
+		taskManager.removeTask(todayTask);
+		assertEquals(2, taskManager.countPresentTasks());
+		taskManager.removeTask(futureTask);
+		assertEquals(1, taskManager.countPresentTasks());
+		
+		//Remove non-existent task
+		taskManager.removeTask(futureTask);
+		assertEquals(1, taskManager.countPresentTasks());
+		taskManager.removeTask(expiredTask);
+		assertEquals(0, taskManager.countPresentTasks());
+		taskManager.removeTask(archivedTask);
+		assertEquals(0, taskManager.countArchivedTasks());
+		
+		//Boundary case where remove from empty list
+		taskManager.removeTask(expiredTask);
+		assertEquals(0, taskManager.countPresentTasks());
+		taskManager.removeTask(archivedTask);
+		assertEquals(0, taskManager.countArchivedTasks());
+	}
+
+	@Test
+	public void testUpdateTask() {
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.TODAY));
+		assertEquals(1, taskManager.getCurrentView().size());
+		assertEquals(todayTask, taskManager.getCurrentView().get(0));
+		
+		taskManager.updateTask(futureTask, todayTask);  //Change from today task to future task
+		assertNotNull(taskManager.setAndGetView(DISPLAY_STATE.FUTURE));
+		assertEquals(2, taskManager.getCurrentView().size());
+	}
+
+	@Test
+	public void testDoneTask() {
+		assertEquals(4, taskManager.countPresentTasks());
+		assertEquals(1, taskManager.countArchivedTasks());
+		
+		taskManager.doneTask(floatingTask);
+		assertTrue(floatingTask.isDone());
+		assertEquals(3, taskManager.countPresentTasks());
+		assertEquals(2, taskManager.countArchivedTasks());
+		taskManager.doneTask(todayTask);
+		assertTrue(todayTask.isDone());
+		taskManager.doneTask(futureTask);
+		assertTrue(futureTask.isDone());
+		taskManager.doneTask(expiredTask);
+		assertTrue(expiredTask.isDone());
+		
+		//Setting of a task that is already done
+		assertTrue(archivedTask.isDone());
+		taskManager.doneTask(archivedTask);
+		assertTrue(archivedTask.isDone());
+		
+		assertEquals(0, taskManager.countPresentTasks());
+		assertEquals(5, taskManager.countArchivedTasks());		
+	}
+
+	@Test
+	public void testUndoneTask() {
+		assertEquals(4, taskManager.countPresentTasks());
+		assertEquals(1, taskManager.countArchivedTasks());
+		
+		assertTrue(archivedTask.isDone());
+		taskManager.undoneTask(archivedTask);
+		assertFalse(archivedTask.isDone());
+		
+		assertEquals(5, taskManager.countPresentTasks());
+		assertEquals(0, taskManager.countArchivedTasks());
+		
+		//Setting of a task that is already undone
+		assertFalse(floatingTask.isDone());
+		taskManager.undoneTask(floatingTask);
+		assertFalse(floatingTask.isDone());
+	}
+
+	@Test
+	public void testClearPresentTasks() {
+		taskManager.clearPresentTasks();
+		assertEquals(0, taskManager.getAllPresentTasks().size());
+	}
+
+	@Test
+	public void testClearArchivedTasks() {
+		taskManager.clearArchivedTasks();
+		assertEquals(0, taskManager.getAllArchivedTasks().size());
+	}
+
+	@Test
+	public void testAddToSearchView() {
+		taskManager.clearSearchView();
+		assertEquals(0, taskManager.getSearchView().size());
+		taskManager.addToSearchView(floatingTask);
+		taskManager.addToSearchView(archivedTask);
+		assertEquals(2, taskManager.getSearchView().size());
+	}
+
+	@Test
+	public void testDeleteInSearchView() {
+		testAddToSearchView();
+		assertEquals(2, taskManager.getSearchView().size());
+
+		//Remove valid task
+		taskManager.deleteInSearchView(floatingTask);
+		assertEquals(1, taskManager.getSearchView().size());
+
+		//Remove non-existent task
+		taskManager.deleteInSearchView(futureTask);
+		assertEquals(1, taskManager.getSearchView().size());
+
+		taskManager.deleteInSearchView(archivedTask);
+		assertEquals(0, taskManager.getSearchView().size());
+
+		//Remove task in empty list
+		taskManager.deleteInSearchView(todayTask);
+		assertEquals(0, taskManager.getSearchView().size());
+	}
+
+	@Test
+	public void testUpdateInSearchView() {
+		testAddToSearchView();
+		assertEquals(2, taskManager.getSearchView().size());
+		taskManager.updateInSearchView(floatingTask, archivedTask);
+		assertEquals(floatingTask, taskManager.getSearchView().get(0));
+		assertEquals(floatingTask, taskManager.getSearchView().get(1));
+	}
+
+	@Test
+	public void testClearSearchView() {
+		taskManager.clearSearchView();
+		assertEquals(0, taskManager.getSearchView().size());
+	}
+
+	@Test
+	public void testStoreAndLoad() throws IOException {
+		taskManager.store();
+		checkTextFile();
+		
+		taskManager.load();
+		assertEquals(8, taskManager.countPresentTasks());
+		assertEquals(2, taskManager.countArchivedTasks());
+	}
+
+	@Test
+	public void testAddToHistory() {
+		history.clear();
+		assertEquals(0, history.size());
+
+		//Valid case
+		taskManager.addToHistory(commandAdd);
+		taskManager.addToHistory(commandClear);
+		taskManager.addToHistory(commandDone);
+		taskManager.addToHistory(commandUndone);
+		taskManager.addToHistory(commandDone);
+		assertEquals(5, history.size());
+		taskManager.addToHistory(commandClear);
+		taskManager.addToHistory(commandClear);
+		taskManager.addToHistory(commandDone);
+		taskManager.addToHistory(commandClear);
+		taskManager.addToHistory(commandClear);
+		assertEquals(10, history.size());
+
+		//Boundary case where more than 10 commands will be added
+		taskManager.addToHistory(commandUndone);
+		taskManager.addToHistory(commandDone);
+		assertEquals(10, history.size());
+	}
+
+	@Test
+	public void testGetMostRecentCommand() {
+		history.clear();
+		assertEquals(0, history.size());
+
+		//Boundary case where pop empty list
+		assertNull(taskManager.getMostRecentCommand());
+
+		//Valid cases
+		taskManager.addToHistory(commandAdd);
+		taskManager.addToHistory(commandClear);
+		assertEquals(commandClear, taskManager.getMostRecentCommand());
+		assertEquals(commandAdd, taskManager.getMostRecentCommand());
+		assertEquals(0, history.size());
+
+		//Call previously function to invoke boundary case
+		testAddToHistory();
+		assertEquals(10, history.size());
+		assertEquals(commandDone, taskManager.getMostRecentCommand());
+		assertEquals(commandUndone, taskManager.getMostRecentCommand());
+		assertEquals(8, history.size());
+	}
+	
+	private void checkTextFile() throws IOException {
+		LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(new File("storageTest.txt")));
+		lineNumberReader.skip(Long.MAX_VALUE);  //Long.MAX_VALUE is more than 2 ExaBytes
+		assertEquals(taskDepo.countAllTasks(), lineNumberReader.getLineNumber());
+		lineNumberReader.close();
+	}
+
+	private TaskInfo setFloatingTask() {
+		TaskInfo task = new TaskInfo();
+		task.setTaskName("something");
+		task.setTaskType(TASK_TYPE.FLOATING);
+		task.setStartDate(null);
+		task.setEndDate(null);
+		task.setPriority(3);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setTodayTask() {
+		TaskInfo task = new TaskInfo();
+		Calendar startDate = Calendar.getInstance();
+		Calendar endDate = Calendar.getInstance();
+
+		task.setTaskName("something else");
+		task.setTaskType(TASK_TYPE.TIMED);
+		task.setStartDate(startDate);
+		task.setEndDate(endDate);
+		task.setPriority(5);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setFutureTask() {
+		TaskInfo task = new TaskInfo();
+		Calendar endDate = Calendar.getInstance();
+		endDate.set(2014,12,12,23,59);  //Set a future end date
+
+		task.setTaskName("hi there");
+		task.setTaskType(TASK_TYPE.DEADLINE);
+		task.setStartDate(null);
+		task.setEndDate(endDate);
+		task.setPriority(1);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setExpiredTask() {
+		TaskInfo task = new TaskInfo();
+		Calendar endDate = Calendar.getInstance();
+		endDate.set(2014,1,1,0,0);  //Set to a date that is expired
+
+		task.setTaskName("hi");
+		task.setTaskType(TASK_TYPE.DEADLINE);
+		task.setStartDate(null);
+		task.setEndDate(endDate);
+		task.setPriority(1);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setArchivedTask() {
+		TaskInfo task = new TaskInfo();
+
+		task.setTaskName("another task");
+		task.setTaskType(TASK_TYPE.FLOATING);
+		task.setStartDate(null);
+		task.setEndDate(null);
+		task.setPriority(1);
+		task.setDone(true);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private void populateTaskDepo() {
+		taskDepo.clearAllTasks();
+		assertEquals(0, taskDepo.countPresentTasks());
+		assertTrue(taskDepo.addTaskToPresentList(floatingTask));
+		assertTrue(taskDepo.addTaskToPresentList(todayTask));
+		assertTrue(taskDepo.addTaskToPresentList(futureTask));
+		assertTrue(taskDepo.addTaskToPresentList(expiredTask));
+		assertTrue(taskDepo.addTaskToPresentList(archivedTask));
+		assertEquals(5, taskDepo.countPresentTasks());
+		assertEquals(0, taskDepo.countArchivedTasks());
+
+		taskDepo.refreshTasks();
+		assertEquals(4, taskDepo.countPresentTasks());
+		assertEquals(1, taskDepo.countArchivedTasks());
+	}
+}
+
+	// End of segment: src\KaboomTest\TaskManagerTest.java
+
+
+
+
+

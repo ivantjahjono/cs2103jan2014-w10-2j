@@ -1,0 +1,1936 @@
+//@author: a0073731j
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\Command.java
+	 */
+
+package kaboom.logic.command;
+
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.logic.TextParser;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.DateAndTimeFormat;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
+import kaboom.shared.comparators.FormatIdentifyComparator;
+import kaboom.storage.TaskManager;
+
+
+public class Command {
+	protected final String MESSAGE_COMMAND_FAIL_INVALID_DATE = "Oops! Did you check the calendar? The date you've entered is invalid";
+	protected final String MESSAGE_COMMAND_FAIL_NO_SUCH_TASK = "Oops! No such task exist";
+	protected final String MESSAGE_COMMAND_FAIL_NO_TASK_NAME = "Enter a taskname or task id, please ?";
+	protected final String MESSAGE_COMMAND_FAIL_INVALID_TASKNAME = "Oops! Invalid taskname??";
+	protected final String MESSAGE_COMMAND_FAIL_INVALID_TASKID = "Oops! Invalid ID??";
+	protected final String MESSAGE_COMMAND_FAIL_INVALID_STARTDATE_AFTER_ENDDATE = "Oops! Please schedule to another time";
+	protected final String MESSAGE_COMMAND_INVALID = "Please enter a valid command. Type <help> for info.";
+	
+	protected COMMAND_TYPE commandType;
+	protected TextParser textParser;
+	protected KEYWORD_TYPE[] keywordList;
+	Hashtable<KEYWORD_TYPE, String> infoTable;
+	protected TaskManager taskManager;
+	protected Vector <COMMAND_ERROR> commandErrorList;
+	protected DateAndTimeFormat dateAndTimeFormat;
+	
+	protected enum COMMAND_ERROR{
+		CLASH, TASK_DOES_NOT_EXIST, NO_TASK_NAME, INVALID_DATE, INVALID_TASKNAME , INVALID_TASKID, INVALID_STARTENDDATE
+	}
+	
+	public Command () {
+		commandType = COMMAND_TYPE.INVALID;
+		textParser = TextParser.getInstance();
+		taskManager = TaskManager.getInstance();
+		infoTable = new Hashtable<KEYWORD_TYPE, String>();
+		keywordList = new KEYWORD_TYPE[0];
+		dateAndTimeFormat = DateAndTimeFormat.getInstance();
+	}
+	
+	public void setCommandType (COMMAND_TYPE type) {
+		commandType = type;
+	}
+	
+	public COMMAND_TYPE getCommandType () {
+		return commandType;
+	}
+
+	public Result execute() {
+		return createResult(MESSAGE_COMMAND_INVALID);
+	}
+	
+	protected Result createResult (String feedback) {
+		return createResult(feedback, DISPLAY_STATE.INVALID, null);
+	}
+
+	protected Result createResult (String feedback, DISPLAY_STATE displayState, TaskInfo taskToFocus) {
+		Result commandResult = new Result();
+		commandResult.setFeedback(feedback);
+		commandResult.setDisplayState(displayState);
+		commandResult.setTaskToFocus(taskToFocus);
+		return commandResult;
+	}
+	
+	public boolean undo() {
+		return false;
+	}
+	
+	public void initialiseCommandInfoTable(String userInputSentence) {
+		commandErrorList = new Vector <COMMAND_ERROR>();
+		infoTable = textParser.extractList(userInputSentence, keywordList);
+		convertInformationToStandardFormat ();
+	}
+	
+	public void initialiseCommandInfoTable(Hashtable<KEYWORD_TYPE, String> infoTable) {
+		commandErrorList = new Vector <COMMAND_ERROR>();
+		this.infoTable = infoTable;
+		convertInformationToStandardFormat ();
+	}
+	
+	protected void convertInformationToStandardFormat () {
+		Enumeration<KEYWORD_TYPE> elementItr =  infoTable.keys();
+		
+		while(elementItr.hasMoreElements()) {
+			KEYWORD_TYPE currentKeyword = elementItr.nextElement();
+			switch(currentKeyword) {
+			case START_TIME:
+			case END_TIME:
+				String time = infoTable.get(currentKeyword);
+				time = dateAndTimeFormat.convertStringTimeTo24HourString(time);
+				infoTable.put(currentKeyword, time);
+				break;
+			case START_DATE:
+			case END_DATE:
+			case DATE:
+				String date = infoTable.get(currentKeyword);
+				date = dateAndTimeFormat.convertStringDateToDayMonthYearFormat(date);
+				infoTable.put(currentKeyword, date);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	
+	protected void addCommandErrorToList (COMMAND_ERROR commandError) {
+		commandErrorList.add(commandError);
+	}
+	
+	protected void addCommandToHistory () {
+		taskManager.addToHistory(this);;
+	}
+	
+	protected int numOfTasksWithSimilarNames(String name) {
+		int count = 0;
+		Vector<TaskInfo> currentViewList = taskManager.getCurrentView();
+		for (int i = 0; i < currentViewList.size(); i++) {
+			String nameFromCurrentViewListInLowerCase = currentViewList.get(i).getTaskName().toLowerCase();
+			if (nameFromCurrentViewListInLowerCase.contains(name.toLowerCase())) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	protected Result callSearch() {
+		Command search = new CommandSearch();
+		search.initialiseCommandInfoTable(infoTable);
+		return search.execute();
+	}
+
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		if (info.equals("")) {
+			return true;
+		}
+		addThisStringToFormatList(info, indexList, KEYWORD_TYPE.INVALID);
+		return false;
+	}
+	
+	protected Hashtable<KEYWORD_TYPE, String> updateFormatList (String info, Vector<FormatIdentify> indexList) {
+		getCommandString(info, indexList);
+		info = textParser.removeFirstWord(info);
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = textParser.extractList(info, keywordList);	
+		return taskInformationTable;
+	}
+	
+	protected void updateFormatListBasedOnHashtable(Vector<FormatIdentify> indexList, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+		String stringDate;
+		
+		Enumeration<KEYWORD_TYPE> elementItr =  taskInformationTable.keys();
+		
+		while (elementItr.hasMoreElements()) {
+			KEYWORD_TYPE currentKeyword = elementItr.nextElement();
+			KEYWORD_TYPE resultKeyword = currentKeyword;
+			
+			switch (currentKeyword) {					
+				case START_DATE:
+				case END_DATE:
+					stringDate = taskInformationTable.get(currentKeyword);
+					if (!DateAndTimeFormat.getInstance().isDateValid(stringDate)) {
+						resultKeyword = KEYWORD_TYPE.INVALID;
+					}
+					break;
+					
+				default:
+					break;
+			}
+			
+			addThisStringToFormatList(taskInformationTable.get(currentKeyword), indexList, resultKeyword);
+		}
+		
+		Collections.sort(indexList, new FormatIdentifyComparator());
+	}
+	
+	protected void getCommandString(String info, Vector<FormatIdentify> indexList) {
+		String commandString = textParser.getFirstWord(info);
+		addThisStringToFormatList(commandString, indexList, KEYWORD_TYPE.COMMAND);
+	}
+	
+	protected void addThisStringToFormatList(String info, Vector<FormatIdentify> indexList, KEYWORD_TYPE type) {
+		FormatIdentify newIdentity = new FormatIdentify();
+		
+		newIdentity.setCommandStringFormat(info);
+		newIdentity.setType(type);
+
+		indexList.add(newIdentity);
+	}
+	
+	protected void determineAndSetTaskType (TaskInfo task) {
+		Calendar startDateAndTime = task.getStartDate();
+		Calendar endDateAndTime = task.getEndDate();
+		
+		if (startDateAndTime == null && endDateAndTime == null) {
+			task.setTaskType(TASK_TYPE.FLOATING);
+		} else if (startDateAndTime == null && endDateAndTime != null) {
+			task.setTaskType(TASK_TYPE.DEADLINE);
+		} else {
+			task.setTaskType(TASK_TYPE.TIMED);
+		} 
+	}
+	
+	protected Result commandErrorHandler(COMMAND_ERROR commandError) {
+		switch(commandError) {
+		case CLASH:
+			return callSearch();
+		case TASK_DOES_NOT_EXIST:
+			return createResult(MESSAGE_COMMAND_FAIL_NO_SUCH_TASK);
+		case NO_TASK_NAME:
+			return createResult(MESSAGE_COMMAND_FAIL_NO_TASK_NAME);
+		case INVALID_DATE:
+			return createResult(MESSAGE_COMMAND_FAIL_INVALID_DATE);
+		case INVALID_TASKNAME:
+			return createResult(MESSAGE_COMMAND_FAIL_INVALID_TASKNAME);
+		case INVALID_TASKID:
+			return createResult(MESSAGE_COMMAND_FAIL_INVALID_TASKID);
+		case INVALID_STARTENDDATE:
+			return createResult(MESSAGE_COMMAND_FAIL_INVALID_STARTDATE_AFTER_ENDDATE);
+		default:
+			return null;
+		}
+	}
+	
+	protected void errorDetectionForInvalidTaskNameAndId() {	
+		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
+		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
+		if(taskId != null && !isStringNullOrEmpty(taskName)) {
+			addCommandErrorToList (COMMAND_ERROR.INVALID_TASKNAME);
+		} else if(taskId != null) {
+			if (!isTaskIdValid()) { 
+				addCommandErrorToList (COMMAND_ERROR.INVALID_TASKID);
+			}
+		} else {
+			if (isStringNullOrEmpty(taskName)) {
+				addCommandErrorToList (COMMAND_ERROR.NO_TASK_NAME);
+			} else {
+				taskExistenceOrClashDetection(taskName);
+			}
+		}
+	}
+
+	protected boolean isStringNullOrEmpty(String string) {
+		return string == null || string.isEmpty();
+	}
+
+	private void taskExistenceOrClashDetection(String taskName) {
+		int taskCount = numOfTasksWithSimilarNames(taskName);
+		if (taskCount > 1) {
+			addCommandErrorToList (COMMAND_ERROR.CLASH);
+		}
+		else if (taskCount < 1) {
+			addCommandErrorToList (COMMAND_ERROR.TASK_DOES_NOT_EXIST);
+		}
+	}
+	
+	protected boolean isTaskIdValid() {
+		TaskInfo task = getTaskWithTaskId();
+		if(task == null) {
+			return false;
+		}
+		return true;
+	}
+
+	protected TaskInfo getTaskWithTaskId() {
+		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
+		if (taskId != null) {
+			int taskIdInteger = Integer.parseInt(taskId);
+			return taskManager.getTaskFromViewByID(taskIdInteger-1);
+		}
+		return null;
+	}
+	
+	protected TaskInfo getTaskWithTaskName() {
+		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
+		if (taskName != null && !taskName.isEmpty()) {
+			return taskManager.getTaskFromViewByName(taskName);
+		}
+		return null;
+	}
+	
+	protected TaskInfo getTask() {
+		TaskInfo task = getTaskWithTaskId();
+		if(task == null) {
+			task = getTaskWithTaskName();
+		}
+		return task;
+	}
+	
+	protected void determineAndSetDateAndTime(TaskInfo task, String startDate, String startTime, String endDate, String endTime) {
+		//Boolean Variables for condition checking
+		boolean hasStartDate = (startDate != null);
+		boolean hasStartTime = (startTime != null);
+		boolean hasEndDate = (endDate != null);
+		boolean hasEndTime = (endTime != null);
+		boolean hasStartDateAndTime = (hasStartTime && hasStartDate);
+		boolean hasEndDateAndTime = (hasEndTime && hasEndDate);
+
+
+		if(hasStartDateAndTime && hasEndDateAndTime) {
+			//save both start and end date 
+			Calendar startCal = dateAndTimeFormat.formatStringToCalendar(startDate, startTime);
+			Calendar endCal = dateAndTimeFormat.formatStringToCalendar(endDate, endTime);
+			saveStartAndEndCalendars (task, startCal, endCal);		
+
+		} else if (hasStartDateAndTime) {
+			Calendar startCal = dateAndTimeFormat.formatStringToCalendar(startDate, startTime);
+			Calendar endCal = null;
+			if(hasEndTime) {
+				//set end date to start date (end time > start time) or 1 day after start date (end time <= start time)
+				endCal = dateAndTimeFormat.formatStringToCalendar(startDate, endTime);
+				if(Integer.parseInt(endTime) <= Integer.parseInt(startTime)) {
+					endCal = dateAndTimeFormat.addDayToCalendar(endCal, 1);
+				} 
+			} else if(hasEndDate) {
+				//set end time to same start time (if not the same date) or 1hr after start time(same date)
+				endCal = dateAndTimeFormat.formatStringToCalendar(endDate, startTime);
+				if(!dateAndTimeFormat.isFirstDateBeforeSecondDate(startCal, endCal)) {
+					endCal = dateAndTimeFormat.addTimeToCalendar(endCal, 1, 0);
+				}
+			} else {
+				//set end date to 1 hour after start date
+				endCal = dateAndTimeFormat.addTimeToCalendar(startCal, 1, 0);
+			}
+			
+			saveStartAndEndCalendars (task, startCal, endCal);	
+			
+		} else if (hasEndDateAndTime) {
+
+			Calendar endCal = dateAndTimeFormat.formatStringToCalendar(endDate, endTime);
+			Calendar startCal = null;
+
+			if(hasStartTime) {
+				//set start date to same end date (start time before end time) or before end date (start time >= end time)
+				startCal = dateAndTimeFormat.formatStringToCalendar(endDate, startTime);
+				if(Integer.parseInt(endTime) <= Integer.parseInt(startTime)) {
+					startCal = dateAndTimeFormat.addDayToCalendar(startCal, -1);
+				} 
+			} else if(hasStartDate) {
+				//set start time to same end time (if not the same date) or 1hr before end time(same date)
+				startCal = dateAndTimeFormat.formatStringToCalendar(startDate, endTime);
+				if(!dateAndTimeFormat.isFirstDateBeforeSecondDate(startCal, endCal)) {
+					startCal = dateAndTimeFormat.addTimeToCalendar(startCal, -1, 0);
+				}	
+			} 
+			saveStartAndEndCalendars (task, startCal, endCal);	
+			
+		} else {
+			Calendar startCal = null;
+			Calendar endCal = null;
+			if (hasStartDate && hasEndDate) {
+				//time to 0000 if different date or start time to 2359 and end time to 2359 if same date
+				startCal = dateAndTimeFormat.formatStringToCalendar(startDate, dateAndTimeFormat.getStartTimeOfTheDay());
+				endCal = dateAndTimeFormat.formatStringToCalendar(endDate, dateAndTimeFormat.getEndTimeOfTheDay());
+				if(!dateAndTimeFormat.isFirstDateBeforeSecondDate(startCal, endCal)) {
+					startCal = dateAndTimeFormat.formatStringToCalendar(startDate, dateAndTimeFormat.getStartTimeOfTheDay());
+					endCal = dateAndTimeFormat.formatStringToCalendar(endDate, dateAndTimeFormat.getEndTimeOfTheDay());
+					endCal = dateAndTimeFormat.addTimeToCalendar(endCal, 1, 0);
+				}
+				
+			} else if (hasStartTime && hasEndTime) {
+				//set to today if start < end time or set start to today and end to next day
+				String today = dateAndTimeFormat.getDateToday2();
+				startCal = dateAndTimeFormat.formatStringToCalendar(today, startTime);
+				endCal = dateAndTimeFormat.formatStringToCalendar(today, endTime);
+				if(Integer.parseInt(endTime) <= Integer.parseInt(startTime)) {
+					endCal = dateAndTimeFormat.addDayToCalendar(endCal, 1);
+				}
+				
+			} else if (hasStartTime && hasEndDate) {
+				//set time to 1hr block with end date
+				startCal = dateAndTimeFormat.formatStringToCalendar(endDate, startTime);
+				endCal = dateAndTimeFormat.addTimeToCalendar(startCal, 1, 0);	
+				
+			} else if (hasStartDate && hasEndTime) {
+				//set time to 1hr block before end time and date to start date
+				endCal = dateAndTimeFormat.formatStringToCalendar(startDate, endTime);
+				startCal = dateAndTimeFormat.addTimeToCalendar(endCal, -1, 0);	
+				
+			} else if (hasStartDate) {
+				//set time from 0000 to 2359 and save start date
+				startCal = dateAndTimeFormat.formatStringToCalendar(startDate, dateAndTimeFormat.getStartTimeOfTheDay());
+				endCal = dateAndTimeFormat.formatStringToCalendar(startDate, dateAndTimeFormat.getEndTimeOfTheDay());
+
+			} else if (hasStartTime) {
+				//set date to today and save start date and end date to 1 hour later
+				String today = dateAndTimeFormat.getDateToday2();
+				startCal = dateAndTimeFormat.formatStringToCalendar(today, startTime);
+				endCal = dateAndTimeFormat.addTimeToCalendar(startCal, 1, 0);
+
+			} else if (hasEndDate) {
+				//set time to 2359 and save end date only
+				endCal = dateAndTimeFormat.formatStringToCalendar(endDate, dateAndTimeFormat.getEndTimeOfTheDay());
+				
+			} else if (hasEndTime) {
+				//set date to today and save end date only
+				String today = dateAndTimeFormat.getDateToday2();
+				endCal = dateAndTimeFormat.formatStringToCalendar(today, endTime);
+			}
+			saveStartAndEndCalendars (task, startCal, endCal);	
+		}
+	}
+	
+	protected void saveStartAndEndCalendars (TaskInfo task, Calendar start, Calendar end) {
+		task.setStartDate(start);
+		task.setEndDate(end);
+	}
+	
+	protected DISPLAY_STATE determineDisplayState(TaskInfo task) {
+		DISPLAY_STATE stateToSet;
+		if (task.getTaskType() == TASK_TYPE.FLOATING) {
+			stateToSet = DISPLAY_STATE.TIMELESS;
+		} else if (TaskInfo.isTaskToday(task)) {
+			stateToSet =  DISPLAY_STATE.TODAY;
+		} else if (TaskInfo.isFutureTask(task)){
+			stateToSet =  DISPLAY_STATE.FUTURE;
+		} else {
+			stateToSet =  DISPLAY_STATE.EXPIRED;
+		}
+		return stateToSet;
+	}
+	
+	protected Result validateStartAndEndTime (TaskInfo temp) {
+		if(temp.getStartDate() != null && temp.getEndDate() != null) {
+			if(!dateAndTimeFormat.isFirstDateBeforeSecondDate(temp.getStartDate(), temp.getEndDate())) {
+				return commandErrorHandler(COMMAND_ERROR.INVALID_STARTENDDATE);
+			}
+		}
+		return null;
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\Command.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandAdd.java
+	 */
+
+
+package kaboom.logic.command;
+
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
+
+
+
+public class CommandAdd extends Command {
+	private final String MESSAGE_COMMAND_ADD_SUCCESS = "WOOT! <%1$s> ADDED. MORE STUFF TO DO!";
+	private final String MESSAGE_COMMAND_ADD_FAIL = "Oops! Fail to add <%1$s>... Error somewhere...";
+	private final String MESSAGE_COMMAND_ADD_FAIL_NO_NAME = "Oops! Task cannot be entered without a name Y_Y";
+	
+	private final int DEFAULT_PRIORITY = 1;
+
+	TaskInfo taskInfo;
+
+	public CommandAdd () {
+		commandType = COMMAND_TYPE.ADD;
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.TASKID,
+				KEYWORD_TYPE.PRIORITY,
+				KEYWORD_TYPE.END_TIME,
+				KEYWORD_TYPE.END_DATE,
+				KEYWORD_TYPE.START_TIME,
+				KEYWORD_TYPE.START_DATE,
+				KEYWORD_TYPE.TASKNAME
+		};
+		taskInfo = new TaskInfo();
+	}
+
+	public Result execute() {
+		assert taskManager != null;
+
+		String commandFeedback = "";
+			
+		validateInfoTable ();
+		if(!commandErrorList.isEmpty()) {
+			return commandErrorHandler(commandErrorList.get(0));
+		} 
+		
+		taskInfo.setTaskName(infoTable.get(KEYWORD_TYPE.TASKNAME));
+		saveTaskPriority();
+
+		getAndSetDateAndTime();
+
+		Result errorResult = validateStartAndEndTime (taskInfo);
+		if(errorResult != null) {
+			return errorResult;
+		}
+
+		determineAndSetTaskType(taskInfo);
+		taskInfo.setRecent(true);
+
+		DISPLAY_STATE stateToSet = DISPLAY_STATE.INVALID;
+		if (taskManager.addPresentTask(taskInfo)) {
+			addCommandToHistory ();
+			commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
+			stateToSet = determineDisplayState(taskInfo);
+		} else {
+			commandFeedback = String.format(MESSAGE_COMMAND_ADD_FAIL, taskInfo.getTaskName());
+			taskInfo = null;
+		}
+
+		return createResult(commandFeedback, stateToSet, taskInfo);
+	}
+
+	public boolean undo () {
+		return taskManager.removeTask(taskInfo);
+	}
+
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private void saveTaskPriority() {
+		String priorityString = infoTable.get(KEYWORD_TYPE.PRIORITY);
+		if (priorityString == null) {
+			taskInfo.setPriority(DEFAULT_PRIORITY);
+		} else {
+			int priorityInteger = Integer.parseInt(priorityString);
+			taskInfo.setPriority(priorityInteger);
+		}
+	}
+	
+	private void getAndSetDateAndTime() {
+		String startDate = infoTable.get(KEYWORD_TYPE.START_DATE);
+		String startTime = infoTable.get(KEYWORD_TYPE.START_TIME);
+		String endTime = infoTable.get(KEYWORD_TYPE.END_TIME);
+		String endDate = infoTable.get(KEYWORD_TYPE.END_DATE);
+		determineAndSetDateAndTime(taskInfo, startDate, startTime, endDate, endTime);
+	}
+	
+	private void validateInfoTable () {
+		validateTaskName();
+		String startDate = infoTable.get(KEYWORD_TYPE.START_DATE);
+		validateDate(startDate);
+		String endDate = infoTable.get(KEYWORD_TYPE.END_DATE);
+		validateDate(endDate);
+	}
+	
+	private void validateDate (String date) {
+		if (date != null && !dateAndTimeFormat.isDateValid(date)) {
+			addCommandErrorToList(COMMAND_ERROR.INVALID_DATE);
+		}
+	}
+	
+	private void validateTaskName() {
+		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
+		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
+		if (taskId != null) {
+			addCommandErrorToList(COMMAND_ERROR.INVALID_TASKNAME);
+		} else if (isStringNullOrEmpty(taskName)) {
+			addCommandErrorToList(COMMAND_ERROR.NO_TASK_NAME);
+		} 
+	}
+	
+	protected Result commandErrorHandler(COMMAND_ERROR commandError) {
+		switch(commandError) {
+		case NO_TASK_NAME:
+			return createResult(MESSAGE_COMMAND_ADD_FAIL_NO_NAME);
+		case INVALID_DATE:
+			return createResult(MESSAGE_COMMAND_FAIL_INVALID_DATE);
+		case INVALID_TASKNAME:
+			return createResult(MESSAGE_COMMAND_FAIL_INVALID_TASKNAME);
+		case INVALID_STARTENDDATE:
+			return createResult(MESSAGE_COMMAND_FAIL_INVALID_STARTDATE_AFTER_ENDDATE);
+		default:
+			return null;
+		}
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\CommandAdd.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandClear.java
+	 */
+
+
+package kaboom.logic.command;
+
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
+
+
+public class CommandClear extends Command {
+	
+	private final String CLEAR_TYPE_ALL = "all";
+	private final String CLEAR_TYPE_PRESENT = "present";
+	private final String CLEAR_TYPE_ARCHIVE = "archive";
+	
+	private final String MESSAGE_COMMAND_CLEAR_ALL_SUCCESS = "1.. 2.. 3.. Pooof! Your schedule has gone with the wind";
+	private final String MESSAGE_COMMAND_CLEAR_PRESENT_SUCCESS = "1.. 2.. 3.. Pooof! Your present schedule has gone with the wind";
+	private final String MESSAGE_COMMAND_CLEAR_ARCHIVE_SUCCESS = "3.. 2.. 1.. Pooof! Your archive has gone with the wind";
+	private final String MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE = "Enter <clear all> to remove all tasks or <clear present> to remove current view";
+	
+	private enum CLEAR_TYPE {
+		ALL, PRESENT, ARCHIVE, INVALID
+	}
+	
+	Vector<TaskInfo> tasksCleared;
+	Vector<TaskInfo> archiveTasksCleared;
+	
+	String clearTypeInString;
+		
+	public CommandClear () {
+		commandType = COMMAND_TYPE.CLEAR;
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.CLEARTYPE
+		};
+		clearTypeInString = null;
+	}
+
+	public Result execute() {
+		assert taskManager != null;
+		
+		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return createResult(MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE);
+		}
+		
+		CLEAR_TYPE clearType = retrieveClearTypeAndDetermineClearType();
+		String commandFeedback = processClearType(clearType);
+		
+		return createResult(commandFeedback);
+	}
+	
+	public boolean undo () {
+		boolean isUndoSuccessful = false;
+		isUndoSuccessful = undoClearedPresentTaskAndClearedArchiveTask(isUndoSuccessful);
+		
+		return isUndoSuccessful;
+	}
+	
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+		
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	private CLEAR_TYPE retrieveClearTypeAndDetermineClearType() {
+		clearTypeInString = infoTable.get(KEYWORD_TYPE.CLEARTYPE);
+		if (clearTypeInString == null) {
+			return CLEAR_TYPE.INVALID;
+		} else {
+			clearTypeInString = clearTypeInString.toLowerCase().trim();
+			return determineClearType(clearTypeInString);
+		}
+	}
+	
+	private CLEAR_TYPE determineClearType(String clearTypeInString) {
+		switch (clearTypeInString) {
+		case CLEAR_TYPE_ALL:
+			return CLEAR_TYPE.ALL;
+		case CLEAR_TYPE_PRESENT:
+			return CLEAR_TYPE.PRESENT;
+		case CLEAR_TYPE_ARCHIVE:
+			return CLEAR_TYPE.ARCHIVE;
+		default: 
+			return CLEAR_TYPE.INVALID;
+		}
+	}
+	
+	private String processClearType(CLEAR_TYPE clearType) {
+		String commandFeedback = "";
+		switch (clearType) {
+		case ALL:
+			commandFeedback = clearAll();
+			break;
+		case PRESENT:
+			commandFeedback = clearPresent();
+			break;
+		case ARCHIVE:
+			commandFeedback = clearArchive();
+			break;
+		default: 
+			commandFeedback = MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE;
+		}
+		return commandFeedback;
+	}
+	
+	private String clearAll() {
+		saveAndClearPresentTaskFromTaskView();
+		saveAndClearArhiveTaskFromTaskView();
+		taskManager.clearSearchView();
+		addCommandToHistory ();
+		return MESSAGE_COMMAND_CLEAR_ALL_SUCCESS;
+	}
+	
+	private String clearPresent() {
+		saveAndClearPresentTaskFromTaskView();
+		taskManager.clearSearchView();
+		addCommandToHistory ();
+		return MESSAGE_COMMAND_CLEAR_PRESENT_SUCCESS;
+	}
+	
+	private String clearArchive() {
+		saveAndClearArhiveTaskFromTaskView();
+		taskManager.clearSearchView();
+		addCommandToHistory ();
+		return MESSAGE_COMMAND_CLEAR_ARCHIVE_SUCCESS;
+	}
+
+	private void saveAndClearPresentTaskFromTaskView() {
+		tasksCleared = taskManager.getAllPresentTasks();
+		taskManager.clearPresentTasks();
+	}
+	
+	private void saveAndClearArhiveTaskFromTaskView() {
+		archiveTasksCleared = taskManager.getAllArchivedTasks();
+		taskManager.clearArchivedTasks ();
+	}
+	
+	private boolean addClearedPresentTaskToMemory() {
+		for (int i = 0; i < tasksCleared.size(); i++) {
+			taskManager.addPresentTask(tasksCleared.get(i));
+		}
+		if (tasksCleared.size() == taskManager.countPresentTasks()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean addClearedArchiveTaskToMemory() {
+		for (int i = 0; i < archiveTasksCleared.size(); i++) {
+			taskManager.addArchivedTask(archiveTasksCleared.get(i));
+		}
+		if (archiveTasksCleared.size() == taskManager.countArchivedTasks()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean undoClearedArchiveTask() {
+		boolean isUndoSuccessful;
+		isUndoSuccessful = addClearedArchiveTaskToMemory();
+		if(isUndoSuccessful == false) {
+			taskManager.clearArchivedTasks ();
+		}
+		return isUndoSuccessful;
+	}
+
+	private boolean undoClearedPresentTask() {
+		boolean isUndoSuccessful;
+		isUndoSuccessful = addClearedPresentTaskToMemory();
+		if(isUndoSuccessful == false) {
+			taskManager.clearPresentTasks();
+		}
+		return isUndoSuccessful;
+	}
+	
+	private boolean undoClearedPresentTaskAndClearedArchiveTask(
+			boolean isUndoSuccessful) {
+		if(tasksCleared != null) {
+			isUndoSuccessful = undoClearedPresentTask();
+		}
+		if(archiveTasksCleared != null) {
+			isUndoSuccessful = undoClearedArchiveTask();
+		}
+		return isUndoSuccessful;
+	}
+	
+
+}
+	// End of segment: src\kaboom\logic\command\CommandClear.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandDelete.java
+	 */
+
+
+package kaboom.logic.command;
+
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
+
+public class CommandDelete extends Command {
+
+	private final String MESSAGE_COMMAND_DELETE_SUCCESS = "<%s> deleted. 1 less work to do :D";
+	private final String MESSAGE_COMMAND_DELETE_FAIL = "Delete fail. Can't access memory...";
+
+	TaskInfo taskToBeDeleted;
+
+	public CommandDelete () {
+		commandType = COMMAND_TYPE.DELETE;
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.TASKID,
+				KEYWORD_TYPE.TASKNAME
+		}; 
+	}
+
+	public Result execute() {
+		assert taskManager != null;
+		
+		String commandFeedback = "";
+		
+		errorDetectionForInvalidTaskNameAndId();
+		if(!commandErrorList.isEmpty()) {
+			return commandErrorHandler(commandErrorList.get(0));
+		} else {
+			taskToBeDeleted = getTask();
+		}
+		commandFeedback = removeTaskFromMemory();
+		
+		return createResult(commandFeedback);
+	}
+
+	public boolean undo () {
+		if (taskManager.addPresentTask(taskToBeDeleted)) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+
+		return true;
+	}
+	
+	private String removeTaskFromMemory() {
+		boolean hasRemovedTask = taskManager.removeTask(taskToBeDeleted);
+		String feedback = "";
+		if (hasRemovedTask) {
+			addCommandToHistory ();
+			feedback = String.format(MESSAGE_COMMAND_DELETE_SUCCESS, taskToBeDeleted.getTaskName());
+		} else {
+			feedback = MESSAGE_COMMAND_DELETE_FAIL;
+		}
+		return feedback;
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\CommandDelete.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandFactory.java
+	 */
+
+
+package kaboom.logic.command;
+
+import kaboom.logic.TextParser;
+
+public class CommandFactory {
+	private final String KEYWORD_COMMAND_ADD = "add";
+	private final String KEYWORD_COMMAND_DELETE = "delete";
+	private final String KEYWORD_COMMAND_MODIFY = "modify";
+	private final String KEYWORD_COMMAND_SEARCH = "search";
+	private final String KEYWORD_COMMAND_CLEAR	 = "clear";
+	private final String KEYWORD_COMMAND_VIEW = "view";
+	private final String KEYWORD_COMMAND_UNDO = "undo";
+	private final String KEYWORD_COMMAND_DONE = "boom";
+	private final String KEYWORD_COMMAND_UNDONE = "unboom";
+	private final String KEYWORD_COMMAND_HELP = "help";
+	private final String KEYWORD_COMMAND_PAGE = "page";
+	
+	private static TextParser textParser = TextParser.getInstance();
+	static CommandFactory commandFactoryInstance = null;
+	
+	private CommandFactory() {
+	}
+	
+	public static CommandFactory getInstance() {
+		if (commandFactoryInstance == null) {
+			commandFactoryInstance = new CommandFactory();
+		}
+		return commandFactoryInstance;
+	}
+	
+	
+	public Command createCommand(String userInputSentence) {
+		
+		String commandKeyword = textParser.getCommandKeyWord(userInputSentence);
+		COMMAND_TYPE commandType = determineCommandType(commandKeyword);
+		Command commandToExecute = createCommandBasedOnCommandType(commandType);	
+		String userInputSentenceWithCommandKeyWordRemoved = textParser.removeFirstWord(userInputSentence);
+		commandToExecute.initialiseCommandInfoTable(userInputSentenceWithCommandKeyWordRemoved);
+		
+		return commandToExecute;
+	}
+	
+	private COMMAND_TYPE determineCommandType(String commandWord) {
+		commandWord = commandWord.toLowerCase();
+		switch(commandWord) {
+			case KEYWORD_COMMAND_ADD:
+				return COMMAND_TYPE.ADD;
+			case KEYWORD_COMMAND_DELETE:
+				return COMMAND_TYPE.DELETE;
+			case KEYWORD_COMMAND_MODIFY:
+				return COMMAND_TYPE.MODIFY;
+			case KEYWORD_COMMAND_SEARCH:
+				return COMMAND_TYPE.SEARCH;
+			case KEYWORD_COMMAND_CLEAR:
+				return COMMAND_TYPE.CLEAR;
+			case KEYWORD_COMMAND_VIEW:
+				return COMMAND_TYPE.VIEW;
+			case KEYWORD_COMMAND_UNDO:
+				return COMMAND_TYPE.UNDO;
+			case KEYWORD_COMMAND_DONE:
+				return COMMAND_TYPE.DONE;
+			case KEYWORD_COMMAND_UNDONE:
+				return COMMAND_TYPE.UNDONE;
+			case KEYWORD_COMMAND_HELP:
+				return COMMAND_TYPE.HELP;
+			case KEYWORD_COMMAND_PAGE:
+				return COMMAND_TYPE.PAGE;
+			default:
+				return COMMAND_TYPE.INVALID;
+		}
+	}
+	
+	private Command createCommandBasedOnCommandType (COMMAND_TYPE commandType) {
+		Command newlyCreatedCommand = new Command();
+		
+		switch (commandType) {
+			case ADD:
+				newlyCreatedCommand = new CommandAdd();
+				break;
+				
+			case DELETE:
+				newlyCreatedCommand = new CommandDelete();
+				break;
+				
+			case MODIFY:
+				newlyCreatedCommand = new CommandModify();
+				break;
+				
+			case SEARCH:
+				newlyCreatedCommand = new CommandSearch();
+				break;
+				
+			case CLEAR:
+				newlyCreatedCommand = new CommandClear();
+				break;
+				
+			case VIEW:
+				newlyCreatedCommand = new CommandView();
+				break;
+				
+			case UNDO:
+				newlyCreatedCommand = new CommandUndo();
+				break;
+				
+			case DONE:
+				newlyCreatedCommand = new CommandDone();
+				break;
+				
+			case UNDONE:
+				newlyCreatedCommand = new CommandUndone();
+				break;
+				
+			case HELP:
+				newlyCreatedCommand = new CommandHelp();
+				break;
+				
+			case PAGE:
+				newlyCreatedCommand = new CommandPage();
+				break;
+				
+			default:
+				newlyCreatedCommand = new Command();
+				break;
+				
+		}
+		
+		return newlyCreatedCommand;
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\CommandFactory.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandModify.java
+	 */
+
+
+package kaboom.logic.command;
+
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
+
+
+public class CommandModify extends Command {
+
+	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_CHANGE = "Nothing happened...";
+	private final String MESSAGE_TASK_NAME = "<%1$s> has";
+	private final String MESSAGE_COMMAND_MODIFY_SUCCESS_NAME_CHANGE = " evolved into <%1$s>";
+	private final String MESSAGE_COMMAND_MODIFY_SUCCESS_TIME_CHANGE = " manipulated time";
+	private final String MESSAGE_COMMAND_MODIFY_SUCCESS_PRIORITY_CHANGE = " consulted the stars";
+	private final String MESSAGE_COMMAND_MODIFY_CONNECTOR = ",";
+	
+	TaskInfo preModifiedTaskInfo;
+	TaskInfo modifiedTaskInfo;
+	boolean hasNameChanged;
+	boolean hasTimeChanged;
+	boolean hasPriorityChanged;
+
+	public CommandModify () {
+		commandType = COMMAND_TYPE.MODIFY;
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.PRIORITY,
+				KEYWORD_TYPE.END_TIME,
+				KEYWORD_TYPE.END_DATE,
+				KEYWORD_TYPE.START_TIME,
+				KEYWORD_TYPE.START_DATE,
+				KEYWORD_TYPE.MODIFIED_TASKNAME,
+				KEYWORD_TYPE.TASKID,
+				KEYWORD_TYPE.TASKNAME
+		};
+		hasNameChanged = false;
+		hasTimeChanged = false;
+		hasPriorityChanged = false;
+	}
+
+	public Result execute() {
+		assert infoTable != null;
+
+		if(infoTable == null) {
+			return createResult("No TaskInfoTable");
+		}
+
+		errorDetectionForInvalidTaskNameAndId();
+		if(!commandErrorList.isEmpty()) {
+			return commandErrorHandler(commandErrorList.get(0));
+		} else {
+			preModifiedTaskInfo = getTask();
+		}
+		
+		String feedback = "";
+		
+		TaskInfo temp = new TaskInfo(preModifiedTaskInfo);
+		modifyTaskDetails(temp);
+
+		Result errorResult = validateStartAndEndTime (temp);
+		if(errorResult != null) {
+			return errorResult;
+		}
+		
+		determineAndSetTaskType(temp);
+		updateAndStoreInTaskManager(temp);
+		
+		DISPLAY_STATE displayState = determineDisplayState(modifiedTaskInfo);
+		feedback = feedbackGenerator();
+		return createResult(feedback, displayState, modifiedTaskInfo);
+	}
+
+
+
+	public boolean undo () {
+		taskManager.updateTask(preModifiedTaskInfo, modifiedTaskInfo);
+		return true;
+	}
+
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private void modifyTaskDetails(TaskInfo temp) {
+		modifyTaskName(temp);
+		modifyTaskPriority(temp);
+		getAndSetDateAndTime(temp);
+	}
+	
+	private void updateAndStoreInTaskManager(TaskInfo temp) {
+		modifiedTaskInfo = temp;
+		modifiedTaskInfo.setRecent(true);
+		taskManager.updateTask(modifiedTaskInfo, preModifiedTaskInfo);
+		addCommandToHistory ();
+	}
+	
+	private String feedbackGenerator() {
+		String feedback = String.format(MESSAGE_TASK_NAME, preModifiedTaskInfo.getTaskName());
+		int countNumOfModifications = 0;
+		if(hasNameChanged) {
+			countNumOfModifications++;
+			feedback += String.format(MESSAGE_COMMAND_MODIFY_SUCCESS_NAME_CHANGE, modifiedTaskInfo.getTaskName());
+		}
+		if(hasTimeChanged) {
+			if (countNumOfModifications > 0) {
+				feedback += MESSAGE_COMMAND_MODIFY_CONNECTOR;
+			}
+			countNumOfModifications++;
+			feedback += MESSAGE_COMMAND_MODIFY_SUCCESS_TIME_CHANGE;
+		}
+		if(hasPriorityChanged) {
+			if (countNumOfModifications > 0) {
+				feedback += MESSAGE_COMMAND_MODIFY_CONNECTOR;
+			}
+			feedback += MESSAGE_COMMAND_MODIFY_SUCCESS_PRIORITY_CHANGE;
+		}
+
+		if(!hasNameChanged && !hasTimeChanged && !hasPriorityChanged) {
+			feedback = MESSAGE_COMMAND_MODIFY_FAIL_NO_CHANGE;
+		}
+
+		return feedback;
+	}
+	
+	private void modifyTaskName(TaskInfo temp) {
+		if (infoTable.get(KEYWORD_TYPE.MODIFIED_TASKNAME) != null) {
+			temp.setTaskName (infoTable.get(KEYWORD_TYPE.MODIFIED_TASKNAME));
+			hasNameChanged = true;
+		} else {
+			hasNameChanged = false;
+		}
+	}
+	
+	private void modifyTaskPriority(TaskInfo temp) {
+		String taskPriority = infoTable.get(KEYWORD_TYPE.PRIORITY);
+		int originalPriorityLevel = temp.getPriority();
+		if(taskPriority != null) {
+			int priorityLevelAfterChange = Integer.parseInt(taskPriority);
+			if (originalPriorityLevel != priorityLevelAfterChange) {
+				temp.setPriority (priorityLevelAfterChange);
+				hasPriorityChanged = true;
+			} else {
+				hasPriorityChanged = false;
+			}
+		} 
+	}
+	
+	private void getAndSetDateAndTime(TaskInfo temp) {
+		String startTime = getStartTime();
+		String startDate = getStartDate();	
+		String endTime = getEndTime();
+		String endDate = getEndDate();
+		determineAndSetDateAndTime(temp, startDate, startTime, endDate, endTime);
+	}
+
+	private String getStartDate() {
+		String startDate = null;
+		if(preModifiedTaskInfo.getStartDate() != null) {
+			startDate = dateAndTimeFormat.dateFromCalendarToString(preModifiedTaskInfo.getStartDate());
+		}
+		startDate = getNewDateOrTimeFromInfoTable(startDate,KEYWORD_TYPE.START_DATE);
+		return startDate;
+	}
+	private String getStartTime() {
+		String startTime = null;
+		if(preModifiedTaskInfo.getStartDate() != null) {
+			startTime = dateAndTimeFormat.timeFromCalendarToString(preModifiedTaskInfo.getStartDate());
+		}
+		startTime = getNewDateOrTimeFromInfoTable(startTime,KEYWORD_TYPE.START_TIME);
+		return startTime;
+	}
+	
+	private String getEndTime() {
+		String endTime = null;
+		if(preModifiedTaskInfo.getEndDate() != null) {
+			endTime = dateAndTimeFormat.timeFromCalendarToString(preModifiedTaskInfo.getEndDate());
+		}
+		endTime = getNewDateOrTimeFromInfoTable(endTime,KEYWORD_TYPE.END_TIME);
+		return endTime;
+	}
+	
+	private String getEndDate() {
+		String endDate = null;
+		if(preModifiedTaskInfo.getEndDate() != null) {
+			endDate = dateAndTimeFormat.dateFromCalendarToString(preModifiedTaskInfo.getEndDate());
+		}
+		endDate = getNewDateOrTimeFromInfoTable(endDate,KEYWORD_TYPE.END_DATE);
+		return endDate;
+	}
+	
+	private String getNewDateOrTimeFromInfoTable(String dateOrTime, KEYWORD_TYPE keyword) {
+		String newDateOrTime = infoTable.get(keyword);
+		if(newDateOrTime != null) {
+			dateOrTime = newDateOrTime;
+			hasTimeChanged = true;
+		}
+		return dateOrTime;
+	}
+	
+	//for testing
+	public void setPreModifiedTask(TaskInfo task) {
+		preModifiedTaskInfo = task;
+	}
+	
+}
+
+	// End of segment: src\kaboom\logic\command\CommandModify.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandUpdate.java
+	 */
+
+
+package kaboom.logic.command;
+
+import kaboom.shared.Result;
+
+public class CommandUpdate extends Command {
+	public Result execute() {
+		taskManager.refreshTasksAndResetRecent();
+		
+		return createResult(null);
+	}
+	
+	public boolean parseInfo(String info) {
+		return true;
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\CommandUpdate.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandView.java
+	 */
+
+package kaboom.logic.command;
+
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+
+public class CommandView extends Command{
+	private final String KEYWORD_TODAY 		= "today";
+	private final String KEYWORD_FUTURE		= "future";
+	private final String KEYWORD_TIMELESS 	= "timeless";
+	private final String KEYWORD_EXPIRED 	= "expired";
+	private final String KEYWORD_ARCHIVE 	= "archive";
+	
+	private final String MESSAGE_VIEW_TODAY 	= "Viewing all the tasks for today";
+	private final String MESSAGE_VIEW_TIMELESS 	= "Viewing timeless tasks";
+	private final String MESSAGE_VIEW_EXPIRED 	= "Viewing expired tasks";
+	private final String MESSAGE_VIEW_FUTURE 	= "Viewing upcoming tasks";
+	private final String MESSAGE_VIEW_ARCHIVE 	= "Viewing completed tasks";
+	private final String MESSAGE_VIEW_INVALID 	= "Invalid View Mode. Might want to use <help view>";
+	
+	String 			viewType;
+	DISPLAY_STATE 	stateToSet;
+	
+	public CommandView () {
+		commandType = COMMAND_TYPE.VIEW;
+		stateToSet = DISPLAY_STATE.INVALID;
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.VIEWTYPE	
+		};
+	}
+
+	public Result execute() {
+		assert taskManager != null;
+
+		storeViewVariables();
+		String feedback = "";
+		if(viewType == null) {
+			viewType = "Nothing to view";
+		}
+		feedback = determineFeedBackForViewState();
+		return createResult(feedback, stateToSet, null);
+	}
+
+	private DISPLAY_STATE determineDisplayState(String viewType) {
+		switch(viewType) {
+			case KEYWORD_TODAY:
+				return DISPLAY_STATE.TODAY;
+			case KEYWORD_FUTURE:
+				return DISPLAY_STATE.FUTURE;
+			case KEYWORD_TIMELESS:
+				return DISPLAY_STATE.TIMELESS;
+			case KEYWORD_EXPIRED:
+				return DISPLAY_STATE.EXPIRED;
+			case KEYWORD_ARCHIVE:
+				return DISPLAY_STATE.ARCHIVE;
+			default:
+				return DISPLAY_STATE.INVALID;
+		}
+	}
+	
+	public DISPLAY_STATE getDisplayState () {
+		return stateToSet;
+	}
+	
+	private void storeViewVariables() {
+		viewType = infoTable.get(KEYWORD_TYPE.VIEWTYPE);
+		if (viewType == null) {
+			return;
+		}
+		
+		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			viewType += infoTable.get(KEYWORD_TYPE.VIEWTYPE);
+		}
+		
+		stateToSet = determineDisplayState(viewType);
+	}
+	
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+		
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private String determineFeedBackForViewState() {
+		String feedback;
+		switch(stateToSet) {
+			case TODAY:
+				feedback = MESSAGE_VIEW_TODAY;
+				break;
+			case FUTURE:
+				feedback = MESSAGE_VIEW_FUTURE;
+				break;
+			case TIMELESS:
+				feedback = MESSAGE_VIEW_TIMELESS;
+				break;
+			case EXPIRED:
+				feedback = MESSAGE_VIEW_EXPIRED;
+				break;
+			case ARCHIVE:
+				feedback = MESSAGE_VIEW_ARCHIVE;
+				break;
+			default:
+				feedback = MESSAGE_VIEW_INVALID;
+		}
+		return feedback;
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\CommandView.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\COMMAND_TYPE.java
+	 */
+
+
+package kaboom.logic.command;
+
+public enum COMMAND_TYPE {
+	ADD, DELETE, MODIFY, SEARCH, INVALID, CLEAR, VIEW, UNDO, DONE, UNDONE, SORT, HELP, PAGE;
+}
+
+	// End of segment: src\kaboom\logic\command\COMMAND_TYPE.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\shared\Result.java
+	 */
+
+
+package kaboom.shared;
+
+import java.util.Vector;
+
+
+public class Result {
+	Vector<TaskInfo> taskToDisplayList;
+	String			 feedback;
+	
+	TaskInfo		taskInFocus;
+	
+	boolean isGoToNextPage;
+	boolean isGoToPreviousPage;
+	int 	pageToGoTo;
+	
+	DISPLAY_STATE 	stateToChangeTo;
+	HELP_STATE		helpStateToChangeTo;
+	
+	public Result () {
+		feedback 	= "";
+		taskInFocus = null;
+		
+		isGoToNextPage 		= false;
+		isGoToPreviousPage 	= false;
+		pageToGoTo = -1;
+		
+		stateToChangeTo 	= DISPLAY_STATE.INVALID;
+		helpStateToChangeTo = HELP_STATE.INVALID;
+		
+	}
+	
+	public void setTasksToDisplay (Vector<TaskInfo> taskList) {
+		taskToDisplayList = taskList;
+	}
+	
+	public void setFeedback (String newFeedback) {
+		feedback = newFeedback;
+	}
+	
+	public void setTaskToFocus (TaskInfo task) {
+		taskInFocus = task;
+	}
+	
+	public void setGoToNextPage (boolean flag) {
+		isGoToNextPage = flag;
+	}
+	
+	public void setGoToPrevPage (boolean flag) {
+		isGoToPreviousPage = flag;
+	}
+	
+	public void setPageToGoTo (int page) {
+		pageToGoTo = page;
+	}
+	
+	public void setDisplayState (DISPLAY_STATE newState) {
+		stateToChangeTo = newState;
+	}
+	
+	public void setHelpState (HELP_STATE newState) {
+		helpStateToChangeTo = newState;
+	}
+	
+	public Vector<TaskInfo> getTasksToDisplay () {
+		return taskToDisplayList;
+	}
+	
+	public String getFeedback () {
+		return feedback;
+	}
+	
+	public TaskInfo getTaskToFocus () {
+		return taskInFocus;
+	}
+	
+	public boolean getGoToNextPage () {
+		return isGoToNextPage;
+	}
+	
+	public boolean getGoToPrevPage () {
+		return isGoToPreviousPage;
+	}
+	
+	public int getPageToGoTo () {
+		return pageToGoTo;
+	}
+	
+	public DISPLAY_STATE getDisplayState () {
+		return stateToChangeTo;	
+	}
+	
+	public HELP_STATE getHelpState () {
+		return helpStateToChangeTo;	
+	}
+}
+
+	// End of segment: src\kaboom\shared\Result.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\shared\TASK_TYPE.java
+	 */
+
+
+package kaboom.shared;
+
+public enum TASK_TYPE {
+	DEADLINE, FLOATING, TIMED;
+}
+
+	// End of segment: src\kaboom\shared\TASK_TYPE.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\CommandTest.java
+	 */
+
+package KaboomTest;
+
+import static org.junit.Assert.*;
+
+import java.util.Hashtable;
+
+import kaboom.logic.command.Command;
+import kaboom.logic.command.CommandAdd;
+import kaboom.logic.command.CommandClear;
+import kaboom.logic.command.CommandDelete;
+import kaboom.logic.command.CommandDone;
+import kaboom.logic.command.CommandSearch;
+import kaboom.logic.command.CommandUndone;
+import kaboom.logic.command.CommandModify;
+import kaboom.logic.command.CommandView;
+import kaboom.shared.KEYWORD_TYPE;
+
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class CommandTest {
+	Hashtable<KEYWORD_TYPE, String> infoTable;
+	TestPopulate tp = new TestPopulate();;
+	
+	@Before
+	public void initAndPopulate() {
+		infoTable = new Hashtable<KEYWORD_TYPE, String>();
+		tp.populate();
+	}
+	
+	//Invalid Command
+	@Test
+	public void testInvalidCommand() {
+		Command com = new Command();
+		
+		assertEquals("Please enter a valid command. Type <help> for info.",com.execute().getFeedback());
+	}
+	
+	//CommandAdd
+	@Test
+	public void testCommandAdd() {
+		CommandAdd com = new CommandAdd();
+
+		//Execution
+		//Add a task without any task name input
+		initAndPopulate();
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Oops! Task cannot be entered without a name Y_Y",com.execute().getFeedback());
+		
+		//Add a task with given task name
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "Hello World");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("WOOT! <Hello World> ADDED. MORE STUFF TO DO!",com.execute().getFeedback());
+		
+		//Add a task with empty task name
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Oops! Task cannot be entered without a name Y_Y",com.execute().getFeedback());
+		
+		//Add a task with valid date and time
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "Valid Time");
+		infoTable.put(KEYWORD_TYPE.START_TIME, "0000");
+		infoTable.put(KEYWORD_TYPE.START_DATE, "010114");
+		infoTable.put(KEYWORD_TYPE.END_TIME, "2359");
+		infoTable.put(KEYWORD_TYPE.END_DATE, "010114");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("WOOT! <Valid Time> ADDED. MORE STUFF TO DO!",com.execute().getFeedback());
+		
+		//Add a task with invalid date and time
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "Invalid Time");
+		infoTable.put(KEYWORD_TYPE.START_TIME, "2359");
+		infoTable.put(KEYWORD_TYPE.START_DATE, "010114");
+		infoTable.put(KEYWORD_TYPE.END_TIME, "0000");
+		infoTable.put(KEYWORD_TYPE.END_DATE, "010114");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Oops! Please schedule to another time",com.execute().getFeedback());
+	}
+	
+	//CommandView
+	@Test
+	public void testCommandView() {
+		CommandView com = new CommandView();
+		initAndPopulate();
+		
+		//Test Command feedback
+		//No viewType set
+		assertEquals("Invalid View Mode. Might want to use <help view>", com.execute().getFeedback());
+		
+		//Valid ViewTypes
+		infoTable.put(KEYWORD_TYPE.VIEWTYPE, "today");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Viewing all the tasks for today", com.execute().getFeedback());
+		
+		infoTable.put(KEYWORD_TYPE.VIEWTYPE, "timeless");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Viewing timeless tasks", com.execute().getFeedback());
+		
+		infoTable.put(KEYWORD_TYPE.VIEWTYPE, "expired");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Viewing expired tasks", com.execute().getFeedback());
+		
+		infoTable.put(KEYWORD_TYPE.VIEWTYPE, "archive");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Viewing completed tasks", com.execute().getFeedback());
+		
+		infoTable.put(KEYWORD_TYPE.VIEWTYPE, "future");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Viewing upcoming tasks", com.execute().getFeedback());
+		
+		//Invalid viewTypes
+		infoTable.put(KEYWORD_TYPE.VIEWTYPE, "someview");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Invalid View Mode. Might want to use <help view>", com.execute().getFeedback());
+		
+		infoTable.put(KEYWORD_TYPE.VIEWTYPE, "-1");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Invalid View Mode. Might want to use <help view>", com.execute().getFeedback());
+	}
+	
+	//CommandClear
+	@Test
+	public void testCommandClear() {
+		CommandClear com = new CommandClear();
+		
+		//Clear without setting clear type
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Enter <clear all> to remove all tasks or <clear present> to remove current view",com.execute().getFeedback());
+		
+		//Clear with invalid clear type
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.CLEARTYPE, "lala");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Enter <clear all> to remove all tasks or <clear present> to remove current view",com.execute().getFeedback());
+		
+		//Clear with ALL clear type
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.CLEARTYPE, "all");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("1.. 2.. 3.. Pooof! Your schedule has gone with the wind",com.execute().getFeedback());
+		
+		//Clear with PRESENT clear type
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.CLEARTYPE, "present");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("1.. 2.. 3.. Pooof! Your present schedule has gone with the wind",com.execute().getFeedback());
+		
+		//Clear with ARCHIVE clear type
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.CLEARTYPE, "archive");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("3.. 2.. 1.. Pooof! Your archive has gone with the wind",com.execute().getFeedback());
+	}
+	
+	//CommandDelete
+	@Test
+	public void testCommandDelete() {		
+		CommandDelete com = new CommandDelete();
+
+		//Execute
+		//Delete with no task name and id
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Enter a taskname or task id, please ?",com.execute().getFeedback());
+		
+		//Delete with invalid id
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKID, "100");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Oops! Invalid ID??",com.execute().getFeedback());
+		
+		//Delete with invalid id and name
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKID, "1");
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "LLALALLA");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Oops! Invalid taskname??",com.execute().getFeedback());
+		
+		//Delete with valid id
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKID, "1");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("<dinner> deleted. 1 less work to do :D",com.execute().getFeedback());
+		
+		//Delete with clash in name
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "meeting");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Search done. 2 item(s) found.",com.execute().getFeedback());
+
+		//Delete with valid name
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "lunch");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("<lunch> deleted. 1 less work to do :D",com.execute().getFeedback());
+	}
+
+	//CommandModify
+	@Test
+	public void testCommandModify() {
+		CommandModify com = new CommandModify();
+		
+		//Execution
+		//Modify a task without any task name input
+		initAndPopulate();
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Enter a taskname or task id, please ?",com.execute().getFeedback());
+		
+		//Modify a task without modifications
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKID, "1");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Nothing happened...",com.execute().getFeedback());
+		
+		//Modify a task without modifications
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "dinner");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Nothing happened...",com.execute().getFeedback());
+		
+		//Modify a task to a new task name
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKID, "1");
+		infoTable.put(KEYWORD_TYPE.MODIFIED_TASKNAME, "somename");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("<dinner> has evolved into <somename>",com.execute().getFeedback());
+		
+		//Modify a task priority
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKID, "1");
+		infoTable.put(KEYWORD_TYPE.PRIORITY, "3");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("<dinner> has consulted the stars",com.execute().getFeedback());
+		
+		//Modify a task date
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKID, "1");
+		infoTable.put(KEYWORD_TYPE.START_DATE, "13/03/14");
+		infoTable.put(KEYWORD_TYPE.END_DATE, "15/03/14");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("<dinner> has manipulated time, consulted the stars",com.execute().getFeedback());
+		
+		//Modify a task time
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKID, "1");
+		infoTable.put(KEYWORD_TYPE.START_TIME, "1200");
+		infoTable.put(KEYWORD_TYPE.END_TIME, "1300");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("<dinner> has manipulated time, consulted the stars",com.execute().getFeedback());
+		
+		//Modify a task with invalid time
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKID, "1");
+		infoTable.put(KEYWORD_TYPE.START_TIME, "1500");
+		infoTable.put(KEYWORD_TYPE.END_TIME, "1200");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Oops! Please schedule to another time",com.execute().getFeedback());
+		
+		//Modify a task with invalid date
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKID, "1");
+		infoTable.put(KEYWORD_TYPE.START_DATE, "02/02/14");
+		infoTable.put(KEYWORD_TYPE.END_DATE, "01/02/14");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Oops! Please schedule to another time",com.execute().getFeedback());
+	}
+	
+	
+	//CommandDone
+	@Test
+	public void testCommandDone() {
+		CommandDone com = new CommandDone();
+		
+		//Execution
+		//Boom a task without any task name input
+		initAndPopulate();
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Enter a taskname or task id, please ?",com.execute().getFeedback());
+		
+		//Boom a task with invalid id
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKID, "10");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Oops! Invalid ID??",com.execute().getFeedback());
+		
+		//Boom a task with valid id
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKID, "1");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Set dinner to complete",com.execute().getFeedback());
+		
+		//Boom a task with valid name
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "dinner");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Set dinner to complete",com.execute().getFeedback());
+	}
+	
+	//CommandUndone
+	@Test
+	public void testCommandUndone() {
+		CommandUndone com = new CommandUndone();
+		
+		//Execution
+		//Unboom a task without any task name input
+		initAndPopulate();
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Enter a taskname or task id, please ?",com.execute().getFeedback());
+		
+		//Unboom a task with invalid id
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKID, "10");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Oops! Invalid ID??",com.execute().getFeedback());
+		
+		//Unboom a task with valid id but completed
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKID, "1");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("dinner was incomplete",com.execute().getFeedback());
+		
+		//Unboom a task with valid id but completed
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "dinner");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("dinner was incomplete",com.execute().getFeedback());
+	}
+	
+	//CommandSearch
+	@Test
+	public void testCommandSearch() {
+		CommandSearch com = new CommandSearch();
+		
+		//Execution
+		//Search a task without any task name input
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Please enter something to search",com.execute().getFeedback());
+		
+		//Search a task by name
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "dinner");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Search done. 1 item(s) found.",com.execute().getFeedback());
+		
+		//Search a task by date
+		initAndPopulate();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "");
+		infoTable.put(KEYWORD_TYPE.DATE, "01/01/00");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Search done. 6 item(s) found.",com.execute().getFeedback());
+	}
+	
+	
+
+}
+
+	// End of segment: src\KaboomTest\CommandTest.java
+
+
+
+
+

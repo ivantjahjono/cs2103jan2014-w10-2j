@@ -1,0 +1,2451 @@
+//@author: a0099175n
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandPage.java
+	 */
+
+package kaboom.logic.command;
+
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+
+public class CommandPage extends Command {
+	private final String KEYWORD_NEXT_PAGE 		= "next";
+	private final String KEYWORD_PREV_PAGE		= "prev";
+	
+	private final String INVALID_PAGE_COMMAND_MESSAGE		= "No such page command. Use <help page> for help.";
+	
+	public CommandPage () {
+		commandType = COMMAND_TYPE.PAGE;
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.PAGE	
+		};
+	}
+
+	public Result execute() {
+		assert taskManager != null;
+		
+		String pageInfo = infoTable.get(KEYWORD_TYPE.PAGE);
+		if (pageInfo == null || infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return createResult(INVALID_PAGE_COMMAND_MESSAGE);
+		}
+		
+		String feedback = "";
+		Result commandResult = createResult(feedback);
+		switch (pageInfo) {
+			case KEYWORD_NEXT_PAGE:
+				commandResult.setGoToNextPage(true);
+				break;
+				
+			case KEYWORD_PREV_PAGE:
+				commandResult.setGoToPrevPage(true);
+				break;
+				
+			default:
+				int pageNumber = Integer.parseInt(pageInfo);
+				commandResult.setPageToGoTo(pageNumber);
+				break;
+		}
+		
+		return commandResult;
+	}
+	
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+		
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+		
+		return true;
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\CommandPage.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\shared\comparators\FormatIdentifyComparator.java
+	 */
+
+package kaboom.shared.comparators;
+
+import java.util.Comparator;
+
+import kaboom.shared.FormatIdentify;
+
+public class FormatIdentifyComparator implements Comparator<FormatIdentify> {
+
+	@Override
+	public int compare(FormatIdentify firstIdentify, FormatIdentify secondIdentify) {
+
+		int firstValue = firstIdentify.getType().getValue();
+		int secondValue = secondIdentify.getType().getValue();
+		if (firstValue > secondValue) {
+			return 1;
+		} else if (secondValue > firstValue) {
+			return -1;
+		}
+		return 0;
+	}
+}
+
+	// End of segment: src\kaboom\shared\comparators\FormatIdentifyComparator.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\shared\DISPLAY_STATE.java
+	 */
+
+
+package kaboom.shared;
+
+public enum DISPLAY_STATE {
+	TODAY, FUTURE, TIMELESS, EXPIRED, ARCHIVE, SEARCH, 
+	INVALID
+}
+
+	// End of segment: src\kaboom\shared\DISPLAY_STATE.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\shared\FormatIdentify.java
+	 */
+
+package kaboom.shared;
+
+
+public class FormatIdentify {
+	KEYWORD_TYPE type;
+	String stringText;
+	
+	public FormatIdentify () {
+		type = KEYWORD_TYPE.INVALID;
+		stringText = "";
+	}
+	
+	public void setCommandStringFormat (String text) {
+		stringText = text;
+	}
+	
+	public String getCommandStringFormat () {
+		return stringText;
+	}
+	
+	public void setType (KEYWORD_TYPE newType) {
+		type = newType;
+	}
+	
+	public KEYWORD_TYPE getType () {
+		return type;
+	}
+}
+
+	// End of segment: src\kaboom\shared\FormatIdentify.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\shared\HELP_STATE.java
+	 */
+
+package kaboom.shared;
+
+public enum HELP_STATE {
+	MAIN, ADD, DELETE, MODIFY, SEARCH, VIEW, COMPLETE, PAGE, CLEAR, CLOSE, INVALID
+}
+
+	// End of segment: src\kaboom\shared\HELP_STATE.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\ui\DisplayData.java
+	 */
+
+
+package kaboom.ui;
+
+import java.util.Observable;
+import java.util.Vector;
+
+import kaboom.logic.TaskMasterKaboom;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.DateAndTimeFormat;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.HELP_STATE;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
+
+/**
+ * This Singleton class contains all the information that User Interface
+ * needs to display. It holds all the tasks, command feedback,
+ * current page the UI is on.
+ */
+public class DisplayData extends Observable {
+	final int NUM_OF_TASK_PER_PAGE = 10;
+
+	static DisplayData instance;
+
+	Vector<TaskInfoDisplay> tasksDataToDisplay;
+	Vector<FormatIdentify> 	formattingCommand;
+	Vector<Integer> 		taskCountList;
+
+	String 	userFeedbackMessage;
+	int 	currentPage;
+	
+	String currentWeekDay;
+	String currentDate;
+	String currentTime;
+
+	DISPLAY_STATE 	currentDisplayState;
+	HELP_STATE 		currentHelpState;
+	
+	/**
+	 * Returns a DisplayData instance of the class.
+	 * <p>
+	 * This method always return DisplayData. The instance will be
+	 * created when it is first called. Subsequent calls will return
+	 * the first created instance.
+	 *
+	 */
+	public static DisplayData getInstance () {
+		if (instance == null) {
+			instance = new DisplayData();
+		}
+		return instance;
+	}
+
+	private DisplayData () {
+		tasksDataToDisplay = new Vector<TaskInfoDisplay>();
+		formattingCommand = new Vector<FormatIdentify>();
+		taskCountList = new Vector<Integer>();
+
+		userFeedbackMessage = "";
+		currentPage = 0;
+		currentDisplayState = DISPLAY_STATE.TODAY;
+		currentHelpState =  HELP_STATE.CLOSE;
+	}
+
+	private void updateTaskCountList() {
+		taskCountList = TaskMasterKaboom.getInstance().updateTaskCount();
+	}
+
+	/**
+	 * Updates the information with the Result object that is
+	 * passed by parameter. 
+	 * 
+	 *  @param commandResult information of the command that is executed
+	 */
+	public void updateDisplayWithResult (Result commandResult) {
+		updateDisplayStateBasedOnResult(commandResult);
+		updateHelpPanelStateBasedOnResult(commandResult);
+
+		extractTasksBasedOnDisplayState(currentDisplayState);
+		setFeedbackMessage(commandResult.getFeedback());
+
+		updateTaskCountList();
+		updateTaskToFocus(commandResult);
+		updatePageSwitching(commandResult);
+
+		int maxPages = getMaxTaskDisplayPages(tasksDataToDisplay)-1;
+		if (isMoreThanMaxPage(maxPages)) {
+			currentPage = maxPages;
+		}
+		
+		updateCurrentDateAndTime();
+
+		setChanged();
+		notifyObservers();
+	}
+
+	private void updatePageSwitching(Result commandResult) {
+		int pageToGoTo = commandResult.getPageToGoTo();
+		if (pageToGoTo != -1) {
+			currentPage = pageToGoTo-1;
+		}
+		
+		if (commandResult.getGoToNextPage()) {
+			goToNextPage();
+		} else if (commandResult.getGoToPrevPage()) {
+			goToPreviousPage();
+		}
+	}
+
+	private void updateTaskToFocus(Result commandResult) {
+		TaskInfo taskToFocus = commandResult.getTaskToFocus();
+		int indexToGo = -1;
+		if (taskToFocus != null) {
+			indexToGo = TaskMasterKaboom.getInstance().indexToGoTo(taskToFocus);
+		}
+		
+		if (indexToGo != -1) {
+			currentPage = indexToGo/NUM_OF_TASK_PER_PAGE;
+		}
+	}
+
+	private void updateCurrentDateAndTime() {
+		currentWeekDay = DateAndTimeFormat.getInstance().getCurrentWeekday().toUpperCase();
+		currentDate = DateAndTimeFormat.getInstance().getDateToday();
+		currentTime = DateAndTimeFormat.getInstance().getTimeNow();
+	}
+
+	private void updateHelpPanelStateBasedOnResult(Result commandResult) {
+		HELP_STATE helpStateChange = commandResult.getHelpState();
+		if (helpStateChange != HELP_STATE.INVALID) {
+			if (currentHelpState == helpStateChange) {
+				currentHelpState = HELP_STATE.CLOSE;
+			} else {
+				currentHelpState = helpStateChange; 
+			}
+		}
+	}
+
+	private void updateDisplayStateBasedOnResult(Result commandResult) {
+		DISPLAY_STATE stateChange = commandResult.getDisplayState();
+		if (stateChange != null && stateChange != DISPLAY_STATE.INVALID) {
+			currentDisplayState = stateChange; 
+		}
+	}
+	
+	public void updateDisplayWithResult () {
+		extractTasksBasedOnDisplayState(currentDisplayState);
+		updateTaskCountList ();
+		
+		int maxPages = getMaxTaskDisplayPages(tasksDataToDisplay)-1;
+		if (isMoreThanMaxPage(maxPages)) {
+			currentPage = maxPages;
+		}
+		
+		setChanged();
+		notifyObservers();
+	}
+
+	private void extractTasksBasedOnDisplayState(DISPLAY_STATE displayState) {
+		setTaskDisplayToThese(TaskMasterKaboom.getInstance().setAndGetView(displayState), tasksDataToDisplay);
+	}
+
+	/**
+	 * Returns a vector of TaskInfoDisplay which contains all the 
+	 * tasks that is displayed. The size of vector is limited
+	 * by the maximum page.
+	 * <p>
+	 * This method will get all the tasks on the current page and
+	 * will be truncated to max task per page. 
+	 *
+	 */
+	public Vector<TaskInfoDisplay> getTaskDisplay () {
+		Vector<TaskInfoDisplay> selectedTaskToDisplay = new Vector<TaskInfoDisplay>();
+		int startTaskIndex = currentPage*NUM_OF_TASK_PER_PAGE;
+		int endTaskIndex = getLastIndexOfCurrentPage(currentPage);
+
+		for (int i = startTaskIndex; i < endTaskIndex; i++) {
+			selectedTaskToDisplay.add(tasksDataToDisplay.get(i));
+		}
+
+		return selectedTaskToDisplay;
+	}
+
+	private int getLastIndexOfCurrentPage(int startPage) {
+		int maxCurrentPage = (currentPage+1)*NUM_OF_TASK_PER_PAGE;
+
+		if (maxCurrentPage > tasksDataToDisplay.size()) {
+			return tasksDataToDisplay.size();
+		}
+
+		return maxCurrentPage;
+	}
+
+	public void setTaskDisplayToThese (Vector<TaskInfo> taskList, Vector<TaskInfoDisplay> taskListToStoreIn) {
+		taskListToStoreIn.clear();
+		convertTasksIntoDisplayData(taskList, taskListToStoreIn);
+	}
+
+	private void convertTasksIntoDisplayData(Vector<TaskInfo> taskList, Vector<TaskInfoDisplay> taskListToAddinto) {
+		for (int i = 0; i < taskList.size(); i++) {
+			TaskInfo currentTaskInfo = taskList.get(i);
+			TaskInfoDisplay infoToDisplay = convertTaskInfoIntoTaskInfoDisplay(currentTaskInfo, i+1);
+
+			taskListToAddinto.add(infoToDisplay);
+		}
+	}
+
+	private TaskInfoDisplay convertTaskInfoIntoTaskInfoDisplay(TaskInfo taskInfoToConvert, int taskId) {
+		TaskInfoDisplay infoToDisplay = new TaskInfoDisplay();
+
+		infoToDisplay.updateFromThisInfo(taskInfoToConvert);
+		infoToDisplay.setTaskId(taskId);
+		return infoToDisplay;
+	}
+
+	public String getFeedbackMessage () {
+		return userFeedbackMessage;
+	}
+
+	public void setFeedbackMessage (String message) {
+		userFeedbackMessage = message;
+	}
+
+	public int getMaxTaskDisplayPagesForCurrentView () {
+		int maxPages = getMaxTaskDisplayPages(tasksDataToDisplay);
+
+		return maxPages;
+	}
+
+	private int getMaxTaskDisplayPages (Vector<TaskInfoDisplay> taskUnderConcern) {
+		if (taskUnderConcern.size() == 0) {
+			return 1;
+		} else {
+			return ((taskUnderConcern.size()-1)/NUM_OF_TASK_PER_PAGE)+1;
+		}
+	}
+
+	public int getCurrentPage () {
+		return currentPage;
+	}
+
+	public void goToNextPage () {
+		currentPage++;
+
+		int maxPage = getMaxTaskDisplayPagesForCurrentView()-1;
+		if (isMoreThanMaxPage(maxPage)) {
+			currentPage = maxPage;
+		}
+
+		setChanged();
+		notifyObservers();
+	}
+
+	private boolean isMoreThanMaxPage(int maxPage) {
+		return currentPage > maxPage;
+	}
+
+	public void goToPreviousPage () {
+		if (currentPage > 0) {
+			currentPage--;
+		}
+
+		setChanged();
+		notifyObservers();
+	}
+	
+	public boolean goToPage (int pageNumber) {
+		if (pageNumber > getMaxTaskDisplayPagesForCurrentView()) {
+			return false;
+		}
+		currentPage = pageNumber;
+		return true;
+	}
+
+	public DISPLAY_STATE getCurrentDisplayState() {
+		return currentDisplayState;
+	}
+	
+	public HELP_STATE getCurrentHelpState() {
+		return currentHelpState;
+	}
+
+	public void setFormatDisplay (Vector<FormatIdentify> formatList) {
+		formattingCommand = formatList;
+
+		setChanged();
+		notifyObservers();
+	}
+
+	public Vector<FormatIdentify> getFormatDisplay () {
+		return formattingCommand;
+	}
+
+	public Vector<Integer> getTaskCountList () {
+		return taskCountList;
+	}
+	
+	public String getCurrentWeekDay () {
+		return currentWeekDay;
+	}
+	
+	public String getCurrentTime () {
+		return currentTime;
+	}
+	
+	public String getCurrentDate () {
+		return currentDate;
+	}
+	
+	public int getMaxTasksPerPage () {
+		return NUM_OF_TASK_PER_PAGE;
+	}
+}
+
+	// End of segment: src\kaboom\ui\DisplayData.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\ui\GraphicInterface.java
+	 */
+
+
+package kaboom.ui;
+
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.util.Duration;
+import kaboom.logic.TaskMasterKaboom;
+
+
+public class GraphicInterface extends Application {
+	private final int UPDATE_INTERVAL = 10;
+	private final int WINDOW_WIDTH  = 700;
+	private final int WINDOW_HEIGHT = 700;
+	
+	private final String APPLICATION_NAME = "Task Master Kaboom";
+	private final String ICON_FILENAME = "img/taskmasterkaboom.png";
+	private final String FXML_FILENAME = "TaskMasterKaboomUiUpgrade.fxml";
+	
+	Parent root;
+	MainWindow mainWindow;
+	
+	UpdateService myService;
+	Timeline updateTimeline;
+	
+	private static TaskMasterKaboom controllerInstance;
+	static int counter = 0;
+	
+	@Override
+	public void start(Stage primaryStage) {
+		FXMLLoader loader = null;
+		try {
+			loader = new FXMLLoader(getClass().getResource(FXML_FILENAME));
+			root = (Parent)(loader.load());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		mainWindow = loader.getController();
+		mainWindow.setStage(primaryStage);
+		
+		Scene scene = new Scene(root);
+		scene.setFill(null);
+		setupStage(primaryStage, scene);
+		
+		mainWindow.prepareTextfieldFocus();
+
+		updateApplicationIconAndTitle(primaryStage);
+		
+		updateTimeline = setupRunningUpdate();
+		initialiseAndStartUpdateService();
+	}
+
+	private void setupStage(Stage primaryStage, Scene scene) {
+		primaryStage.setScene(scene);
+		primaryStage.setResizable(false);
+		primaryStage.initStyle(StageStyle.TRANSPARENT);
+		primaryStage.setWidth(WINDOW_WIDTH);
+		primaryStage.setHeight(WINDOW_HEIGHT);
+		primaryStage.show();
+	}
+
+	private void updateApplicationIconAndTitle(Stage primaryStage) {
+		Image ico = new Image(this.getClass().getResourceAsStream(ICON_FILENAME));
+		primaryStage.getIcons().add(ico);
+		primaryStage.setTitle(APPLICATION_NAME);
+	}
+
+	private void initialiseAndStartUpdateService() {
+		updateTimeline.setCycleCount(Animation.INDEFINITE);
+		updateTimeline.playFrom("end");
+	}
+
+	private Timeline setupRunningUpdate() {
+		myService = new UpdateService(mainWindow);
+
+	    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(UPDATE_INTERVAL), new EventHandler<ActionEvent>() {
+	    	@Override
+			public void handle(ActionEvent event) {
+	    		controllerInstance.updateTaskList();
+	    	}
+	    }));
+		return timeline;
+	}
+	
+	public static void run(String[] args) {
+		launch(args);
+	}
+	
+	public static void main (String[] args) {
+		controllerInstance = TaskMasterKaboom.getInstance();
+		controllerInstance.initialiseKaboom(); 
+		run(args);
+	}
+}
+
+	// End of segment: src\kaboom\ui\GraphicInterface.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\ui\MainWindow.java
+	 */
+
+
+package kaboom.ui;
+
+import java.io.IOException;
+import java.net.URL; 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.ResourceBundle; 
+import java.util.Vector;
+
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.RectangleBuilder;
+import javafx.stage.Stage;
+
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
+import kaboom.logic.TaskMasterKaboom;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.HELP_STATE;
+
+public class MainWindow implements javafx.fxml.Initializable, Observer {	
+	private final int MAX_TABS = 5;
+	private final int MAX_COMMAND_KEEP = 20;
+	
+	// User interface elements
+			private Stage 		windowStage;
+	@FXML	private AnchorPane 	mainPane;
+			
+	@FXML 	private Label		todayWeekDay;
+	@FXML 	private Label		todayDate;
+	@FXML 	private Label		todayTime;
+			
+	// Individual tasks
+	Vector<TaskUiContainer> taskUiList;
+	@FXML	private VBox		taskListContainer;
+	
+	// Top window toolbar buttons
+	@FXML 	private ImageView 	exitButton;
+	@FXML 	private ImageView 	minimiseButton;
+	@FXML 	private Label 		counter;
+	
+	// Task header to show the current type of tasks displayed
+	@FXML 	private Label header_today;
+	@FXML 	private Label header_future;
+	@FXML 	private Label header_timeless;
+	@FXML 	private Label header_expired;
+	@FXML 	private Label header_archive;
+	
+	@FXML 	private Label header_today_count;
+	@FXML 	private Label header_future_count;
+	@FXML 	private Label header_timeless_count;
+	@FXML 	private Label header_expired_count;
+	@FXML 	private Label header_archive_count;
+	
+	private final String HEADER_TODAY_NAME 		= "header_today";
+	private final String HEADER_FUTURE_NAME 	= "header_future";
+	private final String HEADER_TIMELESS_NAME 	= "header_timeless";
+	private final String HEADER_EXPIRED_NAME 	= "header_expired";
+	private final String HEADER_ARCHIVE_NAME 	= "header_archive";
+	
+	// List and tracks of previously activated headers
+	private Vector<Label>	labelList;
+	private int 			currentLabelIndex;
+	private int 			previousLabelIndex;
+	
+	// Main command input and user feedback text
+	@FXML private TextField 	commandTextInput;
+	@FXML private Pane 			feedbackBox;
+	@FXML private Label 		feedbackText;
+	@FXML private HBox 			commandFormatFeedback;
+	
+	// Container to keep the pages tabs 
+	@FXML private Label 				pageNumber;
+	@FXML private HBox 					pageTabContainer;
+		  private ArrayList<Rectangle> 	pagesTab;
+		  
+	// Help boxes
+	@FXML private Pane 	helpPane;
+	@FXML private Pane 	helpAddPane;
+	@FXML private Pane 	helpDeletePane;
+	@FXML private Pane 	helpModifyPane;
+	@FXML private Pane 	helpCompletePane;
+	@FXML private Pane 	helpViewPane;
+	@FXML private Pane 	helpSearchPane;
+	@FXML private Pane 	helpPagePane;
+	@FXML private Pane 	helpClearPane;
+		  private Pane 	activeHelpPanel;
+	
+	// Tracks previous commands
+	private String 			currentCommand;
+	private Vector<String> 	commandsEnteredList;
+	private int 			currentCommandIndex;
+	
+	// Used in tracking window dragging
+	private double initialX;
+	private double initialY;
+	
+	// Class references
+	private TaskMasterKaboom 	applicationController;
+	private DisplayData 		uiData;
+	
+	// Logging unit and file handler for output
+	private final static Logger loggerUnit = Logger.getLogger(MainWindow.class.getName());
+	private static FileHandler 	fh;
+	private final String LOG_FILENAME = "KaboomUI.log";
+	
+	public MainWindow () {
+		currentCommand = "";
+		
+		pagesTab = new ArrayList<Rectangle>();
+		
+		uiData = DisplayData.getInstance();
+		
+		labelList = new Vector<Label>();
+		
+		commandsEnteredList = new Vector<String>();
+		currentCommandIndex = 0;
+		
+		applicationController = TaskMasterKaboom.getInstance();
+	}
+	
+	@Override
+	public void initialize(URL location, ResourceBundle resources) throws NullPointerException {
+		createAndStartLogging();
+		
+		taskUiList = new Vector<TaskUiContainer>();
+		
+		TaskUiContainer tempTaskUi;
+		int maxTaskToDisplay = uiData.getMaxTasksPerPage();
+		for (int i = 0; i < maxTaskToDisplay; i++) {
+			tempTaskUi = new TaskUiContainer();
+			taskListContainer.getChildren().add(tempTaskUi.getPaneContainer());
+			taskUiList.add(tempTaskUi);
+		}
+		
+		mainPane.getStyleClass().add("root");
+		
+		labelList.add(header_today);
+		labelList.add(header_future);
+		labelList.add(header_timeless);
+		labelList.add(header_expired);
+		labelList.add(header_archive);
+		currentLabelIndex = 0;
+		previousLabelIndex = 0;
+		
+		setHeaderLabelToSelected(labelList.get(currentLabelIndex));
+		
+		DisplayData.getInstance().addObserver(this);
+		updateDisplay();
+	}
+
+	private void createAndStartLogging() {
+		try {
+			fh = new FileHandler(LOG_FILENAME, false);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		Logger logger = Logger.getLogger("");
+		fh.setFormatter(new SimpleFormatter());
+		logger.addHandler(fh);
+		logger.setLevel(Level.CONFIG);
+	}
+	
+	public void setStage (Stage currentStage) {
+		windowStage = currentStage;
+	}
+	
+	public void prepareTextfieldFocus () {
+		commandTextInput.requestFocus();
+	}
+	
+	@FXML
+	private void onTextfieldAction (ActionEvent e) {
+		String command = commandTextInput.getText();
+		
+		loggerUnit.log(Level.INFO, command);
+		
+		if (isExitCommand(command)) {
+			Platform.exit();
+			return;
+		}
+		
+		applicationController.processCommand(command);
+		
+		storeCommandEntered(command);
+		
+		commandTextInput.setText("");
+	}
+
+	private boolean isExitCommand(String command) {
+		return command.equals("exit");
+	}
+
+	private void updateDisplay() {
+		updateHeaderDateTime();
+		updateTaskTable();
+		updateFeedbackMessage();
+		
+		updateHeader();
+		updateHeaderTaskCount();
+		
+		updatePagesTab();
+		updatePageNumber();
+		
+		updateCommandFormat();
+		
+		updateHelpPanel();
+	}
+	
+	private void updateHeaderDateTime() {
+		todayWeekDay.setText(uiData.getCurrentWeekDay());
+		todayDate.setText(uiData.getCurrentDate());
+		todayTime.setText(uiData.getCurrentTime());
+	}
+	
+	private void updateTaskTable() {	
+		Vector<TaskInfoDisplay> taskList = uiData.getTaskDisplay();
+		for (int i = 0; i < taskList.size(); i++) {
+			TaskUiContainer currentTaskContainer = taskUiList.get(i);
+			currentTaskContainer.updateWithTaskDisplay(taskList.get(i));
+			currentTaskContainer.setVisibleFlag(true);
+		}
+		
+		for (int i = taskList.size(); i < taskUiList.size(); i++) {
+			TaskUiContainer currentTaskContainer = taskUiList.get(i);
+			currentTaskContainer.setVisibleFlag(false);
+		}
+	}
+	
+	private void updateFeedbackMessage() {
+		String feedback = uiData.getFeedbackMessage();
+		feedbackText.setText(feedback);
+	}
+	
+	private void updateHeader() {
+		DISPLAY_STATE newDisplayState = uiData.getCurrentDisplayState();
+		
+		int newHeaderIndex = 0;
+		switch (newDisplayState) {
+			case TODAY:
+				newHeaderIndex = 0;
+				break;
+				
+			case FUTURE:
+				newHeaderIndex = 1;
+				break;
+				
+			case TIMELESS:
+				newHeaderIndex = 2;
+				break;
+				
+			case EXPIRED:
+				newHeaderIndex = 3;
+				break;
+				
+			case ARCHIVE:
+				newHeaderIndex = 4;
+				break;
+				
+			case SEARCH:
+				newHeaderIndex = -1;
+				break;
+				
+			default:
+				return;
+		}
+		
+		switchToNewHeader(newHeaderIndex);
+	}
+	
+	private void updateHeaderTaskCount() {
+		Vector<Integer> taskCountList = uiData.getTaskCountList();
+		for (int i = 0; i < taskCountList.size(); i++) {
+			String countString = "" + taskCountList.get(i);
+			
+			switch (i) {
+				case 0:
+					header_today_count.setText(countString);
+					break;
+					
+				case 1:
+					header_future_count.setText(countString);
+					break;
+					
+				case 2:
+					header_timeless_count.setText(countString);
+					break;
+					
+				case 3:
+					header_expired_count.setText(countString);
+					break;
+					
+				case 4:
+					header_archive_count.setText(countString);
+					break;
+			}
+		}
+	}
+	
+	private void updatePagesTab() {
+		int maxPages = uiData.getMaxTaskDisplayPagesForCurrentView();
+		int maxTabs = maxPages;
+		
+		if (maxTabs > MAX_TABS) {
+			maxTabs = MAX_TABS;
+		}
+		
+		resizePageTabToMaxPages(maxTabs);
+		updatePageTabStyles();
+		refreshPageTabContainerWithNewPageTabs();
+	}
+	
+	private Rectangle createPageTabRectangle() {
+		@SuppressWarnings("rawtypes")
+		RectangleBuilder pageTabBuilder = RectangleBuilder.create()
+			    .x(100).y(100)
+			    .width(25).height(5)
+			    .styleClass("pagesOn");
+		
+		Rectangle rect1 = pageTabBuilder.build();
+		return rect1;
+	}
+
+	private void updatePageTabStyles() {
+		int currentTabPage = uiData.getCurrentPage()%MAX_TABS;
+		for (int i = 0; i < pagesTab.size(); i++) {
+			
+			Rectangle currentTab = pagesTab.get(i);
+			currentTab.getStyleClass().removeAll(Collections.singleton("pagesOn"));
+			currentTab.getStyleClass().removeAll(Collections.singleton("pagesOff"));
+			
+			if (i == currentTabPage) {
+				pagesTab.get(i).getStyleClass().add("pagesOn");
+			} else {
+				pagesTab.get(i).getStyleClass().add("pagesOff");
+			}
+		}
+	}
+
+	private void resizePageTabToMaxPages(int maxTab) {
+		if (pagesTab.size() < maxTab) {
+			int tabsToCreate = maxTab - pagesTab.size();
+			for (int i = 0; i < tabsToCreate; i++) {
+				pagesTab.add(createPageTabRectangle());
+			}
+		} else if (pagesTab.size() > maxTab ) {
+			int tabsToDelete = pagesTab.size() - maxTab;
+			for (int i = 0; i < tabsToDelete; i++) {
+				pagesTab.remove(pagesTab.size()-1);
+			}
+		}
+	}
+	
+	private void refreshPageTabContainerWithNewPageTabs() {
+		pageTabContainer.getChildren().clear();
+		pageTabContainer.getChildren().addAll(pagesTab);
+	}
+	
+	private void updatePageNumber() {
+		int totalPages = uiData.getMaxTaskDisplayPagesForCurrentView();
+		int currentPage = uiData.getCurrentPage()+1;
+		
+		String pageString = String.format("Pg %d - %d", currentPage, totalPages);
+		pageNumber.setText(pageString);
+	}
+	
+	private void updateCommandFormat() {
+		Label newLabel;
+		
+		if (commandFormatFeedback.getChildren() != null) {
+			commandFormatFeedback.getChildren().clear();
+		}
+		
+		String textToFormat = "";
+		Vector<FormatIdentify> list = uiData.getFormatDisplay();
+		
+		for (int i = 0; i < list.size(); i++) {
+			FormatIdentify currentInfo = list.get(i);
+			
+			if (currentInfo.getCommandStringFormat().equals("")) {
+				continue;
+			}
+			
+			textToFormat = currentInfo.getCommandStringFormat() + " ";
+			newLabel = new Label();
+			newLabel.setText(textToFormat);
+			
+			setStyleBasedOnKeywordType(newLabel, currentInfo);
+			
+			commandFormatFeedback.getChildren().add(newLabel);
+		}
+	}
+
+	private void setStyleBasedOnKeywordType(Label newLabel,
+			FormatIdentify currentInfo) {
+		switch (currentInfo.getType()) {
+			case COMMAND:
+				newLabel.getStyleClass().add("parseCommandTypeName");
+				break;
+				
+			case TASKNAME:
+			case TASKID:
+			case VIEWTYPE:
+			case MODIFIED_TASKNAME:
+			case DATE:
+			case CLEARTYPE:
+			case HELP:
+			case PAGE:
+				newLabel.getStyleClass().add("parseCommandName");
+				break;
+				
+			case START_DATE:
+			case START_TIME:
+				newLabel.getStyleClass().add("parseCommandStartDate");
+				break;
+				
+			case END_DATE:
+			case END_TIME:
+				newLabel.getStyleClass().add("parseCommandEndDate");
+				break;
+				
+			case PRIORITY:
+				newLabel.getStyleClass().add("parseCommandPriority");
+				break;
+				
+			default:
+				newLabel.getStyleClass().add("parseCommandInvalid");
+				break;
+		}
+	}
+	
+	private void updateHelpPanel() {		
+		HELP_STATE currentHelpState = uiData.getCurrentHelpState();
+		
+		if (activeHelpPanel != null) {
+			activeHelpPanel.setVisible(false);
+		}
+		
+		switch (currentHelpState) {
+			case MAIN:
+				activeHelpPanel = helpPane;
+				break;
+				
+			case ADD:
+				activeHelpPanel = helpAddPane;
+				break;
+				
+			case DELETE:
+				activeHelpPanel = helpDeletePane;
+				break;
+				
+			case MODIFY:
+				activeHelpPanel = helpModifyPane;
+				break;
+				
+			case COMPLETE:
+				activeHelpPanel = helpCompletePane;
+				break;
+				
+			case SEARCH:
+				activeHelpPanel = helpSearchPane;
+				break;
+				
+			case VIEW:
+				activeHelpPanel = helpViewPane;
+				break;
+				
+			case PAGE:
+				activeHelpPanel = helpPagePane;
+				break;
+				
+			case CLEAR:
+				activeHelpPanel = helpClearPane;
+				break;
+				
+			default:
+				activeHelpPanel = null;
+				break;
+		}
+		
+		if (activeHelpPanel != null) {
+			activeHelpPanel.setVisible(true);
+		}
+	}
+	
+	private void storeCommandEntered(String command) {
+		commandsEnteredList.add(command);
+		
+		while (commandsEnteredList.size() > MAX_COMMAND_KEEP) {
+			commandsEnteredList.remove(0);
+		}
+
+		currentCommandIndex = commandsEnteredList.size();
+	}
+	
+	private boolean recallPreviousCommand () {
+		if (currentCommandIndex > 0) {
+			currentCommandIndex--;
+			commandTextInput.setText(commandsEnteredList.get(currentCommandIndex));
+			
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean recallStoredTypedCommand () {
+		if (currentCommandIndex < commandsEnteredList.size()-1) {
+			currentCommandIndex++;
+			commandTextInput.setText(commandsEnteredList.get(currentCommandIndex));
+			
+			return true;
+		} else if (currentCommandIndex < commandsEnteredList.size()){
+			currentCommandIndex =  commandsEnteredList.size();
+			commandTextInput.setText(currentCommand);
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
+	@FXML
+	private void onTextfieldKeyPressed (KeyEvent keyEvent) {
+		switch(keyEvent.getCode()) {
+			case Z:
+				if (keyEvent.isControlDown()) {
+					applicationController.processCommand("undo");
+				}
+				break;
+				
+			case H:
+				if (keyEvent.isControlDown()) {
+					if (activeHelpPanel == null) {
+						applicationController.processCommand("help");
+					} else {
+						applicationController.processCommand("help close");
+					}
+				}
+				break;
+				
+			case UP:
+			case DOWN:
+				keyEvent.consume();
+				break;
+				
+			default:
+				break;
+		}
+	}
+
+	@FXML
+	private void onTextfieldKeyReleased (KeyEvent keyEvent) {
+		activateProcessBasedKeyPressed(keyEvent);
+	}
+
+	private void activateProcessBasedKeyPressed(KeyEvent keyEvent) {
+		boolean processResult = false;
+		switch(keyEvent.getCode()) {
+			case UP:
+				if (commandsEnteredList.size() < currentCommandIndex+1) {
+					currentCommand = commandTextInput.getText();
+				}
+				
+				loggerUnit.log(Level.FINE, "Recalling previous command.");
+				if (recallPreviousCommand()) {
+					setTextfieldCursorToLast();
+				}
+				break;
+				
+			case DOWN:
+				loggerUnit.log(Level.FINE, "Recalling next command.");
+				if (recallStoredTypedCommand()) {
+					setTextfieldCursorToLast();
+				}
+				break;
+				
+			case ESCAPE:
+				loggerUnit.log(Level.FINE, "ESC pressed for minimise.");
+				windowStage.setIconified(true);
+				break;
+				
+			case F1:
+				activateHeaderBasedOnName(HEADER_TODAY_NAME);
+				break;
+				
+			case F2:
+				activateHeaderBasedOnName(HEADER_FUTURE_NAME);
+				break;
+				
+			case F3:
+				activateHeaderBasedOnName(HEADER_TIMELESS_NAME);
+				break;
+				
+			case F4:
+				activateHeaderBasedOnName(HEADER_EXPIRED_NAME);
+				break;
+				
+			case F5:
+				activateHeaderBasedOnName(HEADER_ARCHIVE_NAME);
+				break;
+				
+			case PAGE_UP:
+				uiData.goToNextPage();
+				break;
+				
+			case PAGE_DOWN:
+				uiData.goToPreviousPage();
+				break;
+				
+			default:
+				String command = commandTextInput.getText();
+				if (isExitCommand(command)) {
+					processResult = true;
+					commandFormatFeedback.getChildren().clear();
+				} else {
+					processResult = applicationController.processSyntax(command);
+				}
+				
+				updateCommandStatusIndicator(processResult);
+				break;
+		}
+	}
+	
+	private void setTextfieldCursorToLast () {
+		commandTextInput.positionCaret(commandTextInput.getText().length());
+	}
+	
+	@FXML
+	private void onExitButtonPressed (MouseEvent mouseEvent) {
+		loggerUnit.log(Level.FINE, "Close button pressed.");
+		Platform.exit();
+	}
+	
+	@FXML
+	private void onWindowMouseDrag (MouseEvent mouseEvent) {
+		windowStage.setX(mouseEvent.getScreenX() - initialX);
+		windowStage.setY(mouseEvent.getScreenY() - initialY);
+	}
+	
+	@FXML
+	private void onWindowMousePressed (MouseEvent mouseEvent) {
+		initialX = mouseEvent.getSceneX();
+		initialY = mouseEvent.getSceneY();
+	}
+
+// Header manipulation
+	@FXML
+	private void onHeaderMouseClicked (MouseEvent mouseEvent) {
+		Node nodePressed = (Node)mouseEvent.getSource();
+		
+		loggerUnit.log(Level.FINE, nodePressed.getId()+" header clicked.");
+		activateHeaderBasedOnName(nodePressed.getId());
+	}
+
+	private void activateHeaderBasedOnName(String command) {
+		switch (command) {
+			case HEADER_TODAY_NAME:
+				command = "view today";
+				break;
+				
+			case HEADER_FUTURE_NAME:
+				command = "view future";
+				break;
+				
+			case HEADER_TIMELESS_NAME:
+				command = "view timeless";
+				break;
+				
+			case HEADER_EXPIRED_NAME:
+				command = "view expired";
+				break;
+				
+			case HEADER_ARCHIVE_NAME:
+				command = "view archive";
+				break;
+				
+			default:
+				return;
+		}
+		
+		applicationController.processCommand(command);
+	}
+	
+	private void switchToNewHeader(int switchIndexResult) {
+		if (switchIndexResult == currentLabelIndex) {
+			return;
+		}
+		
+		previousLabelIndex = currentLabelIndex;
+		currentLabelIndex = switchIndexResult;
+		if (switchIndexResult == -1) {
+			setHeaderLabelToNormal(labelList.get(previousLabelIndex));
+		} else if (previousLabelIndex == -1) { 
+			setHeaderLabelToSelected(labelList.get(currentLabelIndex));
+		} else {
+			setHeaderLabelToNormal(labelList.get(previousLabelIndex));
+			setHeaderLabelToSelected(labelList.get(currentLabelIndex));
+		}
+	}
+	
+	private void setHeaderLabelToNormal (Label labelToChange) {
+		labelToChange.getStyleClass().removeAll(Collections.singleton("header-label-selected"));
+		labelToChange.getStyleClass().add("header-label-normal");
+	}
+	
+	private void setHeaderLabelToSelected (Label labelToChange) {
+		labelToChange.getStyleClass().removeAll(Collections.singleton("header-label-normal"));
+		labelToChange.getStyleClass().add("header-label-selected");
+	}
+	
+	@FXML
+	private void onMinimiseMousePressed () {
+		loggerUnit.log(Level.FINE, "Minimise button pressed.");
+		windowStage.setIconified(true);
+	}
+	
+	public void updateCounter(int number) {
+		counter.setText("Test Counter: "+number);
+	}
+	
+	@FXML
+	private void onPagesArrowMouseClicked (MouseEvent mouseEvent) {
+		Node nodePressed = (Node)mouseEvent.getSource();
+		
+		loggerUnit.log(Level.FINE, nodePressed.getId()+" button pressed.");
+		switch (nodePressed.getId()) {
+			case "nextArrow":
+				uiData.goToNextPage();
+				break;
+				
+			case "prevArrow":
+				uiData.goToPreviousPage();
+				break;
+		}
+		
+		updateDisplay();
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		updateDisplay();
+	}
+	
+	private void updateCommandStatusIndicator(boolean status) {
+		String newStyleName;
+		String styleToRemove;
+		
+		if (status) {
+			newStyleName = "text-field-correct";
+			styleToRemove = "text-field-wrong";
+		} else {
+			styleToRemove = "text-field-correct";
+			newStyleName = "text-field-wrong";
+		}
+		
+		changeStatusIndicatorStyle(styleToRemove, newStyleName);
+	}
+	
+	private void changeStatusIndicatorStyle (String oldStyle, String newStyle) {
+		commandTextInput.getStyleClass().removeAll(Collections.singleton(oldStyle));
+		commandTextInput.getStyleClass().add(newStyle);
+	}
+}
+	// End of segment: src\kaboom\ui\MainWindow.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\ui\TaskInfoDisplay.java
+	 */
+
+
+package kaboom.ui;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import kaboom.shared.DateAndTimeFormat;
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
+
+public class TaskInfoDisplay {
+	private int taskId;
+	private String taskName;
+	
+	private String startDate;
+	private String endDate;
+	
+	private String importanceLevel;
+	
+	private boolean isExpired;
+	private boolean isDone;
+	private boolean isRecent;
+	
+	private DateAndTimeFormat dateTimeFormat;
+	
+	SimpleDateFormat fullTimeFormat = new SimpleDateFormat("h:mma");
+	SimpleDateFormat fullDateFormat = new SimpleDateFormat("dd MMM yy");
+	SimpleDateFormat dayMonthFormat = new SimpleDateFormat("dd MMM");
+	SimpleDateFormat dayOnlyFormat = new SimpleDateFormat("EEE");
+	
+	private String DEADLINE_START_STRING = "Due by ";
+	
+	public TaskInfoDisplay () {
+		taskId 			= 0;
+		taskName 		= "No taskname available";
+		startDate 		= "-";
+		endDate 		= "-";
+		importanceLevel = "";
+		isExpired 	= false;
+		isDone 		= false;
+		isRecent 	= false;
+		
+		dateTimeFormat = DateAndTimeFormat.getInstance();
+	}
+	
+	public void updateFromThisInfo (TaskInfo infoToUpdateFrom) {
+		setTaskName(infoToUpdateFrom.getTaskName());
+		
+		TASK_TYPE currentTaskType = infoToUpdateFrom.getTaskType();
+		if (currentTaskType== TASK_TYPE.TIMED) {
+			updateTimeFormatDisplayForTimedTasks(infoToUpdateFrom);
+		} else if (currentTaskType == TASK_TYPE.DEADLINE) {
+			updateTimeFormatDisplayForDeadlineTasks(infoToUpdateFrom);
+		}
+		
+		setImportanceLevel(infoToUpdateFrom.getPriority());
+		
+		setExpiryFlag(infoToUpdateFrom.isExpired());
+		setDoneFlag(infoToUpdateFrom.isDone());
+		setRecentFlag(infoToUpdateFrom.isRecent());
+	}
+
+	private void updateTimeFormatDisplayForDeadlineTasks(TaskInfo infoToUpdateFrom) {
+		Calendar dueTime = infoToUpdateFrom.getEndDate();
+		String dueTimeToDisplay = DEADLINE_START_STRING + convertDateTimeFormatBasedOnTime(dueTime);
+		startDate = dueTimeToDisplay;
+	}
+
+	private void updateTimeFormatDisplayForTimedTasks(TaskInfo infoToUpdateFrom) {
+		Calendar startTime 	= infoToUpdateFrom.getStartDate();
+		Calendar endTime 	= infoToUpdateFrom.getEndDate();
+
+		String startToDisplay = "From " + convertDateTimeFormatBasedOnTime(startTime);
+		String endToDisplay = " to " + convertDateTimeFormatBasedOnTime(endTime);
+		
+		if (dateTimeFormat.isSameDay(startTime, endTime)) {
+			startToDisplay = removeFirstWeekdayType(startToDisplay);
+		}
+		
+		startDate = startToDisplay+endToDisplay;
+	}
+
+	private String removeFirstWeekdayType(String startToDisplay) {
+		int index = startToDisplay.indexOf(",");
+		if (index > 0) {
+			startToDisplay = startToDisplay.substring(0, index);
+		}
+		return startToDisplay;
+	}
+	
+	private String convertDateTimeFormatBasedOnTime(Calendar timeDate) {
+		if (dateTimeFormat.isToday(timeDate)) {
+			return fullTimeFormat.format(timeDate.getTime()) + ", Today";
+		} else if (dateTimeFormat.isThisWeek(timeDate)) {
+			return fullTimeFormat.format(timeDate.getTime()) +  ", " + dayOnlyFormat.format(timeDate.getTime());
+		} else if (dateTimeFormat.isThisYear(timeDate)) {
+			return fullTimeFormat.format(timeDate.getTime()) + ", " +
+					dayMonthFormat.format(timeDate.getTime())  +
+					" (" + dayOnlyFormat.format(timeDate.getTime()) + ")"; 
+		} else {
+			return fullTimeFormat.format(timeDate.getTime()) + ", " + 
+					fullDateFormat.format(timeDate.getTime()) +
+					" (" + dayOnlyFormat.format(timeDate.getTime()) + ")";
+		}
+	}
+
+	public void setTaskId (int id) {
+		taskId = id;
+	}
+	
+	public void setTaskName (String name) {
+		taskName = name;
+	}
+	
+	public void setImportanceLevel (int level) {
+		if (level == 0) {
+			importanceLevel = "";
+		} else {
+			for (int i = 0; i < level; i++) {
+				importanceLevel = importanceLevel + "*";
+			}
+		}
+	}
+	
+	public void setExpiryFlag (boolean flag) {
+		isExpired = flag;
+	}
+	
+	public void setDoneFlag (boolean flag) {
+		isDone = flag;
+	}
+	
+	public void setRecentFlag (boolean flag) {
+		isRecent = flag;
+	}
+	
+	public int getTaskId () {
+		return taskId;
+	}
+	
+	public String getTaskName () {
+		return taskName;
+	}
+	
+	public String getStartDate () {
+		return startDate;
+	}
+	
+	public String getEndDate () {
+		return endDate;
+	}
+	
+	public String getImportanceLevel () {
+		return importanceLevel;
+	}
+	
+	public boolean isExpired () {
+		return isExpired;
+	}
+	
+	public boolean isDone () {
+		return isDone;
+	}
+	
+	public boolean isRecent () {
+		return isRecent;
+	}
+}
+
+
+	// End of segment: src\kaboom\ui\TaskInfoDisplay.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\ui\TaskUiContainer.java
+	 */
+
+
+package kaboom.ui;
+
+import java.util.Collections;
+
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
+
+public class TaskUiContainer {
+ 	private Pane 		task;
+ 	private Label 		taskid;
+ 	private Label 		taskname;
+ 	private Rectangle 	statusbar;
+ 	private Label 		datetime;
+ 	private Label 		priority;
+ 	private Rectangle 	backlitBox;
+ 	
+ 	
+ 	public TaskUiContainer () {
+ 		createTaskUi();
+ 	}
+ 	
+ 	public void createTaskUi () {
+ 		task = new Pane();
+ 		task.setPrefSize(512, 40);
+ 		
+ 		backlitBox = new Rectangle();
+ 		backlitBox.setWidth(512);
+ 		backlitBox.setHeight(40);
+ 		backlitBox.getStyleClass().add("taskbox-rectangle");
+ 		task.getChildren().add(backlitBox);
+ 		
+ 		taskid = new Label();
+ 		taskid.setPrefSize(50, 26.6);
+ 		taskid.setLayoutX(-59);
+ 		taskid.setLayoutY(5);
+ 		taskid.getStyleClass().add("taskid-label");
+ 		taskid.setMouseTransparent(true);
+ 		task.getChildren().add(taskid);
+ 		
+ 		taskname = new Label();
+ 		taskname.setPrefSize(479, 22);
+ 		taskname.setLayoutX(21);
+ 		taskname.setLayoutY(1);
+ 		taskname.getStyleClass().add("taskname-label");
+ 		taskname.setMouseTransparent(true);
+ 		task.getChildren().add(taskname);
+ 		
+ 		statusbar = new Rectangle();
+ 		statusbar.setWidth(5);
+ 		statusbar.setHeight(40);
+ 		statusbar.setMouseTransparent(true);
+ 		task.getChildren().add(statusbar);
+ 		
+ 		datetime = new Label();
+ 		datetime.setPrefSize(302, 19);
+ 		datetime.setLayoutX(21);
+ 		datetime.setLayoutY(19);
+ 		datetime.getStyleClass().add("taskdatetime-label");
+ 		datetime.setMouseTransparent(true);
+ 		task.getChildren().add(datetime);
+ 		
+ 		priority  = new Label();
+ 		priority.setPrefSize(80, 26.6);
+ 		priority.setLayoutX(418);
+ 		priority.setLayoutY(16);
+ 		priority.getStyleClass().add("taskpriority-label");
+ 		priority.setMouseTransparent(true);
+ 		task.getChildren().add(priority);
+ 	}
+ 	
+ 	public Pane getPaneContainer () {
+ 		return task;
+ 	}
+ 	
+ 	public void setupContainer (Pane taskLink, Label id, Label name, Rectangle status, Label date, Label priorityLink) {
+ 		task = taskLink;
+ 		taskid = id;
+ 		taskname = name;
+ 		statusbar = status;
+ 		datetime = date;
+ 		priority = priorityLink;
+ 	}
+ 	
+ 	public void setVisibleFlag (boolean flag) {
+ 		task.setVisible(flag);
+ 	}
+ 	
+ 	public void updateWithTaskDisplay (TaskInfoDisplay info) {
+ 		taskid.setText(""+info.getTaskId());
+ 		taskname.setText(info.getTaskName());
+ 		datetime.setText(info.getStartDate());
+ 		priority.setText(info.getImportanceLevel());
+ 		
+ 		statusbar.getStyleClass().removeAll(Collections.singleton("isNotExpired"));
+ 		statusbar.getStyleClass().removeAll(Collections.singleton("isExpired"));
+ 		statusbar.getStyleClass().removeAll(Collections.singleton("isComplete"));
+ 		statusbar.getStyleClass().removeAll(Collections.singleton("isEmpty"));
+ 		statusbar.getStyleClass().removeAll(Collections.singleton("isRecent"));
+ 		backlitBox.getStyleClass().removeAll(Collections.singleton("taskbox-rectangle"));
+ 		backlitBox.getStyleClass().removeAll(Collections.singleton("taskbox-recent-rectangle"));
+ 		
+ 		 if (info.isDone()) {
+ 			statusbar.getStyleClass().add("isComplete");
+ 			backlitBox.getStyleClass().add("taskbox-rectangle");
+ 		} else if (info.isExpired()) {
+ 			statusbar.getStyleClass().add("isExpired");
+ 			backlitBox.getStyleClass().add("taskbox-rectangle");
+ 		}  else if (info.isRecent()) {
+ 			backlitBox.getStyleClass().add("taskbox-recent-rectangle");
+ 			statusbar.getStyleClass().add("isNotExpired");
+ 		} else {
+ 			statusbar.getStyleClass().add("isNotExpired");
+ 			backlitBox.getStyleClass().add("taskbox-rectangle");
+ 		}
+ 	}
+}
+
+	// End of segment: src\kaboom\ui\TaskUiContainer.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\ui\UpdateService.java
+	 */
+
+
+package kaboom.ui;
+
+import javafx.application.Platform;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import kaboom.logic.TaskMasterKaboom;
+
+class UpdateService extends Service<Void> {
+	
+	MainWindow mainWindow;
+	int counter;
+	TaskMasterKaboom controllerInstance;
+	
+	UpdateService (MainWindow window) {
+		mainWindow = window;
+		counter = 0;
+		controllerInstance = TaskMasterKaboom.getInstance();
+	}
+	
+    @Override
+    protected Task<Void> createTask() {
+    	return new Task<Void>() {
+    		@Override
+    		protected Void call() throws Exception {
+    			//System.out.println("Begin task");
+    			if (Platform.isFxApplicationThread()) {
+    				System.out.println("Running on FX thread!");
+    			} else {
+    				System.out.println("Running on background thread!");
+    			}
+    			++counter;
+    			controllerInstance.updateTaskList();
+    			return null;
+    		}
+    	};
+    }
+}
+
+	// End of segment: src\kaboom\ui\UpdateService.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\DisplayDataTest.java
+	 */
+
+
+package KaboomTest;
+
+import static org.junit.Assert.*;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.HELP_STATE;
+import kaboom.shared.Result;
+import kaboom.ui.DisplayData;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class DisplayDataTest {
+
+	DisplayData displayData;
+	
+	@Before
+	public void init () {
+		displayData = DisplayData.getInstance();
+	}
+	
+	
+	@Test
+	public void testDisplayState() {
+		Result commandResult = new Result();
+		
+		DISPLAY_STATE currentState = DISPLAY_STATE.ARCHIVE;
+		commandResult.setDisplayState(currentState);
+		displayData.updateDisplayWithResult(commandResult);
+		assertEquals(currentState, displayData.getCurrentDisplayState());
+		
+		// Test if activate same state will give errors
+		currentState = DISPLAY_STATE.ARCHIVE;
+		commandResult.setDisplayState(currentState);
+		displayData.updateDisplayWithResult(commandResult);
+		assertEquals(currentState, displayData.getCurrentDisplayState());
+		
+		currentState = DISPLAY_STATE.EXPIRED;
+		commandResult.setDisplayState(currentState);
+		displayData.updateDisplayWithResult(commandResult);
+		assertEquals(currentState, displayData.getCurrentDisplayState());
+		
+		currentState = DISPLAY_STATE.INVALID;
+		commandResult.setDisplayState(currentState);
+		displayData.updateDisplayWithResult(commandResult);
+		assertEquals(DISPLAY_STATE.EXPIRED, displayData.getCurrentDisplayState());
+		
+		currentState = null;
+		commandResult.setDisplayState(currentState);
+		displayData.updateDisplayWithResult(commandResult);
+		assertEquals(DISPLAY_STATE.EXPIRED, displayData.getCurrentDisplayState());
+	}
+	
+	@Test
+	public void testHelpState() {
+		Result commandResult = new Result();
+		
+		HELP_STATE currentState = HELP_STATE.INVALID;
+		commandResult.setHelpState(currentState);
+		displayData.updateDisplayWithResult(commandResult);
+		assertEquals(HELP_STATE.CLOSE, displayData.getCurrentHelpState());
+		
+		// Test if activate same state will give errors
+		currentState = HELP_STATE.INVALID;
+		commandResult.setHelpState(currentState);
+		displayData.updateDisplayWithResult(commandResult);
+		assertEquals(HELP_STATE.CLOSE, displayData.getCurrentHelpState());
+		
+		currentState = HELP_STATE.CLOSE;
+		commandResult.setHelpState(currentState);
+		displayData.updateDisplayWithResult(commandResult);
+		assertEquals(currentState, displayData.getCurrentHelpState());
+		
+		currentState = HELP_STATE.MAIN;
+		commandResult.setHelpState(currentState);
+		displayData.updateDisplayWithResult(commandResult);
+		assertEquals(currentState, displayData.getCurrentHelpState());
+		
+		currentState = HELP_STATE.MAIN;
+		commandResult.setHelpState(currentState);
+		displayData.updateDisplayWithResult(commandResult);
+		assertEquals(HELP_STATE.CLOSE, displayData.getCurrentHelpState());
+		
+		currentState = HELP_STATE.ADD;
+		commandResult.setHelpState(currentState);
+		displayData.updateDisplayWithResult(commandResult);
+		assertEquals(currentState, displayData.getCurrentHelpState());
+		
+		currentState = HELP_STATE.INVALID;
+		commandResult.setHelpState(currentState);
+		displayData.updateDisplayWithResult(commandResult);
+		assertEquals(HELP_STATE.ADD, displayData.getCurrentHelpState());
+	}
+
+}
+
+	// End of segment: src\KaboomTest\DisplayDataTest.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\Stage1.java
+	 */
+
+
+package KaboomTest;
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+@RunWith(Suite.class)
+@SuiteClasses({ DateAndTimeFormatTest.class, })
+public class Stage1 {
+
+}
+
+	// End of segment: src\KaboomTest\Stage1.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\Stage2.java
+	 */
+
+
+package KaboomTest;
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+
+@RunWith(Suite.class)
+@SuiteClasses({ 
+		Stage1.class,
+		StorageComponentTest.class
+		})
+public class Stage2 {
+
+
+}
+
+	// End of segment: src\KaboomTest\Stage2.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\Stage3.java
+	 */
+
+
+package KaboomTest;
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+@RunWith(Suite.class)
+@SuiteClasses({ 
+		Stage2.class,
+		LogicComponentTest.class
+		})
+public class Stage3 {
+
+}
+
+	// End of segment: src\KaboomTest\Stage3.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\Stage4.java
+	 */
+
+
+package KaboomTest;
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+@RunWith(Suite.class)
+@SuiteClasses({ 
+		Stage3.class,
+		DisplayDataTest.class
+		})
+public class Stage4 {
+
+}
+
+	// End of segment: src\KaboomTest\Stage4.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\Stage5.java
+	 */
+
+
+package KaboomTest;
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+@RunWith(Suite.class)
+@SuiteClasses({ 
+		Stage4.class,
+		SystemTest.class
+		})
+public class Stage5 {
+
+}
+
+	// End of segment: src\KaboomTest\Stage5.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\SystemTest.java
+	 */
+
+package KaboomTest;
+
+import static org.junit.Assert.*;
+import kaboom.logic.TaskMasterKaboom;
+import kaboom.storage.History;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+public class SystemTest {
+
+	TaskMasterKaboom controller;
+	
+	@Before
+	public void init () {
+		controller = TaskMasterKaboom.getInstance();
+		controller.setFilename("TESTFILE.dat");
+		controller.initialiseKaboom();
+	}
+	
+	@Test
+	public void testAddAndDeleteCommands() {
+		controller.processCommand("clear all");
+		String command = "";
+		
+		// Process empty command
+		assertEquals("Please enter a valid command. Type <help> for info.", controller.processCommand(command));
+		
+		// Process only whitespaces command
+		command = "       ";
+		assertEquals("Please enter a valid command. Type <help> for info.", controller.processCommand(command));
+		
+		// Process only whitespaces command
+		command = "      add ";
+		assertEquals("Oops! Task cannot be entered without a name Y_Y", controller.processCommand(command));
+		
+		// Add only command
+		command = "add";
+		assertEquals("Oops! Task cannot be entered without a name Y_Y", controller.processCommand(command));
+		
+		// Add whitespaces command
+		command = "add     ";
+		assertEquals("Oops! Task cannot be entered without a name Y_Y", controller.processCommand(command));
+		
+		command = "add hello";
+		assertEquals("WOOT! <hello> ADDED. MORE STUFF TO DO!", controller.processCommand(command));
+		
+		// Delete only command
+		command = "delete";
+		assertEquals("Enter a taskname or task id, please ?", controller.processCommand(command));
+		
+		// Delete whitespaces command
+		command = "delete ";
+		assertEquals("Enter a taskname or task id, please ?", controller.processCommand(command));
+		
+		// Test delete by id but over limit
+		command = "delete 3";
+		assertEquals("Oops! Invalid ID??", controller.processCommand(command));
+		
+		// Test delete by id but over limit
+		command = "delete -10";
+		assertEquals("Oops! No such task exist", controller.processCommand(command));
+		
+		// Delete whitespaces command
+		command = "delete hello";
+		assertEquals("<hello> deleted. 1 less work to do :D", controller.processCommand(command));
+		
+		// Add whitespaces command
+		command = "add        hello";
+		assertEquals("WOOT! <hello> ADDED. MORE STUFF TO DO!", controller.processCommand(command));
+		
+		// Delete whitespaces command
+		command = "delete     hello";
+		assertEquals("<hello> deleted. 1 less work to do :D", controller.processCommand(command));	
+	}
+	
+	@Test
+	public void testViewCommands() {
+		String command = "";
+	
+		command = "view";
+		assertEquals("Invalid View Mode. Might want to use <help view>", controller.processCommand(command));
+		
+		command = "view     ";
+		assertEquals("Invalid View Mode. Might want to use <help view>", controller.processCommand(command));
+		
+		command = "view today";
+		assertEquals("Viewing all the tasks for today", controller.processCommand(command));
+		
+		command = "view today";
+		assertEquals("Viewing all the tasks for today", controller.processCommand(command));
+		
+		command = "view timeless";
+		assertEquals("Viewing timeless tasks", controller.processCommand(command));
+		
+		command = "view expired";
+		assertEquals("Viewing expired tasks", controller.processCommand(command));
+		
+		command = "view future";
+		assertEquals("Viewing upcoming tasks", controller.processCommand(command));
+		
+		command = "view archive";
+		assertEquals("Viewing completed tasks", controller.processCommand(command));
+	}
+	
+	@Test
+	public void testModify() {
+		String command = "";
+		
+		command = "add hello";
+		assertEquals("WOOT! <hello> ADDED. MORE STUFF TO DO!", controller.processCommand(command));
+		
+		command = "modify";
+		assertEquals("Enter a taskname or task id, please ?", controller.processCommand(command));
+		
+		command = "modify     ";
+		assertEquals("Enter a taskname or task id, please ?", controller.processCommand(command));
+		
+		command = "modify 10";
+		assertEquals("Oops! Invalid ID??", controller.processCommand(command));
+		
+		command = "modify -5";
+		assertEquals("Oops! No such task exist", controller.processCommand(command));
+		
+		command = "modify 1";
+		assertEquals("Nothing happened...", controller.processCommand(command));
+		
+		testModifyName();
+		testModifyDate();
+	}
+	
+	public void testModifyName () {
+		String command = "";
+		
+		command = "modify 1 > world";
+		assertEquals("<hello> has evolved into <world>", controller.processCommand(command));
+		
+		command = "modify 25 > world";
+		assertEquals("Oops! Invalid ID??", controller.processCommand(command));
+		
+		command = "modify world > hello";
+		assertEquals("<world> has evolved into <hello>", controller.processCommand(command));
+	}
+	
+	public void testModifyDate () {
+		String command = "";
+		
+		command = "modify 1 by today";
+		assertEquals("<hello> has manipulated time", controller.processCommand(command));
+		
+		command = "modify 1 by 1";
+		assertEquals("<hello> has manipulated time", controller.processCommand(command));
+		
+		command = "modify 1 BY 1";
+		assertEquals("Oops! Invalid taskname??", controller.processCommand(command));
+		
+		command = "modify hello by 2pm";
+		assertEquals("<hello> has manipulated time", controller.processCommand(command));
+		
+		command = "modify hello at 2pm";
+		assertEquals("<hello> has manipulated time", controller.processCommand(command));
+		
+		command = "modify hello at 2   pm";
+		assertEquals("Oops! No such task exist", controller.processCommand(command));
+		
+		command = "modify 1 at 2pm";
+		assertEquals("<hello> has manipulated time", controller.processCommand(command));
+	}
+	
+	@Test
+	public void testSearchByName () {
+		controller.processCommand("clear all");
+		String command = "";
+		
+		command = "add hello";
+		assertEquals("WOOT! <hello> ADDED. MORE STUFF TO DO!", controller.processCommand(command));
+		
+		command = "search";
+		assertEquals("Please enter something to search", controller.processCommand(command));
+		
+		command = "        search";
+		assertEquals("Please enter something to search", controller.processCommand(command));
+		
+		command = "search h";
+		assertEquals("Search done. 1 item(s) found.", controller.processCommand(command));
+		
+		command = "search helloo";
+		assertEquals("Search done. 0 item(s) found.", controller.processCommand(command));
+		
+		command = "search h ello";
+		assertEquals("Search done. 0 item(s) found.", controller.processCommand(command));
+		
+		command = "search            * hello";
+		assertEquals("Search done. 0 item(s) found.", controller.processCommand(command));
+		
+		command = "search llo";
+		assertEquals("Search done. 1 item(s) found.", controller.processCommand(command));
+		
+		command = "search        ";
+		assertEquals("Please enter something to search", controller.processCommand(command));
+		
+		command = "search **";
+		assertEquals("Search done. 0 item(s) found.", controller.processCommand(command));
+	}
+	
+	@Test
+	public void testSearchByDate () {
+		controller.processCommand("clear all");
+		String command = "";
+		
+		command = "add hello by tmr";
+		assertEquals("WOOT! <hello> ADDED. MORE STUFF TO DO!", controller.processCommand(command));
+
+		command = "search by tmr";
+		assertEquals("Search done. 1 item(s) found.", controller.processCommand(command));
+		
+		command = "search by today";
+		assertEquals("Search done. 0 item(s) found.", controller.processCommand(command));
+		
+		command = "search by today by today";
+		assertEquals("Search done. 0 item(s) found.", controller.processCommand(command));
+		
+		command = "search by tomorrow";
+		assertEquals("Search done. 1 item(s) found.", controller.processCommand(command));
+		
+		command = "search to tomorrow";
+		assertEquals("Search done. 1 item(s) found.", controller.processCommand(command));
+		
+		command = "search to tomorrow ";
+		assertEquals("Search done. 1 item(s) found.", controller.processCommand(command));
+		
+		// The search should not accept something as time
+		command = "search by something";
+		assertEquals("Search done. 0 item(s) found.", controller.processCommand(command));
+	}
+	
+	@Test
+	public void testClear () {
+		controller.processCommand("clear all");
+		String command = "";
+		
+		command = "clear";
+		assertEquals("Enter <clear all> to remove all tasks or <clear present> to remove current view", controller.processCommand(command));
+		
+		command = "Clear";
+		assertEquals("Enter <clear all> to remove all tasks or <clear present> to remove current view", controller.processCommand(command));
+		
+		command = "clear    ";
+		assertEquals("Enter <clear all> to remove all tasks or <clear present> to remove current view", controller.processCommand(command));
+		
+		command = "clear all";
+		assertEquals("1.. 2.. 3.. Pooof! Your schedule has gone with the wind", controller.processCommand(command));
+		
+		command = "clear All";
+		assertEquals("Enter <clear all> to remove all tasks or <clear present> to remove current view", controller.processCommand(command));
+		
+		command = "clear all     ";
+		assertEquals("1.. 2.. 3.. Pooof! Your schedule has gone with the wind", controller.processCommand(command));
+		
+		command = "clear present";
+		assertEquals("1.. 2.. 3.. Pooof! Your present schedule has gone with the wind", controller.processCommand(command));
+		
+		command = "clear archive";
+		assertEquals("3.. 2.. 1.. Pooof! Your archive has gone with the wind", controller.processCommand(command));
+	}
+	
+	@Test
+	public void testCompleteIncomplete () {
+		controller.processCommand("clear all");
+		String command = "";
+		
+		command = "add hello";
+		assertEquals("WOOT! <hello> ADDED. MORE STUFF TO DO!", controller.processCommand(command));
+		
+		command = "boom hello";
+		assertEquals("Set hello to complete", controller.processCommand(command));
+		
+		command = "boom hello";
+		assertEquals("Oops! No such task exist", controller.processCommand(command));
+		
+		command = "unboom hello";
+		assertEquals("Oops! No such task exist", controller.processCommand(command));
+		
+		command = "view archive";
+		controller.processCommand(command);
+		
+		command = "unboom hello";
+		assertEquals("Set hello to incomplete", controller.processCommand(command));
+		
+		command = "unboom hello";
+		assertEquals("Oops! No such task exist", controller.processCommand(command));
+		
+		command = "add hello";
+		assertEquals("WOOT! <hello> ADDED. MORE STUFF TO DO!", controller.processCommand(command));
+		
+		command = "boom hello";
+		assertEquals("Search done. 2 item(s) found.", controller.processCommand(command));
+		
+		command = "unboom hello";
+		assertEquals("Search done. 2 item(s) found.", controller.processCommand(command));
+		
+		command = "delete 1";
+		controller.processCommand(command);
+		
+		command = "unboom hello";
+		assertEquals("hello was incomplete", controller.processCommand(command));
+	}
+	
+	@Test
+	public void testUndo () {
+		controller.processCommand("clear all");
+		History history = History.getInstance();
+		history.clear();
+		
+		String command = "";
+
+		command = "undo";
+		assertEquals("No more action to undo", controller.processCommand(command));
+		
+		command = "UNDO";
+		assertEquals("No more action to undo", controller.processCommand(command));
+		
+		command = "undo 1";
+		assertEquals("Sorry. Not valid undo command. Type <help undo> for help.", controller.processCommand(command));
+		
+		command = "undo undo";
+		assertEquals("No more action to undo", controller.processCommand(command));
+		
+		command = "add undo";
+		controller.processCommand(command);
+
+		command = "undo";
+		assertEquals("Command undone!", controller.processCommand(command));
+		
+		command = "     Undo";
+		assertEquals("No more action to undo", controller.processCommand(command));
+		
+		command = "view timeless";
+		controller.processCommand(command);
+
+		command = "undo";
+		assertEquals("No more action to undo", controller.processCommand(command));
+	}
+	
+	@Test
+	public void testView () {
+		controller.processCommand("clear all");
+		
+		String command = "";
+		
+		command = "view";
+		assertEquals("Invalid View Mode. Might want to use <help view>", controller.processCommand(command));
+
+		command = "view today";
+		assertEquals("Viewing all the tasks for today", controller.processCommand(command));
+		
+		command = "view Today";
+		assertEquals("Invalid View Mode. Might want to use <help view>", controller.processCommand(command));
+		
+		// Check if at current view already will trigger error
+		command = "view today";
+		assertEquals("Viewing all the tasks for today", controller.processCommand(command));
+		
+		command = "view future";
+		assertEquals("Viewing upcoming tasks", controller.processCommand(command));
+		
+		command = "view timeless";
+		assertEquals("Viewing timeless tasks", controller.processCommand(command));
+		
+		command = "view expired";
+		assertEquals("Viewing expired tasks", controller.processCommand(command));
+		
+		command = "view archive";
+		assertEquals("Viewing completed tasks", controller.processCommand(command));
+	}
+
+	@After
+	public void deinit () {
+		controller.processCommand("clear");
+	}
+}
+
+	// End of segment: src\KaboomTest\SystemTest.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\TestPopulate.java
+	 */
+
+package KaboomTest;
+
+import static org.junit.Assert.*;
+import kaboom.logic.TaskMasterKaboom;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class TestPopulate {
+
+	TaskMasterKaboom controller;
+	
+	String []commandArrayList = {
+								 "add gaming", 
+								 "add sleep by 11pm", 
+								 "add meeting from 1200 to 1pm", 
+								 "add dinner from 11am to 1200",
+								 "add lunch from 11am to 1200",
+								 "add meeting from 11am to 1200",
+								 }; 
+	
+	@Before
+	public void populate () {
+		controller = TaskMasterKaboom.getInstance();
+		controller.initialiseKaboom();
+		controller.processCommand("clear all");
+		String command = "";
+		
+		// Process empty command
+		assertEquals("Please enter a valid command. Type <help> for info.", controller.processCommand(command));
+		
+		for (int i = 0; i < commandArrayList.length; i++) {
+			controller.processCommand(commandArrayList[i]);
+		}
+	}
+	
+	@Test
+	public void main() {
+	}
+}
+
+	// End of segment: src\KaboomTest\TestPopulate.java
+
+
+
+
+

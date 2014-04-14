@@ -1,0 +1,1973 @@
+//@author: a0099863h
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandHelp.java
+	 */
+
+package kaboom.logic.command;
+
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.HELP_STATE;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+
+public class CommandHelp extends Command {
+	private final String HELP_TYPE_ADD 		= "add";
+	private final String HELP_TYPE_DELETE 	= "delete";
+	private final String HELP_TYPE_MODIFY 	= "modify";
+	private final String HELP_TYPE_COMPLETE = "complete";
+	private final String HELP_TYPE_SEARCH 	= "search";
+	private final String HELP_TYPE_VIEW 	= "view";
+	private final String HELP_TYPE_PAGE 	= "page";
+	private final String HELP_TYPE_CLEAR 	= "clear";
+	private final String HELP_TYPE_CLOSE 	= "close";
+	
+	private final String HELP_INVALID_COMMAND = "Nope. Not help command! Type <help> for more info.";
+		
+	public CommandHelp () {
+		commandType = COMMAND_TYPE.HELP;
+		keywordList = new KEYWORD_TYPE[] {
+				KEYWORD_TYPE.HELP
+		};
+	}
+
+	public Result execute() {
+		assert taskManager != null;
+		
+		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return createResult(HELP_INVALID_COMMAND);
+		}
+		
+		String helpType = infoTable.get(KEYWORD_TYPE.HELP);
+		HELP_STATE helpState = HELP_STATE.INVALID;
+		
+		helpState = getHelpStateBasedOnKeywords(helpType);
+		
+		Result currentResult = createResult("");
+		currentResult.setHelpState(helpState);
+		
+		return currentResult;
+	}
+
+	private HELP_STATE getHelpStateBasedOnKeywords(String helpType) {
+		if (helpType == null)  {
+			return HELP_STATE.MAIN;
+		} else {
+			// convert to help type
+			switch (helpType) {
+				case HELP_TYPE_ADD:
+					return HELP_STATE.ADD;
+					
+				case HELP_TYPE_DELETE:
+					return HELP_STATE.DELETE;
+					
+				case HELP_TYPE_MODIFY:
+					return HELP_STATE.MODIFY;
+					
+				case HELP_TYPE_COMPLETE:
+					return HELP_STATE.COMPLETE;
+					
+				case HELP_TYPE_SEARCH:
+					return HELP_STATE.SEARCH;
+					
+				case HELP_TYPE_VIEW:
+					return HELP_STATE.VIEW;
+					
+				case HELP_TYPE_PAGE:
+					return HELP_STATE.PAGE;
+					
+				case HELP_TYPE_CLEAR:
+					return HELP_STATE.CLEAR;
+					
+				case HELP_TYPE_CLOSE:
+					return HELP_STATE.CLOSE;
+					
+				default:
+					return null;
+			}
+		}
+	}
+	
+	public boolean undo () {
+		boolean isUndoSuccessful = false;
+		return isUndoSuccessful;
+	}
+	
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+		
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+		
+		return true;
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\CommandHelp.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\command\CommandUndo.java
+	 */
+
+package kaboom.logic.command;
+
+import java.util.Hashtable;
+import java.util.Vector;
+
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.KEYWORD_TYPE;
+import kaboom.shared.Result;
+
+public class CommandUndo extends Command{
+	private final String MESSAGE_COMMAND_UNDO_SUCCESS = "Command undone!";
+	private final String MESSAGE_COMMAND_UNDO_FAIL = "Fail to undo.";
+	private final String MESSAGE_COMMAND_NOTHING_TO_UNDO = "No more action to undo";
+	private final String MESSAGE_COMMAND_INVALID = "Sorry. Not valid undo command. Type <help undo> for help.";
+	
+	public CommandUndo() {
+		commandType = COMMAND_TYPE.UNDO;
+	}
+	
+	public Result execute() {
+		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return createResult(MESSAGE_COMMAND_INVALID);
+		}
+		
+		Command commandToUndo = taskManager.getMostRecentCommand();
+		String feedback = "";
+		
+		if (commandToUndo == null) {
+			feedback = MESSAGE_COMMAND_NOTHING_TO_UNDO;
+			return createResult(feedback);
+		}
+		
+		boolean isUndoSuccessful = commandToUndo.undo();
+		
+		if (isUndoSuccessful) {
+			feedback = MESSAGE_COMMAND_UNDO_SUCCESS;
+			return createResult(feedback);
+		}
+		
+		feedback = MESSAGE_COMMAND_UNDO_FAIL;
+		return createResult(feedback);
+	}
+	
+	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = updateFormatList(info, indexList);
+		updateFormatListBasedOnHashtable(indexList, taskInformationTable);
+		
+		if (taskInformationTable.containsKey(KEYWORD_TYPE.INVALID)) {
+			return false;
+		}
+		
+		return true;
+	}
+}
+
+	// End of segment: src\kaboom\logic\command\CommandUndo.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\TaskMasterKaboom.java
+	 */
+
+package kaboom.logic;
+
+import java.util.Vector;
+
+import kaboom.logic.command.COMMAND_TYPE;
+import kaboom.logic.command.Command;
+import kaboom.logic.command.CommandFactory;
+import kaboom.logic.command.CommandUpdate;
+import kaboom.shared.DISPLAY_STATE;
+import kaboom.shared.FormatIdentify;
+import kaboom.shared.Result;
+import kaboom.shared.TaskInfo;
+import kaboom.storage.TaskManager;
+import kaboom.ui.DisplayData;
+
+
+/*
+** This is main class that will run Task Master KABOOM
+** 
+** 
+**/
+
+public class TaskMasterKaboom {
+	private final String MESSAGE_WELCOME = "Welcome back, Commander";
+	
+	private String FILENAME = "KABOOM_FILE.dat";
+	
+	private DisplayData 	guiDisplayData;
+	//private Storage 		fileStorage;
+	private TaskManager taskManager;
+	private CommandFactory commandFactory;
+	
+	static TaskMasterKaboom instance;
+	
+	private int refreshCounter;
+	private int REFRESH_POINT = 3;
+	
+	private TaskMasterKaboom () {
+		commandFactory = CommandFactory.getInstance();
+		resetRefreshCounter();
+	}
+	
+	public static TaskMasterKaboom getInstance () {
+		if (instance == null) {
+			instance = new TaskMasterKaboom();
+		}
+		return instance;
+	}
+	
+	public void initialiseKaboom() {
+		// Setup Storage
+		initialiseTaskManager();
+	
+		// Setup UI
+		guiDisplayData = DisplayData.getInstance();
+		updateUiWithFirstLoadedMemory();
+	}
+	
+	public void setFilename (String newFilename) {
+		FILENAME = newFilename;
+	}
+
+	private void updateUiWithFirstLoadedMemory() {
+		Result introResult = new Result();
+		
+		introResult.setFeedback(MESSAGE_WELCOME);
+		updateUi(introResult);
+	}
+	
+	private boolean initialiseTaskManager () {
+		taskManager = TaskManager.getInstance(FILENAME);
+		//taskManager.load();
+		//fileStorage = new Storage(FILENAME);
+		//fileStorage.load();
+		
+		return true;
+	}
+	
+	public void updateTaskList () {
+		if (refreshCounter >= REFRESH_POINT) {
+			Command updateCommand = new CommandUpdate();
+			updateCommand.execute();
+			
+			//4. Save data to file
+			//taskManager.store();
+			
+			guiDisplayData.updateDisplayWithResult();
+			resetRefreshCounter();
+		} else {
+			refreshCounter++;
+		}
+	}
+	
+	/*
+	 * Purpose: ProcessCommand will read the userCommand and break down into
+	 * respective information for the task information. Currently, it returns
+	 * the feedback for command that is executed.
+	 * 
+	 * Note: Public access allow execution from test driven development
+	 * to run straight into command.
+	 * 
+	 * Future improvement: Return task class instead.
+	 */
+	//***********************************************
+	//			THE NEW CONTROLLER IS HERE	(LIVE)	*
+	//***********************************************
+	public String processCommand(String userInputSentence) {
+		assert userInputSentence != null;
+	
+		resetRefreshCounter();
+		taskManager.refreshTasksAndResetRecent();
+		
+		Command commandToExecute = null;
+		Result commandResult = null;
+		
+		//1. Create Command
+		commandToExecute = commandFactory.createCommand(userInputSentence);
+	
+		//2. Execute Command
+		try {
+			commandResult = commandToExecute.execute();
+		} catch (Exception e) {
+			commandResult = new Result();
+			commandResult.setFeedback("Error executing command! Please inform your administrator!");
+		}
+		
+		updateUi(commandResult);
+		
+		//3. Save data to file
+		//taskManager.store();
+		
+		return commandResult.getFeedback();
+	}
+
+	private void resetRefreshCounter() {
+		refreshCounter = 0;
+	}
+	
+	public boolean processSyntax(String usercommand) {
+		Command commandToExecute = null;
+		boolean processResult = false;
+		Vector<FormatIdentify> characterIndexList = new Vector<FormatIdentify>();
+		
+		commandToExecute = commandFactory.createCommand(usercommand);
+		
+		try {
+			processResult = commandToExecute.parseInfo(usercommand, characterIndexList);
+		} catch (Exception e) {
+			
+		}
+	
+		guiDisplayData.setFormatDisplay(characterIndexList);
+		return processResult;
+	}
+	
+	
+	public void activateCommand (COMMAND_TYPE commandToActivate) {
+		
+	}
+
+	private void updateUi(Result commandResult) {
+		guiDisplayData.updateDisplayWithResult(commandResult);
+	}
+	
+	public Vector<Integer> updateTaskCount() {
+		return TaskManager.getInstance().getTasksCountList();
+	}
+	
+	public Integer indexToGoTo(TaskInfo taskToFocus) {
+		return TaskManager.getInstance().getTaskPositionInView(taskToFocus);
+	}
+	
+	public Vector<TaskInfo> setAndGetView(DISPLAY_STATE displayState) {
+		return TaskManager.getInstance().setAndGetView(displayState);
+	}
+}
+
+	// End of segment: src\kaboom\logic\TaskMasterKaboom.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\logic\TextParser.java
+	 */
+
+package kaboom.logic;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import kaboom.shared.KEYWORD_TYPE;
+
+public class TextParser {
+	private final String KEYWORD_STARTTIME = "(at|from)\\s";
+	private final String KEYWORD_ENDTIME = "(by|to)\\s";
+	private final String KEYWORD_DATE = "on";
+	private final String KEYWORD_MODIFY = ">";
+	private final String KEYWORD_TASKID = "#";
+	private final String KEYWORD_DATEONLY = "^";
+	private final String KEYWORD_CLEAR = "^(all|present|archive)";
+	private final String KEYWORD_VIEW = "^(today|future|timeless|expired|archive)";
+	private final String KEYWORD_HELP = "^(add|delete|modify|complete|search|view|page|clear|close)";
+	
+	private final String TIME_REGEX = "\\s*(([0-9]|0[0-9]|1[0-9]|2[0-3])([\\s?:\\s?]?[0-5][0-9])?|([0-9]|0[1-9]|1[0-2])(([\\s?:\\s?]?[0-5][0-9])?(am|pm)))(\\s|$)";
+	private final String DATE_REGEX = "\\s*\\d{1,2}[\\/\\.]\\d{2}[\\/\\.]\\d{2}(\\s|$)";
+	private final String DATE_NAME_REGEX = "\\s*(today|tmr|tomorrow|monday|tuesday|wednesday|thursday|friday|saturday|sunday)(\\s|$)";
+	private final String FULLDATE_REGEX = "((%1$s" + DATE_REGEX + ")|(%2$s" + DATE_NAME_REGEX + "))";
+	private final String ID_REGEX = "^\\s*\\d+(\\s+|$)";
+	private final String PRIORITY_REGEX = "[\\s+]\\*{1,5}(\\s|$)";
+	private final String PAGE_REGEX = "^\\s*(\\d+|next|prev)\\s*$";
+	static TextParser instance;
+	
+	private TextParser () {
+	}
+	
+	public static TextParser getInstance () {
+		if (instance == null) {
+			instance = new TextParser();
+		}
+		
+		return instance;
+	}
+	
+	//******************** Method Calls By Controller ******************************************
+	public String getCommandKeyWord (String userInput) {
+		return getFirstWord(userInput);
+	}
+
+	//******************** Method Calls By Controller ******************************************
+	public String removeFirstWord(String userInputSentence) {
+		String wordRemoved = userInputSentence.replace(getFirstWord(userInputSentence), "").trim();
+		return wordRemoved;
+	}
+
+	public String getFirstWord(String userInputSentence) {
+		String[] elements = textProcess(userInputSentence);
+		String firstWord = elements[0];
+		return firstWord;
+	}
+	
+	private String[] textProcess(String userInputSentence){
+		String[] commandAndData = userInputSentence.trim().split("\\s+");
+		return commandAndData;
+	}
+	
+	public String extractPriority(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+	    int startIndex = 0;
+	    int endIndex = 0;
+	    int priorityLevel = 0;
+	    
+		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, PRIORITY_REGEX);
+	    
+		//if there is no match or no priority is detected
+		if (matchList.isEmpty()) {
+			return "";
+		}
+		
+		endIndex = getLastIndex(matchList);
+		startIndex = getStartIndex(matchList);
+	    
+	    // Extract the priority
+	    String extractedPriorityString = userInputSentence.substring(startIndex, endIndex).trim();
+	    priorityLevel = extractedPriorityString.length();
+	    keywordTable.put(KEYWORD_TYPE.PRIORITY, ""+priorityLevel);
+	    
+	    return extractedPriorityString;
+	}
+
+	private Integer getStartIndex(ArrayList<Integer> matchList) {
+		return matchList.get(matchList.size()-2);
+	}
+
+	private Integer getLastIndex(ArrayList<Integer> matchList) {
+		return matchList.get(matchList.size()-1);
+	}
+	
+	public String extractTimeOnly(String KEYWORD_TIME, String userInputSentence ,Hashtable<KEYWORD_TYPE, String> keywordTable){										
+		int startIndex = 0;
+		int endIndex = 0;
+		
+		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, KEYWORD_TIME+TIME_REGEX);
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList)) {
+			return "";
+		}
+		
+		endIndex = getLastIndex(matchList);
+		startIndex = getStartIndex(matchList);
+		
+		String extractedTimeString = userInputSentence.substring(startIndex, endIndex);
+		String finalExtractedTimeString = extractedTimeString.replaceAll(KEYWORD_TIME, "").trim();
+		
+		switch(KEYWORD_TIME) {
+			case KEYWORD_ENDTIME: 
+				keywordTable.put(KEYWORD_TYPE.END_TIME, finalExtractedTimeString);
+				break;
+			case KEYWORD_STARTTIME:
+				keywordTable.put(KEYWORD_TYPE.START_TIME, finalExtractedTimeString);
+				break;
+		}
+		
+		return extractedTimeString;
+	}
+	
+	public String extractDateOnly(String KEYWORD_TIME, String SECOND_KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+		// TODO allow where to store at for the hashtable, should not detect by keyword
+		int startIndex = 0;
+		int endIndex = 0;
+		
+		String fulldateFormat = String.format(FULLDATE_REGEX, KEYWORD_TIME, SECOND_KEYWORD_TIME);
+		
+		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, fulldateFormat);
+		//if no pattern match found
+		if (hasTimeDatePattern(matchList)) {
+			return "";
+		}
+		
+		endIndex = getLastIndex(matchList);
+		startIndex = getStartIndex(matchList);
+		
+		String extractedDateString = userInputSentence.substring(startIndex, endIndex);
+		String finalExtractedDateString = extractedDateString.replaceAll(KEYWORD_TIME, "").trim();
+		
+		switch(KEYWORD_TIME) {
+		case KEYWORD_ENDTIME: 
+			keywordTable.put(KEYWORD_TYPE.END_DATE, finalExtractedDateString);
+			break;
+			
+		case KEYWORD_STARTTIME:
+			keywordTable.put(KEYWORD_TYPE.START_DATE, finalExtractedDateString);
+			break;
+			
+		case KEYWORD_DATEONLY:
+			keywordTable.put(KEYWORD_TYPE.DATE, finalExtractedDateString);
+			break;
+		}
+		
+		return extractedDateString;
+	}
+	
+	public String extractDateAndTime(String KEYWORD_TIME, String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+		String fulldateFormat = KEYWORD_DATE + DATE_REGEX;
+		String dateFormat2 = DATE_NAME_REGEX;
+		String timeAndDateRegex = KEYWORD_TIME+TIME_REGEX+"\\s*"+fulldateFormat;
+		String timeAndDateRegex2 = KEYWORD_TIME+TIME_REGEX+"\\s*"+dateFormat2;
+		
+		//GET PATTERN FOR WHOLE START/END DATE AND TIME
+		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, timeAndDateRegex);
+		ArrayList<Integer> matchList2 = searchForPatternMatch(userInputSentence, timeAndDateRegex2);
+		ArrayList<Integer> matchListToUse = matchList;
+		
+		int startIndex = 0;
+		int endIndex = 0;
+		
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList) && hasTimeDatePattern(matchList2)) {
+			return "";
+		}
+		
+		if (hasTimeDatePattern(matchList)) {
+			matchListToUse = matchList2;
+		}
+		
+		//EXTRACT START/END DATE AND TIME
+		endIndex = getLastIndex(matchListToUse);
+		startIndex = getStartIndex(matchListToUse);
+		String extractedDateAndTimeString = userInputSentence.substring(startIndex, endIndex);
+		
+		//GET DATE
+		String extractedDateString = extractDateOnly(KEYWORD_DATE, "", extractedDateAndTimeString, keywordTable);
+		extractedDateString = extractedDateString.replaceAll(KEYWORD_DATE, "").trim();
+		
+		//GET TIME
+		String extractedTimeString = extractTimeOnly(KEYWORD_TIME, extractedDateAndTimeString, keywordTable);
+		extractedTimeString = extractedTimeString.replaceAll(KEYWORD_TIME, "").trim();
+		
+		switch(KEYWORD_TIME) {
+		case KEYWORD_ENDTIME: 
+			keywordTable.put(KEYWORD_TYPE.END_TIME, extractedTimeString);
+			keywordTable.put(KEYWORD_TYPE.END_DATE, extractedDateString);
+			break;
+		case KEYWORD_STARTTIME:
+			keywordTable.put(KEYWORD_TYPE.START_TIME, extractedTimeString);
+			keywordTable.put(KEYWORD_TYPE.START_DATE, extractedDateString);
+			break;
+		}
+		
+		return extractedDateAndTimeString;
+	}
+
+	private boolean hasTimeDatePattern(ArrayList<Integer> matchList) {
+		return matchList.size() < 2;
+	}
+	
+	
+	/*
+	 * Extracts the last instance of the task name to modify
+	 */
+	public String extractModifiedTaskName (String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {		
+		int startIndex = 0;
+		int endIndex = 0;
+		String modifyTaskName = "";
+		if(userInputSentence.contains(KEYWORD_MODIFY)) {
+			startIndex = userInputSentence.lastIndexOf(KEYWORD_MODIFY);
+			endIndex = userInputSentence.length();
+		
+			modifyTaskName = userInputSentence.substring(startIndex, endIndex);
+			userInputSentence = userInputSentence.replace(modifyTaskName, "");
+			String finalModifyTaskName = modifyTaskName.replace(KEYWORD_MODIFY, "").trim();
+			keywordTable.put(KEYWORD_TYPE.MODIFIED_TASKNAME, finalModifyTaskName);
+		}
+		
+		return modifyTaskName;
+	}
+	
+	public String extractTaskName(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+		String taskName = userInputSentence.trim();
+		keywordTable.put(KEYWORD_TYPE.TASKNAME, taskName);
+		
+		return taskName;
+	}
+	
+	public String extractTaskId(String userInputSentence, Hashtable<KEYWORD_TYPE, String> keywordTable) {
+		int startIndex = 0;
+		int endIndex = 0;
+		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, ID_REGEX);
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList)) {
+			return "";
+		}
+		endIndex = getLastIndex(matchList);
+		startIndex = getStartIndex(matchList);
+		String taskId = userInputSentence.substring(startIndex, endIndex);;
+		taskId = taskId.replace(KEYWORD_TASKID, "").trim();
+		keywordTable.put(KEYWORD_TYPE.TASKID, taskId);
+		return taskId;
+	}
+
+	private ArrayList<Integer> searchForPatternMatch(String userInputSentence, String regex) {
+		int startIndex = 0;
+	    int endIndex = 0;
+	    
+	    ArrayList<Integer> matchList = new ArrayList<Integer>();
+	    
+	    Pattern asteriskPattern = Pattern.compile(regex);
+		Matcher matcher = asteriskPattern.matcher(userInputSentence);
+	    while (matcher.find()) {
+	    	startIndex = matcher.start();
+	    	endIndex = matcher.end();
+	    	
+	    	matchList.add(startIndex);
+	    	matchList.add(endIndex);
+	    } 
+	    
+	    if (matchList.size() == 0) {
+	    }
+	    
+	    return matchList;
+	}
+	
+	public Hashtable<KEYWORD_TYPE, String> extractList(String userInput, KEYWORD_TYPE[] list) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = getInfoFromList(userInput,list);
+		return taskInformationTable;
+	}
+	
+	private Hashtable<KEYWORD_TYPE, String> getInfoFromList(String userInput, KEYWORD_TYPE[] list) {
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = new Hashtable<KEYWORD_TYPE, String>();
+		String result = "";
+		
+		for(int i=0; i<list.length; i++) {
+			switch(list[i]) {
+			
+			case DATE:
+				result = extractDateOnly("^", "^", userInput, taskInformationTable);
+				break;
+			
+			case PRIORITY: 
+				result = extractPriority(userInput,taskInformationTable);
+				break;
+				
+			case END_TIME:
+				result = getEndTimeDate(userInput, taskInformationTable);
+				break;
+				
+			case START_TIME:
+				//userInput = extractDateAndTime(KEYWORD_STARTTIME,userInput,taskInformationTable);
+				result = getStartTimeDate(userInput, taskInformationTable);
+				break;
+				
+			case MODIFIED_TASKNAME:
+				result = extractModifiedTaskName(userInput,taskInformationTable);
+				break;
+				
+			case TASKNAME:
+				result = extractTaskName(userInput,taskInformationTable);
+				break;
+				
+			case CLEARTYPE:
+				result = extractClearType(userInput,taskInformationTable);
+				break;
+				
+			case VIEWTYPE:
+				result = extractViewType(userInput,taskInformationTable);
+				break;
+				
+			case TASKID:
+				result = extractTaskId(userInput,taskInformationTable);
+				break;
+				
+			case HELP:
+				result = extractHelpType(userInput,taskInformationTable);
+				break;
+				
+			case PAGE:
+				result = extractPageType(userInput,taskInformationTable);
+				break;
+				
+			default:
+				break;
+			}
+			
+			userInput = userInput.replace(result, "").trim();
+		}
+		
+		// If there is still unextracted information after parsing, consider it as invalid command
+		if (!userInput.equals("")) {
+			extractUnknownCommandString(userInput, taskInformationTable);
+		}
+		
+		return taskInformationTable;
+	}
+
+	private String getStartTimeDate(String userInput,
+			Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+		
+		ArrayList<Integer> startTimeMatchList = new ArrayList<Integer>();
+		String result = "";
+		if(checkTimeAndDateInputFormat(KEYWORD_STARTTIME, userInput, startTimeMatchList)){
+			result = extractDateAndTime(KEYWORD_STARTTIME,userInput,taskInformationTable);
+		}
+		else if(checkTimeOnlyInputFormat(KEYWORD_STARTTIME, userInput, startTimeMatchList)){
+			result = extractTimeOnly(KEYWORD_STARTTIME,userInput,taskInformationTable);
+		}
+		else if(checkDateOnlyInputFormat(KEYWORD_STARTTIME, userInput, startTimeMatchList)){
+			result = extractDateOnly(KEYWORD_STARTTIME, KEYWORD_STARTTIME, userInput,taskInformationTable);
+		}
+		return result;
+	}
+
+	private String getEndTimeDate(String userInput,
+			Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+		
+		ArrayList<Integer> endTimeMatchList = new ArrayList<Integer>();
+		String result = "";
+		if(checkTimeAndDateInputFormat(KEYWORD_ENDTIME, userInput, endTimeMatchList)){
+			result = extractDateAndTime(KEYWORD_ENDTIME,userInput,taskInformationTable);
+		}
+		else if(checkTimeOnlyInputFormat(KEYWORD_ENDTIME, userInput, endTimeMatchList)){
+			result = extractTimeOnly(KEYWORD_ENDTIME,userInput,taskInformationTable);
+		}
+		else if(checkDateOnlyInputFormat(KEYWORD_ENDTIME, userInput, endTimeMatchList)){
+			result = extractDateOnly(KEYWORD_ENDTIME, KEYWORD_ENDTIME ,userInput, taskInformationTable);
+		}
+		return result;
+	}
+
+
+	private String extractUnknownCommandString(String userInput, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
+		String unknownCommandString = userInput.substring(0);
+		taskInformationTable.put(KEYWORD_TYPE.INVALID, unknownCommandString);
+		
+		return unknownCommandString;
+	}
+	
+	private boolean checkDateOnlyInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){
+		String fulldateFormat = String.format(FULLDATE_REGEX, KEYWORD_TIME, KEYWORD_TIME);
+		matchVector = searchForPatternMatch(userInputSentence, fulldateFormat);
+		
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchVector)) {
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	
+	private boolean checkTimeOnlyInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){		
+		//GET PATTERN FOR WHOLE START/END DATE AND TIME
+		matchVector = searchForPatternMatch(userInputSentence, KEYWORD_TIME+TIME_REGEX);
+		
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchVector)) {
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	
+	public boolean checkTimeAndDateInputFormat(String KEYWORD_TIME, String userInputSentence, ArrayList<Integer> matchVector){		
+		String fulldateFormat = KEYWORD_DATE + DATE_REGEX;
+		String dateFormat2 = DATE_NAME_REGEX;
+		String timeAndDateRegex = KEYWORD_TIME+TIME_REGEX+"\\s*"+fulldateFormat;
+		String timeAndDateRegex2 = KEYWORD_TIME+TIME_REGEX+"\\s*"+dateFormat2;
+		
+		//GET PATTERN FOR WHOLE START/END DATE AND TIME
+		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, timeAndDateRegex);
+		ArrayList<Integer> matchList2 = searchForPatternMatch(userInputSentence, timeAndDateRegex2);
+		
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList) && hasTimeDatePattern(matchList2)) {
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	
+	private String extractViewType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {		
+		ArrayList<Integer> matchList = searchForPatternMatch(userInput, KEYWORD_VIEW);
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList)) {
+			return "";
+		}
+		
+		int endIndex = getLastIndex(matchList);
+		int startIndex = getStartIndex(matchList);
+		
+		String extractedViewString = userInput.substring(startIndex, endIndex).trim();
+		taskInformationTable.put(KEYWORD_TYPE.VIEWTYPE, extractedViewString);
+		
+		return extractedViewString;
+	}
+	
+	private String extractClearType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
+		ArrayList<Integer> matchList = searchForPatternMatch(userInput, KEYWORD_CLEAR);
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList)) {
+			return "";
+		}
+		
+		int endIndex = getLastIndex(matchList);
+		int startIndex = getStartIndex(matchList);
+		
+		String extractedClearString = userInput.substring(startIndex, endIndex).trim();
+		taskInformationTable.put(KEYWORD_TYPE.CLEARTYPE, extractedClearString);
+
+		return extractedClearString;
+	}
+	
+	private String extractHelpType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
+		ArrayList<Integer> matchList = searchForPatternMatch(userInput, KEYWORD_HELP);
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList)) {
+			return "";
+		}
+		
+		int endIndex = getLastIndex(matchList);
+		int startIndex = getStartIndex(matchList);
+		
+		String extractedClearString = userInput.substring(startIndex, endIndex).trim();
+		taskInformationTable.put(KEYWORD_TYPE.HELP, extractedClearString);
+
+		return extractedClearString;
+	}
+	
+	private String extractPageType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
+		ArrayList<Integer> matchList = searchForPatternMatch(userInput, PAGE_REGEX);
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList)) {
+			return "";
+		}
+		
+		int endIndex = getLastIndex(matchList);
+		int startIndex = getStartIndex(matchList);
+		
+		String extractedString = userInput.substring(startIndex, endIndex).trim();
+		taskInformationTable.put(KEYWORD_TYPE.PAGE, extractedString);
+
+		return extractedString;
+	}
+}
+
+	// End of segment: src\kaboom\logic\TextParser.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\shared\DateAndTimeFormat.java
+	 */
+
+package kaboom.shared;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+public class DateAndTimeFormat {
+	
+	private final String dateFormat1 = "ddMMyy";		// 12/06/12 or 12.01.06 or 120106
+	private final String dateFormat2 = "dd'/'MM'/'yy";
+	private final String dateFormat3 = "dd'.'MM'.'yy";
+	private final String dateFormat4 = "ddMMyyyy";		// 12/06/12 or 12.01.06 or 120106
+	private final String dateFormat5 = "dd'/'MM'/'yyyy";
+	private final String dateFormat6 = "dd'.'MM'.'yyyy";
+
+	private final SimpleDateFormat[] dateFormatList = { 
+		new SimpleDateFormat(dateFormat1),
+		new SimpleDateFormat(dateFormat2),
+		new SimpleDateFormat(dateFormat3),
+		new SimpleDateFormat(dateFormat4),
+		new SimpleDateFormat(dateFormat5),
+		new SimpleDateFormat(dateFormat6)
+	};
+	
+	private final String endTimeOfTheDay = "235959";
+	private final String startTimeOfTheDay = "000000";
+	
+	private static DateAndTimeFormat instance = null;
+	
+	private DateAndTimeFormat() {
+	}
+	
+	public static DateAndTimeFormat getInstance () {
+		if (instance  == null) {
+			instance  = new DateAndTimeFormat ();
+		}
+
+		return instance;
+	}
+
+	
+	public Calendar formatStringToCalendar (String date, String time) {
+		if(date == null || time == null) {
+			return null;
+		}
+		Calendar dateAndTime = Calendar.getInstance();
+		SimpleDateFormat sdf = new  SimpleDateFormat("HHmmss ddMMyy");
+		Date dateTime = null;
+		try {
+			dateTime = sdf.parse(time+" "+date);
+		} catch (ParseException e) {
+			return null;
+		}
+		
+		dateAndTime.setTime(dateTime);
+
+		return dateAndTime;
+	}
+	
+	public void convertStringDateToCalendar(Calendar cal, String date) {
+		for(int i = 0; i < dateFormatList.length; i++) {
+			try {
+				//validate date
+				dateFormatList[i].setLenient(false);
+				Date dateType = dateFormatList[i].parse(date);
+				//set date to thisDate
+				Calendar getDate = Calendar.getInstance();
+				getDate.setTime(dateType);
+				cal.set(Calendar.DAY_OF_MONTH, getDate.get(Calendar.DAY_OF_MONTH));
+				cal.set(Calendar.MONTH, getDate.get(Calendar.MONTH));
+				cal.set(Calendar.YEAR, getDate.get(Calendar.YEAR));
+			} catch (Exception e) {	
+			}
+		}
+	}
+	
+	public void convertStringTimeToCalendar(Calendar cal, String time) {	
+		String minutesString = time.substring(time.length()-2, time.length());
+		String hourString = time.replaceFirst(minutesString, "");
+		int minutes = Integer.parseInt(minutesString);
+		int hour = Integer.parseInt(hourString);
+		cal.set(Calendar.HOUR_OF_DAY, hour);
+		cal.set(Calendar.MINUTE, minutes);
+	}
+	
+	public String convertStringTimeTo24HourString(String date) {
+		if(date == null) {
+			return null;
+		}
+		
+		// Convert time to 2400hr format
+		int hour = 0;
+		int addedHour = 0;
+		int minutes = 0;
+		int seconds = 0;
+		boolean ampmTiming = false;
+		
+		// Check if it contains am or pm
+		if (date.contains("pm")) {
+			hour += 12;
+			ampmTiming = true;
+		} else if (date.contains("am")) {
+			ampmTiming = true;
+		}
+		
+		// Remove all instance of am and pm and colon if possible
+		date = date.replaceAll(":?(am|pm)?", "");
+		
+		// Extract time into hours and minutes
+		if (date.length() > 2) {
+			String minuteString = date.substring(date.length()-2, date.length());
+			minutes += Integer.parseInt(minuteString);
+			date =  date.replaceAll(minuteString, "");
+		} 
+		
+		if (!date.equals("")) {
+			addedHour = Integer.parseInt(date);
+			
+			// Checks for 12am and 12pm
+			if (addedHour == 12 && ampmTiming) {
+				hour -= 12;
+			}
+			hour += addedHour;
+		}
+		
+		return String.format("%02d%02d%02d", hour, minutes, seconds);
+	}
+	
+	public String convertStringDateToDayMonthYearFormat(String date) {
+		if (date == null) {
+			return null;
+		}
+		
+		if (date.matches("[a-zA-Z]+")) {
+			date =  convertWordsToDayMonthYearFormat(date);
+		}
+		
+		// Replace all separators
+		date = date.replaceAll("(\\/|\\.|\\s+)", "");
+		
+		if (date.length() == 5) {
+			date = "0" + date;
+		}
+		
+		return date;
+	}
+	
+	private String convertWordsToDayMonthYearFormat(String date) {
+		// TODO Auto-generated method stub
+		switch (date) {
+			case "today":
+				return getDateToday2();
+		
+			case "tmr":
+			case "tomorrow":
+				return getDateOffsetFromToday(1);
+				
+			case "monday":
+				return getNearestWeekdayFromToday(2);
+				
+			case "tuesday":
+				return  getNearestWeekdayFromToday(3);
+				
+			case "wednesday":
+				return  getNearestWeekdayFromToday(4);
+				
+			case "thursday":
+				return  getNearestWeekdayFromToday(5);
+				
+			case "friday":
+				return  getNearestWeekdayFromToday(6);
+				
+			case "saturday":
+				return  getNearestWeekdayFromToday(7);
+				
+			case "sunday":
+				return  getNearestWeekdayFromToday(1);
+		}
+		
+		return "";
+	}
+
+	public boolean isDateValid (String theDate) {
+		if(theDate == null) {
+			return false;
+		}
+		
+		// Allow matches for weekday words
+		if (theDate.matches("[a-zA-Z]+")) {
+			return true;
+		}
+		
+		for(int i = 0; i < dateFormatList.length; i++) {
+			try {
+				dateFormatList[i].setLenient(false);
+				dateFormatList[i].parse(theDate);
+				return true;
+			} catch (Exception e) {	
+			}
+		}
+		return false;
+	}
+	
+	public String dateFromCalendarToString (Calendar cal) {
+		String dayFormatString = "ddMMyy";
+		SimpleDateFormat dayFormat = new SimpleDateFormat(dayFormatString);
+		
+		return dayFormat.format(cal.getTime());
+
+	}
+	
+	public String timeFromCalendarToString (Calendar cal) {
+		String timeFormatString = "HHmmss";
+		SimpleDateFormat dayFormat = new SimpleDateFormat(timeFormatString);
+		
+		return dayFormat.format(cal.getTime());
+
+	}
+
+	public Calendar addTimeToCalendar (Calendar dateAndTime, int hour, int min) {
+		Calendar dateAndTimeToAdd = (Calendar) dateAndTime.clone();
+		dateAndTimeToAdd.add(Calendar.HOUR_OF_DAY, hour);
+		dateAndTimeToAdd.add(Calendar.MINUTE, min);
+		return dateAndTimeToAdd;
+	}
+	
+	public Calendar addDayToCalendar (Calendar dateAndTime, int day) {
+		Calendar dateAndTimeToAdd = (Calendar) dateAndTime.clone();
+		dateAndTimeToAdd.add(Calendar.DATE, day);
+		return dateAndTimeToAdd;
+	}
+	
+	public Calendar addMonthToCalendar (Calendar dateAndTime, int month) {
+		Calendar dateAndTimeToAdd = (Calendar) dateAndTime.clone();
+		dateAndTimeToAdd.add(Calendar.MONTH, month);
+		return dateAndTimeToAdd;
+	}
+	
+	public boolean isFirstDateBeforeSecondDate (Calendar firstDate, Calendar secondDate) {
+		if (firstDate == null || secondDate == null) {
+			return false;
+		}
+		if (firstDate.before(secondDate)) {
+			String firstStringDate = dateFromCalendarToString(firstDate);
+			String secondStringDate = dateFromCalendarToString(secondDate);
+			if(firstStringDate.equals(secondStringDate)) {
+				String firstStringTime = timeFromCalendarToString (firstDate);
+				String secondStringTime = timeFromCalendarToString (secondDate);
+				if(firstStringTime.equals(secondStringTime)) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	public String getNextDay (Calendar cal) {
+		String todayString = "";
+		String day = String.format("%02d",cal.get(Calendar.DATE)+1);
+		String month = String.format("%02d",cal.get(Calendar.MONTH) + 1);
+		String year = Integer.toString(cal.get(Calendar.YEAR));
+		todayString = day + month + year;
+		return todayString;
+	}
+	
+	public String getEndTimeOfTheDay () {
+		return endTimeOfTheDay;
+	}
+	
+	public String getStartTimeOfTheDay () {
+		return startTimeOfTheDay;
+	}
+	
+	public boolean isToday (Calendar dateTime) {
+		Calendar todayDateTime = Calendar.getInstance();
+		if (isThisYear(dateTime) && todayDateTime.get(Calendar.DAY_OF_YEAR) == dateTime.get(Calendar.DAY_OF_YEAR)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isThisWeek (Calendar dateTime) {
+		Calendar todayDateTime = Calendar.getInstance();
+		todayDateTime.setFirstDayOfWeek(Calendar.MONDAY);
+		dateTime.setFirstDayOfWeek(Calendar.MONDAY);
+		
+		if (isThisYear(dateTime) && todayDateTime.get(Calendar.WEEK_OF_YEAR) == dateTime.get(Calendar.WEEK_OF_YEAR)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isNextWeek (Calendar dateTime) {
+		Calendar todayDateTime = Calendar.getInstance();
+		todayDateTime.setFirstDayOfWeek(Calendar.MONDAY);
+		dateTime.setFirstDayOfWeek(Calendar.MONDAY);
+		
+		int thisWeek = todayDateTime.get(Calendar.WEEK_OF_YEAR);
+		int dateWeek = dateTime.get(Calendar.WEEK_OF_YEAR);
+		if (isThisYear(dateTime) &&  (dateWeek-thisWeek == 1) ||  (thisWeek-dateWeek == 51)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isThisYear (Calendar dateTime) {
+		Calendar todayDateTime = Calendar.getInstance();
+		if (todayDateTime.get(Calendar.YEAR) == dateTime.get(Calendar.YEAR)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isSameDay (Calendar firstDateTime, Calendar secondDateTime) {
+		if (firstDateTime.get(Calendar.YEAR) == secondDateTime.get(Calendar.YEAR) && 
+			firstDateTime.get(Calendar.DAY_OF_YEAR) == secondDateTime.get(Calendar.DAY_OF_YEAR)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public Calendar getCurrentDateAndTime () {
+		return Calendar.getInstance();
+	}
+	
+	public String getCurrentWeekday () {
+		Calendar dateTime = Calendar.getInstance();
+		
+		String weekFormatString = "EEE";
+		SimpleDateFormat weekFormat = new SimpleDateFormat(weekFormatString);
+		
+		return weekFormat.format(dateTime.getTime());
+	}
+	//get date today for the UI current date
+	public String getDateToday () {
+		Calendar dateTime = Calendar.getInstance();
+		
+		String dayFormatString = "dd MMM yy";
+		SimpleDateFormat dayFormat = new SimpleDateFormat(dayFormatString);
+		
+		return dayFormat.format(dateTime.getTime());
+	}
+	//this one is for command 
+	public String getDateToday2 () {
+		Calendar dateTime = Calendar.getInstance();
+		
+		String dayFormatString = "ddMMyy";
+		SimpleDateFormat dayFormat = new SimpleDateFormat(dayFormatString);
+		
+		return dayFormat.format(dateTime.getTime());
+	}
+	
+	public String getTimeNow () {
+		Calendar dateTime = Calendar.getInstance();
+		
+		String timeFormatString = "hh:mm a";
+		SimpleDateFormat timeFormat = new SimpleDateFormat(timeFormatString);
+		
+		return timeFormat.format(dateTime.getTime());
+	}
+	
+	public String getDateOffsetFromToday (int offset) {
+		Calendar dateTime = Calendar.getInstance();
+		dateTime.add(Calendar.DAY_OF_YEAR, offset);
+		
+		String dayFormatString = "ddMMyy";
+		SimpleDateFormat dayFormat = new SimpleDateFormat(dayFormatString);
+		
+		return dayFormat.format(dateTime.getTime());
+	}
+	
+	public String getNearestWeekdayFromToday (int weekday) {
+		Calendar dateTime = Calendar.getInstance();
+		int currentWeekday = dateTime.get(Calendar.DAY_OF_WEEK);
+		
+		int difference = 0;
+		if (currentWeekday != weekday) {
+			difference = (-currentWeekday + weekday + 7)%7;
+		}
+		return getDateOffsetFromToday(difference);
+	}
+	
+}
+
+	// End of segment: src\kaboom\shared\DateAndTimeFormat.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\shared\KEYWORD_TYPE.java
+	 */
+
+package kaboom.shared;
+
+public enum KEYWORD_TYPE {
+	COMMAND (0),
+	TASKID(1), TASKNAME(1), 
+	MODIFIED_TASKNAME(2), 
+	START_TIME(3), START_DATE(4), END_TIME(5), END_DATE(6),  DATE(3),
+	PRIORITY(7),
+	VIEWTYPE (8), SORT (8), CLEARTYPE (8), HELP (8), PAGE(8),
+	INVALID (100), UNKNOWN (100);
+	
+	private final int value;
+    private KEYWORD_TYPE(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
+	
+}
+
+	// End of segment: src\kaboom\shared\KEYWORD_TYPE.java
+
+
+
+
+
+	/**
+	 * origin: src\kaboom\shared\TaskInfo.java
+	 */
+
+package kaboom.shared;
+
+import java.util.Calendar; 
+
+public class TaskInfo {
+		
+	String taskname;
+	TASK_TYPE taskType;
+	
+	Calendar startDate;
+	Calendar endDate;
+	
+	int priority;
+	
+	boolean isExpired;
+	boolean isDone;
+	boolean isRecent;
+	
+	public TaskInfo () {
+		taskname = "";
+		
+		startDate = null;
+		endDate = null;
+		
+		priority = 1;
+		isExpired = false;
+		isDone = false;
+		isRecent = false;
+	}
+	
+	public TaskInfo (TaskInfo info) {
+		taskname = info.getTaskName();
+		startDate = info.getStartDate();
+		endDate = info.getEndDate();
+		priority = info.getPriority();
+		isExpired = info.isExpired();
+		taskType = info.getTaskType();
+	}
+	
+	public void setTask(TaskInfo taskInfo) {
+		//TODO for undo of modify
+	}
+	
+	public void setTaskName (String name) { 
+		taskname = name;
+	}
+	
+	public void setTaskType (TASK_TYPE type) { 
+		taskType = type;
+	}
+	
+	public void setStartDate (Calendar date) { 
+		startDate = date;
+	}
+	
+	public void setEndDate (Calendar date) { 
+		endDate = date;
+	}
+	
+	public void setPriority (int level) { 
+		priority = level;
+	}
+	
+	public void setExpiry (boolean flag) { 
+		isExpired = flag;
+	}
+	
+	public void setDone (boolean flag) {
+		isDone = flag;
+	}
+	
+	public void setRecent (boolean flag) {
+		isRecent = flag;
+	}
+	
+	public String getTaskName () { 
+		return taskname;
+	}
+	
+	public TASK_TYPE getTaskType () { 
+		return taskType;
+	}
+	
+	public Calendar getStartDate () { 
+		return startDate;
+	}
+	
+	public Calendar getEndDate () { 
+		return endDate;
+	}
+	
+	public int getPriority () { 
+		return priority;
+	}
+	
+	public boolean isExpired () { 
+		return isExpired;
+	}
+	
+	public boolean isDone () {
+		return isDone;
+	}
+	
+	public boolean isEmpty () {
+	
+		if (taskname == "" && startDate == null && endDate == null && priority == 0) {
+			return true;
+		}		
+		
+		return false;
+	}
+	
+	public boolean isRecent () {
+		return isRecent;
+	}
+	
+	public static TASK_TYPE getTaskType(String taskType) {
+		if (taskType.equalsIgnoreCase("DEADLINE")) {
+			return TASK_TYPE.DEADLINE;
+		}
+		else if (taskType.equalsIgnoreCase("FLOATING")) {
+			return TASK_TYPE.FLOATING;
+		}
+		else {
+			return TASK_TYPE.TIMED;
+		}
+	}
+	
+	public static String taskTypeToString(TASK_TYPE taskType) {
+		switch (taskType) {
+		case DEADLINE:
+			return "DEADLINE";
+		case FLOATING:
+			return "FLOATING";
+		case TIMED:
+			return "TIMED";
+		default:
+			return "Unrecognized";  //This should never be reached
+		}
+	}
+	
+	public static boolean isTaskToday(TaskInfo task) {
+		Calendar today = Calendar.getInstance();
+
+		Calendar taskStartDate = task.getStartDate();
+		Calendar taskEndDate = task.getEndDate();
+
+		//Do not get floating tasks
+		if (task.getTaskType() != TASK_TYPE.FLOATING) {
+			if ((taskStartDate != null && taskStartDate.before(today)) 
+					&& (taskEndDate != null && taskEndDate.after(today))) {
+				return true;
+			}
+			else if (taskStartDate != null && 
+					taskStartDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) &&
+					taskStartDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
+				return true;
+			}
+			else if (taskEndDate != null &&
+					taskEndDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) &&
+					taskEndDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean isFutureTask(TaskInfo task) {
+		Calendar today = Calendar.getInstance();
+		today.set(Calendar.HOUR_OF_DAY, 23);
+		today.set(Calendar.MINUTE, 59);
+		today.set(Calendar.SECOND, 59);
+		
+		Calendar taskStartDate = task.getStartDate();
+		Calendar taskEndDate = task.getEndDate();
+
+		//Do not get floating tasks
+		if (task.getTaskType() != TASK_TYPE.FLOATING) {
+			if (taskStartDate != null && taskStartDate.after(today)) {
+				return true;
+			}
+			else if (taskEndDate != null && taskEndDate.after(today)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+}
+
+	// End of segment: src\kaboom\shared\TaskInfo.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\DateAndTimeFormatTest.java
+	 */
+
+package KaboomTest;
+
+import static org.junit.Assert.*;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import kaboom.shared.DateAndTimeFormat;
+
+import org.junit.Test;
+
+public class DateAndTimeFormatTest {
+	//TODO
+	DateAndTimeFormat datFormat = DateAndTimeFormat.getInstance();
+	Calendar cal = Calendar.getInstance();
+	
+	@Test
+	public void addTimeToCalendarTest() {
+		Calendar date = Calendar.getInstance();
+		Calendar dateAfterAddition = null;
+		date.set(Calendar.HOUR_OF_DAY, 12);
+		date.set(Calendar.MINUTE, 0);
+		
+		//Test for no manipulation
+		dateAfterAddition = datFormat.addTimeToCalendar(date, 0, 0);
+		assertEquals("12", Integer.toString(dateAfterAddition.get(Calendar.HOUR_OF_DAY)));
+		assertEquals("0", Integer.toString(dateAfterAddition.get(Calendar.MINUTE)));
+		
+		//Test for 1 Hour After
+		dateAfterAddition = datFormat.addTimeToCalendar(date, 1, 0);
+		assertEquals("13", Integer.toString(dateAfterAddition.get(Calendar.HOUR_OF_DAY)));
+		assertEquals("0", Integer.toString(dateAfterAddition.get(Calendar.MINUTE)));
+		
+		//Test for 30 Mins After
+		dateAfterAddition = datFormat.addTimeToCalendar(date, 0, 30);
+		assertEquals("12", Integer.toString(dateAfterAddition.get(Calendar.HOUR_OF_DAY)));
+		assertEquals("30", Integer.toString(dateAfterAddition.get(Calendar.MINUTE)));
+		
+		//Test for 1 Hour Before
+		dateAfterAddition = datFormat.addTimeToCalendar(date, -1, 0);
+		assertEquals("11", Integer.toString(dateAfterAddition.get(Calendar.HOUR_OF_DAY)));
+		assertEquals("0", Integer.toString(dateAfterAddition.get(Calendar.MINUTE)));
+		
+		//Test for 30 Mins Before
+		dateAfterAddition = datFormat.addTimeToCalendar(date, 0, -30);
+		assertEquals("11", Integer.toString(dateAfterAddition.get(Calendar.HOUR_OF_DAY)));
+		assertEquals("30", Integer.toString(dateAfterAddition.get(Calendar.MINUTE)));
+		
+		//Date Boundaries (Next Day)
+		date.set(Calendar.HOUR_OF_DAY, 23);
+		date.set(Calendar.MINUTE, 59);
+		date.set(Calendar.DAY_OF_MONTH, 10);
+		
+		//Test 1 Hour After
+		dateAfterAddition = datFormat.addTimeToCalendar(date, 1, 0);
+		assertEquals("0", Integer.toString(dateAfterAddition.get(Calendar.HOUR_OF_DAY)));
+		assertEquals("59", Integer.toString(dateAfterAddition.get(Calendar.MINUTE)));
+		assertEquals("11", Integer.toString(dateAfterAddition.get(Calendar.DAY_OF_MONTH)));
+		
+		//Test 1 Min After
+		dateAfterAddition = datFormat.addTimeToCalendar(date, 0, 1);
+		assertEquals("0", Integer.toString(dateAfterAddition.get(Calendar.HOUR_OF_DAY)));
+		assertEquals("0", Integer.toString(dateAfterAddition.get(Calendar.MINUTE)));
+		assertEquals("11", Integer.toString(dateAfterAddition.get(Calendar.DAY_OF_MONTH)));
+		
+	}
+	
+	/*
+	 * SimpleDateFormat Year Boundary: 2 digit years range from 1934 to 2033
+	 */
+	
+	@Test
+	public void testDateValidity() {
+		//Null
+		assertFalse ("Null test",datFormat.isDateValid(null));
+		//testing parsing simpleDateFormat
+		//ddMMyy Format
+		assertTrue ("Valid: ddMMyy format",datFormat.isDateValid("010414"));
+		//invalid date
+		assertFalse ("Invalid: day",datFormat.isDateValid("000414"));
+		//invalid month
+		assertFalse ("Invalid: month",datFormat.isDateValid("011314"));
+		
+		assertTrue ("Valid",datFormat.isDateValid("010100"));
+		
+		//dd/MM/yy Format
+		assertTrue ("Valid: dd/MM/yy format",datFormat.isDateValid("21/04/14"));
+		assertTrue ("Valid: dd/MM/yy format",datFormat.isDateValid("21/04/33"));
+		//invalid day
+		assertFalse ("Invalid: day",datFormat.isDateValid("31/04/14"));
+		//invalid Format 
+		assertFalse ("Invalid: format",datFormat.isDateValid("31.04/14"));
+		//invalid Format 
+		assertFalse ("Invalid: format",datFormat.isDateValid("31004014"));
+		
+		//dd.MM.yy Format
+		assertTrue ("Valid: dd/MM/yy format",datFormat.isDateValid("21.04.14"));
+		assertTrue ("Valid: dd/MM/yy format",datFormat.isDateValid("21.04.34"));
+		assertFalse ("Invalid: month",datFormat.isDateValid("21.00.34"));
+		assertFalse ("Invalid: format",datFormat.isDateValid("21/00/34"));
+		assertFalse ("Invalid: format",datFormat.isDateValid("21-00-34"));
+		assertTrue ("Invalid: format",datFormat.isDateValid("01/04/14"));
+	}
+	
+	@Test
+	public void dateFromCalendarToStringConverterTest() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(2014, Calendar.MAY, 01);
+		assertEquals("010514",datFormat.dateFromCalendarToString (cal)); 
+		cal.set(2000, Calendar.JULY, 01);
+		assertEquals("010700",datFormat.dateFromCalendarToString (cal));  
+		cal.set(Calendar.MONTH,Calendar.JANUARY);
+		assertEquals("010100",datFormat.dateFromCalendarToString (cal));  
+	}
+	
+	@Test
+	public void timeFromCalendarToStringConverterTest() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 15);
+		cal.set(Calendar.MINUTE, 30);
+		cal.set(Calendar.SECOND, 00);
+		assertEquals("153000",datFormat.timeFromCalendarToString (cal)); 
+		cal.set(Calendar.HOUR_OF_DAY, 01);
+		cal.set(Calendar.MINUTE, 30);
+		assertEquals("013000",datFormat.timeFromCalendarToString (cal));  
+	}
+	
+	@Test
+	public void convertTime () {
+		String timeString = "";
+		
+		timeString = "1pm";
+		assertEquals("130000", datFormat.convertStringTimeTo24HourString(timeString));
+		
+		timeString = "1:00";
+		assertEquals("010000", datFormat.convertStringTimeTo24HourString(timeString));
+		
+		timeString = "13:00";
+		assertEquals("130000", datFormat.convertStringTimeTo24HourString(timeString));
+		
+		timeString = "8pm";
+		assertEquals("200000", datFormat.convertStringTimeTo24HourString(timeString));
+		
+		timeString = "8am";
+		assertEquals("080000", datFormat.convertStringTimeTo24HourString(timeString));
+		
+		timeString = "12:01am";
+		assertEquals("000100", datFormat.convertStringTimeTo24HourString(timeString));
+		
+		timeString = "12:34pm";
+		assertEquals("123400", datFormat.convertStringTimeTo24HourString(timeString));
+		
+		timeString = "1234";
+		assertEquals("123400", datFormat.convertStringTimeTo24HourString(timeString));
+		
+		timeString = "2401";
+		assertEquals("240100", datFormat.convertStringTimeTo24HourString(timeString));
+		
+	}
+	
+	@Test
+	public void convertDateStringToCalendar () {
+		String timeString = "";
+		String dateString = "";
+		Calendar testCalendar = null;
+		SimpleDateFormat sdf = new  SimpleDateFormat("HHmmss ddMMyy");
+		
+		timeString = "080000";
+		dateString = "121212";
+		testCalendar = datFormat.formatStringToCalendar(dateString, timeString);
+		assertEquals(sdf.format(testCalendar.getTime()), timeString + " " + dateString);
+		
+		timeString = "200000";
+		dateString = "080414";
+		testCalendar = datFormat.formatStringToCalendar(dateString, timeString);
+		assertEquals(sdf.format(testCalendar.getTime()), timeString + " " + dateString);
+	}
+}
+
+	// End of segment: src\KaboomTest\DateAndTimeFormatTest.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\LogicComponentTest.java
+	 */
+
+package KaboomTest;
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+@RunWith(Suite.class)
+@SuiteClasses({ CommandTest.class, DateAndTimeFormatTest.class,
+		TextParserTest.class })
+public class LogicComponentTest {
+
+}
+
+	// End of segment: src\KaboomTest\LogicComponentTest.java
+
+
+
+
+
+	/**
+	 * origin: src\KaboomTest\TextParserTest.java
+	 */
+
+package KaboomTest;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+
+import kaboom.logic.TextParser;
+import kaboom.shared.KEYWORD_TYPE;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class TextParserTest {
+	
+	Hashtable<KEYWORD_TYPE, String> keywordTable = new Hashtable<KEYWORD_TYPE, String>();
+	
+	TextParser textparser;
+	
+	@Before 
+	public void init () {
+		textparser = TextParser.getInstance();
+	}
+	
+	@Test
+	public void testPriorityExtraction () {
+		String command = "";
+		Hashtable<KEYWORD_TYPE, String> tempHashTable = new Hashtable<KEYWORD_TYPE, String>();
+		
+		command = "Test string ***";
+		assertEquals("***", textparser.extractPriority(command, tempHashTable));
+		
+		command = "Test string ***   ";
+		assertEquals("***", textparser.extractPriority(command, tempHashTable));
+		
+		command = "Test string *";
+		assertEquals("*", textparser.extractPriority(command, tempHashTable));
+		
+		command = " **      ";
+		assertEquals("**", textparser.extractPriority(command, tempHashTable));
+		
+		command = "asdasd**      ";
+		assertEquals("", textparser.extractPriority(command, tempHashTable));
+		
+		command = "**asdasd      ";
+		assertEquals("", textparser.extractPriority(command, tempHashTable));
+		
+		command = " *";
+		assertEquals("*", textparser.extractPriority(command, tempHashTable));
+		
+		command = " *****";
+		assertEquals("*****", textparser.extractPriority(command, tempHashTable));
+		
+		command = "*****";
+		assertEquals("", textparser.extractPriority(command, tempHashTable));
+		
+		command = " ********";
+		assertEquals("", textparser.extractPriority(command, tempHashTable));
+	}
+	
+	@Test
+	public void testTimeAndDateExtraction () {
+		String command = "";
+		String timeKeyword = "at";
+		Hashtable<KEYWORD_TYPE, String> tempHashTable = new Hashtable<KEYWORD_TYPE, String>();
+		
+		// Full working syntax
+		command = "at 1700 on 25/12/18";
+		assertEquals("at 1700 on 25/12/18", textparser.extractDateAndTime(timeKeyword, command, tempHashTable));
+		
+		command = "at 600   on 25/12/18";
+		assertEquals(command, textparser.extractDateAndTime(timeKeyword, command, tempHashTable));
+		
+		command = "at 1800 on 25/12/18     ";
+		assertEquals("at 1800 on 25/12/18 ", textparser.extractDateAndTime(timeKeyword, command, tempHashTable));
+		
+		command = "at  160 on 25/12/18";
+		assertEquals("", textparser.extractDateAndTime(timeKeyword, command, tempHashTable));
+		
+		command = "at 1800 by 30/04/14";
+		assertEquals("", textparser.extractDateAndTime(timeKeyword, command, tempHashTable));
+		
+		command = "on 30/04/14";
+		assertEquals("", textparser.extractDateAndTime(timeKeyword, command, tempHashTable));
+	}
+	
+	@Test
+	public void checkTimeAndDateExtractionCondition () {
+		String command = "";
+		String timeKeyword = "at";
+
+		ArrayList<Integer> matchVector = new ArrayList<Integer>();
+		
+		// this test only to check format. Not validity of time or date
+		// dd/MM/yy or dd.MM.yy
+		command = "at 1700 on 25/12/18";
+		assertTrue(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
+		
+		command = "at 600   on 25.12.18";
+		assertTrue(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
+		
+		command = "at 1800 on 111/04/18     ";
+		assertFalse(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
+		
+		command = "at 1800 on 11/04/180     ";
+		assertFalse(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
+		
+		command = "at 1300 on 110418     ";
+		assertFalse(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
+		
+		command = "at 1800 on 11/04/1993     ";
+		assertFalse(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
+	}
+	
+	@Test
+	public void testTimeExtraction () {
+		String command = "";
+		String keyword = "by";
+		Hashtable<KEYWORD_TYPE, String> tempHashTable = new Hashtable<KEYWORD_TYPE, String>();
+		
+		// Test normal format with spaces
+		command = "by 1700";
+		assertEquals("by 1700", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 600";
+		assertEquals("by 600", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 1800 ";
+		assertEquals("by 1800 ", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by  160";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 17:00";
+		assertEquals("by 17:00", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 6:00";
+		assertEquals("by 6:00", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 180:0 ";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 18:0 ";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 1:6000";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by :160";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by :160pm";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 6:00ampm";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by    6:00pmpm ";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 1:08pm ";
+		assertEquals("by 1:08pm ", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 108pm";
+		assertEquals("by 108pm", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 01:08pm";
+		assertEquals("by 01:08pm", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 13pm";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 24am";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 0000";
+		assertEquals("by 0000", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 2359";
+		assertEquals("by 2359", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 2400";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 2360";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by -0001";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+	}
+	
+	@Test
+	public void testDateExtraction () {
+		String command = "";
+		String keyword = "on";
+		Hashtable<KEYWORD_TYPE, String> tempHashTable = new Hashtable<KEYWORD_TYPE, String>();
+		
+		command = "on  ";
+		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+		
+		command = "on 12/06/06";
+		assertEquals(command, textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+		
+		command = "on 12.06.06";
+		assertEquals(command, textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+		
+		command = "on 120606";
+		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+		
+		command = "on  120606 ";
+		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+		
+		command = "on  1206065  ";
+		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+		
+		command = "on  120.06.06 ";
+		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+		
+		command = "on  1.06.06 ";
+		assertEquals(command, textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+		
+		command = "on  1.6.06 ";
+		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+		
+		command = "on  1.6.1906 ";
+		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+	
+	}
+	
+	@Test
+	public void testExtractModifyName() {
+		Hashtable<KEYWORD_TYPE, String> keywordTable = new Hashtable<KEYWORD_TYPE, String>();
+		assertEquals("> some name", textparser.extractModifiedTaskName("hello world > some name",keywordTable));
+		assertEquals("> aabbcc ", textparser.extractModifiedTaskName("hello world > aabbcc ",keywordTable));
+		assertEquals("> hello world", textparser.extractModifiedTaskName("> hello world",keywordTable));
+		assertEquals("", textparser.extractModifiedTaskName("hello world",keywordTable));
+		//error here
+		assertEquals("> asd", textparser.extractModifiedTaskName("> hello world > asd",keywordTable));
+	}
+}
+	// End of segment: src\KaboomTest\TextParserTest.java
+
+
+
+
+
