@@ -49,7 +49,7 @@ public class CommandDone extends Command {
 		String feedback = MESSAGE_COMMAND_INVALID;
 		String taskName = taskToBeModified.getTaskName();
 		
-		if (taskToBeModified.getDone()) {
+		if (taskToBeModified.isDone()) {
 			feedback = String.format(MESSAGE_COMMAND_DONE_AlEADY_COMPLETED, taskName);
 		} else {
 			taskManager.doneTask(taskToBeModified);

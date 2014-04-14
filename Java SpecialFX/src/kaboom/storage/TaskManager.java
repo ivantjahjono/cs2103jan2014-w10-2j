@@ -172,7 +172,7 @@ public class TaskManager {
 	}
 	
 	public boolean addPresentTask(TaskInfo task) {
-		assert task.getDone() == false;
+		assert task.isDone() == false;
 		boolean isAdded = taskDepo.addTaskToPresentList(task);
 		taskDepo.refreshTasks();
 		addToSearchView(task);
@@ -181,7 +181,7 @@ public class TaskManager {
 	}
 	
 	public boolean addArchivedTask(TaskInfo task) {
-		assert task.getDone() == true;
+		assert task.isDone() == true;
 		boolean isAdded = taskDepo.addTaskToArchivedList(task);
 		taskDepo.refreshTasks();
 		addToSearchView(task);
@@ -207,8 +207,8 @@ public class TaskManager {
 	}
 	
 	public void doneTask(TaskInfo task) {
-		assert task.getDone() == false;
-		task.setExpiryFlag(false);
+		assert task.isDone() == false;
+		task.setExpiry(false);
 		task.setDone(true);
 		deleteInSearchView(task);
 		task.setRecent(true);
@@ -217,7 +217,7 @@ public class TaskManager {
 	}
 	
 	public void undoneTask(TaskInfo task) {
-		assert task.getDone() == true;
+		assert task.isDone() == true;
 		task.setDone(false);
 		deleteInSearchView(task);
 		task.setRecent(true);
