@@ -1,4 +1,13 @@
 //@author A0096670W
+
+/**
+ * History.java:
+ * This class stores and retrieves commands that are saved for undo purposes.
+ * The commands are stored in a stack and the limit set is 10 commands. 
+ * This is to ensure that the program does not take up too much memory even if
+ * the user runs Task Master Kaboom for extended periods. 
+ * This is a singleton class as there can only be one instance of this class. 
+ */
 package kaboom.storage;
 
 import java.util.Stack;
