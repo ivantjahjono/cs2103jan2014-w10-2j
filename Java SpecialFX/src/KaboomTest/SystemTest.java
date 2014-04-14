@@ -122,6 +122,13 @@ public class SystemTest {
 		command = "modify 1";
 		assertEquals("Modify has failed. Type <help modify> for help.", controller.processCommand(command));
 		
+		testModifyName();
+		testModifyDate();
+	}
+	
+	public void testModifyName () {
+		String command = "";
+		
 		command = "modify 1 > world";
 		assertEquals("<hello> has evolved into <world>", controller.processCommand(command));
 		
@@ -129,6 +136,22 @@ public class SystemTest {
 		assertEquals("Oops! Invalid ID??", controller.processCommand(command));
 		
 		command = "modify world > hello";
+		assertEquals("<world> has evolved into <hello>", controller.processCommand(command));
+	}
+	
+	public void testModifyDate () {
+		String command = "";
+		
+		command = "modify 1 by today";
+		assertEquals("<hello> has evolved into <world>", controller.processCommand(command));
+		
+		command = "modify hello by 2pm";
+		assertEquals("Oops! Invalid ID??", controller.processCommand(command));
+		
+		command = "modify hello at 2pm";
+		assertEquals("<world> has evolved into <hello>", controller.processCommand(command));
+		
+		command = "modify 1 at 2pm";
 		assertEquals("<world> has evolved into <hello>", controller.processCommand(command));
 	}
 
