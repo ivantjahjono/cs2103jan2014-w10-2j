@@ -53,7 +53,6 @@ public class TaskDepositoryTest {
 		assertEquals(3, taskDepo.countPresentTasks());
 	}
 	
-	
 	@Test
 	public void testAddTaskToArchivedList() {
 		taskDepo.clearAllArchivedTasks();
@@ -63,7 +62,6 @@ public class TaskDepositoryTest {
 		assertTrue(taskDepo.addTaskToArchivedList(task3));
 		assertEquals(3, taskDepo.countArchivedTasks());
 	}
-
 
 	@Test
 	public void testUpdateTask() {
@@ -87,10 +85,9 @@ public class TaskDepositoryTest {
 		taskDepo.updateTask(task2, task3);
 		assertEquals(0, taskDepo.getFloatingTasks().size());
 	}
-	
+
 	@Test
-	public void testRemoveTask() {
-		//Add and remove from present task list
+	public void testRemoveFromPresentList() {
 		testAddTaskToPresentList();
 		assertEquals(3, taskDepo.countPresentTasks());
 		taskDepo.removeTask(task1);  //Remove valid task
@@ -103,8 +100,10 @@ public class TaskDepositoryTest {
 		assertEquals(0, taskDepo.countPresentTasks());
 		taskDepo.removeTask(task3);  //Boundary case for empty list
 		assertEquals(0, taskDepo.countPresentTasks());
-		
-		//Add and remove from archive task list
+	}
+	
+	@Test
+	public void testRemoveFromArchiveList() {
 		testAddTaskToArchivedList();
 		assertEquals(3, taskDepo.countArchivedTasks());
 		taskDepo.removeTask(task1);  //Remove valid task
@@ -144,6 +143,31 @@ public class TaskDepositoryTest {
 	}
 	
 	@Test
+	public void testGetTodayTasks() {
+		taskDepo.clearAllPresentTasks();
+		assertTrue(taskDepo.addTaskToPresentList(task2));
+		assertNotNull(taskDepo.getToday());
+		assertEquals(1, taskDepo.getToday().size());
+	}
+	
+	@Test
+	public void testGetExpiredTasks() {
+		taskDepo.clearAllPresentTasks();
+		assertTrue(taskDepo.addTaskToPresentList(task4));
+		taskDepo.refreshTasks();
+		assertNotNull(taskDepo.getExpiredTasks());
+		assertEquals(1, taskDepo.getExpiredTasks().size());
+	}
+	
+	@Test
+	public void testGetFutureTasks() {
+		taskDepo.clearAllPresentTasks();
+		assertTrue(taskDepo.addTaskToPresentList(task2));
+		assertNotNull(taskDepo.getFutureTasks());
+		assertEquals(1, taskDepo.getFutureTasks().size());
+	}
+	
+	@Test
 	public void testRefreshTasks() {
 		taskDepo.clearAllTasks();
 		assertEquals(0, taskDepo.countAllTasks());
@@ -178,6 +202,7 @@ public class TaskDepositoryTest {
 		taskDepo.clearAllTasks();
 		assertEquals(0, taskDepo.countPresentTasks());
 		assertEquals(0, taskDepo.countArchivedTasks());
+		assertEquals(0, taskDepo.countAllTasks());
 	}
 
 	@Test
@@ -208,14 +233,13 @@ public class TaskDepositoryTest {
 
 	private TaskInfo setTaskInfo2() {
 		TaskInfo task = new TaskInfo();
-		Calendar startDate = Calendar.getInstance();
-		//startDate.set(2014,4,14,8,0);
+		Calendar now = Calendar.getInstance();
 		Calendar endDate = Calendar.getInstance();
-		endDate.set(2014,4,18,8,0);
+		endDate.set(2020,12,12,23,59);
 
 		task.setTaskName("something else");
 		task.setTaskType(TASK_TYPE.TIMED);
-		task.setStartDate(startDate);
+		task.setStartDate(now);
 		task.setEndDate(endDate);
 		task.setPriority(5);
 		task.setDone(false);
