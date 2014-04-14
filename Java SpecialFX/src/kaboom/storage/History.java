@@ -29,11 +29,11 @@ public class History {
 		return historyInstance;
 	}
 
-	public History () {
+	private History() {
 		previousCommandList = new Stack<Command>();
 	}
 
-	public Command getMostRecentCommand () {
+	public Command getMostRecentCommand() {
 		if (previousCommandList.empty()) {
 			return null;
 		}
@@ -54,7 +54,7 @@ public class History {
 		trimOutOldCommands();
 	}
 
-	private void trimOutOldCommands () {
+	private void trimOutOldCommands() {
 		int firstObjectIndex = 0;
 
 		while (previousCommandList.size() > MAX_COMMAND_TO_STORE) {
