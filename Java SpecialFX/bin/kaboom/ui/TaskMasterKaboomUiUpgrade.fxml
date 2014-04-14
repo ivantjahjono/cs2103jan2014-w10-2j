@@ -251,7 +251,7 @@
       <children>
         <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="447.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
         <Label font="$x9" layoutX="10.0" layoutY="0.0" text="Help" />
-        <VBox layoutX="52.0" layoutY="32.0" prefHeight="237.0" prefWidth="487.0">
+        <VBox layoutX="52.0" layoutY="32.0" prefHeight="348.0" prefWidth="487.0">
           <children>
             <HBox alignment="CENTER_LEFT" prefHeight="26.6015625" prefWidth="501.0">
               <children>
@@ -311,6 +311,12 @@
                 <Label font="$x14" text="Display help on how to use the page command" />
               </children>
             </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="26.6015625" prefWidth="501.0">
+              <children>
+                <Label prefWidth="127.0" styleClass="parseCommandTypeName" text="help clear" />
+                <Label font="$x14" text="Display help on how to use the clear command" />
+              </children>
+            </HBox>
           </children>
         </VBox>
       </children>
@@ -329,7 +335,7 @@
         <Label font="$x1" layoutX="20.0" layoutY="54.0" text="Adding scheduled task:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="75.0" prefHeight="26.6015625" prefWidth="310.0" spacing="10.0">
           <children>
-            <Label styleClass="parseCommandTypeName" text="add" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="add" />
             <Label styleClass="parseCommandName" text="&lt;task name&gt;" />
             <Label styleClass="parseCommandPriority" text="&lt;start date&gt;" />
             <Label styleClass="parseCommandPriority" text="&lt;end date&gt;" />
@@ -339,7 +345,7 @@
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="93.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="add" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="add" />
             <Label styleClass="parseCommandName" text="Hello world" />
             <Label styleClass="parseCommandPriority" text="at 3pm on thu" />
             <Label styleClass="parseCommandPriority" text="to 5pm on sat" />
@@ -350,7 +356,7 @@
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="158.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="add" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="add" />
             <Label styleClass="parseCommandName" text="Homework" />
             <Label styleClass="parseCommandPriority" text="by 7pm, today" />
             <Label styleClass="parseCommandPriority" text="*****" />
@@ -359,7 +365,7 @@
         <Label font="$x1" layoutX="20.0" layoutY="188.0" text="Adding timeless task:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="207.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
           <children>
-            <Label styleClass="parseCommandTypeName" text="modify" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="add" />
             <Label styleClass="parseCommandName" text="&lt;task name&gt;" />
             <Label styleClass="parseCommandPriority" text="&lt;priority&gt;" />
           </children>
@@ -367,14 +373,14 @@
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="225.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="modify" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="add" />
             <Label styleClass="parseCommandName" text="Watch television" />
             <Label styleClass="parseCommandPriority" text="*" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="140.0" prefHeight="26.6015625" prefWidth="310.0" spacing="10.0">
           <children>
-            <Label styleClass="parseCommandTypeName" text="add" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="add" />
             <Label styleClass="parseCommandName" text="&lt;task name&gt;" />
             <Label styleClass="parseCommandPriority" text="&lt;end date&gt;" />
             <Label styleClass="parseCommandPriority" text="&lt;priority&gt;" />
@@ -416,21 +422,21 @@
         <Label font="$x1" layoutX="20.0" layoutY="54.0" text="Deleting task" />
         <HBox alignment="CENTER_LEFT" layoutX="55.0" layoutY="73.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
           <children>
-            <Label styleClass="parseCommandTypeName" text="delete" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="delete" />
             <Label styleClass="parseCommandName" text="&lt;task name or task id&gt;" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="26.0" layoutY="91.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="delete" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="delete" />
             <Label styleClass="parseCommandName" text="Hello world" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="26.0" layoutY="110.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="delete" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="delete" />
             <Label styleClass="parseCommandName" text="1" />
           </children>
         </HBox>
@@ -450,7 +456,7 @@
         <Label font="$x1" layoutX="20.0" layoutY="54.0" text="Modifying task:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="75.0" prefHeight="26.6015625" prefWidth="506.0" spacing="10.0">
           <children>
-            <Label styleClass="parseCommandTypeName" text="modify" />
+            <Label prefWidth="45.0" styleClass="parseCommandTypeName" text="modify" />
             <Label styleClass="parseCommandName" text="&lt;task name&gt;" />
             <Label styleClass="parseCommandPriority" text="&lt;modified name&gt;" />
             <Label styleClass="parseCommandPriority" text="&lt;startdate&gt;" />
@@ -461,7 +467,7 @@
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="93.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="modify" />
+            <Label prefWidth="45.0" styleClass="parseCommandTypeName" text="modify" />
             <Label styleClass="parseCommandName" text="Hello world" />
             <Label styleClass="parseCommandPriority" text="at 3pm on thu" />
             <Label styleClass="parseCommandPriority" text="to 5pm on sat" />
@@ -471,7 +477,7 @@
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="114.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="modify" />
+            <Label prefWidth="45.0" styleClass="parseCommandTypeName" text="modify" />
             <Label styleClass="parseCommandName" text="Hello world" />
             <Label styleClass="parseCommandPriority" text="***" />
           </children>
@@ -479,7 +485,7 @@
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="134.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="modify" />
+            <Label prefWidth="45.0" styleClass="parseCommandTypeName" text="modify" />
             <Label styleClass="parseCommandName" text="Hello world" />
             <Label styleClass="parseCommandPriority" text="&gt; hello universe" />
           </children>
@@ -487,7 +493,7 @@
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="155.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="modify" />
+            <Label prefWidth="45.0" styleClass="parseCommandTypeName" text="modify" />
             <Label styleClass="parseCommandName" text="Hello world" />
             <Label styleClass="parseCommandPriority" text="by 7pm" />
           </children>
@@ -528,14 +534,14 @@
         <Label font="$x1" layoutX="20.0" layoutY="54.0" text="Marking task as complete:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="75.0" prefHeight="26.6015625" prefWidth="504.0" spacing="10.0">
           <children>
-            <Label styleClass="parseCommandTypeName" text="boom" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="boom" />
             <Label styleClass="parseCommandName" text="&lt;task name or task id&gt;" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="93.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="boom" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="boom" />
             <Label styleClass="parseCommandName" text="Hello world" />
           </children>
         </HBox>
@@ -543,27 +549,27 @@
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="111.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="boom" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="boom" />
             <Label styleClass="parseCommandName" text="5" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="163.0" prefHeight="26.6015625" prefWidth="504.0" spacing="10.0">
           <children>
-            <Label styleClass="parseCommandTypeName" text="unboom" />
+            <Label prefWidth="60.0" styleClass="parseCommandTypeName" text="unboom" />
             <Label styleClass="parseCommandName" text="&lt;task name or task id&gt;" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="181.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="unboom" />
+            <Label prefWidth="60.0" styleClass="parseCommandTypeName" text="unboom" />
             <Label styleClass="parseCommandName" text="Hello world" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="199.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="unboom" />
+            <Label prefWidth="60.0" styleClass="parseCommandTypeName" text="unboom" />
             <Label styleClass="parseCommandName" text="5" />
           </children>
         </HBox>
@@ -583,42 +589,42 @@
         <Label font="$x1" layoutX="20.0" layoutY="60.0" text="Changing view" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="81.0" prefHeight="26.6015625" prefWidth="504.0" spacing="10.0">
           <children>
-            <Label styleClass="parseCommandTypeName" text="view" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="view" />
             <Label styleClass="parseCommandName" text="&lt;view selection name&gt;" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="100.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="view" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="view" />
             <Label styleClass="parseCommandName" text="today" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="120.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="view" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="view" />
             <Label styleClass="parseCommandName" text="future" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="141.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="view" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="view" />
             <Label styleClass="parseCommandName" text="timeless" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="162.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="view" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="view" />
             <Label styleClass="parseCommandName" text="expired" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="183.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="view" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="view" />
             <Label styleClass="parseCommandName" text="archive" />
           </children>
         </HBox>
@@ -638,42 +644,42 @@
         <Label font="$x1" layoutX="20.0" layoutY="60.0" text="Search task by name:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="81.0" prefHeight="26.6015625" prefWidth="504.0" spacing="10.0">
           <children>
-            <Label styleClass="parseCommandTypeName" text="search" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="search" />
             <Label styleClass="parseCommandName" text="&lt;task name&gt;" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="99.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="search" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="search" />
             <Label styleClass="parseCommandName" text="Hello" />
           </children>
         </HBox>
         <Label font="$x1" layoutX="20.0" layoutY="136.0" text="Search by date:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="155.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
           <children>
-            <Label styleClass="parseCommandTypeName" text="search" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="search" />
             <Label styleClass="parseCommandName" text="&lt;end date&gt;" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="172.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="search" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="search" />
             <Label styleClass="parseCommandName" text="by 12/06/14" />
           </children>
         </HBox>
         <Label font="$x1" layoutX="20.0" layoutY="209.0" text="Search on date:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="228.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
           <children>
-            <Label styleClass="parseCommandTypeName" text="search" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="search" />
             <Label styleClass="parseCommandName" text="&lt;date&gt;" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="245.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="search" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="search" />
             <Label styleClass="parseCommandName" text="12/06/14" />
           </children>
         </HBox>
@@ -693,7 +699,7 @@
         <Label font="$x1" layoutX="20.0" layoutY="60.0" text="Switch to next page:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="81.0" prefHeight="26.6015625" prefWidth="504.0" spacing="10.0">
           <children>
-            <Label styleClass="parseCommandTypeName" text="page" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="page" />
             <Label styleClass="parseCommandName" text="next" />
           </children>
         </HBox>
@@ -701,22 +707,57 @@
         <Label font="$x1" layoutX="20.0" layoutY="115.0" text="Switch to previous page:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="134.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
           <children>
-            <Label styleClass="parseCommandTypeName" text="page" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="page" />
             <Label styleClass="parseCommandName" text="prev" />
           </children>
         </HBox>
         <Label font="$x1" layoutX="20.0" layoutY="168.0" text="Switch to a particular page:" />
         <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="187.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
           <children>
-            <Label styleClass="parseCommandTypeName" text="page" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="page" />
             <Label styleClass="parseCommandName" text="&lt;page  number&gt;" />
           </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="204.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0">
           <children>
             <Label text="E.g." />
-            <Label styleClass="parseCommandTypeName" text="page" />
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="page" />
             <Label styleClass="parseCommandName" text="5" />
+          </children>
+        </HBox>
+      </children>
+    </Pane>
+    <Pane id="helpadd" fx:id="helpClearPane" layoutX="16.0" layoutY="83.0" prefHeight="446.05859375" prefWidth="567.0" visible="false">
+      <children>
+        <Rectangle arcHeight="5.0" arcWidth="0.0" fill="WHITE" height="447.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="567.0" />
+        <Label font="$x5" layoutX="10.0" layoutY="6.0" text="Help Clear" />
+        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="33.0" prefHeight="26.6015625" prefWidth="543.0" spacing="10.0">
+          <children>
+            <Label styleClass="parseCommandTypeName" text="Command Name" />
+            <Label styleClass="parseCommandName" text="Required" />
+            <Label styleClass="parseCommandPriority" text="Optional" />
+          </children>
+        </HBox>
+        <Label font="$x1" layoutX="20.0" layoutY="60.0" text="Clearing all tasks in existance" />
+        <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="81.0" prefHeight="26.6015625" prefWidth="504.0" spacing="10.0">
+          <children>
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="clear" />
+            <Label styleClass="parseCommandName" text="all" />
+          </children>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="99.0" prefHeight="26.6015625" prefWidth="339.0" spacing="10.0" />
+        <Label font="$x1" layoutX="20.0" layoutY="120.0" text="Clear all incomplete tasks" />
+        <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="139.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
+          <children>
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="clear" />
+            <Label styleClass="parseCommandName" text="present" />
+          </children>
+        </HBox>
+        <Label font="$x1" layoutX="20.0" layoutY="179.0" text="Clear all completed tasks" />
+        <HBox alignment="CENTER_LEFT" layoutX="49.0" layoutY="198.0" prefHeight="26.6015625" prefWidth="411.0" spacing="10.0">
+          <children>
+            <Label prefWidth="40.0" styleClass="parseCommandTypeName" text="clear" />
+            <Label styleClass="parseCommandName" text="archive" />
           </children>
         </HBox>
       </children>
