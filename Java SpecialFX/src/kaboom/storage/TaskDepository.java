@@ -220,6 +220,11 @@ public class TaskDepository {
 		presentTaskList.add(singleTask);
 		archivedTaskList.remove(singleTask);
 	}
+	
+	public void clearAll() {
+		clearAllCurrentTasks();
+		clearAllArchivedTasks();
+	}
 
 	public Vector<TaskInfo> clearAllCurrentTasks () {
 		presentTaskList = new Vector<TaskInfo>();
