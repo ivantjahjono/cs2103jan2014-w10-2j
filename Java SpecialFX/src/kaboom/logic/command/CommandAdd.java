@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import kaboom.logic.command.Command.COMMAND_ERROR;
 import kaboom.shared.DISPLAY_STATE;
 import kaboom.shared.DateAndTimeFormat;
 import kaboom.shared.FormatIdentify;
@@ -52,7 +51,7 @@ public class CommandAdd extends Command {
 	 * If any are invalid: cancel add and return invalid command
 	 */
 	public Result execute() {
-		assert taskView != null;
+		assert taskManager != null;
 
 		String commandFeedback = "";
 
@@ -102,7 +101,7 @@ public class CommandAdd extends Command {
 		taskInfo.setRecent(true);
 
 		DISPLAY_STATE stateToSet = DISPLAY_STATE.INVALID;
-		if (taskView.addTask(taskInfo)) {
+		if (taskManager.addPresentTask(taskInfo)) {
 			addCommandToHistory ();
 			commandFeedback = String.format(MESSAGE_COMMAND_ADD_SUCCESS, taskInfo.getTaskName());
 
@@ -124,7 +123,7 @@ public class CommandAdd extends Command {
 	}
 
 	public boolean undo () {
-		return taskView.removeTask(taskInfo);
+		return taskManager.removeTask(taskInfo);
 	}
 
 	public boolean parseInfo(String info, Vector<FormatIdentify> indexList) {

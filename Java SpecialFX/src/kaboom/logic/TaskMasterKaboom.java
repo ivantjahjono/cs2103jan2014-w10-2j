@@ -11,7 +11,7 @@ import kaboom.shared.DISPLAY_STATE;
 import kaboom.shared.FormatIdentify;
 import kaboom.shared.Result;
 import kaboom.shared.TaskInfo;
-import kaboom.storage.TaskView;
+import kaboom.storage.TaskManager;
 import kaboom.ui.DisplayData;
 
 
@@ -28,7 +28,7 @@ public class TaskMasterKaboom {
 	
 	private DisplayData 	guiDisplayData;
 	//private Storage 		fileStorage;
-	private TaskView taskManager;
+	private TaskManager taskManager;
 	private CommandFactory commandFactory;
 	
 	static TaskMasterKaboom instance;
@@ -69,8 +69,8 @@ public class TaskMasterKaboom {
 	}
 	
 	private boolean initialiseTaskManager () {
-		taskManager = TaskView.getInstance(FILENAME);
-		taskManager.load();
+		taskManager = TaskManager.getInstance(FILENAME);
+		//taskManager.load();
 		//fileStorage = new Storage(FILENAME);
 		//fileStorage.load();
 		
@@ -83,7 +83,7 @@ public class TaskMasterKaboom {
 			updateCommand.execute();
 			
 			//4. Save data to file
-			taskManager.store();
+			//taskManager.store();
 			
 			guiDisplayData.updateDisplayWithResult();
 			resetRefreshCounter();
@@ -109,7 +109,7 @@ public class TaskMasterKaboom {
 		assert userInputSentence != null;
 	
 		resetRefreshCounter();
-		TaskView.getInstance().refreshAllTasksFlags();
+		taskManager.refreshTasksAndResetRecent();
 		
 		Command commandToExecute = null;
 		Result commandResult = null;
@@ -128,7 +128,7 @@ public class TaskMasterKaboom {
 		updateUi(commandResult);
 		
 		//3. Save data to file
-		taskManager.store();
+		//taskManager.store();
 		
 		return commandResult.getFeedback();
 	}
@@ -164,14 +164,14 @@ public class TaskMasterKaboom {
 	}
 	
 	public Vector<Integer> updateTaskCount() {
-		return TaskView.getInstance().getTasksCountList();
+		return TaskManager.getInstance().getTasksCountList();
 	}
 	
 	public Integer indexToGoTo(TaskInfo taskToFocus) {
-		return TaskView.getInstance().getTaskPositionInView(taskToFocus);
+		return TaskManager.getInstance().getTaskPositionInView(taskToFocus);
 	}
 	
 	public Vector<TaskInfo> setAndGetView(DISPLAY_STATE displayState) {
-		return TaskView.getInstance().setAndGetView(displayState);
+		return TaskManager.getInstance().setAndGetView(displayState);
 	}
 }

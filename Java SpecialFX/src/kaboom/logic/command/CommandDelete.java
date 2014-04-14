@@ -26,7 +26,7 @@ public class CommandDelete extends Command {
 	}
 
 	public Result execute() {
-		assert taskView != null;
+		assert taskManager != null;
 		
 		String commandFeedback = "";
 
@@ -49,7 +49,7 @@ public class CommandDelete extends Command {
 	}
 
 	public boolean undo () {
-		if (taskView.addTask(taskToBeDeleted)) {
+		if (taskManager.addPresentTask(taskToBeDeleted)) {
 			return true;
 		}
 		return false;
@@ -67,7 +67,7 @@ public class CommandDelete extends Command {
 	}
 	
 	private String removeTaskFromMemory() {
-		boolean hasRemovedTask = taskView.removeTask(taskToBeDeleted);
+		boolean hasRemovedTask = taskManager.removeTask(taskToBeDeleted);
 		String feedback = "";
 		if (hasRemovedTask) {
 			addCommandToHistory ();
