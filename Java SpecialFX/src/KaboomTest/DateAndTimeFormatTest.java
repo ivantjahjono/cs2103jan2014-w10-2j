@@ -69,6 +69,7 @@ public class DateAndTimeFormatTest {
 	/*
 	 * SimpleDateFormat Year Boundary: 2 digit years range from 1934 to 2033
 	 */
+	
 	@Test
 	public void testDateValidity() {
 		//Null
@@ -80,14 +81,9 @@ public class DateAndTimeFormatTest {
 		assertFalse ("Invalid: day",datFormat.isDateValid("000414"));
 		//invalid month
 		assertFalse ("Invalid: month",datFormat.isDateValid("011314"));
-		//Year boundary (millennium year)
-		assertTrue ("Valid: 2000",datFormat.isDateValid("010100"));
-		//Year boundary 1999
-		assertTrue ("Valid: 1999",datFormat.isDateValid("010101"));
-		//Year boundary 2001
-		assertTrue ("Valid: 2001",datFormat.isDateValid("010199"));
 		
-		System.out.println("----------------------------------------------------------------");
+		assertTrue ("Valid",datFormat.isDateValid("010100"));
+		
 		//dd/MM/yy Format
 		assertTrue ("Valid: dd/MM/yy format",datFormat.isDateValid("21/04/14"));
 		assertTrue ("Valid: dd/MM/yy format",datFormat.isDateValid("21/04/33"));
@@ -158,21 +154,10 @@ public class DateAndTimeFormatTest {
 		timeString = "1234";
 		assertEquals("123400", datFormat.convertStringTimeTo24HourString(timeString));
 		
-		timeString = "2334";
-		assertEquals("233400", datFormat.convertStringTimeTo24HourString(timeString));
+		timeString = "2401";
+		assertEquals("240100", datFormat.convertStringTimeTo24HourString(timeString));
+		
 	}
-	
-//	@Test
-//	public void convertDate () {
-//		String timeString = "";
-//		
-//		timeString = "1pm";
-//		assertEquals("07 04 14", datFormat.getNearestWeekdayFromToday(2));
-//		
-//		assertEquals("12 04 14", datFormat.getNearestWeekdayFromToday(7));
-//		
-//		assertEquals("10 04 14", datFormat.getNearestWeekdayFromToday(5));
-//	}
 	
 	@Test
 	public void convertDateStringToCalendar () {

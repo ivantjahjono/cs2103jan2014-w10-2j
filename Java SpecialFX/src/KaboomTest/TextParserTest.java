@@ -82,6 +82,8 @@ public class TextParserTest {
 		command = "at 1800 by 30/04/14";
 		assertEquals("", textparser.extractDateAndTime(timeKeyword, command, tempHashTable));
 		
+		command = "on 30/04/14";
+		assertEquals("", textparser.extractDateAndTime(timeKeyword, command, tempHashTable));
 	}
 	
 	@Test
@@ -91,16 +93,25 @@ public class TextParserTest {
 
 		ArrayList<Integer> matchVector = new ArrayList<Integer>();
 		
-		// Full working syntax
+		// this test only to check format. Not validity of time or date
+		// dd/MM/yy or dd.MM.yy
 		command = "at 1700 on 25/12/18";
 		assertTrue(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
 		
-		command = "at 600   on 25/12/18";
+		command = "at 600   on 25.12.18";
 		assertTrue(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
 		
-		command = "at 1800 on 25/12/18     ";
-		assertTrue(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
+		command = "at 1800 on 111/04/18     ";
+		assertFalse(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
 		
+		command = "at 1800 on 11/04/180     ";
+		assertFalse(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
+		
+		command = "at 1300 on 110418     ";
+		assertFalse(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
+		
+		command = "at 1800 on 11/04/1993     ";
+		assertFalse(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
 	}
 	
 	@Test
