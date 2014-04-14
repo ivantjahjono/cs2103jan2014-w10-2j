@@ -23,7 +23,7 @@ import kaboom.storage.TaskView;
 
 public class Command {
 	protected final String MESSAGE_COMMAND_FAIL_INVALID_DATE = "Oops! Did you check the calendar? The date you've entered is invalid";
-	protected final String MESSAGE_COMMAND_FAIL_NO_SUCH_TASK = "Oops! Modify wut??";
+	protected final String MESSAGE_COMMAND_FAIL_NO_SUCH_TASK = "Oops! No such task exist";
 	protected final String MESSAGE_COMMAND_FAIL_NO_TASK_NAME = "Enter a taskname or task id, please ?";
 	protected final String MESSAGE_COMMAND_FAIL_INVALID_TASKNAME = "Oops! HAVENDO??";
 	protected final String MESSAGE_COMMAND_INVALID = "Please enter a valid command. Type <help> for info.";
