@@ -1,4 +1,5 @@
 //@author A0096670W
+
 /**
  * Storage.java:
  * This class stores the data in the task depository into a text file
@@ -80,7 +81,7 @@ public class Storage {
 		try {
 			writer = new BufferedWriter(new FileWriter(fileName));
 
-			writeAllTasks();
+			writeAllTasksToFile();
 
 			logger.fine("All tasks written to text file: " + fileName);
 			writer.close();
@@ -91,18 +92,18 @@ public class Storage {
 		}
 	}
 
-	private void writeAllTasks() throws IOException {
+	private void writeAllTasksToFile() throws IOException {
 		writePresentTaskList();
 		writeArchivedTaskList();
 	}
 
 	private void writePresentTaskList() throws IOException {
 		logger.fine("Trying to write current tasks text file: " + fileName);
-		Vector<TaskInfo> presentTaskList = taskDepository.getAllCurrentTasks();
+		Vector<TaskInfo> presentTaskList = taskDepository.getAllPresentTasks();
 		assert (presentTaskList != null);
 		writeToFile(presentTaskList);
 	}
-	
+
 	private void writeArchivedTaskList() throws IOException {
 		logger.fine("Trying to write archived tasks text file: " + fileName);
 		Vector<TaskInfo> archivedTaskList = taskDepository.getAllArchivedTasks();
@@ -228,13 +229,13 @@ public class Storage {
 		while (fileScanner.hasNext()) {
 			String input = getNextLineFromFile(fileScanner);
 			String[] inputSplitTokens = input.split(DELIMITER);
-			
+
 			TaskInfo task = new TaskInfo();
 			setTaskAttributes(task, inputSplitTokens);
 			addTaskToAppropriateList(task);
 		}
 	}
-	
+
 	private String getNextLineFromFile(Scanner fileScanner) {
 		return fileScanner.nextLine().trim();
 	}
@@ -248,15 +249,15 @@ public class Storage {
 		setExpired(task, inputSplitTokens);
 		setDone(task, inputSplitTokens);
 	}
-	
+
 	private void setTaskName(TaskInfo task, String[] inputTokens) {
 		task.setTaskName(inputTokens[INDEX_TASK_NAME]);
 	}
-	
+
 	private void setTaskType(TaskInfo task, String[] inputTokens) {
 		task.setTaskType(TaskInfo.getTaskType(inputTokens[INDEX_TASK_TYPE]));
 	}
-	
+
 	private void setStartDate(TaskInfo task, String[] inputTokens) {
 		Calendar startDate = Calendar.getInstance();
 		if (inputTokens[INDEX_START_YEAR].equals(BLANK)) {
@@ -274,7 +275,7 @@ public class Storage {
 		}
 		task.setStartDate(startDate);
 	}
-	
+
 	private void setEndDate(TaskInfo task, String[] inputTokens) {
 		Calendar endDate = Calendar.getInstance();
 		if (inputTokens[INDEX_END_YEAR].equals(BLANK)) {
@@ -292,28 +293,32 @@ public class Storage {
 		}
 		task.setEndDate(endDate);
 	}
-	
+
 	private void setPriority(TaskInfo task, String[] inputTokens) {
 		task.setPriority(Integer.parseInt(inputTokens[INDEX_IMPORTANCE_LEVEL]));
 	}
-	
+
 	private void setExpired(TaskInfo task, String[] inputTokens) {
-		Calendar now = Calendar.getInstance();
-		Calendar endDate = task.getEndDate();
-		boolean isExpired = now.after(endDate);
-		
+		boolean isExpired = checkExpired(task);
+
 		if (!task.getTaskType().equals(TASK_TYPE.FLOATING)) {
-			task.setExpiryFlag(isExpired);  //Set true if current time is after endDate
+			task.setExpiryFlag(isExpired);  //Set true only for non-floating tasks
 		}
 		else {
-			task.setExpiryFlag(Boolean.parseBoolean(inputTokens[INDEX_IS_EXPIRED]));  //Floating tasks cannot expire
+			task.setExpiryFlag(Boolean.parseBoolean(inputTokens[INDEX_IS_EXPIRED]));
 		}
 	}
-	
+
+	private boolean checkExpired(TaskInfo task) {
+		Calendar now = Calendar.getInstance();
+		Calendar endDate = task.getEndDate();
+		return now.after(endDate);
+	}
+
 	private void setDone(TaskInfo task, String[] inputTokens) {
 		task.setDone(Boolean.parseBoolean(inputTokens[INDEX_IS_DONE]));
 	}
-	
+
 	private void addTaskToAppropriateList(TaskInfo task) {
 		if (task.getDone()) {
 			taskDepository.addTaskToArchivedList(task);
