@@ -16,7 +16,7 @@ import kaboom.storage.TaskManager;
 
 public class CommandModify extends Command {
 
-	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_CHANGE = "Nothing happened...";
+	private final String MESSAGE_COMMAND_MODIFY_FAIL_NO_CHANGE = "Modify has failed. Type <help modify> for help.";
 	private final String MESSAGE_TASK_NAME = "<%1$s> has";
 	private final String MESSAGE_COMMAND_MODIFY_SUCCESS_NAME_CHANGE = " evolved into <%1$s>";
 	private final String MESSAGE_COMMAND_MODIFY_SUCCESS_TIME_CHANGE = " manipulated time";
