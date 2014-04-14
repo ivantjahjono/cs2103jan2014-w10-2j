@@ -55,8 +55,8 @@ public class TaskInfoDisplay {
 		
 		setImportanceLevel(infoToUpdateFrom.getPriority());
 		
-		setExpiryFlag(infoToUpdateFrom.getExpiryFlag());
-		setDoneFlag(infoToUpdateFrom.getDone());
+		setExpiryFlag(infoToUpdateFrom.isExpired());
+		setDoneFlag(infoToUpdateFrom.isDone());
 		setRecentFlag(infoToUpdateFrom.isRecent());
 	}
 
