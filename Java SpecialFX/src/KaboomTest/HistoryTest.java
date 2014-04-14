@@ -107,6 +107,8 @@ public class HistoryTest {
 		history.addToRecentCommands(commandClear);
 		history.addToRecentCommands(commandAdd);
 		history.addToRecentCommands(commandClear);
+		assertEquals(history.getMostRecentCommand(), commandClear);
+		assertEquals(5, history.size());
 		history.addToRecentCommands(commandAdd);
 		history.addToRecentCommands(commandClear);
 		history.addToRecentCommands(commandAdd);
