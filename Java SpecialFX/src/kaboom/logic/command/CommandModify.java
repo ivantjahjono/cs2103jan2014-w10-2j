@@ -173,105 +173,125 @@ public class CommandModify extends Command {
 	}
 
 	
-	private String getPrevStartDate() {
+//	private String getNewStartTime(String startTime) {
+//		String newStartTime =  dateAndTimeFormat.convertStringTimeTo24HourString(infoTable.get(KEYWORD_TYPE.START_TIME));
+//		if(newStartTime != null) {
+//			startTime = dateAndTimeFormat.convertStringTimeTo24HourString(newStartTime);
+//			hasTimeChanged = true;
+//		}
+//		return startTime;
+//	}
+	
+//	private String getNewEndDate(String endDate) {
+//		String newEndDate = dateAndTimeFormat.convertStringDateToDayMonthYearFormat(infoTable.get(KEYWORD_TYPE.END_DATE));
+//		if(newEndDate != null) {
+//			if(dateAndTimeFormat.isDateValid(newEndDate)) {
+//				endDate = newEndDate;
+//				hasTimeChanged = true;
+//			} else {
+//				endDate = INVALID_DATE;
+//			}
+//		}
+//		return endDate;
+//	}
+	
+//	private String getNewEndTime(String endTime) {
+//		String newEndTime = dateAndTimeFormat.convertStringTimeTo24HourString(infoTable.get(KEYWORD_TYPE.END_TIME));
+//		if(newEndTime != null) {
+//			endTime = dateAndTimeFormat.convertStringTimeTo24HourString(newEndTime);
+//			hasTimeChanged = true;
+//		}
+//		return endTime;
+//	}
+	
+//	private String getPrevStartDate() {
+//		String startDate = null;
+//		if(preModifiedTaskInfo.getStartDate() != null) {
+//			startDate = dateAndTimeFormat.dateFromCalendarToString(preModifiedTaskInfo.getStartDate());
+//		}
+//		return startDate;
+//	}
+	
+//	private String getPrevEndDate() {
+//		String endDate = null;
+//		if(preModifiedTaskInfo.getEndDate() != null) {
+//			endDate = dateAndTimeFormat.dateFromCalendarToString(preModifiedTaskInfo.getEndDate());
+//		}
+//		return endDate;
+//	}
+	
+//	private String getPrevStartTime() {
+//		String startTime = null;
+//		if(preModifiedTaskInfo.getStartDate() != null) {
+//			startTime = dateAndTimeFormat.timeFromCalendarToString(preModifiedTaskInfo.getStartDate());
+//		}
+//		return startTime;
+//	}
+	
+//	private String getPrevEndTime() {
+//		String endTime = null;
+//		if(preModifiedTaskInfo.getEndDate() != null) {
+//			endTime = dateAndTimeFormat.timeFromCalendarToString(preModifiedTaskInfo.getEndDate());
+//		}
+//		return endTime;
+//	}
+	
+	private String getStartDate() {
 		String startDate = null;
 		if(preModifiedTaskInfo.getStartDate() != null) {
 			startDate = dateAndTimeFormat.dateFromCalendarToString(preModifiedTaskInfo.getStartDate());
 		}
+		startDate = getNewDateOrTimeFromInfoTable(startDate,KEYWORD_TYPE.START_DATE);
 		return startDate;
 	}
-	
-	private String getPrevStartTime() {
+	private String getStartTime() {
 		String startTime = null;
 		if(preModifiedTaskInfo.getStartDate() != null) {
 			startTime = dateAndTimeFormat.timeFromCalendarToString(preModifiedTaskInfo.getStartDate());
 		}
-		return startTime;
-	}
-	
-	private String getNewStartTime(String startTime) {
-		String newStartTime =  dateAndTimeFormat.convertStringTimeTo24HourString(infoTable.get(KEYWORD_TYPE.START_TIME));
-		if(newStartTime != null) {
-			startTime = dateAndTimeFormat.convertStringTimeTo24HourString(newStartTime);
-			hasTimeChanged = true;
-		}
-		return startTime;
-	}
-	
-	private String getNewStartDate(String startDate) {
-		String newStartDate = dateAndTimeFormat.convertStringDateToDayMonthYearFormat(infoTable.get(KEYWORD_TYPE.START_DATE));
-		if(newStartDate != null) {
-			if(dateAndTimeFormat.isDateValid(newStartDate)) {
-				startDate = newStartDate;
-				hasTimeChanged = true;
-			} else {
-				startDate = INVALID_DATE;
-			}
-		}
-		return startDate;
-	}
-	
-	private String getPrevEndDate() {
-		String endDate = null;
-		if(preModifiedTaskInfo.getEndDate() != null) {
-			endDate = dateAndTimeFormat.dateFromCalendarToString(preModifiedTaskInfo.getEndDate());
-		}
-		return endDate;
-	}
-	
-	private String getPrevEndTime() {
-		String endTime = null;
-		if(preModifiedTaskInfo.getEndDate() != null) {
-			endTime = dateAndTimeFormat.timeFromCalendarToString(preModifiedTaskInfo.getEndDate());
-		}
-		return endTime;
-	}
-	
-	private String getNewEndDate(String endDate) {
-		String newEndDate = dateAndTimeFormat.convertStringDateToDayMonthYearFormat(infoTable.get(KEYWORD_TYPE.END_DATE));
-		if(newEndDate != null) {
-			if(dateAndTimeFormat.isDateValid(newEndDate)) {
-				endDate = newEndDate;
-				hasTimeChanged = true;
-			} else {
-				endDate = INVALID_DATE;
-			}
-		}
-		return endDate;
-	}
-	
-	private String getNewEndTime(String endTime) {
-		String newEndTime = dateAndTimeFormat.convertStringTimeTo24HourString(infoTable.get(KEYWORD_TYPE.END_TIME));
-		if(newEndTime != null) {
-			endTime = dateAndTimeFormat.convertStringTimeTo24HourString(newEndTime);
-			hasTimeChanged = true;
-		}
-		return endTime;
-	}
-	
-	private String getStartDate() {
-		String startDate = getPrevStartDate();
-		startDate = getNewStartDate(startDate);
-		return startDate;
-	}
-	
-	private String getStartTime() {
-		String startTime = getPrevStartTime();
-		startTime = getNewStartTime(startTime);
+		startTime = getNewDateOrTimeFromInfoTable(startTime,KEYWORD_TYPE.START_TIME);
 		return startTime;
 	}
 	
 	private String getEndTime() {
-		String endTime = getPrevEndTime();
-		endTime = getNewEndTime(endTime);
+		String endTime = null;
+		if(preModifiedTaskInfo.getEndDate() != null) {
+			endTime = dateAndTimeFormat.timeFromCalendarToString(preModifiedTaskInfo.getEndDate());
+		}
+		endTime = getNewDateOrTimeFromInfoTable(endTime,KEYWORD_TYPE.END_TIME);
 		return endTime;
 	}
 	
 	private String getEndDate() {
-		String endDate = getPrevEndDate();
-		endDate = getNewEndDate(endDate);
+		String endDate = null;
+		if(preModifiedTaskInfo.getEndDate() != null) {
+			endDate = dateAndTimeFormat.dateFromCalendarToString(preModifiedTaskInfo.getEndDate());
+		}
+		endDate = getNewDateOrTimeFromInfoTable(endDate,KEYWORD_TYPE.END_DATE);
 		return endDate;
 	}
+	
+
+	
+//	private String getNewStartDate(String startDate) {
+//		String newStartDate = infoTable.get(KEYWORD_TYPE.START_DATE);
+//		if(newStartDate != null) {
+//			startDate = newStartDate;
+//			hasTimeChanged = true;
+//		}
+//		return startDate;
+//	}
+	
+	private String getNewDateOrTimeFromInfoTable(String dateOrTime, KEYWORD_TYPE keyword) {
+		String newDateOrTime = infoTable.get(keyword);
+		if(newDateOrTime != null) {
+			dateOrTime = newDateOrTime;
+			hasTimeChanged = true;
+		}
+		return dateOrTime;
+	}
+	
+
 	
 //	private COMMAND_ERROR modifyDateAndTime(TaskInfo temp) {
 //		//Get Start Date And Time		

@@ -25,6 +25,7 @@ public class Command {
 	protected final String MESSAGE_COMMAND_FAIL_NO_TASK_NAME = "Enter a taskname or task id, please ?";
 	protected final String MESSAGE_COMMAND_FAIL_INVALID_TASKNAME = "Oops! Invalid taskname??";
 	protected final String MESSAGE_COMMAND_FAIL_INVALID_TASKID = "Oops! Invalid ID??";
+	protected final String MESSAGE_COMMAND_FAIL_INVALID_STARTDATE_AFTER_ENDDATE = "Oops! Please schedule to another time";
 	protected final String MESSAGE_COMMAND_INVALID = "Please enter a valid command. Type <help> for info.";
 	
 	protected COMMAND_TYPE commandType;
@@ -36,7 +37,7 @@ public class Command {
 	protected DateAndTimeFormat dateAndTimeFormat;
 	
 	protected enum COMMAND_ERROR{
-		CLASH, TASK_DOES_NOT_EXIST, NO_TASK_NAME, INVALID_DATE, INVALID_TASKNAME , INVALID_TASKID
+		CLASH, TASK_DOES_NOT_EXIST, NO_TASK_NAME, INVALID_DATE, INVALID_TASKNAME , INVALID_TASKID, INVALID_STARTENDDATE
 	}
 	
 	public Command () {
@@ -223,6 +224,8 @@ public class Command {
 			return createResult(MESSAGE_COMMAND_FAIL_INVALID_TASKNAME);
 		case INVALID_TASKID:
 			return createResult(MESSAGE_COMMAND_FAIL_INVALID_TASKID);
+		case INVALID_STARTENDDATE:
+			return createResult(MESSAGE_COMMAND_FAIL_INVALID_STARTDATE_AFTER_ENDDATE);
 		default:
 			return null;
 		}
@@ -432,7 +435,7 @@ public class Command {
 	protected Result validateStartAndEndTime (TaskInfo temp) {
 		if(temp.getStartDate() != null && temp.getEndDate() != null) {
 			if(!dateAndTimeFormat.isFirstDateBeforeSecondDate(temp.getStartDate(), temp.getEndDate())) {
-				return commandErrorHandler(COMMAND_ERROR.INVALID_DATE);
+				return commandErrorHandler(COMMAND_ERROR.INVALID_STARTENDDATE);
 			}
 		}
 		return null;
