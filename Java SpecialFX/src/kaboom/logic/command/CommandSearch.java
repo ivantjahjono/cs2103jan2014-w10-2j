@@ -1,4 +1,10 @@
 //@author A0096670W
+
+/**
+ * CommandSearch.java:
+ * This class performs the searching for tasks using either the name
+ * or the date.
+ */
 package kaboom.logic.command;
 
 import java.util.Calendar;
@@ -105,9 +111,13 @@ public class CommandSearch extends Command {
 		}
 	}
 
-	//Checks if tasks starts or ends on a particular date
-	//Checks the start time of timed tasks or in between
-	//Checks the end time of deadline tasks
+	/**
+	 * This function checks if a task starts or ends on the date.
+	 * Checks the start/end time or in between for timed tasks
+	 * Checks the end time for deadline tasks
+	 * @param task
+	 * @param searchOnDate
+	 */
 	private boolean isTaskOnDate(TaskInfo task, Calendar searchOnDate) {
 		Calendar taskStartDate = task.getStartDate();
 		Calendar taskEndDate = task.getEndDate();
@@ -139,8 +149,12 @@ public class CommandSearch extends Command {
 				taskDate.get(Calendar.YEAR) == searchDate.get(Calendar.YEAR);
 	}
 
-	//Searches tasks that ends by that particular date
-	//Does not include tasks that start before but end after that date
+	/**
+	 * This class searches for tasks that ends by that particular date.
+	 * Does not include tasks that start before but ends after that date.
+	 * @param task
+	 * @param searchByDate
+	 */
 	private boolean isTaskByDate(TaskInfo task, Calendar searchByDate) {
 		Calendar taskEndDate = task.getEndDate();
 

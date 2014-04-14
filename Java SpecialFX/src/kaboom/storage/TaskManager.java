@@ -30,7 +30,7 @@ public class TaskManager {
 	private Vector<TaskInfo> searchView;  	//Vector for searches
 	private Vector<Integer> tasksCount;
 	private TaskDepository taskDepo;
-	
+
 	private Storage fileStorage;
 	private final String FILENAME = "KABOOM_FILE.dat";
 	private History history;
@@ -44,7 +44,7 @@ public class TaskManager {
 		history = History.getInstance();
 		fileStorage.load();
 	}
-	
+
 	private TaskManager(String fileName) {
 		taskDepo = TaskDepository.getInstance();
 		currentView = taskDepo.getToday();
@@ -61,14 +61,14 @@ public class TaskManager {
 		}
 		return instance;
 	}
-	
+
 	public static TaskManager getInstance(String fileName) {
 		if (instance == null) {
 			instance = new TaskManager(fileName);
 		}
 		return instance;
 	}
-	
+
 	public Vector<Integer> getTasksCountList() {
 		clearAndAddTaskCounts();
 		return tasksCount;
@@ -113,10 +113,10 @@ public class TaskManager {
 			setCurrentView(taskDepo.getToday());
 			break;
 		}
-		
+
 		return currentView;
 	}
-	
+
 	private void setCurrentView(Vector<TaskInfo> taskList) {
 		currentView = taskList;
 	}	
@@ -129,11 +129,11 @@ public class TaskManager {
 		searchView = taskList;
 		setCurrentView(taskList);
 	}
-	
+
 	public Vector<TaskInfo> getSearchView() {
 		return searchView;
 	}
-	
+
 	public TaskInfo getTaskFromViewByName(String searchName) {
 		for (int i = 0; i < currentView.size(); i++) {
 			if (currentView.get(i).getTaskName().contains(searchName)) {
@@ -142,7 +142,7 @@ public class TaskManager {
 		}
 		return null;
 	}
-	
+
 	public TaskInfo getTaskFromViewByID(int index) {
 		if (currentView.size() <= index) {
 			return null;
@@ -150,27 +150,27 @@ public class TaskManager {
 			return currentView.get(index);			
 		}
 	}
-	
+
 	public int getTaskPositionInView (TaskInfo taskToSearch) {
 		return currentView.indexOf(taskToSearch);
 	}
-	
+
 	public Vector<TaskInfo> getAllPresentTasks() {
 		return taskDepo.getAllPresentTasks();
 	}
-	
+
 	public Vector<TaskInfo> getAllArchivedTasks() {
 		return taskDepo.getAllArchivedTasks();
 	}
-	
+
 	public int countPresentTasks() {
 		return taskDepo.countPresentTasks();
 	}
-	
+
 	public int countArchivedTasks() {
 		return taskDepo.countArchivedTasks();
 	}
-	
+
 	public boolean addPresentTask(TaskInfo task) {
 		assert task.isDone() == false;
 		boolean isAdded = taskDepo.addTaskToPresentList(task);
@@ -179,7 +179,7 @@ public class TaskManager {
 		store();
 		return isAdded;
 	}
-	
+
 	public boolean addArchivedTask(TaskInfo task) {
 		assert task.isDone() == true;
 		boolean isAdded = taskDepo.addTaskToArchivedList(task);
@@ -188,7 +188,7 @@ public class TaskManager {
 		store();
 		return isAdded;
 	}
-	
+
 	public boolean removeTask(TaskInfo task) {
 		TaskInfo removedTask = taskDepo.removeTask(task);
 		deleteInSearchView(task);
@@ -199,59 +199,60 @@ public class TaskManager {
 			return true;
 		}
 	}
-	
+
 	public void updateTask(TaskInfo newTask, TaskInfo oldTask) {
 		taskDepo.updateTask(newTask, oldTask);
 		updateInSearchView(newTask, oldTask);
 		store();
 	}
-	
+
 	public void doneTask(TaskInfo task) {
 		assert task.isDone() == false;
 		task.setExpiry(false);
 		task.setDone(true);
 		deleteInSearchView(task);
 		task.setRecent(true);
-		taskDepo.refreshTasks();  //Refresh to shift task to archive
+		taskDepo.refreshTasks();
 		store();
 	}
-	
+
 	public void undoneTask(TaskInfo task) {
 		assert task.isDone() == true;
 		task.setDone(false);
 		deleteInSearchView(task);
 		task.setRecent(true);
-		taskDepo.refreshTasks();  //Refresh to shift task to archive
+		taskDepo.refreshTasks();
 		store();
 	}
-	
+
 	public void clearAllTasks() {
 		clearPresentTasks();
 		clearArchivedTasks();
 	}
-	
+
 	public void clearPresentTasks() {
 		taskDepo.clearAllPresentTasks();
 		clearSearchView();
 		store();
 	}
-	
+
 	public void clearArchivedTasks() {
 		taskDepo.clearAllArchivedTasks();
 		clearSearchView();
 		store();
 	}
-	
+
 	public void refreshTasks() {
 		taskDepo.refreshTasks();
 		store();
 	}
-	
+
 	public void refreshTasksAndResetRecent() {
-		taskDepo.refreshTasks(true);
+		boolean isResetRecentFlag = true;
+		taskDepo.refreshTasks(isResetRecentFlag);
 		store();
 	}
-	
+
 	public void addToSearchView(TaskInfo task) {
 		searchView.add(task);
 	}
@@ -271,23 +272,23 @@ public class TaskManager {
 			}
 		}
 	}
-	
+
 	public void clearSearchView() {
 		searchView.clear();
 	}
-	
+
 	public void store() {
 		fileStorage.store();
 	}
-	
+
 	public void load() {
 		fileStorage.load();
 	}
-	
+
 	public void addToHistory(Command command) {
 		history.addToRecentCommands(command);
 	}
-	
+
 	public Command getMostRecentCommand() {
 		return history.getMostRecentCommand();
 	}

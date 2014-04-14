@@ -1,4 +1,9 @@
 //@author A0096670W
+
+/**
+ * CommandUndone.java:
+ * This class sets a task as undone and shifts it from the archive to the present task list.
+ */
 package kaboom.logic.command;
 
 import java.util.Hashtable;
@@ -55,7 +60,7 @@ public class CommandUndone extends Command {
 
 	public boolean undo() {
 		taskToBeModified.setDone(true);
-		taskManager.refreshTasks();  //Refresh to shift task to archive
+		taskManager.refreshTasks();
 		taskManager.addToSearchView(taskToBeModified);
 		return true;
 	}
