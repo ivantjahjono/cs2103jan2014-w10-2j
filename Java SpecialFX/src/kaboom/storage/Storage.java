@@ -1,5 +1,6 @@
 //@author A0096670W
 /**
+ * Storage.java:
  * This class stores the data in the task depository into a text file
  * for persistence. Storing and loading of data are called by the store()
  * and load() functions respectively. Each task is stored in a single line
@@ -42,6 +43,10 @@ public class Storage {
 	private final int INDEX_IMPORTANCE_LEVEL = 12;
 	private final int INDEX_IS_EXPIRED = 13;
 	private final int INDEX_IS_DONE = 14;
+	private final int VALUE_START_TIME_SECONDS = 0;
+	private final int VALUE_START_TIME_MILLISECONDS = 0;
+	private final int VALUE_END_TIME_SECONDS = 59;
+	private final int VALUE_END_TIME_MILLISECONDS = 0;
 
 	private String fileName;
 	private final String storageLoggerFile = "StorageLog.txt";
@@ -264,8 +269,8 @@ public class Storage {
 			startDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(inputTokens[INDEX_START_DAY]));
 			startDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputTokens[INDEX_START_HOUR]));
 			startDate.set(Calendar.MINUTE, Integer.parseInt(inputTokens[INDEX_START_MINUTE]));
-			startDate.set(Calendar.SECOND, 0);
-			startDate.set(Calendar.MILLISECOND, 0);
+			startDate.set(Calendar.SECOND, VALUE_START_TIME_SECONDS);
+			startDate.set(Calendar.MILLISECOND, VALUE_START_TIME_MILLISECONDS);
 		}
 		task.setStartDate(startDate);
 	}
@@ -282,8 +287,8 @@ public class Storage {
 			endDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(inputTokens[INDEX_END_DAY]));
 			endDate.set(Calendar.HOUR_OF_DAY, Integer.parseInt(inputTokens[INDEX_END_HOUR]));
 			endDate.set(Calendar.MINUTE, Integer.parseInt(inputTokens[INDEX_END_MINUTE]));
-			endDate.set(Calendar.SECOND, 59);
-			endDate.set(Calendar.MILLISECOND, 0);
+			endDate.set(Calendar.SECOND, VALUE_END_TIME_SECONDS);
+			endDate.set(Calendar.MILLISECOND, VALUE_END_TIME_MILLISECONDS);
 		}
 		task.setEndDate(endDate);
 	}
