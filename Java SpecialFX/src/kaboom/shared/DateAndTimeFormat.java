@@ -55,9 +55,6 @@ public class DateAndTimeFormat {
 		}
 		
 		dateAndTime.setTime(dateTime);
-		
-		//convertStringDateToCalendar(dateAndTime, date);
-		//convertStringTimeToCalendar(dateAndTime, time);
 
 		return dateAndTime;
 	}
@@ -211,11 +208,7 @@ public class DateAndTimeFormat {
 		SimpleDateFormat dayFormat = new SimpleDateFormat(dayFormatString);
 		
 		return dayFormat.format(cal.getTime());
-//		String day = String.format("%02d", cal.get(Calendar.DATE));
-//		String month = String.format("%02d", cal.get(Calendar.MONTH)+1);
-//		String year = String.format("%02d", cal.get(Calendar.YEAR));
-//		String date = day+month+year;
-//		return date;
+
 	}
 	
 	public String timeFromCalendarToString (Calendar cal) {
@@ -223,10 +216,7 @@ public class DateAndTimeFormat {
 		SimpleDateFormat dayFormat = new SimpleDateFormat(timeFormatString);
 		
 		return dayFormat.format(cal.getTime());
-//		String hour = String.format("%02d", cal.get(Calendar.HOUR_OF_DAY));
-//		String min = String.format("%02d", cal.get(Calendar.MINUTE));
-//		String time = hour+min;
-//		return time;
+
 	}
 
 	public Calendar addTimeToCalendar (Calendar dateAndTime, int hour, int min) {
@@ -283,35 +273,6 @@ public class DateAndTimeFormat {
 	public String getStartTimeOfTheDay () {
 		return startTimeOfTheDay;
 	}
-	
-	//*************************** TEST METHODS **********************************
-	//Date tests
-//	public String testDayFromDateTranslator (Calendar thisDate, String theDate) throws InvalidDateAndTimeException {
-//		dateTranslator (thisDate,theDate);	
-//		return Integer.toString(thisDate.get(Calendar.DAY_OF_MONTH));
-//	}
-//	public String testMonthFromDateTranslator (Calendar thisDate, String theDate) throws InvalidDateAndTimeException {
-//		dateTranslator (thisDate,theDate);	
-//		return Integer.toString(thisDate.get(Calendar.MONTH));
-//	}
-//	public String testYearFromDateTranslator (Calendar thisDate, String theDate) throws InvalidDateAndTimeException {
-//		dateTranslator (thisDate,theDate);	
-//		return Integer.toString(thisDate.get(Calendar.YEAR));
-//	}
-//	//Time tests
-//	public String testHourFromTimeTranslator (Calendar cal, String theTime) throws InvalidDateAndTimeException {
-//		timeTranslator (cal,theTime);	
-//		return Integer.toString(cal.get(Calendar.HOUR_OF_DAY));
-//	}
-//	public String testMinFromTimeTranslator (Calendar cal, String theTime) throws InvalidDateAndTimeException {
-//		timeTranslator (cal,theTime);	
-//		return Integer.toString(cal.get(Calendar.MINUTE));
-//	}
-
-
-
-	//*************************** TEST METHODS **********************************
-	
 	
 	public boolean isToday (Calendar dateTime) {
 		Calendar todayDateTime = Calendar.getInstance();
