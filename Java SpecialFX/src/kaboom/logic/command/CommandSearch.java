@@ -36,7 +36,6 @@ public class CommandSearch extends Command {
 		assert taskManager != null;
 		String commandFeedback;
 
-		//current extraction
 		DateAndTimeFormat dateAndTimeFormat = DateAndTimeFormat.getInstance();
 
 		String searchName = infoTable.get(KEYWORD_TYPE.TASKNAME).toLowerCase();
@@ -51,10 +50,8 @@ public class CommandSearch extends Command {
 		if (!searchName.equals("")) {
 			searchUsingName(searchName);
 		} else if (searchOnDate != null){
-			//Search only on a particular day
 			searchOnlyOnDate(searchOnDate);
 		} else if (searchByDate != null) {
-			//Cumulative search to a particular day
 			searchCumulativeByDate(searchByDate);
 		} else {
 			commandFeedback = MESSAGE_COMMAND_SEARCH_ERROR;
