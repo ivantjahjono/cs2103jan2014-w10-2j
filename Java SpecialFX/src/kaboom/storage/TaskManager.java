@@ -10,6 +10,8 @@
  * This class is also responsible for the "dynamic" IDs of the tasks.
  * (Such as the task ID being different while under different views 
  * but referring to the same object.)
+ * 
+ * This is a singleton class as there can only be one instance of this class. 
  */
 
 package kaboom.storage;
@@ -154,7 +156,7 @@ public class TaskManager {
 	}
 	
 	public Vector<TaskInfo> getAllPresentTasks() {
-		return taskDepo.getAllCurrentTasks();
+		return taskDepo.getAllPresentTasks();
 	}
 	
 	public Vector<TaskInfo> getAllArchivedTasks() {
@@ -162,11 +164,11 @@ public class TaskManager {
 	}
 	
 	public int presentTaskCount() {
-		return taskDepo.presentTaskCount();
+		return taskDepo.countPresentTasks();
 	}
 	
 	public int archiveTaskCount() {
-		return taskDepo.archiveTaskCount();
+		return taskDepo.countArchivedTasks();
 	}
 	
 	public boolean addPresentTask(TaskInfo task) {
@@ -224,7 +226,7 @@ public class TaskManager {
 	}
 	
 	public void clearPresentTasks() {
-		taskDepo.clearAllCurrentTasks();
+		taskDepo.clearAllPresentTasks();
 		clearSearchView();
 		store();
 	}
