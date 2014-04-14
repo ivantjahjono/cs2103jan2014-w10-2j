@@ -120,7 +120,7 @@ public class SystemTest {
 		assertEquals("Oops! No such task exist", controller.processCommand(command));
 		
 		command = "modify 1";
-		assertEquals("Modify has failed. Type <help modify> for help.", controller.processCommand(command));
+		assertEquals("Nothing happened...", controller.processCommand(command));
 		
 		testModifyName();
 		testModifyDate();
@@ -143,16 +143,16 @@ public class SystemTest {
 		String command = "";
 		
 		command = "modify 1 by today";
-		assertEquals("<hello> has evolved into <world>", controller.processCommand(command));
+		assertEquals("<hello> has manipulated time", controller.processCommand(command));
 		
 		command = "modify hello by 2pm";
-		assertEquals("Oops! Invalid ID??", controller.processCommand(command));
+		assertEquals("<hello> has manipulated time", controller.processCommand(command));
 		
 		command = "modify hello at 2pm";
-		assertEquals("<world> has evolved into <hello>", controller.processCommand(command));
+		assertEquals("<hello> has manipulated time", controller.processCommand(command));
 		
 		command = "modify 1 at 2pm";
-		assertEquals("<world> has evolved into <hello>", controller.processCommand(command));
+		assertEquals("<hello> has manipulated time", controller.processCommand(command));
 	}
 
 	@After
