@@ -46,7 +46,7 @@ public class CommandView extends Command{
 		return createResult(feedback, stateToSet, null);
 	}
 
-	private DISPLAY_STATE determineDisplayState(String viewType2) {
+	private DISPLAY_STATE determineDisplayState(String viewType) {
 		switch(viewType) {
 			case KEYWORD_TODAY:
 				return DISPLAY_STATE.TODAY;
@@ -61,10 +61,6 @@ public class CommandView extends Command{
 			default:
 				return DISPLAY_STATE.INVALID;
 		}
-	}
-	
-	public void setDisplayState (DISPLAY_STATE state) {
-		stateToSet = state;
 	}
 	
 	public DISPLAY_STATE getDisplayState () {

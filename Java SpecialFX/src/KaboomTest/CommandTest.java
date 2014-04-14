@@ -48,8 +48,7 @@ public class CommandTest {
 	public void testCommandAdd() {
 		CommandAdd com = new CommandAdd();
 
-		
-		
+
 		//Execution
 		//Add a task without any task name input
 		initialise();
@@ -89,19 +88,25 @@ public class CommandTest {
 		assertEquals("Oops! Please schedule to another time",com.execute().getFeedback());
 	}
 	
-//	//CommandDelete (Unable to test unless memory is initialised);
-//	@Test
-//	public void testCommandDelete() {
-//		CommandDelete com = new CommandDelete();
-//	//	com.setTaskInfo(task);
-//		//Test when no taskinfo in memory to be deleted
-////		assertEquals("<Hello World> does not exist...", com.execute().getFeedback());
-////		
-////		//Delete by name
-////		task.setTaskName("abc");
-////		assertEquals("<abc> does not exist...", com.execute().getFeedback());
-//	}
-//
+	//CommandDelete
+	@Test
+	public void testCommandDelete() {
+		CommandDelete com = new CommandDelete();
+		
+		//Execute
+		//Delete with no task name and id
+		initialise();
+		infoTable.put(KEYWORD_TYPE.TASKNAME, "");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Enter a taskname or task id, please ?",com.execute().getFeedback());
+		
+		//Delete with invalid id
+		initialise();
+		infoTable.put(KEYWORD_TYPE.TASKID, "-1");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Oops! No such task exist",com.execute().getFeedback());
+	}
+
 //	//CommandModify (Unable to test unless memory is initialised);
 //	@Test
 //	public void testCommandModify() {
@@ -110,45 +115,48 @@ public class CommandTest {
 //		//Test when no existing task to modify
 ////		assertEquals("Fail to cast a spell on <Hello World>", com.execute().getFeedback());
 //	}
-//	
-//	
-//	//CommandView
-//	@Test
-//	public void testCommandView() {
-//		String viewString = "view";
-//		
-//		Command currentCommand = null;
-//		CommandView com = new CommandView();
-//
-//		//Test Command feedback
-//		//No viewType set
-//		assertEquals("Invalid View Mode", com.execute().getFeedback());
-//		
-//		//Valid ViewTypes
-//		com.setDisplayState(DISPLAY_STATE.TODAY);
-//		assertEquals("Viewing all the tasks for today", com.execute().getFeedback());
-//		
-//		com.setDisplayState(DISPLAY_STATE.TIMELESS);
-//		assertEquals("Viewing timeless tasks", com.execute().getFeedback());
-//		
-//		com.setDisplayState(DISPLAY_STATE.EXPIRED);
-//		assertEquals("Viewing expired tasks", com.execute().getFeedback());
-//		
-//		//Boundary 
-//		//To be discussed whether to accept or no
-//		currentCommand = CommandFactory.createCommand(viewString+" today ");
-//		assertEquals("Viewing all the tasks for today", currentCommand.execute().getFeedback());
-//		
-//		currentCommand = CommandFactory.createCommand(viewString+" today");
-//		assertEquals("Viewing all the tasks for today", currentCommand.execute().getFeedback());
-//		
-//		currentCommand = CommandFactory.createCommand(viewString+" today 123");
-//		assertEquals("Invalid View Mode", currentCommand.execute().getFeedback());
-//		
-//		//Invalid Types
-//		currentCommand = CommandFactory.createCommand(viewString+" todays");
-//		assertEquals("Invalid View Mode", currentCommand.execute().getFeedback());
-//	}
+	
+	
+	//CommandView
+	@Test
+	public void testCommandView() {
+		CommandView com = new CommandView();
+		initialise();
+		
+		//Test Command feedback
+		//No viewType set
+		assertEquals("Invalid View Mode. Might want to use <help view>", com.execute().getFeedback());
+		
+		//Valid ViewTypes
+		infoTable.put(KEYWORD_TYPE.VIEWTYPE, "today");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Viewing all the tasks for today", com.execute().getFeedback());
+		
+		infoTable.put(KEYWORD_TYPE.VIEWTYPE, "timeless");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Viewing timeless tasks", com.execute().getFeedback());
+		
+		infoTable.put(KEYWORD_TYPE.VIEWTYPE, "expired");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Viewing expired tasks", com.execute().getFeedback());
+		
+		infoTable.put(KEYWORD_TYPE.VIEWTYPE, "archive");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Viewing completed tasks", com.execute().getFeedback());
+		
+		infoTable.put(KEYWORD_TYPE.VIEWTYPE, "future");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Viewing upcoming tasks", com.execute().getFeedback());
+		
+		//Invalid viewTypes
+		infoTable.put(KEYWORD_TYPE.VIEWTYPE, "someview");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Invalid View Mode. Might want to use <help view>", com.execute().getFeedback());
+		
+		infoTable.put(KEYWORD_TYPE.VIEWTYPE, "-1");
+		com.initialiseCommandInfoTable(infoTable);
+		assertEquals("Invalid View Mode. Might want to use <help view>", com.execute().getFeedback());
+	}
 	
 	//CommandClear
 	@Test
