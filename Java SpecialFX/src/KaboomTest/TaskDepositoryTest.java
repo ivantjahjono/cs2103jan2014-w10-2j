@@ -24,10 +24,11 @@ import org.junit.Test;
 public class TaskDepositoryTest {
 
 	TaskDepository taskDepo;
-	TaskInfo task1;
-	TaskInfo task2;
-	TaskInfo task3;
-	TaskInfo task4;
+	TaskInfo task1;  //Floating task
+	TaskInfo task2;  //Today task
+	TaskInfo task3;  //Future task
+	TaskInfo task4;  //Expired task
+	TaskInfo task5;  //Archived task
 
 	@Before
 	public void initialize() {
@@ -162,7 +163,7 @@ public class TaskDepositoryTest {
 	@Test
 	public void testGetFutureTasks() {
 		taskDepo.clearAllPresentTasks();
-		assertTrue(taskDepo.addTaskToPresentList(task2));
+		assertTrue(taskDepo.addTaskToPresentList(task3));
 		assertNotNull(taskDepo.getFutureTasks());
 		assertEquals(1, taskDepo.getFutureTasks().size());
 	}
@@ -233,13 +234,12 @@ public class TaskDepositoryTest {
 
 	private TaskInfo setTaskInfo2() {
 		TaskInfo task = new TaskInfo();
-		Calendar now = Calendar.getInstance();
+		Calendar startDate = Calendar.getInstance();
 		Calendar endDate = Calendar.getInstance();
-		endDate.set(2020,12,12,23,59);
 
 		task.setTaskName("something else");
 		task.setTaskType(TASK_TYPE.TIMED);
-		task.setStartDate(now);
+		task.setStartDate(startDate);
 		task.setEndDate(endDate);
 		task.setPriority(5);
 		task.setDone(false);
@@ -250,7 +250,7 @@ public class TaskDepositoryTest {
 	private TaskInfo setTaskInfo3() {
 		TaskInfo task = new TaskInfo();
 		Calendar endDate = Calendar.getInstance();
-		endDate.set(2014,4,15,15,0);
+		endDate.set(2014,12,12,23,59);  //Set a future end date
 
 		task.setTaskName("hi there");
 		task.setTaskType(TASK_TYPE.DEADLINE);
@@ -261,7 +261,7 @@ public class TaskDepositoryTest {
 		task.setExpiry(false);
 		return task;
 	}
-	
+
 	private TaskInfo setTaskInfo4() {
 		TaskInfo task = new TaskInfo();
 		Calendar endDate = Calendar.getInstance();
@@ -273,6 +273,19 @@ public class TaskDepositoryTest {
 		task.setEndDate(endDate);
 		task.setPriority(1);
 		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setTaskInfo5() {
+		TaskInfo task = new TaskInfo();
+
+		task.setTaskName("another task");
+		task.setTaskType(TASK_TYPE.FLOATING);
+		task.setStartDate(null);
+		task.setEndDate(null);
+		task.setPriority(1);
+		task.setDone(true);
 		task.setExpiry(false);
 		return task;
 	}
