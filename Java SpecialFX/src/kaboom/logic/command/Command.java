@@ -17,15 +17,14 @@ import kaboom.shared.TASK_TYPE;
 import kaboom.shared.TaskInfo;
 import kaboom.shared.comparators.FormatIdentifyComparator;
 import kaboom.storage.TaskView;
-/* 
- ** Purpose: 
- */
+
 
 public class Command {
 	protected final String MESSAGE_COMMAND_FAIL_INVALID_DATE = "Oops! Did you check the calendar? The date you've entered is invalid";
 	protected final String MESSAGE_COMMAND_FAIL_NO_SUCH_TASK = "Oops! Modify wut??";
 	protected final String MESSAGE_COMMAND_FAIL_NO_TASK_NAME = "Enter a taskname or task id, please ?";
 	protected final String MESSAGE_COMMAND_FAIL_INVALID_TASKNAME = "Oops! Invalid taskname??";
+	protected final String MESSAGE_COMMAND_FAIL_INVALID_TASKID = "Oops! Invalid ID??";
 	protected final String MESSAGE_COMMAND_INVALID = "Please enter a valid command. Type <help> for info.";
 	
 	protected COMMAND_TYPE commandType;
@@ -37,7 +36,7 @@ public class Command {
 	protected DateAndTimeFormat dateAndTimeFormat;
 	
 	protected enum COMMAND_ERROR{
-		CLASH, TASK_DOES_NOT_EXIST, NO_TASK_NAME, INVALID_DATE, INVALID_TASKNAME ,NIL
+		CLASH, TASK_DOES_NOT_EXIST, NO_TASK_NAME, INVALID_DATE, INVALID_TASKNAME , INVALID_TASKID
 	}
 	
 	public Command () {
@@ -221,6 +220,8 @@ public class Command {
 			return createResult(MESSAGE_COMMAND_FAIL_INVALID_DATE);
 		case INVALID_TASKNAME:
 			return createResult(MESSAGE_COMMAND_FAIL_INVALID_TASKNAME);
+		case INVALID_TASKID:
+			return createResult(MESSAGE_COMMAND_FAIL_INVALID_TASKID);
 		default:
 			return null;
 		}
@@ -231,8 +232,8 @@ public class Command {
 		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 		if(taskId != null && !isStringNullOrEmpty(taskName)) {
 			return COMMAND_ERROR.INVALID_TASKNAME;
-		} else if(isTaskIdValid()) {
-			return null;
+		} else if(taskId != null && !isTaskIdValid()) {
+			return COMMAND_ERROR.INVALID_TASKID;
 		} else {
 			if (isStringNullOrEmpty(taskName)) {
 				return COMMAND_ERROR.NO_TASK_NAME;
@@ -289,31 +290,4 @@ public class Command {
 		}
 		return task;
 	}
-	
-	
-	
-	
-//	protected Result invalidTaskNameAndClashErrorDetection() {
-//	String taskName = getTaskNameFromInfoTable();
-//	String feedback = "";
-//	Result errorFeedback = null;
-//	
-//	if(!existsATaskWithGivenTaskId()) {
-//		if (taskName != null && !taskName.isEmpty()){
-//			int taskCount = numOfTasksWithSimilarNames(taskName);
-//			
-//			if (taskCount > 1) {
-//				errorFeedback = callSearch();
-//			}
-//			else if (taskCount < 1) {
-//				feedback = MESSAGE_COMMAND_FAIL_NO_SUCH_TASK;
-//				errorFeedback = createResult(feedback);
-//			}
-//		} else {
-//			feedback = MESSAGE_COMMAND_FAIL_NO_TASK_NAME;
-//			errorFeedback = createResult(feedback);
-//		}
-//	}
-//	return errorFeedback;
-//}
 }
