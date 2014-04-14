@@ -1,4 +1,5 @@
 //@author A0096670W
+
 /**
  * StorageTest.java:
  * This class tests the storage on whether it stores and loads information properly.
@@ -14,7 +15,10 @@ import java.io.LineNumberReader;
 import java.io.FileReader;
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 
+import kaboom.shared.TASK_TYPE;
+import kaboom.shared.TaskInfo;
 import kaboom.storage.Storage;
 import kaboom.storage.TaskDepository;
 
@@ -30,15 +34,26 @@ public class StorageTest {
 	private final int EMPTY = 0;
 	private final String TEST_FILE_NAME = "StorageTest.txt";
 	
+	TaskInfo floatingTask;
+	TaskInfo todayTask;
+	TaskInfo futureTask;
+	TaskInfo expiredTask;
+	TaskInfo archivedTask;
+	
 	@Before
 	public void initailize() {
 		taskDepo = TaskDepository.getInstance();
+		populateTaskDepo();
 		assertNotNull(taskDepo);
-		assertEquals(EMPTY, taskDepo.countAllTasks());
-		taskDepo.clearAllTasks();
 		storageTest = new Storage(TEST_FILE_NAME);
 		assertNotNull(storageTest);
-		storageTest.load();
+		
+		floatingTask = setFloatingTask();
+		todayTask = setTodayTask();
+		futureTask = setFutureTask();
+		expiredTask = setExpiredTask();
+		archivedTask = setArchivedTask();
+		populateTaskDepo();
 	}
 	
 	/**
@@ -51,7 +66,8 @@ public class StorageTest {
 	 */
 	@Test
 	public void testLoad() throws IOException {
-		//Since load is already called when initialized, no need to call it again
+		taskDepo.clearAllTasks();
+		storageTest.load();
 		lineNumberReader = new LineNumberReader(new FileReader(new File("storageTest.txt")));
 		lineNumberReader.skip(Long.MAX_VALUE);  //Long.MAX_VALUE is more than 2 ExaBytes
 		assertEquals(taskDepo.countAllTasks(), lineNumberReader.getLineNumber());
@@ -88,5 +104,87 @@ public class StorageTest {
 		
 		//It is not feasible to test the other boundary case where the taskDepo takes up
 		//the full memory allocated for it
+	}
+	
+	private void populateTaskDepo() {
+		taskDepo.clearAllTasks();
+		assertEquals(0, taskDepo.countPresentTasks());
+		assertTrue(taskDepo.addTaskToPresentList(floatingTask));
+		assertTrue(taskDepo.addTaskToPresentList(todayTask));
+		assertTrue(taskDepo.addTaskToPresentList(futureTask));
+		assertTrue(taskDepo.addTaskToPresentList(expiredTask));
+		assertTrue(taskDepo.addTaskToArchivedList(archivedTask));
+		assertEquals(4, taskDepo.countPresentTasks());
+		assertEquals(1, taskDepo.countArchivedTasks());
+	}
+	
+	private TaskInfo setFloatingTask() {
+		TaskInfo task = new TaskInfo();
+		task.setTaskName("something");
+		task.setTaskType(TASK_TYPE.FLOATING);
+		task.setStartDate(null);
+		task.setEndDate(null);
+		task.setPriority(3);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setTodayTask() {
+		TaskInfo task = new TaskInfo();
+		Calendar startDate = Calendar.getInstance();
+		Calendar endDate = Calendar.getInstance();
+
+		task.setTaskName("something else");
+		task.setTaskType(TASK_TYPE.TIMED);
+		task.setStartDate(startDate);
+		task.setEndDate(endDate);
+		task.setPriority(5);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setFutureTask() {
+		TaskInfo task = new TaskInfo();
+		Calendar endDate = Calendar.getInstance();
+		endDate.set(2014,12,12,23,59);  //Set a future end date
+
+		task.setTaskName("hi there");
+		task.setTaskType(TASK_TYPE.DEADLINE);
+		task.setStartDate(null);
+		task.setEndDate(endDate);
+		task.setPriority(1);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setExpiredTask() {
+		TaskInfo task = new TaskInfo();
+		Calendar endDate = Calendar.getInstance();
+		endDate.set(2014,1,1,0,0);  //Set to a date that is expired
+
+		task.setTaskName("hi");
+		task.setTaskType(TASK_TYPE.DEADLINE);
+		task.setStartDate(null);
+		task.setEndDate(endDate);
+		task.setPriority(1);
+		task.setDone(false);
+		task.setExpiry(false);
+		return task;
+	}
+
+	private TaskInfo setArchivedTask() {
+		TaskInfo task = new TaskInfo();
+
+		task.setTaskName("another task");
+		task.setTaskType(TASK_TYPE.FLOATING);
+		task.setStartDate(null);
+		task.setEndDate(null);
+		task.setPriority(1);
+		task.setDone(true);
+		task.setExpiry(false);
+		return task;
 	}
 }

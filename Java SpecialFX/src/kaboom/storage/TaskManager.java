@@ -225,6 +225,11 @@ public class TaskManager {
 		store();
 	}
 	
+	public void clearAllTasks() {
+		clearPresentTasks();
+		clearArchivedTasks();
+	}
+	
 	public void clearPresentTasks() {
 		taskDepo.clearAllPresentTasks();
 		clearSearchView();
