@@ -34,6 +34,7 @@ public class Command {
 	Hashtable<KEYWORD_TYPE, String> infoTable;
 	protected TaskView taskView;
 	protected Vector <COMMAND_ERROR> commandErrorList;
+	protected DateAndTimeFormat dateAndTimeFormat;
 	
 	protected enum COMMAND_ERROR{
 		CLASH, TASK_DOES_NOT_EXIST, NO_TASK_NAME, INVALID_DATE, INVALID_TASKNAME ,NIL
@@ -46,6 +47,7 @@ public class Command {
 		infoTable = new Hashtable<KEYWORD_TYPE, String>();
 		keywordList = new KEYWORD_TYPE[0];
 		commandErrorList = new Vector <COMMAND_ERROR>();
+		dateAndTimeFormat = DateAndTimeFormat.getInstance();
 	}
 	
 	public void setCommandType (COMMAND_TYPE type) {
@@ -78,25 +80,45 @@ public class Command {
 	
 	public void initialiseCommandInfoTable(String userInputSentence) {
 		infoTable = textParser.extractList(userInputSentence, keywordList);
-		convertAndValidateInformation ();
+		convertInformationToStandardFormat ();
 	}
 	
 	public void initialiseCommandInfoTable(Hashtable<KEYWORD_TYPE, String> infoTable) {
 		this.infoTable = infoTable;
-		convertAndValidateInformation ();
+		convertInformationToStandardFormat ();
 	}
 	
-	protected void convertAndValidateInformation () {
-		//this is a stub
+	protected void convertInformationToStandardFormat () {
+		Enumeration<KEYWORD_TYPE> elementItr =  infoTable.keys();
+		
+		while(elementItr.hasMoreElements()) {
+			KEYWORD_TYPE currentKeyword = elementItr.nextElement();
+			switch(currentKeyword) {
+			case START_TIME:
+			case END_TIME:
+				String time = infoTable.get(currentKeyword);
+				time = dateAndTimeFormat.convertStringTimeTo24HourString(time);
+				infoTable.put(currentKeyword, time);
+				break;
+			case START_DATE:
+			case END_DATE:
+			case DATE:
+				String date = infoTable.get(currentKeyword);
+				date = dateAndTimeFormat.convertStringDateToDayMonthYearFormat(date);
+				infoTable.put(currentKeyword, date);
+				break;
+			default:
+				break;
+			}
+		}
 	}
 	
 	protected void addCommandErrorToList (COMMAND_ERROR commandError) {
 		commandErrorList.add(commandError);
 	}
 	
-	//TODO
 	protected void addCommandToHistory () {
-		taskView.addToHistory(this);;
+		taskView.addToHistory(this);
 	}
 	
 	protected int numOfTasksWithSimilarNames(String name) {
@@ -121,24 +143,17 @@ public class Command {
 		if (info.equals("")) {
 			return true;
 		}
-		
-		// All in command are invalid
 		addThisStringToFormatList(info, indexList, KEYWORD_TYPE.INVALID);
-		
 		return false;
 	}
 	
 	protected Hashtable<KEYWORD_TYPE, String> updateFormatList (String info, Vector<FormatIdentify> indexList) {
 		getCommandString(info, indexList);
 		info = textParser.removeFirstWord(info);
-		
-		//5. Extract Task Info Base on Keywords
-		Hashtable<KEYWORD_TYPE, String> taskInformationTable = textParser.extractList(info, keywordList);
-		
+		Hashtable<KEYWORD_TYPE, String> taskInformationTable = textParser.extractList(info, keywordList);	
 		return taskInformationTable;
 	}
 	
-	//used
 	protected void updateFormatListBasedOnHashtable(Vector<FormatIdentify> indexList, Hashtable<KEYWORD_TYPE, String> taskInformationTable) {
 		String stringDate;
 		
@@ -148,15 +163,11 @@ public class Command {
 			KEYWORD_TYPE currentKeyword = elementItr.nextElement();
 			KEYWORD_TYPE resultKeyword = currentKeyword;
 			
-			// Check current type
 			switch (currentKeyword) {					
 				case START_DATE:
 				case END_DATE:
 					stringDate = taskInformationTable.get(currentKeyword);
-					
-					// Check if time is valid
 					if (!DateAndTimeFormat.getInstance().isDateValid(stringDate)) {
-						//taskInformationTable.remove(currentKeyword);
 						resultKeyword = KEYWORD_TYPE.INVALID;
 					}
 					break;
@@ -197,54 +208,6 @@ public class Command {
 			task.setTaskType(TASK_TYPE.TIMED);
 		} 
 	}
-
-	protected String getTaskNameFromInfoTable() {
-		return infoTable.get(KEYWORD_TYPE.TASKNAME);
-	}
-	
-	protected String getTaskIdFromInfoTable() {
-		return infoTable.get(KEYWORD_TYPE.TASKID);
-	}
-	
-	protected String getTaskNameToModifyToFromInfoTable() {
-		return infoTable.get(KEYWORD_TYPE.MODIFIED_TASKNAME);
-	}
-
-	protected String getTaskPriorityFromInfoTable() {
-		return infoTable.get(KEYWORD_TYPE.PRIORITY);
-	}
-	
-	protected String getTaskEndTimeFromInfoTable() {
-		return infoTable.get(KEYWORD_TYPE.END_TIME);
-	}
-	
-	protected String getTaskEndDateFromInfoTable() {
-		return infoTable.get(KEYWORD_TYPE.END_DATE);
-	}
-	
-	protected String getTaskStartDateFromInfoTable() {
-		return infoTable.get(KEYWORD_TYPE.START_DATE);
-	}
-	
-	protected String getTaskStartTimeFromInfoTable() {
-		return infoTable.get(KEYWORD_TYPE.START_TIME);
-	}
-	
-	protected String getTaskDateFromInfoTable() {
-		return infoTable.get(KEYWORD_TYPE.DATE);
-	}
-	
-	protected String getTaskClearTypeFromInfoTable() {
-		return infoTable.get(KEYWORD_TYPE.CLEARTYPE);
-	}
-	
-	protected String getTaskViewTypeFromInfoTable() {
-		return infoTable.get(KEYWORD_TYPE.VIEWTYPE);
-	}
-	
-	protected String getPageCommandFromInfoTable() {
-		return infoTable.get(KEYWORD_TYPE.PAGE);
-	}
 	
 	protected Result commandErrorHandler(COMMAND_ERROR commandError) {
 		switch(commandError) {
@@ -264,8 +227,8 @@ public class Command {
 	}
 	
 	protected COMMAND_ERROR errorDetectionForInvalidTaskNameAndId() {	
-		String taskId = getTaskIdFromInfoTable();
-		String taskName = getTaskNameFromInfoTable();
+		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
+		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 		if(taskId != null && !isStringNullOrEmpty(taskName)) {
 			return COMMAND_ERROR.INVALID_TASKNAME;
 		} else if(isTaskIdValid()) {
@@ -303,7 +266,7 @@ public class Command {
 	}
 
 	protected TaskInfo getTaskWithTaskId() {
-		String taskId = getTaskIdFromInfoTable();
+		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
 		if (taskId != null) {
 			int taskIdInteger = Integer.parseInt(taskId);
 			return taskView.getTaskFromViewByID(taskIdInteger-1);
@@ -312,7 +275,7 @@ public class Command {
 	}
 	
 	protected TaskInfo getTaskWithTaskName() {
-		String taskName = getTaskNameFromInfoTable();
+		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 		if (taskName != null && !taskName.isEmpty()) {
 			return taskView.getTaskFromViewByName(taskName);
 		}
@@ -326,6 +289,9 @@ public class Command {
 		}
 		return task;
 	}
+	
+	
+	
 	
 //	protected Result invalidTaskNameAndClashErrorDetection() {
 //	String taskName = getTaskNameFromInfoTable();

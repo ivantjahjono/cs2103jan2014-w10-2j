@@ -71,7 +71,7 @@ public class CommandClear extends Command {
 	}
 
 	private CLEAR_TYPE retrieveClearTypeAndDetermineClearType() {
-		clearTypeInString = getTaskClearTypeFromInfoTable();
+		clearTypeInString = infoTable.get(KEYWORD_TYPE.CLEARTYPE);
 		if (clearTypeInString == null) {
 			return CLEAR_TYPE.INVALID;
 		} else {
