@@ -23,7 +23,6 @@ public class TextParserTest {
 		textparser = TextParser.getInstance();
 	}
 	
-	
 	@Test
 	public void testPriorityExtraction () {
 		String command = "";
