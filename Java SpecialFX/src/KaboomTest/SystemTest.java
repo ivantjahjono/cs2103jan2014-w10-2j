@@ -57,7 +57,7 @@ public class SystemTest {
 		
 		// Test delete by id but over limit
 		command = "delete 3";
-		assertEquals("Enter a taskname or task id, please ?", controller.processCommand(command));
+		assertEquals("Oops! Invalid ID??", controller.processCommand(command));
 		
 		// Delete whitespaces command
 		command = "delete hello";
