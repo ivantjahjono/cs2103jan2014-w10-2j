@@ -29,17 +29,10 @@ public class CommandDelete extends Command {
 		assert taskManager != null;
 		
 		String commandFeedback = "";
-
-//		Result errorResult = invalidTaskNameAndClashErrorDetection();
-//		if(errorResult != null) {
-//			return errorResult;
-//		} else {
-//			taskToBeDeleted = getTask();
-//		}
 		
-		COMMAND_ERROR commandError = errorDetectionForInvalidTaskNameAndId();
-		if(commandError != null) {
-			return commandErrorHandler(commandError);
+		errorDetectionForInvalidTaskNameAndId();
+		if(!commandErrorList.isEmpty()) {
+			return commandErrorHandler(commandErrorList.get(0));
 		} else {
 			taskToBeDeleted = getTask();
 		}

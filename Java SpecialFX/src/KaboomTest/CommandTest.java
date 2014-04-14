@@ -86,7 +86,7 @@ public class CommandTest {
 		infoTable.put(KEYWORD_TYPE.END_TIME, "0000");
 		infoTable.put(KEYWORD_TYPE.END_DATE, "010114");
 		com.initialiseCommandInfoTable(infoTable);
-		assertEquals("Oops! Did you check the calendar? The date you've entered is invalid",com.execute().getFeedback());
+		assertEquals("Oops! Please schedule to another time",com.execute().getFeedback());
 	}
 	
 //	//CommandDelete (Unable to test unless memory is initialised);

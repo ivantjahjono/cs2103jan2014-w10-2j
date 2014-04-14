@@ -137,6 +137,8 @@ public class CommandAdd extends Command {
 			return createResult(MESSAGE_COMMAND_FAIL_INVALID_DATE);
 		case INVALID_TASKNAME:
 			return createResult(MESSAGE_COMMAND_FAIL_INVALID_TASKNAME);
+		case INVALID_STARTENDDATE:
+			return createResult(MESSAGE_COMMAND_FAIL_INVALID_STARTDATE_AFTER_ENDDATE);
 		default:
 			return null;
 		}
