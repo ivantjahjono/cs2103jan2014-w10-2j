@@ -1,4 +1,14 @@
 //@author A0096670W
+
+/**
+ * TaskDepository.java:
+ * This class stores, retrieves, updates and deletes tasks.
+ * Tasks are separated into two vectors, presentTaskList and archivedTaskList.
+ * presentTaskList contains tasks that are not marked as done by the user.
+ * archivedTaskList contains tasks that are marked as done by the user.
+ * 
+ * This is a singleton class as there can only be one instance of this class. 
+ */
 package kaboom.storage;
 
 import java.util.Calendar;
@@ -9,6 +19,7 @@ import java.util.logging.Logger;
 import kaboom.shared.TASK_TYPE;
 import kaboom.shared.TaskInfo;
 import kaboom.shared.comparators.ComparatorDefault;
+import kaboom.shared.comparators.ComparatorExpired;
 import kaboom.shared.comparators.ComparatorPriority;
 
 public class TaskDepository {
@@ -51,26 +62,21 @@ public class TaskDepository {
 		}
 	}
 
-	public TaskInfo getTaskByName (String taskName) {
-		for (int i = presentTaskList.size()-1; i >= 0; i--) {
-			if (taskName.equals(presentTaskList.get(i).getTaskName())) {
-				return presentTaskList.get(i);
-			}
-		}
-		return null;
-	}
-
 	public void updateTask (TaskInfo newTaskInfo, TaskInfo prevTaskInfo) {
-		int indexOfTaskListToBeModified = -1;
-		for (int i = 0; i < presentTaskList.size(); i++) {
-			if (prevTaskInfo.equals(presentTaskList.get(i))) {
-				indexOfTaskListToBeModified = i;
-			}
-		}
+		int indexOfTaskListToBeModified = getIndexOfTask(prevTaskInfo);
 
 		if (indexOfTaskListToBeModified != -1) {
 			presentTaskList.set(indexOfTaskListToBeModified, newTaskInfo);
 		}
+	}
+	
+	private int getIndexOfTask(TaskInfo task) {
+		for (int i = 0; i < presentTaskList.size(); i++) {
+			if (task.equals(presentTaskList.get(i))) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	public Vector<TaskInfo> getToday() {
@@ -100,7 +106,7 @@ public class TaskDepository {
 		return tasksToReturn;
 	}
 
-	public Vector<TaskInfo> getAllCurrentTasks () {
+	public Vector<TaskInfo> getAllPresentTasks () {
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(presentTaskList);
 		return vectorToReturn;
 	}
@@ -134,7 +140,7 @@ public class TaskDepository {
 				returnVector.add(singleTask);
 			}
 		}
-		Collections.sort(returnVector, new ComparatorDefault());
+		Collections.sort(returnVector, new ComparatorExpired());
 		return returnVector;
 	}
 
@@ -221,12 +227,12 @@ public class TaskDepository {
 		archivedTaskList.remove(singleTask);
 	}
 	
-	public void clearAll() {
-		clearAllCurrentTasks();
+	public void clearAllTasks() {
+		clearAllPresentTasks();
 		clearAllArchivedTasks();
 	}
 
-	public Vector<TaskInfo> clearAllCurrentTasks () {
+	public Vector<TaskInfo> clearAllPresentTasks () {
 		presentTaskList = new Vector<TaskInfo>();
 		Vector<TaskInfo> vectorToReturn = new Vector<TaskInfo>(presentTaskList);
 		logger.fine("All tasks cleared");
@@ -248,15 +254,15 @@ public class TaskDepository {
 		return taskID;
 	}
 
-	public int totalTaskCount() {
+	public int countTotal() {
 		return presentTaskList.size() + archivedTaskList.size();
 	}
 
-	public int presentTaskCount () {
+	public int countPresentTasks() {
 		return presentTaskList.size();
 	}
 
-	public int archiveTaskCount() {
+	public int countArchivedTasks() {
 		return archivedTaskList.size();
 	}
 }
