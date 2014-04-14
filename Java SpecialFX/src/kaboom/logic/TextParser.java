@@ -97,8 +97,8 @@ public class TextParser {
 		int endIndex = 0;
 		
 		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, KEYWORD_TIME+TIME_REGEX);
-		
-		if (matchList.size() < 2) {
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList)) {
 			return "";
 		}
 		
@@ -128,8 +128,8 @@ public class TextParser {
 		String fulldateFormat = String.format(FULLDATE_REGEX, KEYWORD_TIME, SECOND_KEYWORD_TIME);
 		
 		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, fulldateFormat);
-		
-		if (matchList.size() < 2) {
+		//if no pattern match found
+		if (hasTimeDatePattern(matchList)) {
 			return "";
 		}
 		
@@ -170,12 +170,12 @@ public class TextParser {
 		int startIndex = 0;
 		int endIndex = 0;
 		
-		//IF NOTHING RETURN
-		if (matchList.size() < 2 && matchList2.size() < 2) {
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList) && hasTimeDatePattern(matchList2)) {
 			return "";
 		}
 		
-		if (matchList.size() < 2) {
+		if (hasTimeDatePattern(matchList)) {
 			matchListToUse = matchList2;
 		}
 		
@@ -204,6 +204,10 @@ public class TextParser {
 		}
 		
 		return extractedDateAndTimeString;
+	}
+
+	private boolean hasTimeDatePattern(ArrayList<Integer> matchList) {
+		return matchList.size() < 2;
 	}
 	
 	
@@ -238,7 +242,8 @@ public class TextParser {
 		int startIndex = 0;
 		int endIndex = 0;
 		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, ID_REGEX);
-		if (matchList.size() < 2) {
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList)) {
 			return "";
 		}
 		endIndex = getLastIndex(matchList);
@@ -389,8 +394,8 @@ public class TextParser {
 		String fulldateFormat = String.format(FULLDATE_REGEX, KEYWORD_TIME, KEYWORD_TIME);
 		matchVector = searchForPatternMatch(userInputSentence, fulldateFormat);
 		
-		//IF NOTHING RETURN
-		if (matchVector.size() < 2) {
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchVector)) {
 			return false;
 		}
 		else{
@@ -402,8 +407,8 @@ public class TextParser {
 		//GET PATTERN FOR WHOLE START/END DATE AND TIME
 		matchVector = searchForPatternMatch(userInputSentence, KEYWORD_TIME+TIME_REGEX);
 		
-		//IF NOTHING RETURN
-		if (matchVector.size() < 2) {
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchVector)) {
 			return false;
 		}
 		else{
@@ -421,8 +426,8 @@ public class TextParser {
 		ArrayList<Integer> matchList = searchForPatternMatch(userInputSentence, timeAndDateRegex);
 		ArrayList<Integer> matchList2 = searchForPatternMatch(userInputSentence, timeAndDateRegex2);
 		
-		//IF NOTHING RETURN
-		if (matchList.size() < 2 && matchList2.size() < 2) {
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList) && hasTimeDatePattern(matchList2)) {
 			return false;
 		}
 		else{
@@ -432,8 +437,8 @@ public class TextParser {
 	
 	private String extractViewType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {		
 		ArrayList<Integer> matchList = searchForPatternMatch(userInput, KEYWORD_VIEW);
-		
-		if (matchList.size() < 2) {
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList)) {
 			return "";
 		}
 		
@@ -448,8 +453,8 @@ public class TextParser {
 	
 	private String extractClearType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
 		ArrayList<Integer> matchList = searchForPatternMatch(userInput, KEYWORD_CLEAR);
-		
-		if (matchList.size() < 2) {
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList)) {
 			return "";
 		}
 		
@@ -464,8 +469,8 @@ public class TextParser {
 	
 	private String extractHelpType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
 		ArrayList<Integer> matchList = searchForPatternMatch(userInput, KEYWORD_HELP);
-		
-		if (matchList.size() < 2) {
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList)) {
 			return "";
 		}
 		
@@ -480,8 +485,8 @@ public class TextParser {
 	
 	private String extractPageType(String userInput, Hashtable<KEYWORD_TYPE,String> taskInformationTable) {
 		ArrayList<Integer> matchList = searchForPatternMatch(userInput, PAGE_REGEX);
-		
-		if (matchList.size() < 2) {
+		//if no pattern match is found
+		if (hasTimeDatePattern(matchList)) {
 			return "";
 		}
 		

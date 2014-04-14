@@ -1,9 +1,9 @@
 //@author A0096670W
 
 /**
- * This comparator is the default comparator for tasks.
- * First, it compares the start dates.
- * If they are the same, it compares the end dates.
+ * This comparator is the comparator for expired tasks.
+ * First, it compares the end dates.
+ * If they are the same, it compares the start dates.
  * If they are the same, it compares the priority.
  * If they are the same, the task name is compared.
  */
@@ -14,27 +14,16 @@ import java.util.Comparator;
 
 import kaboom.shared.TaskInfo;
 
-public class ComparatorDefault implements Comparator<TaskInfo> {
-
+public class ComparatorExpired implements Comparator<TaskInfo> {
 	public int compare(TaskInfo task1, TaskInfo task2) {
 		final int COMPARE_EQUAL = 0;
-		final int COMPARE_LESS_THAN = -1;
-		final int COMPARE_MORE_THAN = 1;
-
-		int compareValue = compareDates(task1.getStartDate(), task2.getStartDate());
+		
+		int compareValue = compareDates(task1.getEndDate(), task2.getEndDate());
 		if (compareValue != COMPARE_EQUAL) {
 			return compareValue;
 		}
 		
-		if (task1.getStartDate() != null && task2.getStartDate() == null) {
-			return COMPARE_LESS_THAN;
-		}
-		
-		if (task1.getStartDate() == null && task2.getStartDate() != null) {
-			return COMPARE_MORE_THAN;
-		}
-		
-		compareValue = compareDates(task1.getEndDate(), task2.getEndDate());
+		compareValue = compareDates(task1.getStartDate(), task2.getStartDate());
 		if (compareValue != COMPARE_EQUAL) {
 			return compareValue;
 		}
@@ -46,7 +35,7 @@ public class ComparatorDefault implements Comparator<TaskInfo> {
 		
 		return compareTaskName(task1.getTaskName(), task2.getTaskName());
 	}
-
+	
 	private int compareDates(Calendar date1, Calendar date2) {
 		if (date1 == null || date2 == null) {
 			return 0;
@@ -54,7 +43,7 @@ public class ComparatorDefault implements Comparator<TaskInfo> {
 			return date1.compareTo(date2);
 		}
 	}
-
+	
 	private int comparePriority(int priority1, int priority2) {
 		return priority2 - priority1;
 	}
