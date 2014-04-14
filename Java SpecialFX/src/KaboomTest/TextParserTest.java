@@ -55,6 +55,9 @@ public class TextParserTest {
 		
 		command = "*****";
 		assertEquals("", textparser.extractPriority(command, tempHashTable));
+		
+		command = " ********";
+		assertEquals("", textparser.extractPriority(command, tempHashTable));
 	}
 	
 	@Test
