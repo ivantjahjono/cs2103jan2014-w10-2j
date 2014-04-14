@@ -29,10 +29,7 @@ public class TestPopulate {
 	public void populate () {
 		controller = TaskMasterKaboom.getInstance();
 		controller.initialiseKaboom();
-	}
-	
-	@Test
-	public void test() {
+		
 		String command = "";
 		
 		// Process empty command
@@ -42,5 +39,4 @@ public class TestPopulate {
 			controller.processCommand(commandArrayList[i]);
 		}
 	}
-
 }
