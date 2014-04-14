@@ -1,4 +1,5 @@
 //@author A0096670W
+
 /**
  * HistoryTest.java:
  * This class tests the storing and retrieving of commands from History class.
@@ -50,6 +51,7 @@ public class HistoryTest {
 		history.clear();
 		assertEquals(0, history.size());
 		
+		//Valid testing values
 		history.addToRecentCommands(commandClear);
 		assertEquals(1, history.size());
 		history.addToRecentCommands(commandAdd);
@@ -107,14 +109,17 @@ public class HistoryTest {
 		history.addToRecentCommands(commandClear);
 		history.addToRecentCommands(commandAdd);
 		history.addToRecentCommands(commandClear);
+		//Valid testing values
+		assertEquals(history.getMostRecentCommand(), commandClear);
+		assertEquals(5, history.size());
 		history.addToRecentCommands(commandAdd);
 		history.addToRecentCommands(commandClear);
 		history.addToRecentCommands(commandAdd);
 		history.addToRecentCommands(commandClear);
-		history.addToRecentCommands(commandClear);
-		history.addToRecentCommands(commandAdd);
+		history.addToRecentCommands(commandClear);  //10th item
 		
 		//Boundary testing where more than 10 items are added and attempting to pop them
+		history.addToRecentCommands(commandAdd);  //11th item
 		assertEquals(10, history.size());
 		assertEquals(history.getMostRecentCommand(), commandAdd);
 		assertEquals(9, history.size());
@@ -125,6 +130,4 @@ public class HistoryTest {
 		assertEquals(history.getMostRecentCommand(), commandAdd);
 		assertEquals(6, history.size());
 	}
-
-
 }

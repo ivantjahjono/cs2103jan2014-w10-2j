@@ -1,10 +1,10 @@
+//@author A0096670W
 /**
  * StorageTest.java:
  * This class tests the storage on whether it stores and loads information properly.
  * There are two boundary cases, no tasks to store/load or the file size limit.
  * Since it is not feasible to test the latter boundary, only the former will be tested.
  */
-//@author A0096670W
 
 package KaboomTest;
 
@@ -27,14 +27,15 @@ public class StorageTest {
 	Storage storageTest;
 	LineNumberReader lineNumberReader;
 	private final int EMPTY = 0;
+	private final String TEST_FILE_NAME = "StorageTest.txt";
 	
 	@Before
 	public void initailize() {
 		taskDepo = TaskDepository.getInstance();
 		assertNotNull(taskDepo);
-		assertEquals(EMPTY, taskDepo.totalTaskCount());
-		taskDepo.clearAll();
-		storageTest = new Storage("StorageTest.txt");
+		assertEquals(EMPTY, taskDepo.countTotal());
+		taskDepo.clearAllTasks();
+		storageTest = new Storage(TEST_FILE_NAME);
 		assertNotNull(storageTest);
 		storageTest.load();
 	}
@@ -52,7 +53,7 @@ public class StorageTest {
 		//Since load is already called when initialized, no need to call it again
 		lineNumberReader = new LineNumberReader(new FileReader(new File("storageTest.txt")));
 		lineNumberReader.skip(Long.MAX_VALUE);  //Long.MAX_VALUE is more than 2 ExaBytes
-		assertEquals(taskDepo.totalTaskCount(), lineNumberReader.getLineNumber());
+		assertEquals(taskDepo.countTotal(), lineNumberReader.getLineNumber());
 		lineNumberReader.close();
 	}
 
@@ -73,15 +74,15 @@ public class StorageTest {
 		storageTest.store();
 		lineNumberReader = new LineNumberReader(new FileReader(new File("storageTest.txt")));
 		lineNumberReader.skip(Long.MAX_VALUE);  //Long.MAX_VALUE is more than 2 ExaBytes
-		assertEquals(taskDepo.totalTaskCount(), lineNumberReader.getLineNumber());
+		assertEquals(taskDepo.countTotal(), lineNumberReader.getLineNumber());
 		
 		//Test boundary case where there is no task in task depository
-		taskDepo.clearAll();
-		assertEquals(EMPTY, taskDepo.totalTaskCount());
+		taskDepo.clearAllTasks();
+		assertEquals(EMPTY, taskDepo.countTotal());
 		storageTest.store();
 		lineNumberReader = new LineNumberReader(new FileReader(new File("storageTest.txt")));
 		lineNumberReader.skip(Long.MAX_VALUE);  //Long.MAX_VALUE is more than 2 ExaBytes
-		assertEquals(taskDepo.totalTaskCount(), lineNumberReader.getLineNumber());
+		assertEquals(taskDepo.countTotal(), lineNumberReader.getLineNumber());
 		lineNumberReader.close();
 		
 		//It is not feasible to test the other boundary case where the taskDepo takes up
