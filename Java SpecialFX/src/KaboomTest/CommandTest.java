@@ -20,7 +20,7 @@ import kaboom.shared.TASK_TYPE;
 import kaboom.shared.TaskInfo;
 import kaboom.storage.Storage;
 import kaboom.storage.TaskDepository;
-import kaboom.storage.TaskView;
+import kaboom.storage.TaskManager;
 
 import org.junit.Before;
 import org.junit.Test;

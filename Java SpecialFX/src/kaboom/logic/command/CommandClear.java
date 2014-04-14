@@ -40,7 +40,7 @@ public class CommandClear extends Command {
 	}
 
 	public Result execute() {
-		assert taskView != null;
+		assert taskManager != null;
 		
 		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
 			return createResult(MESSAGE_COMMAND_CLEAR_FAIL_INVALID_TYPE);
@@ -114,40 +114,40 @@ public class CommandClear extends Command {
 	private String clearAll() {
 		saveAndClearPresentTaskFromTaskView();
 		saveAndClearArhiveTaskFromTaskView();
-		taskView.clearSearchView();
+		taskManager.clearSearchView();
 		addCommandToHistory ();
 		return MESSAGE_COMMAND_CLEAR_ALL_SUCCESS;
 	}
 	
 	private String clearPresent() {
 		saveAndClearPresentTaskFromTaskView();
-		taskView.clearSearchView();
+		taskManager.clearSearchView();
 		addCommandToHistory ();
 		return MESSAGE_COMMAND_CLEAR_PRESENT_SUCCESS;
 	}
 	
 	private String clearArchive() {
 		saveAndClearArhiveTaskFromTaskView();
-		taskView.clearSearchView();
+		taskManager.clearSearchView();
 		addCommandToHistory ();
 		return MESSAGE_COMMAND_CLEAR_ARCHIVE_SUCCESS;
 	}
 
 	private void saveAndClearPresentTaskFromTaskView() {
-		tasksCleared = taskView.getAllPresentTasks();
-		taskView.clearPresentTasks();
+		tasksCleared = taskManager.getAllPresentTasks();
+		taskManager.clearPresentTasks();
 	}
 	
 	private void saveAndClearArhiveTaskFromTaskView() {
-		archiveTasksCleared = taskView.getAllArchivedTasks();
-		taskView.clearArchivedTasks ();
+		archiveTasksCleared = taskManager.getAllArchivedTasks();
+		taskManager.clearArchivedTasks ();
 	}
 	
 	private boolean addClearedPresentTaskToMemory() {
 		for (int i = 0; i < tasksCleared.size(); i++) {
-			taskView.addTask(tasksCleared.get(i));
+			taskManager.addPresentTask(tasksCleared.get(i));
 		}
-		if (tasksCleared.size() == taskView.presentTaskCount()) {
+		if (tasksCleared.size() == taskManager.presentTaskCount()) {
 			return true;
 		} else {
 			return false;
@@ -156,9 +156,9 @@ public class CommandClear extends Command {
 	
 	private boolean addClearedArchiveTaskToMemory() {
 		for (int i = 0; i < archiveTasksCleared.size(); i++) {
-			taskView.addArchivedTask(archiveTasksCleared.get(i));
+			taskManager.addArchivedTask(archiveTasksCleared.get(i));
 		}
-		if (archiveTasksCleared.size() == taskView.archiveTaskCount()) {
+		if (archiveTasksCleared.size() == taskManager.archiveTaskCount()) {
 			return true;
 		} else {
 			return false;
@@ -169,7 +169,7 @@ public class CommandClear extends Command {
 		boolean isUndoSuccessful;
 		isUndoSuccessful = addClearedArchiveTaskToMemory();
 		if(isUndoSuccessful == false) {
-			taskView.clearArchivedTasks ();
+			taskManager.clearArchivedTasks ();
 		}
 		return isUndoSuccessful;
 	}
@@ -178,7 +178,7 @@ public class CommandClear extends Command {
 		boolean isUndoSuccessful;
 		isUndoSuccessful = addClearedPresentTaskToMemory();
 		if(isUndoSuccessful == false) {
-			taskView.clearPresentTasks();
+			taskManager.clearPresentTasks();
 		}
 		return isUndoSuccessful;
 	}

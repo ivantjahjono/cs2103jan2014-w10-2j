@@ -96,17 +96,6 @@ public class TaskListShopTest {
 	}
 
 	@Test
-	public void testGetTimedTasks() {
-		allTasks.clearAllCurrentTasks();
-		assertEquals(0, allTasks.presentTaskCount());
-		assertTrue(allTasks.addTaskToList(oldTask));
-		assertTrue(allTasks.addTaskToList(newTask));
-		assertEquals("something else", allTasks.getTimedTasks().get(0).getTaskName());
-		assertTrue(allTasks.addTaskToList(oldTask));
-		assertEquals(2, allTasks.getTimedTasks().size());
-	}
-
-	@Test
 	public void testClearAllTasks() {
 		assertTrue(allTasks.addTaskToList(oldTask));
 		assertNotEquals(0, allTasks.presentTaskCount());

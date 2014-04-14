@@ -53,7 +53,6 @@ public class TaskDepository {
 
 	public TaskInfo getTaskByName (String taskName) {
 		for (int i = presentTaskList.size()-1; i >= 0; i--) {
-			//System.out.println(taskList.get(i).getTaskName());
 			if (taskName.equals(presentTaskList.get(i).getTaskName())) {
 				return presentTaskList.get(i);
 			}
@@ -66,7 +65,6 @@ public class TaskDepository {
 		for (int i = 0; i < presentTaskList.size(); i++) {
 			if (prevTaskInfo.equals(presentTaskList.get(i))) {
 				indexOfTaskListToBeModified = i;
-				//System.out.println("index="+indexOfTaskListToBeModified);
 			}
 		}
 
@@ -90,7 +88,7 @@ public class TaskDepository {
 
 	public Vector<TaskInfo> getFutureTasks() {
 		Vector<TaskInfo> tasksToReturn = new Vector<TaskInfo>();
-		
+
 
 		for (int i = 0; i < presentTaskList.size(); i++) {
 			TaskInfo singleTask = presentTaskList.get(i);
@@ -126,18 +124,6 @@ public class TaskDepository {
 		return returnVector;
 	}
 
-	public Vector<TaskInfo> getTimedTasks() {
-		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
-
-		for (int i = 0; i < presentTaskList.size(); i++) {
-			TaskInfo singleTask = presentTaskList.get(i);
-			if (singleTask.getTaskType() == TASK_TYPE.TIMED) {
-				returnVector.add(singleTask);
-			}
-		}
-		return returnVector;
-	}
-
 	public Vector<TaskInfo> getExpiredTasks() {
 		Vector<TaskInfo> returnVector = new Vector<TaskInfo>();
 
@@ -159,6 +145,7 @@ public class TaskDepository {
 				return presentTaskList.remove(presentTaskList.indexOf(singleTask));
 			}
 		}
+		
 		for (int i = 0; i < archivedTaskList.size(); i++) {
 			TaskInfo singleTask = archivedTaskList.get(i);
 			if (singleTask.equals(taskToDelete)) {
@@ -168,54 +155,75 @@ public class TaskDepository {
 		return null;
 	}
 
-	
+
 	public void refreshTasks() {
 		refreshTasks(false);
 	}
-	
-	//This function refreshes all the tasks in the vector to check
-	//whether it has expired and set to true if it has expired.
-	//Sets to false if the task has not expired
-	//Floating tasks have a default of not expired
-	//Also changes current tasks to archived tasks and vice versa
-	public void refreshTasks(boolean uiFlag) {
-		//Shift from archive to current list
+
+	public void refreshTasks(boolean isResetRecentFlag) {
+		refreshArchive(isResetRecentFlag);
+		refreshPresent(isResetRecentFlag);
+	}
+
+	private void refreshArchive(boolean isResetRecentFlag) {
 		for (int i = 0; i < archivedTaskList.size(); i++) {
 			TaskInfo singleTask = archivedTaskList.get(i);
+			checkAndSetRecent(isResetRecentFlag, singleTask);
 
 			if (!singleTask.getDone()) {
-				presentTaskList.add(singleTask);
-				archivedTaskList.remove(singleTask);
+				swapFromArchiveToPresent(singleTask);
 			}
 		}
+	}
 
-		//Check for expired tasks
+	private void refreshPresent(boolean isResetRecentFlag) {
 		for (int i = 0; i < presentTaskList.size(); i++) {
 			TaskInfo singleTask = presentTaskList.get(i);
-			Calendar now = Calendar.getInstance();
+			checkAndSetExpiry(singleTask);
+			checkAndSetRecent(isResetRecentFlag, singleTask);
 
-			if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
-				if (now.after(singleTask.getEndDate()) && !singleTask.getDone()) {
-					singleTask.setExpiryFlag(true);
-				} else {
-					singleTask.setExpiryFlag(false);
-				}
-			} else {
-				singleTask.setExpiryFlag(false);  //Floating tasks cannot expire
-			}
-
-			if (uiFlag && singleTask.isRecent()) {
-				singleTask.setRecent(false);
-			}
-
-			//Shift from current list to archived list
 			if (singleTask.getDone()) {
-				archivedTaskList.add(singleTask);
-				presentTaskList.remove(singleTask);
+				swapFromPresentToArchive(singleTask);
 			}
 		}
+	}
 
-		Collections.sort(presentTaskList, new ComparatorDefault());
+	private void checkAndSetRecent(boolean isSetToNotRecent, TaskInfo singleTask) {
+		if (isSetToNotRecent && singleTask.isRecent()) {
+			singleTask.setRecent(false);
+		}
+	}
+
+	private void checkAndSetExpiry(TaskInfo singleTask) {
+		if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
+			if (isTaskExpired(singleTask)) {
+				singleTask.setExpiryFlag(true);
+			} else {
+				singleTask.setExpiryFlag(false);
+			}
+		} else {
+			singleTask.setExpiryFlag(false);  //Floating tasks cannot expire
+		}
+	}
+
+	private boolean isTaskExpired(TaskInfo singleTask) {
+		Calendar now = Calendar.getInstance();
+		return now.after(singleTask.getEndDate()) && !singleTask.getDone();
+	}
+
+	private void swapFromPresentToArchive(TaskInfo singleTask) {
+		archivedTaskList.add(singleTask);
+		presentTaskList.remove(singleTask);
+	}
+
+	private void swapFromArchiveToPresent(TaskInfo singleTask) {
+		presentTaskList.add(singleTask);
+		archivedTaskList.remove(singleTask);
+	}
+	
+	public void clearAll() {
+		clearAllCurrentTasks();
+		clearAllArchivedTasks();
 	}
 
 	public Vector<TaskInfo> clearAllCurrentTasks () {
@@ -239,7 +247,7 @@ public class TaskDepository {
 		}
 		return taskID;
 	}
-	
+
 	public int totalTaskCount() {
 		return presentTaskList.size() + archivedTaskList.size();
 	}
@@ -247,7 +255,7 @@ public class TaskDepository {
 	public int presentTaskCount () {
 		return presentTaskList.size();
 	}
-	
+
 	public int archiveTaskCount() {
 		return archivedTaskList.size();
 	}
