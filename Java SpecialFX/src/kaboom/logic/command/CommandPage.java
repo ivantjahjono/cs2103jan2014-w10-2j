@@ -24,7 +24,7 @@ public class CommandPage extends Command {
 	public Result execute() {
 		assert taskManager != null;
 		
-		String pageInfo = getPageCommandFromInfoTable();
+		String pageInfo = infoTable.get(KEYWORD_TYPE.PAGE);
 		if (pageInfo == null || infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
 			return createResult(INVALID_PAGE_COMMAND_MESSAGE);
 		}
