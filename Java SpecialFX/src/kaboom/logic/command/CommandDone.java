@@ -1,5 +1,9 @@
 //@author A0096670W
 
+/**
+ * CommandDone.java:
+ * This class set a task as done and shifts it to the archive.
+ */
 package kaboom.logic.command;
 
 import java.util.Hashtable;
@@ -55,7 +59,7 @@ public class CommandDone extends Command {
 
 	public boolean undo() {
 		taskToBeModified.setDone(false);
-		taskManager.refreshTasks();  //Refresh to shift task to current
+		taskManager.refreshTasks();
 		taskManager.addToSearchView(taskToBeModified);
 		return true;
 	}
