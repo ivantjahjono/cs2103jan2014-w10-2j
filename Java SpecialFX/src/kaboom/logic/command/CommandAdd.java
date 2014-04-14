@@ -49,7 +49,7 @@ public class CommandAdd extends Command {
 		taskInfo.setTaskName(infoTable.get(KEYWORD_TYPE.TASKNAME));
 		saveTaskPriority();
 
-		determineAndSetDateAndTime(taskInfo);
+		getAndSetDateAndTime();
 
 		Result errorResult = validateStartAndEndTime (taskInfo);
 		if(errorResult != null) {
@@ -97,13 +97,12 @@ public class CommandAdd extends Command {
 		}
 	}
 	
-	private Result validateStartAndEndTime (TaskInfo temp) {
-		if(temp.getStartDate() != null && temp.getEndDate() != null) {
-			if(!dateAndTimeFormat.isFirstDateBeforeSecondDate(temp.getStartDate(), temp.getEndDate())) {
-				return commandErrorHandler(COMMAND_ERROR.INVALID_DATE);
-			}
-		}
-		return null;
+	private void getAndSetDateAndTime() {
+		String startDate = infoTable.get(KEYWORD_TYPE.START_DATE);
+		String startTime = infoTable.get(KEYWORD_TYPE.START_TIME);
+		String endTime = infoTable.get(KEYWORD_TYPE.END_TIME);
+		String endDate = infoTable.get(KEYWORD_TYPE.END_DATE);
+		determineAndSetDateAndTime(taskInfo, startDate, startTime, endDate, endTime);
 	}
 	
 	private void validateInfoTable () {

@@ -33,7 +33,7 @@ public class StorageTest {
 	public void initailize() {
 		taskDepo = TaskDepository.getInstance();
 		assertNotNull(taskDepo);
-		assertEquals(EMPTY, taskDepo.countTotal());
+		assertEquals(EMPTY, taskDepo.countAllTasks());
 		taskDepo.clearAllTasks();
 		storageTest = new Storage(TEST_FILE_NAME);
 		assertNotNull(storageTest);
@@ -53,7 +53,7 @@ public class StorageTest {
 		//Since load is already called when initialized, no need to call it again
 		lineNumberReader = new LineNumberReader(new FileReader(new File("storageTest.txt")));
 		lineNumberReader.skip(Long.MAX_VALUE);  //Long.MAX_VALUE is more than 2 ExaBytes
-		assertEquals(taskDepo.countTotal(), lineNumberReader.getLineNumber());
+		assertEquals(taskDepo.countAllTasks(), lineNumberReader.getLineNumber());
 		lineNumberReader.close();
 	}
 
@@ -74,15 +74,15 @@ public class StorageTest {
 		storageTest.store();
 		lineNumberReader = new LineNumberReader(new FileReader(new File("storageTest.txt")));
 		lineNumberReader.skip(Long.MAX_VALUE);  //Long.MAX_VALUE is more than 2 ExaBytes
-		assertEquals(taskDepo.countTotal(), lineNumberReader.getLineNumber());
+		assertEquals(taskDepo.countAllTasks(), lineNumberReader.getLineNumber());
 		
 		//Test boundary case where there is no task in task depository
 		taskDepo.clearAllTasks();
-		assertEquals(EMPTY, taskDepo.countTotal());
+		assertEquals(EMPTY, taskDepo.countAllTasks());
 		storageTest.store();
 		lineNumberReader = new LineNumberReader(new FileReader(new File("storageTest.txt")));
 		lineNumberReader.skip(Long.MAX_VALUE);  //Long.MAX_VALUE is more than 2 ExaBytes
-		assertEquals(taskDepo.countTotal(), lineNumberReader.getLineNumber());
+		assertEquals(taskDepo.countAllTasks(), lineNumberReader.getLineNumber());
 		lineNumberReader.close();
 		
 		//It is not feasible to test the other boundary case where the taskDepo takes up
