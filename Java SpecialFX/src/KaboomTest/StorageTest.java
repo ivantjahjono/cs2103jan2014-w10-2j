@@ -26,6 +26,7 @@ public class StorageTest {
 	TaskDepository taskDepo;
 	Storage storageTest;
 	LineNumberReader lineNumberReader;
+
 	private final int EMPTY = 0;
 	private final String TEST_FILE_NAME = "StorageTest.txt";
 	
