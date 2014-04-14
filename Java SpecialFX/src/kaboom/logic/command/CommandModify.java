@@ -6,13 +6,10 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import kaboom.logic.command.Command.COMMAND_ERROR;
-import kaboom.shared.DateAndTimeFormat;
 import kaboom.shared.FormatIdentify;
 import kaboom.shared.KEYWORD_TYPE;
 import kaboom.shared.Result;
 import kaboom.shared.TaskInfo;
-import kaboom.storage.TaskManager;
 
 
 public class CommandModify extends Command {
@@ -74,6 +71,7 @@ public class CommandModify extends Command {
 			feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 			return createResult(feedback);
 		}
+//		determineAndSetDateAndTime(temp);
 		commandError = validateStartAndEndTime (temp);
 		if(commandError == COMMAND_ERROR.INVALID_DATE) {
 			feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
