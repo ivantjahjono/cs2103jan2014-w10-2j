@@ -52,7 +52,7 @@ public class CommandAdd extends Command {
 		taskInfo.setTaskName(infoTable.get(KEYWORD_TYPE.TASKNAME));
 		saveTaskPriority();
 
-		modifyDateAndTime(taskInfo);
+		determineAndSetDateAndTime(taskInfo);
 
 		Result errorResult = validateStartAndEndTime (taskInfo);
 		if(errorResult != null) {
@@ -114,7 +114,7 @@ public class CommandAdd extends Command {
 		}
 	}
 	
-	private void modifyDateAndTime(TaskInfo temp) {
+	private void determineAndSetDateAndTime(TaskInfo task) {
 		String startDate = infoTable.get(KEYWORD_TYPE.START_DATE);
 		String startTime = infoTable.get(KEYWORD_TYPE.START_TIME);
 		String endTime = infoTable.get(KEYWORD_TYPE.END_TIME);
@@ -133,7 +133,7 @@ public class CommandAdd extends Command {
 			//save both start and end date 
 			Calendar startCal = dateAndTimeFormat.formatStringToCalendar(startDate, startTime);
 			Calendar endCal = dateAndTimeFormat.formatStringToCalendar(endDate, endTime);
-			saveStartAndEndCalendars (temp, startCal, endCal);		
+			saveStartAndEndCalendars (task, startCal, endCal);		
 
 		} else if (hasStartDateAndTime) {
 			Calendar startCal = dateAndTimeFormat.formatStringToCalendar(startDate, startTime);
@@ -155,7 +155,7 @@ public class CommandAdd extends Command {
 				endCal = dateAndTimeFormat.addTimeToCalendar(startCal, 1, 0);
 			}
 			
-			saveStartAndEndCalendars (temp, startCal, endCal);	
+			saveStartAndEndCalendars (task, startCal, endCal);	
 			
 		} else if (hasEndDateAndTime) {
 
@@ -175,7 +175,7 @@ public class CommandAdd extends Command {
 					startCal = dateAndTimeFormat.addTimeToCalendar(startCal, -1, 0);
 				}	
 			} 
-			saveStartAndEndCalendars (temp, startCal, endCal);	
+			saveStartAndEndCalendars (task, startCal, endCal);	
 			
 		} else {
 			Calendar startCal = null;
@@ -229,7 +229,7 @@ public class CommandAdd extends Command {
 				String today = dateAndTimeFormat.getDateToday2();
 				endCal = dateAndTimeFormat.formatStringToCalendar(today, endTime);
 			}
-			saveStartAndEndCalendars (temp, startCal, endCal);	
+			saveStartAndEndCalendars (task, startCal, endCal);	
 		}
 	}
 	
