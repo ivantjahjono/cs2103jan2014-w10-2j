@@ -343,6 +343,38 @@ public class SystemTest {
 		command = "undo";
 		assertEquals("No more action to undo", controller.processCommand(command));
 	}
+	
+	@Test
+	public void testView () {
+		controller.processCommand("clear all");
+		
+		String command = "";
+		
+		command = "view";
+		assertEquals("Invalid View Mode. Might want to use <help view>", controller.processCommand(command));
+
+		command = "view today";
+		assertEquals("Viewing all the tasks for today", controller.processCommand(command));
+		
+		command = "view Today";
+		assertEquals("Invalid View Mode. Might want to use <help view>", controller.processCommand(command));
+		
+		// Check if at current view already will trigger error
+		command = "view today";
+		assertEquals("Viewing all the tasks for today", controller.processCommand(command));
+		
+		command = "view future";
+		assertEquals("Viewing upcoming tasks", controller.processCommand(command));
+		
+		command = "view timeless";
+		assertEquals("Viewing timeless tasks", controller.processCommand(command));
+		
+		command = "view expired";
+		assertEquals("Viewing expired tasks", controller.processCommand(command));
+		
+		command = "view archive";
+		assertEquals("Viewing completed tasks", controller.processCommand(command));
+	}
 
 	@After
 	public void deinit () {
