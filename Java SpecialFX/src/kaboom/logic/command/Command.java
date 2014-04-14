@@ -231,22 +231,20 @@ public class Command {
 		}
 	}
 	
-	protected COMMAND_ERROR errorDetectionForInvalidTaskNameAndId() {	
+	protected void errorDetectionForInvalidTaskNameAndId() {	
 		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
 		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 		if(taskId != null && !isStringNullOrEmpty(taskName)) {
-			return COMMAND_ERROR.INVALID_TASKNAME;
+			addCommandErrorToList (COMMAND_ERROR.INVALID_TASKNAME);
 		} else if(taskId != null) {
-			if (!isTaskIdValid()) {
-				return COMMAND_ERROR.INVALID_TASKID;
-			} else {
-				return null;
+			if (!isTaskIdValid()) { 
+				addCommandErrorToList (COMMAND_ERROR.INVALID_TASKID);
 			}
 		} else {
 			if (isStringNullOrEmpty(taskName)) {
-				return COMMAND_ERROR.NO_TASK_NAME;
+				addCommandErrorToList (COMMAND_ERROR.NO_TASK_NAME);
 			} else {
-				return taskExistenceOrClashDetection(taskName);
+				taskExistenceOrClashDetection(taskName);
 			}
 		}
 	}
@@ -255,15 +253,14 @@ public class Command {
 		return string == null || string.isEmpty();
 	}
 
-	private COMMAND_ERROR taskExistenceOrClashDetection(String taskName) {
+	private void taskExistenceOrClashDetection(String taskName) {
 		int taskCount = numOfTasksWithSimilarNames(taskName);
 		if (taskCount > 1) {
-			return COMMAND_ERROR.CLASH;
+			addCommandErrorToList (COMMAND_ERROR.CLASH);
 		}
 		else if (taskCount < 1) {
-			return COMMAND_ERROR.TASK_DOES_NOT_EXIST;
+			addCommandErrorToList (COMMAND_ERROR.TASK_DOES_NOT_EXIST);
 		}
-		return null;
 	}
 	
 	protected boolean isTaskIdValid() {

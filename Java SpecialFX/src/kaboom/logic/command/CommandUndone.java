@@ -27,21 +27,14 @@ public class CommandUndone extends Command {
 
 	public Result execute() {
 		assert taskManager != null;
-
-//		Result errorResult = invalidTaskNameAndClashErrorDetection();
-//		if(errorResult != null) {
-//			return errorResult;
-//		} else {
-//			taskToBeModified = getTask();
-//		}
 		
 		if (infoTable.containsKey(KEYWORD_TYPE.INVALID)) {
 			return createResult(MESSAGE_COMMAND_INVALID);
 		}
 		
-		COMMAND_ERROR commandError = errorDetectionForInvalidTaskNameAndId();
-		if(commandError != null) {
-			return commandErrorHandler(commandError);
+		errorDetectionForInvalidTaskNameAndId();
+		if(!commandErrorList.isEmpty()) {
+			return commandErrorHandler(commandErrorList.get(0));
 		} else {
 			taskToBeModified = getTask();
 		}
