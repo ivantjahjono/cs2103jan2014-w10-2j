@@ -66,12 +66,12 @@ public class CommandModify extends Command {
 		TaskInfo temp = new TaskInfo(preModifiedTaskInfo);
 		hasNameChanged = modifyTaskName(temp);
 		hasPriorityChanged = modifyTaskPriority(temp);
-		commandError = modifyDateAndTime(temp);
-		if(commandError == COMMAND_ERROR.INVALID_DATE) {
-			feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
-			return createResult(feedback);
-		}
-//		determineAndSetDateAndTime(temp);
+//		commandError = modifyDateAndTime(temp);
+//		if(commandError == COMMAND_ERROR.INVALID_DATE) {
+//			feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
+//			return createResult(feedback);
+//		}
+		determineAndSetDateAndTime(temp);
 		commandError = validateStartAndEndTime (temp);
 		if(commandError == COMMAND_ERROR.INVALID_DATE) {
 			feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
@@ -257,145 +257,6 @@ public class CommandModify extends Command {
 		String endDate = getPrevEndDate();
 		endDate = getNewEndDate(endDate);
 		return endDate;
-	}
-	
-	private COMMAND_ERROR modifyDateAndTime(TaskInfo temp) {
-		//Get Start Date And Time		
-		String startTime = getStartTime();
-		String startDate = getStartDate();
-		//Get End Date and Time		
-		String endTime = getEndTime();
-		String endDate = getEndDate();
-		
-		if(startDate == INVALID_DATE || endDate == INVALID_DATE) {
-			return COMMAND_ERROR.INVALID_DATE;
-		}
-		
-		//Boolean Variables for condition checking
-		boolean hasStartDate = (startDate != null);
-		boolean hasStartTime = (startTime != null);
-		boolean hasEndDate = (endDate != null);
-		boolean hasEndTime = (endTime != null);
-		boolean hasStartCal = (hasStartTime && hasStartDate);
-		boolean hasEndCal = (hasEndTime && hasEndDate);
-
-		
-		if(hasStartCal && hasEndCal) {
-			//save both start and end date 
-			Calendar startCal = dateAndTimeFormat.formatStringToCalendar(startDate, startTime);
-			Calendar endCal = dateAndTimeFormat.formatStringToCalendar(endDate, endTime);
-			temp.setStartDate(startCal);
-			temp.setEndDate(endCal);			
-			
-		} else if (hasStartCal && !hasEndCal) {
-			Calendar startCal = dateAndTimeFormat.formatStringToCalendar(startDate, startTime);
-			
-			if(hasEndTime) {
-				//set end date to start date (end time > start time) or 1 day after start date (end time <= start time)
-				Calendar endCal = dateAndTimeFormat.formatStringToCalendar(startDate, endTime);
-				if(Integer.parseInt(endTime) <= Integer.parseInt(startTime)) {
-					endCal = dateAndTimeFormat.addDayToCalendar(endCal, 1);
-				} 
-				temp.setStartDate(startCal);
-				temp.setEndDate(endCal);
-				
-			} else if(hasEndDate) {
-				//set end time to same start time (if not the same date) or 1hr after start time(same date)
-				Calendar endCal = dateAndTimeFormat.formatStringToCalendar(endDate, startTime);
-				if(!dateAndTimeFormat.isFirstDateBeforeSecondDate(startCal, endCal)) {
-					endCal = dateAndTimeFormat.addTimeToCalendar(endCal, 1, 0);
-				}
-				temp.setStartDate(startCal);
-				temp.setEndDate(endCal);
-			} else {
-				//set end date to 1 hour after start date
-				Calendar endCal = dateAndTimeFormat.addTimeToCalendar(startCal, 1, 0);
-				temp.setStartDate(startCal);
-				temp.setEndDate(endCal);
-			}
-		} else if (!hasStartCal && hasEndCal) {
-			
-			Calendar endCal = dateAndTimeFormat.formatStringToCalendar(endDate, endTime);
-			
-			if(hasStartTime) {
-				//set start date to same end date (start time before end time) or before end date (start time >= end time)
-				Calendar startCal = dateAndTimeFormat.formatStringToCalendar(endDate, startTime);
-				if(Integer.parseInt(endTime) <= Integer.parseInt(startTime)) {
-					startCal = dateAndTimeFormat.addDayToCalendar(startCal, -1);
-				} 
-				temp.setStartDate(startCal);
-				temp.setEndDate(endCal);
-			} else if(hasStartDate) {
-				//set start time to same end time (if not the same date) or 1hr before end time(same date)
-				Calendar startCal = dateAndTimeFormat.formatStringToCalendar(startDate, endTime);
-				if(!dateAndTimeFormat.isFirstDateBeforeSecondDate(startCal, endCal)) {
-					startCal = dateAndTimeFormat.addTimeToCalendar(startCal, -1, 0);
-				}
-				temp.setStartDate(startCal);
-				temp.setEndDate(endCal);	
-			} else {
-				//overwrite end cal
-				temp.setEndDate(endCal);	
-			}
-		} else {
-			if (hasStartDate && hasEndDate) {
-				//time to 0000 if different date or start time to 2359 and end time to 2359 if same date
-				Calendar startCal = dateAndTimeFormat.formatStringToCalendar(startDate, dateAndTimeFormat.getStartTimeOfTheDay());
-				Calendar endCal = dateAndTimeFormat.formatStringToCalendar(endDate, dateAndTimeFormat.getEndTimeOfTheDay());
-				if(!dateAndTimeFormat.isFirstDateBeforeSecondDate(startCal, endCal)) {
-					startCal = dateAndTimeFormat.formatStringToCalendar(startDate, dateAndTimeFormat.getStartTimeOfTheDay());
-					endCal = dateAndTimeFormat.formatStringToCalendar(endDate, dateAndTimeFormat.getEndTimeOfTheDay());
-					endCal = dateAndTimeFormat.addTimeToCalendar(endCal, 1, 0);
-				}
-				temp.setStartDate(startCal);
-				temp.setEndDate(endCal);
-			} else if (hasStartTime && hasEndTime) {
-				//set to today if start < end time or set start to today and end to next day
-				String today = dateAndTimeFormat.getDateToday2();
-				Calendar startCal = dateAndTimeFormat.formatStringToCalendar(today, startTime);
-				Calendar endCal = dateAndTimeFormat.formatStringToCalendar(today, endTime);
-				if(Integer.parseInt(endTime) <= Integer.parseInt(startTime)) {
-					endCal = dateAndTimeFormat.addDayToCalendar(endCal, 1);
-				}
-				temp.setStartDate(startCal);
-				temp.setEndDate(endCal);
-			} else if (hasStartTime && hasEndDate) {
-				//set time to 1hr block with end date
-				Calendar startCal = dateAndTimeFormat.formatStringToCalendar(endDate, startTime);
-				Calendar endCal = dateAndTimeFormat.addTimeToCalendar(startCal, 1, 0);
-				temp.setStartDate(startCal);
-				temp.setEndDate(endCal);
-			} else if (hasStartDate && hasEndTime) {
-				//set time to 1hr block before end time and date to start date
-				Calendar endCal = dateAndTimeFormat.formatStringToCalendar(startDate, endTime);
-				Calendar startCal = dateAndTimeFormat.addTimeToCalendar(endCal, -1, 0);
-				temp.setStartDate(startCal);
-				temp.setEndDate(endCal);
-			} else if (hasStartDate) {
-				//set time from 0000 to 2359 and save start date
-				Calendar startCal = dateAndTimeFormat.formatStringToCalendar(startDate, dateAndTimeFormat.getStartTimeOfTheDay());
-				Calendar endCal = dateAndTimeFormat.formatStringToCalendar(startDate, dateAndTimeFormat.getEndTimeOfTheDay());
-				temp.setStartDate(startCal);
-				temp.setEndDate(endCal);
-				} else if (hasStartTime) {
-				//set date to today and save start date and end date to 1 hour later
-					String today = dateAndTimeFormat.getDateToday2();
-				Calendar startCal = dateAndTimeFormat.formatStringToCalendar(today, startTime);
-				Calendar endCal = dateAndTimeFormat.addTimeToCalendar(startCal, 1, 0);
-				temp.setStartDate(startCal);
-				temp.setEndDate(endCal);
-			} else if (hasEndDate) {
-				//set time to 2359 and save end date only
-				Calendar endCal = dateAndTimeFormat.formatStringToCalendar(endDate, dateAndTimeFormat.getEndTimeOfTheDay());
-				temp.setEndDate(endCal);
-			} else if (hasEndTime) {
-				//set date to today and save end date only
-				String today = dateAndTimeFormat.getDateToday2();
-				Calendar endCal = dateAndTimeFormat.formatStringToCalendar(today, endTime);
-				temp.setEndDate(endCal);
-			}
-		}
-		return null;
 	}
 	
 	private COMMAND_ERROR validateStartAndEndTime (TaskInfo temp) {
