@@ -266,15 +266,11 @@ public class CommandAdd extends Command {
 	private void validateTaskName() {
 		String taskName = infoTable.get(KEYWORD_TYPE.TASKNAME);
 		String taskId = infoTable.get(KEYWORD_TYPE.TASKID);
-		if (hasTaskIdAndTaskName(taskName, taskId)) {
+		if (taskId != null) {
 			addCommandErrorToList(COMMAND_ERROR.INVALID_TASKNAME);
 		} else if (isStringNullOrEmpty(taskName)) {
 			addCommandErrorToList(COMMAND_ERROR.NO_TASK_NAME);
 		} 
-	}
-
-	private boolean hasTaskIdAndTaskName(String taskName, String taskId) {
-		return taskId != null && !isStringNullOrEmpty(taskName);
 	}
 	
 	protected Result commandErrorHandler(COMMAND_ERROR commandError) {
