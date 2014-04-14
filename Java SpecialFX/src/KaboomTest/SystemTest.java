@@ -43,7 +43,6 @@ public class SystemTest {
 		command = "add     ";
 		assertEquals("Oops! Task cannot be entered without a name Y_Y", controller.processCommand(command));
 		
-		// Add whitespaces command
 		command = "add hello";
 		assertEquals("WOOT! <hello> ADDED. MORE STUFF TO DO!", controller.processCommand(command));
 		
@@ -85,6 +84,9 @@ public class SystemTest {
 		command = "view today";
 		assertEquals("Viewing all the tasks for today", controller.processCommand(command));
 		
+		command = "view today";
+		assertEquals("Viewing all the tasks for today", controller.processCommand(command));
+		
 		command = "view timeless";
 		assertEquals("Viewing timeless tasks", controller.processCommand(command));
 		
@@ -96,6 +98,38 @@ public class SystemTest {
 		
 		command = "view archive";
 		assertEquals("Viewing completed tasks", controller.processCommand(command));
+	}
+	
+	@Test
+	public void testModify() {
+		String command = "";
+		
+		command = "add hello";
+		assertEquals("WOOT! <hello> ADDED. MORE STUFF TO DO!", controller.processCommand(command));
+		
+		command = "modify";
+		assertEquals("Enter a taskname or task id, please ?", controller.processCommand(command));
+		
+		command = "modify     ";
+		assertEquals("Enter a taskname or task id, please ?", controller.processCommand(command));
+		
+		command = "modify 10";
+		assertEquals("Oops! Invalid ID??", controller.processCommand(command));
+		
+		command = "modify -5";
+		assertEquals("Oops! No such task exist", controller.processCommand(command));
+		
+		command = "modify 1";
+		assertEquals("Modify has failed. Type <help modify> for help.", controller.processCommand(command));
+		
+		command = "modify 1 > world";
+		assertEquals("<hello> has evolved into <world>", controller.processCommand(command));
+		
+		command = "modify 25 > world";
+		assertEquals("Oops! Invalid ID??", controller.processCommand(command));
+		
+		command = "modify world > hello";
+		assertEquals("<world> has evolved into <hello>", controller.processCommand(command));
 	}
 
 	@After
