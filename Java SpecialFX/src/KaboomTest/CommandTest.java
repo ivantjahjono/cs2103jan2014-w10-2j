@@ -158,13 +158,13 @@ public class CommandTest {
 		//Clear without setting clear type
 		initialise();
 		com.initialiseCommandInfoTable(infoTable);
-		assertEquals("Enter <clear all> to remove all tasks or <clear current> to remove current view",com.execute().getFeedback());
+		assertEquals("Enter <clear all> to remove all tasks or <clear present> to remove current view",com.execute().getFeedback());
 		
 		//Clear with invalid clear type
 		initialise();
 		infoTable.put(KEYWORD_TYPE.CLEARTYPE, "lala");
 		com.initialiseCommandInfoTable(infoTable);
-		assertEquals("Enter <clear all> to remove all tasks or <clear current> to remove current view",com.execute().getFeedback());
+		assertEquals("Enter <clear all> to remove all tasks or <clear present> to remove current view",com.execute().getFeedback());
 		
 		//Clear with ALL clear type
 		initialise();
