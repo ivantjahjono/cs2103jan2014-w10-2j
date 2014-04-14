@@ -10,7 +10,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ 
 		StorageTest.class,
 		HistoryTest.class,
-		TaskListShopTest.class,
+		TaskDepositoryTest.class,
 		})
 public class StorageComponentTest {
 
