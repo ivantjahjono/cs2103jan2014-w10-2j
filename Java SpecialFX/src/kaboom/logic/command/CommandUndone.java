@@ -49,7 +49,7 @@ public class CommandUndone extends Command {
 		String feedback = MESSAGE_COMMAND_INVALID;
 		String taskName = taskToBeModified.getTaskName();
 
-		if (!taskToBeModified.getDone()) {
+		if (!taskToBeModified.isDone()) {
 			feedback = String.format(MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE, taskName);
 		} else {
 			taskManager.undoneTask(taskToBeModified);
