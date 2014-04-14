@@ -136,7 +136,7 @@ public class TextParser {
 		endIndex = getLastIndex(matchList);
 		startIndex = getStartIndex(matchList);
 		
-		String extractedDateString = userInputSentence.substring(startIndex, endIndex).trim();
+		String extractedDateString = userInputSentence.substring(startIndex, endIndex);
 		String finalExtractedDateString = extractedDateString.replaceAll(KEYWORD_TIME, "").trim();
 		
 		switch(KEYWORD_TIME) {

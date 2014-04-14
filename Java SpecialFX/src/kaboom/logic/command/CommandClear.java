@@ -147,7 +147,7 @@ public class CommandClear extends Command {
 		for (int i = 0; i < tasksCleared.size(); i++) {
 			taskManager.addPresentTask(tasksCleared.get(i));
 		}
-		if (tasksCleared.size() == taskManager.presentTaskCount()) {
+		if (tasksCleared.size() == taskManager.countPresentTasks()) {
 			return true;
 		} else {
 			return false;
@@ -158,7 +158,7 @@ public class CommandClear extends Command {
 		for (int i = 0; i < archiveTasksCleared.size(); i++) {
 			taskManager.addArchivedTask(archiveTasksCleared.get(i));
 		}
-		if (archiveTasksCleared.size() == taskManager.archiveTaskCount()) {
+		if (archiveTasksCleared.size() == taskManager.countArchivedTasks()) {
 			return true;
 		} else {
 			return false;

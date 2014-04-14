@@ -50,6 +50,12 @@ public class TextParserTest {
 		command = " *";
 		assertEquals("*", textparser.extractPriority(command, tempHashTable));
 		
+		command = " *****";
+		assertEquals("*****", textparser.extractPriority(command, tempHashTable));
+		
+		command = "*****";
+		assertEquals("", textparser.extractPriority(command, tempHashTable));
+		
 		command = " ********";
 		assertEquals("", textparser.extractPriority(command, tempHashTable));
 	}
@@ -73,11 +79,9 @@ public class TextParserTest {
 		command = "at  160 on 25/12/18";
 		assertEquals("", textparser.extractDateAndTime(timeKeyword, command, tempHashTable));
 		
-		command = "     at 160 on 25/12/18";
+		command = "at 1800 by 30/04/14";
 		assertEquals("", textparser.extractDateAndTime(timeKeyword, command, tempHashTable));
 		
-		command = "     at 160       on 25/12/18";
-		assertEquals("", textparser.extractDateAndTime(timeKeyword, command, tempHashTable));
 	}
 	
 	@Test
@@ -97,24 +101,6 @@ public class TextParserTest {
 		command = "at 1800 on 25/12/18     ";
 		assertTrue(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
 		
-//		command = "at 1700 today";
-//		assertTrue(textparser.checkTimeAndDateInputFormat2(timeKeyword, command, matchVector));
-//		
-//		command = "at 1800 on 25/12/18";
-//		assertTrue(textparser.checkTimeAndDateInputFormat2(timeKeyword, command, matchVector));
-//		
-//		command = "at 600   on 25/12/18";
-//		assertTrue(textparser.checkTimeAndDateInputFormat2(timeKeyword, command, matchVector));
-		
-		//assertion errsor (fix please)
-//		command = "at  160 on 25/12/18";
-//		assertTrue(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
-//		
-//		command = "     at 160 on 25/12/18";
-//		assertTrue(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
-//		
-//		command = "     at 160       on 25/12/18";
-//		assertTrue(textparser.checkTimeAndDateInputFormat(timeKeyword, command, matchVector));
 	}
 	
 	@Test
@@ -174,18 +160,41 @@ public class TextParserTest {
 		
 		command = "by 13pm";
 		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 24am";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 0000";
+		assertEquals("by 0000", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 2359";
+		assertEquals("by 2359", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 2400";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by 2360";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
+		command = "by -0001";
+		assertEquals("", textparser.extractTimeOnly(keyword, command, tempHashTable));
+		
 	}
 	
+	@Test
 	public void testDateExtraction () {
 		String command = "";
 		String keyword = "on";
 		Hashtable<KEYWORD_TYPE, String> tempHashTable = new Hashtable<KEYWORD_TYPE, String>();
 		
-		command = "on 12/06/06";
+		command = "on  ";
 		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 		
+		command = "on 12/06/06";
+		assertEquals(command, textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+		
 		command = "on 12.06.06";
-		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+		assertEquals(command, textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 		
 		command = "on 120606";
 		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
@@ -194,19 +203,20 @@ public class TextParserTest {
 		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 		
 		command = "on  1206065  ";
-		assertEquals(command, textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 		
 		command = "on  120.06.06 ";
-		assertEquals(command, textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 		
 		command = "on  1.06.06 ";
 		assertEquals(command, textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 		
 		command = "on  1.6.06 ";
-		assertEquals(command, textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
 		
 		command = "on  1.6.1906 ";
-		assertEquals(command, textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+		assertEquals("", textparser.extractDateOnly(keyword, keyword,command, tempHashTable));
+	
 	}
 	
 	@Test
