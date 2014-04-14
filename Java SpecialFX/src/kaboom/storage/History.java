@@ -12,7 +12,6 @@ public class History {
 	private static History historyInstance = null;
 
 	private Stack<Command> previousCommandList;
-	private Command currentCommandView;
 
 	public static History getInstance () {
 		if (historyInstance == null) {
@@ -23,7 +22,6 @@ public class History {
 
 	public History () {
 		previousCommandList = new Stack<Command>();
-		currentCommandView = null;
 	}
 
 	public Command getMostRecentCommand () {
@@ -32,10 +30,6 @@ public class History {
 		}
 
 		return previousCommandList.pop();
-	}
-
-	public Command getMostRecentCommandView () {            
-		return currentCommandView;
 	}
 
 	public int size() {
@@ -48,12 +42,7 @@ public class History {
 
 	public void addToRecentCommands(Command recentCommand) {
 		previousCommandList.push(recentCommand);
-
 		trimOutOldCommands();
-	}
-
-	public void setCurrentViewCommand(Command setView) {
-		currentCommandView = setView;
 	}
 
 	private void trimOutOldCommands () {
