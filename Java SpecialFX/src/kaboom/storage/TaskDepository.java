@@ -135,7 +135,7 @@ public class TaskDepository {
 
 		for (int i = 0; i < presentTaskList.size(); i++) {
 			TaskInfo singleTask = presentTaskList.get(i);
-			boolean isExpired = singleTask.getExpiryFlag();
+			boolean isExpired = singleTask.isExpired();
 			if (isExpired) {
 				returnVector.add(singleTask);
 			}
@@ -177,7 +177,7 @@ public class TaskDepository {
 			TaskInfo singleTask = archivedTaskList.get(i);
 			checkAndSetRecent(isResetRecentFlag, singleTask);
 
-			if (!singleTask.getDone()) {
+			if (!singleTask.isDone()) {
 				swapFromArchiveToPresent(singleTask);
 			}
 		}
@@ -189,7 +189,7 @@ public class TaskDepository {
 			checkAndSetExpiry(singleTask);
 			checkAndSetRecent(isResetRecentFlag, singleTask);
 
-			if (singleTask.getDone()) {
+			if (singleTask.isDone()) {
 				swapFromPresentToArchive(singleTask);
 			}
 		}
@@ -204,18 +204,18 @@ public class TaskDepository {
 	private void checkAndSetExpiry(TaskInfo singleTask) {
 		if (!singleTask.getTaskType().equals(TASK_TYPE.FLOATING)) {
 			if (isTaskExpired(singleTask)) {
-				singleTask.setExpiryFlag(true);
+				singleTask.setExpiry(true);
 			} else {
-				singleTask.setExpiryFlag(false);
+				singleTask.setExpiry(false);
 			}
 		} else {
-			singleTask.setExpiryFlag(false);  //Floating tasks cannot expire
+			singleTask.setExpiry(false);  //Floating tasks cannot expire
 		}
 	}
 
 	private boolean isTaskExpired(TaskInfo singleTask) {
 		Calendar now = Calendar.getInstance();
-		return now.after(singleTask.getEndDate()) && !singleTask.getDone();
+		return now.after(singleTask.getEndDate()) && !singleTask.isDone();
 	}
 
 	private void swapFromPresentToArchive(TaskInfo singleTask) {

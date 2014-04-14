@@ -133,11 +133,11 @@ public class Storage {
 	}
 
 	private void appendDone(StringBuilder output, TaskInfo task) {
-		output.append(task.getDone() + DELIMITER);
+		output.append(task.isDone() + DELIMITER);
 	}
 
 	private void appendExpiry(StringBuilder output, TaskInfo task) {
-		output.append(task.getExpiryFlag() + DELIMITER);
+		output.append(task.isExpired() + DELIMITER);
 	}
 
 	private void appendPriority(StringBuilder output, TaskInfo task) {
@@ -302,10 +302,10 @@ public class Storage {
 		boolean isExpired = checkExpired(task);
 
 		if (!task.getTaskType().equals(TASK_TYPE.FLOATING)) {
-			task.setExpiryFlag(isExpired);  //Set true only for non-floating tasks
+			task.setExpiry(isExpired);  //Set true only for non-floating tasks
 		}
 		else {
-			task.setExpiryFlag(Boolean.parseBoolean(inputTokens[INDEX_IS_EXPIRED]));
+			task.setExpiry(Boolean.parseBoolean(inputTokens[INDEX_IS_EXPIRED]));
 		}
 	}
 
@@ -320,7 +320,7 @@ public class Storage {
 	}
 
 	private void addTaskToAppropriateList(TaskInfo task) {
-		if (task.getDone()) {
+		if (task.isDone()) {
 			taskDepository.addTaskToArchivedList(task);
 		}
 		else {

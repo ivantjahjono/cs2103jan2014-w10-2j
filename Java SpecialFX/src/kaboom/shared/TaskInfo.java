@@ -34,7 +34,7 @@ public class TaskInfo {
 		startDate = info.getStartDate();
 		endDate = info.getEndDate();
 		priority = info.getPriority();
-		isExpired = info.getExpiryFlag();
+		isExpired = info.isExpired();
 		taskType = info.getTaskType();
 	}
 	
@@ -62,7 +62,7 @@ public class TaskInfo {
 		priority = level;
 	}
 	
-	public void setExpiryFlag (boolean flag) { 
+	public void setExpiry (boolean flag) { 
 		isExpired = flag;
 	}
 	
@@ -94,11 +94,11 @@ public class TaskInfo {
 		return priority;
 	}
 	
-	public boolean getExpiryFlag () { 
+	public boolean isExpired () { 
 		return isExpired;
 	}
 	
-	public boolean getDone () {
+	public boolean isDone () {
 		return isDone;
 	}
 	
