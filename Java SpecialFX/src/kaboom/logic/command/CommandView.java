@@ -36,40 +36,14 @@ public class CommandView extends Command{
 
 	public Result execute() {
 		assert taskManager != null;
-		
-		//store info
+
 		storeViewVariables();
-		
 		String feedback = "";
-		Result commandResult = createResult(feedback);
-		
 		if(viewType == null) {
 			viewType = "Nothing to view";
 		}
-		
-		switch(stateToSet) {
-			case TODAY:
-				feedback = MESSAGE_VIEW_TODAY;
-				break;
-			case FUTURE:
-				feedback = MESSAGE_VIEW_FUTURE;
-				break;
-			case TIMELESS:
-				feedback = MESSAGE_VIEW_TIMELESS;
-				break;
-			case EXPIRED:
-				feedback = MESSAGE_VIEW_EXPIRED;
-				break;
-			case ARCHIVE:
-				feedback = MESSAGE_VIEW_ARCHIVE;
-				break;
-			default:
-				feedback = MESSAGE_VIEW_INVALID;
-		}
-		
-		commandResult.setDisplayState(stateToSet);
-		commandResult.setFeedback(feedback);
-		return commandResult;
+		feedback = determineFeedBackForViewState();
+		return createResult(feedback, stateToSet, null);
 	}
 
 	private DISPLAY_STATE determineDisplayState(String viewType2) {
@@ -119,5 +93,29 @@ public class CommandView extends Command{
 		}
 		
 		return true;
+	}
+	
+	private String determineFeedBackForViewState() {
+		String feedback;
+		switch(stateToSet) {
+			case TODAY:
+				feedback = MESSAGE_VIEW_TODAY;
+				break;
+			case FUTURE:
+				feedback = MESSAGE_VIEW_FUTURE;
+				break;
+			case TIMELESS:
+				feedback = MESSAGE_VIEW_TIMELESS;
+				break;
+			case EXPIRED:
+				feedback = MESSAGE_VIEW_EXPIRED;
+				break;
+			case ARCHIVE:
+				feedback = MESSAGE_VIEW_ARCHIVE;
+				break;
+			default:
+				feedback = MESSAGE_VIEW_INVALID;
+		}
+		return feedback;
 	}
 }
