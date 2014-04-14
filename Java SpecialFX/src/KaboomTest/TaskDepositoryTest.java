@@ -21,7 +21,7 @@ import kaboom.storage.TaskDepository;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TaskListShopTest {
+public class TaskDepositoryTest {
 
 	TaskDepository taskDepo;
 	TaskInfo task1;
