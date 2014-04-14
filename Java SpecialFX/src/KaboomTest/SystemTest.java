@@ -3,6 +3,7 @@ package KaboomTest;
 
 import static org.junit.Assert.*;
 import kaboom.logic.TaskMasterKaboom;
+import kaboom.storage.History;
 
 import org.junit.After;
 import org.junit.Before;
@@ -57,6 +58,10 @@ public class SystemTest {
 		// Test delete by id but over limit
 		command = "delete 3";
 		assertEquals("Oops! Invalid ID??", controller.processCommand(command));
+		
+		// Test delete by id but over limit
+		command = "delete -10";
+		assertEquals("Oops! No such task exist", controller.processCommand(command));
 		
 		// Delete whitespaces command
 		command = "delete hello";
@@ -301,6 +306,42 @@ public class SystemTest {
 		
 		command = "unboom hello";
 		assertEquals("hello was incomplete", controller.processCommand(command));
+	}
+	
+	@Test
+	public void testUndo () {
+		controller.processCommand("clear all");
+		History history = History.getInstance();
+		history.clear();
+		
+		String command = "";
+
+		command = "undo";
+		assertEquals("No more action to undo", controller.processCommand(command));
+		
+		command = "UNDO";
+		assertEquals("No more action to undo", controller.processCommand(command));
+		
+		command = "undo 1";
+		assertEquals("Sorry. Not valid undo command. Type <help undo> for help.", controller.processCommand(command));
+		
+		command = "undo undo";
+		assertEquals("No more action to undo", controller.processCommand(command));
+		
+		command = "add undo";
+		controller.processCommand(command);
+
+		command = "undo";
+		assertEquals("Command undone!", controller.processCommand(command));
+		
+		command = "     Undo";
+		assertEquals("No more action to undo", controller.processCommand(command));
+		
+		command = "view timeless";
+		controller.processCommand(command);
+
+		command = "undo";
+		assertEquals("No more action to undo", controller.processCommand(command));
 	}
 
 	@After
