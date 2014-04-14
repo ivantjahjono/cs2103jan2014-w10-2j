@@ -51,7 +51,6 @@ public class CommandModify extends Command {
 	}
 
 	public Result execute() {
-		assert taskView != null;
 		assert infoTable != null;
 
 		if(infoTable == null) {
@@ -84,7 +83,7 @@ public class CommandModify extends Command {
 		//store and update in memory
 		modifiedTaskInfo = temp;
 		modifiedTaskInfo.setRecent(true);
-		taskView.updateTask(modifiedTaskInfo, preModifiedTaskInfo);
+		taskManager.updateTask(modifiedTaskInfo, preModifiedTaskInfo);
 		
 		feedback = feedbackGenerator();
 		addCommandToHistory ();
@@ -93,7 +92,7 @@ public class CommandModify extends Command {
 
 	public boolean undo () {
 		System.out.println(preModifiedTaskInfo.getTaskName()+" > "+ modifiedTaskInfo.getTaskName());
-		taskView.updateTask(preModifiedTaskInfo, modifiedTaskInfo);
+		taskManager.updateTask(preModifiedTaskInfo, modifiedTaskInfo);
 		return true;
 	}
 
