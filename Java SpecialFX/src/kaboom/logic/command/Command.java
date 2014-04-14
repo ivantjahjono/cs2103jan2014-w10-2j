@@ -45,7 +45,6 @@ public class Command {
 		taskManager = TaskManager.getInstance();
 		infoTable = new Hashtable<KEYWORD_TYPE, String>();
 		keywordList = new KEYWORD_TYPE[0];
-		commandErrorList = new Vector <COMMAND_ERROR>();
 		dateAndTimeFormat = DateAndTimeFormat.getInstance();
 	}
 	
@@ -78,11 +77,13 @@ public class Command {
 	}
 	
 	public void initialiseCommandInfoTable(String userInputSentence) {
+		commandErrorList = new Vector <COMMAND_ERROR>();
 		infoTable = textParser.extractList(userInputSentence, keywordList);
 		convertInformationToStandardFormat ();
 	}
 	
 	public void initialiseCommandInfoTable(Hashtable<KEYWORD_TYPE, String> infoTable) {
+		commandErrorList = new Vector <COMMAND_ERROR>();
 		this.infoTable = infoTable;
 		convertInformationToStandardFormat ();
 	}
