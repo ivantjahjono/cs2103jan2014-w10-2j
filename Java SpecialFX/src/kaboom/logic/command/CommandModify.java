@@ -11,7 +11,7 @@ import kaboom.shared.FormatIdentify;
 import kaboom.shared.KEYWORD_TYPE;
 import kaboom.shared.Result;
 import kaboom.shared.TaskInfo;
-import kaboom.storage.TaskView;
+import kaboom.storage.TaskManager;
 
 
 public class CommandModify extends Command {
@@ -31,7 +31,7 @@ public class CommandModify extends Command {
 	boolean hasNameChanged;
 	boolean hasTimeChanged;
 	boolean hasPriorityChanged;
-	TaskView taskView;
+	TaskManager taskView;
 	DateAndTimeFormat datFormat;
 
 	public CommandModify () {
@@ -49,7 +49,7 @@ public class CommandModify extends Command {
 		hasNameChanged = false;
 		hasTimeChanged = false;
 		hasPriorityChanged = false;
-		taskView = TaskView.getInstance();
+		taskView = TaskManager.getInstance();
 		datFormat = DateAndTimeFormat.getInstance();
 	}
 

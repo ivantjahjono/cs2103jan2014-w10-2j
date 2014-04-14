@@ -16,7 +16,7 @@ import kaboom.shared.Result;
 import kaboom.shared.TASK_TYPE;
 import kaboom.shared.TaskInfo;
 import kaboom.shared.comparators.FormatIdentifyComparator;
-import kaboom.storage.TaskView;
+import kaboom.storage.TaskManager;
 /* 
  ** Purpose: 
  */
@@ -32,7 +32,7 @@ public class Command {
 	protected TextParser textParser;
 	protected KEYWORD_TYPE[] keywordList;
 	Hashtable<KEYWORD_TYPE, String> infoTable;
-	protected TaskView taskView;
+	protected TaskManager taskManager;
 	
 	protected enum COMMAND_ERROR{
 		CLASH, TASK_DOES_NOT_EXIST, NO_TASK_NAME, INVALID_DATE, INVALID_TASKNAME ,NIL
@@ -41,7 +41,7 @@ public class Command {
 	public Command () {
 		commandType = COMMAND_TYPE.INVALID;
 		textParser = TextParser.getInstance();
-		taskView = TaskView.getInstance();
+		taskManager = TaskManager.getInstance();
 		infoTable = new Hashtable<KEYWORD_TYPE, String>();
 		keywordList = new KEYWORD_TYPE[0];
 	}
@@ -84,12 +84,12 @@ public class Command {
 	
 	//TODO
 	protected void addCommandToHistory () {
-		taskView.addToHistory(this);;
+		taskManager.addToHistory(this);;
 	}
 	
 	protected int numOfTasksWithSimilarNames(String name) {
 		int count = 0;
-		Vector<TaskInfo> currentViewList = taskView.getCurrentView();
+		Vector<TaskInfo> currentViewList = taskManager.getCurrentView();
 		for (int i = 0; i < currentViewList.size(); i++) {
 			String nameFromCurrentViewListInLowerCase = currentViewList.get(i).getTaskName().toLowerCase();
 			if (nameFromCurrentViewListInLowerCase.contains(name.toLowerCase())) {
@@ -317,7 +317,7 @@ public class Command {
 		String taskId = getTaskIdFromInfoTable();
 		if (taskId != null) {
 			int taskIdInteger = Integer.parseInt(taskId);
-			return taskView.getTaskFromViewByID(taskIdInteger-1);
+			return taskManager.getTaskFromViewByID(taskIdInteger-1);
 		}
 		return null;
 	}
@@ -325,7 +325,7 @@ public class Command {
 	protected TaskInfo getTaskWithTaskName() {
 		String taskName = getTaskNameFromInfoTable();
 		if (taskName != null && !taskName.isEmpty()) {
-			return taskView.getTaskFromViewByName(taskName);
+			return taskManager.getTaskFromViewByName(taskName);
 		}
 		return null;
 	}

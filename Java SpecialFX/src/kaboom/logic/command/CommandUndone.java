@@ -26,7 +26,7 @@ public class CommandUndone extends Command {
 	}
 
 	public Result execute() {
-		assert taskView != null;
+		assert taskManager != null;
 
 //		Result errorResult = invalidTaskNameAndClashErrorDetection();
 //		if(errorResult != null) {
@@ -52,7 +52,7 @@ public class CommandUndone extends Command {
 		if (!taskToBeModified.getDone()) {
 			feedback = String.format(MESSAGE_COMMAND_UNDONE_AlEADY_INCOMPLETE, taskName);
 		} else {
-			taskView.undoneTask(taskToBeModified);
+			taskManager.undoneTask(taskToBeModified);
 			addCommandToHistory ();
 			feedback = String.format(MESSAGE_COMMAND_UNDONE_SUCCESS, taskName);
 		}
@@ -62,8 +62,8 @@ public class CommandUndone extends Command {
 
 	public boolean undo() {
 		taskToBeModified.setDone(true);
-		taskView.refreshTasksFlagsOnly();  //Refresh to shift task to archive
-		taskView.addToSearchView(taskToBeModified);
+		taskManager.refreshTasks();  //Refresh to shift task to archive
+		taskManager.addToSearchView(taskToBeModified);
 		return true;
 	}
 

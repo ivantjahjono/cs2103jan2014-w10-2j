@@ -22,7 +22,7 @@ public class CommandPage extends Command {
 	}
 
 	public Result execute() {
-		assert taskView != null;
+		assert taskManager != null;
 		
 		String pageInfo = getPageCommandFromInfoTable();
 		if (pageInfo == null || infoTable.containsKey(KEYWORD_TYPE.INVALID)) {

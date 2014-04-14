@@ -35,7 +35,7 @@ public class CommandView extends Command{
 	}
 
 	public Result execute() {
-		assert taskView != null;
+		assert taskManager != null;
 		
 		//store info
 		storeViewVariables();
