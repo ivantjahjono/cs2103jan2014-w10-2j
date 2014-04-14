@@ -163,11 +163,11 @@ public class TaskManager {
 		return taskDepo.getAllArchivedTasks();
 	}
 	
-	public int presentTaskCount() {
+	public int countPresentTasks() {
 		return taskDepo.countPresentTasks();
 	}
 	
-	public int archiveTaskCount() {
+	public int countArchivedTasks() {
 		return taskDepo.countArchivedTasks();
 	}
 	
