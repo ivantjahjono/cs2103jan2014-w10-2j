@@ -296,12 +296,7 @@ public class Command {
 		return task;
 	}
 	
-	protected void determineAndSetDateAndTime(TaskInfo task) {
-		String startDate = infoTable.get(KEYWORD_TYPE.START_DATE);
-		String startTime = infoTable.get(KEYWORD_TYPE.START_TIME);
-		String endTime = infoTable.get(KEYWORD_TYPE.END_TIME);
-		String endDate = infoTable.get(KEYWORD_TYPE.END_DATE);
-
+	protected void determineAndSetDateAndTime(TaskInfo task, String startDate, String startTime, String endDate, String endTime) {
 		//Boolean Variables for condition checking
 		boolean hasStartDate = (startDate != null);
 		boolean hasStartTime = (startTime != null);
@@ -432,5 +427,14 @@ public class Command {
 			stateToSet =  DISPLAY_STATE.EXPIRED;
 		}
 		return stateToSet;
+	}
+	
+	protected Result validateStartAndEndTime (TaskInfo temp) {
+		if(temp.getStartDate() != null && temp.getEndDate() != null) {
+			if(!dateAndTimeFormat.isFirstDateBeforeSecondDate(temp.getStartDate(), temp.getEndDate())) {
+				return commandErrorHandler(COMMAND_ERROR.INVALID_DATE);
+			}
+		}
+		return null;
 	}
 }

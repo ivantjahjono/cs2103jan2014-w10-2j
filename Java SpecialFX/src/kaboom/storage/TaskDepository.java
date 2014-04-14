@@ -44,7 +44,7 @@ public class TaskDepository {
 		archivedTaskList = new Vector<TaskInfo>();
 	}
 
-	public boolean addTaskToList (TaskInfo newTask) {
+	public boolean addTaskToPresentList (TaskInfo newTask) {
 		if (presentTaskList != null) {
 			logger.fine("Adding one item to current list");
 			return presentTaskList.add(newTask);
@@ -163,7 +163,8 @@ public class TaskDepository {
 
 
 	public void refreshTasks() {
-		refreshTasks(false);
+		boolean isResetRecentFlag = false;
+		refreshTasks(isResetRecentFlag);
 	}
 
 	public void refreshTasks(boolean isResetRecentFlag) {
@@ -254,7 +255,7 @@ public class TaskDepository {
 		return taskID;
 	}
 
-	public int countTotal() {
+	public int countAllTasks() {
 		return presentTaskList.size() + archivedTaskList.size();
 	}
 
