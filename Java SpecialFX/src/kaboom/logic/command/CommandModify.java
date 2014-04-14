@@ -2,7 +2,6 @@
 
 package kaboom.logic.command;
 
-import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -67,16 +66,12 @@ public class CommandModify extends Command {
 		TaskInfo temp = new TaskInfo(preModifiedTaskInfo);
 		hasNameChanged = modifyTaskName(temp);
 		hasPriorityChanged = modifyTaskPriority(temp);
+		getAndSetDateAndTime(temp);
 //		commandError = modifyDateAndTime(temp);
 //		if(commandError == COMMAND_ERROR.INVALID_DATE) {
 //			feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
 //			return createResult(feedback);
 //		}	
-		String startTime = getStartTime();
-		String startDate = getStartDate();	
-		String endTime = getEndTime();
-		String endDate = getEndDate();
-		determineAndSetDateAndTime(temp, startDate, startTime, endDate, endTime);
 //		commandError = validateStartAndEndTime (temp);
 //		if(commandError == COMMAND_ERROR.INVALID_DATE) {
 //			feedback = MESSAGE_COMMAND_FAIL_INVALID_DATE;
@@ -96,6 +91,7 @@ public class CommandModify extends Command {
 		addCommandToHistory ();
 		return createResult(feedback, displayState, modifiedTaskInfo);
 	}
+
 
 	public boolean undo () {
 		System.out.println(preModifiedTaskInfo.getTaskName()+" > "+ modifiedTaskInfo.getTaskName());
@@ -167,6 +163,15 @@ public class CommandModify extends Command {
 		}
 		return false;
 	}
+	
+	private void getAndSetDateAndTime(TaskInfo temp) {
+		String startTime = getStartTime();
+		String startDate = getStartDate();	
+		String endTime = getEndTime();
+		String endDate = getEndDate();
+		determineAndSetDateAndTime(temp, startDate, startTime, endDate, endTime);
+	}
+
 	
 	private String getPrevStartDate() {
 		String startDate = null;
